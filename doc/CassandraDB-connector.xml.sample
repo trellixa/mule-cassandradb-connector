@@ -1,0 +1,12 @@
+<!-- BEGIN_INCLUDE(cassandradb:insert) -->
+    <cassandradb:insert/>    
+<!-- END_INCLUDE(cassandradb:insert) -->
+<!-- BEGIN_INCLUDE(cassandradb:get) -->
+    <cassandradb:get rowKey="xyz" columnPath="ColumnFamily:SuperColumn:Column"/>    
+<!-- END_INCLUDE(cassandradb:get) -->
+<!-- BEGIN_INCLUDE(cassandradb:get-slice) -->
+    <cassandradb:get-slice rowKey="xyz" columnParent="ColumnFamily:SuperColumn" start="aaa" finish="bbb" reversed="false" count="100"/>
+<!-- END_INCLUDE(cassandradb:get-slice) -->
+<!-- BEGIN_INCLUDE(cassandradb:remove) -->
+    <cassandradb:remove rowKey="xyz" columnPath="ColumnFamily:SuperColumn"/>
+<!-- END_INCLUDE(cassandradb:remove) -->
