@@ -13,7 +13,7 @@ you can survive regional outages.
 Installation and Usage
 ----------------------
 
-For information about usage and installation you can check our documentation at http://mulesoft.github.com/mule-module-jpa
+For information about usage and installation you can check our documentation at http://mulesoft.github.com/mule-module-cassandradb
 
 Reporting Issues
 ----------------
