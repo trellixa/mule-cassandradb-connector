@@ -1,8 +1,6 @@
 package com.mulesoft.mule.cassandradb;
 
-import me.prettyprint.cassandra.serializers.DoubleSerializer;
-import me.prettyprint.cassandra.serializers.ObjectSerializer;
-import me.prettyprint.cassandra.serializers.StringSerializer;
+import me.prettyprint.cassandra.serializers.*;
 import me.prettyprint.hector.api.Serializer;
 import org.apache.cassandra.thrift.*;
 
@@ -14,6 +12,7 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.node.ObjectNode;
 import org.codehaus.jackson.node.ArrayNode;
 import org.codehaus.jackson.JsonNode;
+import org.mule.api.DefaultMuleException;
 
 import java.io.UnsupportedEncodingException;
 
@@ -42,13 +41,10 @@ public class CassandraDBUtils {
 
         for (ColumnSerializer columnSerializer : columnSerializers) {
             Serializer serializer = null;
-
-            if (columnSerializer.getType().equals("string")) {
-                serializer = new StringSerializer();
-            }
-
-            if (columnSerializer.getType().equals("double")) {
-                serializer = new DoubleSerializer();
+            try {
+                serializer = SerializerTypeInferer.getSerializer(Class.forName(columnSerializer.getType()));
+            } catch (ClassNotFoundException e) {
+                throw new CassandraException(e);
             }
 
             if (serializer == null) {
@@ -116,9 +112,7 @@ public class CassandraDBUtils {
     public static JsonNode listOfColumnsToJSONNode(List<ColumnOrSuperColumn> listOfColumns) throws Exception {
         ObjectMapper mapper = new ObjectMapper();
         ArrayNode arrayNode = mapper.createArrayNode();
-        Iterator<ColumnOrSuperColumn> cols = listOfColumns.iterator();
-        while (cols.hasNext()) {
-            ColumnOrSuperColumn nextCol = cols.next();
+        for (ColumnOrSuperColumn nextCol : listOfColumns) {
             arrayNode.add(columnOrSuperColumnToJSONNode(nextCol));
         }
         return arrayNode;
@@ -139,16 +133,9 @@ public class CassandraDBUtils {
         return mapper.writeValueAsString(node);
     }
 
+    @SuppressWarnings({"unchecked"})
     public static ByteBuffer toByteBuffer(Object value) throws UnsupportedEncodingException {
-        if (value instanceof String) {
-            StringSerializer serializer = new StringSerializer();
-            return serializer.toByteBuffer((String) value);
-        } else if (value instanceof Double) {
-            DoubleSerializer serializer = new DoubleSerializer();
-            return serializer.toByteBuffer((Double) value);
-        } else {
-            ObjectSerializer serializer = new ObjectSerializer();
-            return serializer.toByteBuffer(value);
-        }
+        TypeInferringSerializer typeInferringSerializer = new TypeInferringSerializer();
+        return typeInferringSerializer.toByteBuffer(value);
     }
 }

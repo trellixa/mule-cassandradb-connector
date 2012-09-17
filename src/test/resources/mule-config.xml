@@ -44,8 +44,8 @@
     <flow name="testGetDataFlow">
         <cassandradb:get rowKey="#[payload:]" columnPath="ToyStores:Transformer">
             <cassandradb:column-serializers>
-                <cassandradb:column-serializer key="Section" type="string"/>
-                <cassandradb:column-serializer key="Price" type="double"/>
+                <cassandradb:column-serializer key="Section" type="java.lang.String"/>
+                <cassandradb:column-serializer key="Price" type="java.lang.Double"/>
             </cassandradb:column-serializers>
         </cassandradb:get>
         <logger level="INFO" message="************** PAYLOAD IS #[payload:]"/>
@@ -55,8 +55,8 @@
         <cassandradb:get-slice rowKey="#[payload:]" columnParent="ToyStores"
                                count="2">
             <cassandradb:column-serializers>
-                <cassandradb:column-serializer key="Section" type="string"/>
-                <cassandradb:column-serializer key="Price" type="double"/>
+                <cassandradb:column-serializer key="Section" type="java.lang.String"/>
+                <cassandradb:column-serializer key="Price" type="java.lang.Double"/>
             </cassandradb:column-serializers>
         </cassandradb:get-slice>
         <logger level="INFO" message="************** PAYLOAD IS #[payload:]"/>
