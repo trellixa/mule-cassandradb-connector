@@ -1,38 +1,22 @@
-
-WELCOME
-=======
-Congratulations you have just created a new Mule Cloud Connector!
-
-This wizard created a number of new classes and resources useful for Mule
-modules.  Each of the created files contains documentation and TODO
-items where necessary.  Here is an overview of what was created.
-
-./pom.xml:
-A maven project descriptor that describes how to build this module.
-
-./LICENSE.md:
-The open source license text for this project.
-
-TESTING
-=======
-
-This  project also contains test classes that can be run as part of a test
-suite.
-
-ADDITIONAL RESOURCES
+Mule Cassandra Module
 ====================
-Everything you need to know about getting started with Mule can be found here:
-http://www.mulesoft.org/documentation/display/MULE3INTRO/Home
 
-There further useful information about extending Mule here:
-http://www.mulesoft.org/documentation/display/DEVKIT/Home
+Mule Module support for Cassandra.
 
-Remember if you get stuck you can try getting help on the Mule user list:
-http://www.mulesoft.org/email-lists
+The Apache Cassandra database is the right choice when you need scalability and high availability without
+compromising performance. Linear scalability and proven fault-tolerance on commodity hardware or cloud infrastructure
+make it the perfect platform for mission-critical data. Cassandra's support for replicating across multiple
+datacenters is best-in-class, providing lower latency for your users and the peace of mind of knowing that
+you can survive regional outages.
 
-Also, MuleSoft, the company behind Mule, offers 24x7 support options:
-http://www.mulesoft.com/enterprise-subscriptions-and-support
 
-Enjoy your Mule ride!
+Installation and Usage
+----------------------
 
-The Mule Team
+For information about usage and installation you can check our documentation at http://mulesoft.github.com/mule-module-jpa
+
+Reporting Issues
+----------------
+
+We use GitHub:Issues for tracking issues with this module. You can report new issues at this
+link https://github.com/mulesoft/mule-module-jpa/issues
