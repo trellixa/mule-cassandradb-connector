@@ -1,0 +1,11 @@
+com.mulesoft.mule.cassandradb
+com.mulesoft.mule.cassandradb.adapters
+com.mulesoft.mule.cassandradb.agents
+com.mulesoft.mule.cassandradb.config
+com.mulesoft.mule.cassandradb.connectivity
+com.mulesoft.mule.cassandradb.holders
+com.mulesoft.mule.cassandradb.process
+com.mulesoft.mule.cassandradb.processors
+com.mulesoft.mule.cassandradb.transformers
+org.apache.cassandra.thrift.transformers
+
