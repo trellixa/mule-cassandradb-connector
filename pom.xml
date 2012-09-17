@@ -80,6 +80,31 @@
                 <artifactId>mule-devkit-maven-plugin</artifactId>
                 <version>${mule.devkit.version}</version>
             </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <version>1.0-alpha-4</version>
+                <executions>
+                    <execution>
+                        <id>enforce-maven-version</id>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                        <configuration>
+                            <rules>
+                                <requireMavenVersion>
+                                    <version>[3.0.0,)</version>
+                                </requireMavenVersion>
+                                <requireJavaVersion>
+                                    <version>[1.6.0,)</version>
+                                </requireJavaVersion>
+                            </rules>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
@@ -148,7 +173,7 @@
     </build>
 
     <dependencies>
-         <dependency>
+        <dependency>
             <groupId>org.mule</groupId>
             <artifactId>mule-core</artifactId>
             <version>${mule.version}</version>
@@ -212,7 +237,6 @@
         </dependency>
 
 
-
         <!--
         <dependency>
             <groupId>org.apache.thrift</groupId>
@@ -227,9 +251,9 @@
         </dependency>
 
         <!--<dependency>-->
-        	<!--<groupId>org.apache.cassandra</groupId>-->
-        	<!--<artifactId>cassandra-all</artifactId>-->
-        	<!--<version>1.1.0</version>-->
+        <!--<groupId>org.apache.cassandra</groupId>-->
+        <!--<artifactId>cassandra-all</artifactId>-->
+        <!--<version>1.1.0</version>-->
         <!--</dependency>-->
     </dependencies>
 
@@ -272,4 +296,15 @@
             </snapshots>
         </pluginRepository>
     </pluginRepositories>
+
+    <scm>
+        <connection>
+            scm:git:git://github.com:mulesoft/mule-module-cassandradb.git
+        </connection>
+        <developerConnection>
+            scm:git:git@github.com:mulesoft/mule-module-cassandradb.git
+        </developerConnection>
+        <url>http://github.com/mulesoft/mule-module-cassandradb</url>
+    </scm>
+
 </project>
