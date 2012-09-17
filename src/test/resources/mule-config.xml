@@ -24,10 +24,14 @@
       xmlns:json="http://www.mulesoft.org/schema/mule/json"
       xmlns:cassandradb="http://www.mulesoft.org/schema/mule/cassandradb"
       xsi:schemaLocation="
-        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
-        http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
-        http://www.mulesoft.org/schema/mule/cassandradb http://www.mulesoft.org/schema/mule/cassandradb/current/mule-cassandradb.xsd 
-        http://www.mulesoft.org/schema/mule/json http://www.mulesoft.org/schema/mule/json/current/mule-json.xsd">
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+        http://www.mulesoft.org/schema/mule/core
+        http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+        http://www.mulesoft.org/schema/mule/cassandradb
+        http://www.mulesoft.org/schema/mule/cassandradb/current/mule-cassandradb.xsd
+        http://www.mulesoft.org/schema/mule/json
+        http://www.mulesoft.org/schema/mule/json/current/mule-json.xsd">
 
     <cassandradb:config name="myCassandraDB"
                         host="localhost" port="9160"

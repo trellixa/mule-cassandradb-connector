@@ -253,7 +253,7 @@ public class CassandraDBConnector {
      * @param finish       The column name to stop the slice at.
      * @param reversed     Whether the results should be ordered in reversed order. Similar to ORDER BY blah DESC in SQL.
      * @param count        How many columns to return.
-     * @param columnSerializers Path to the column - must be in the form of ColumnFamily:SuperColumn:Column
+     * @param columnSerializers Serializers for each column
      * @return the result as a JSON node
      * @throws Exception Exception
      */
@@ -303,7 +303,7 @@ public class CassandraDBConnector {
      *
      * @param rowKey            the row key
      * @param columnPath        Path to the column - must be in the form of ColumnFamily:SuperColumn:Column
-     * @param columnSerializers Path to the column - must be in the form of ColumnFamily:SuperColumn:Column
+     * @param columnSerializers Serializers for each column
      * @return the result as a JSON node
      * @throws Exception IOException
      */
