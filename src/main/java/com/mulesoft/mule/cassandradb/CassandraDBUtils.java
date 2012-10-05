@@ -10,21 +10,25 @@
 
 package com.mulesoft.mule.cassandradb;
 
-import me.prettyprint.cassandra.serializers.*;
+import me.prettyprint.cassandra.serializers.ObjectSerializer;
+import me.prettyprint.cassandra.serializers.SerializerTypeInferer;
+import me.prettyprint.cassandra.serializers.StringSerializer;
+import me.prettyprint.cassandra.serializers.TypeInferringSerializer;
 import me.prettyprint.hector.api.Serializer;
-import org.apache.cassandra.thrift.*;
-
-import java.nio.ByteBuffer;
-
-import java.util.*;
-
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.node.ObjectNode;
-import org.codehaus.jackson.node.ArrayNode;
+import org.apache.cassandra.thrift.Column;
+import org.apache.cassandra.thrift.ColumnOrSuperColumn;
+import org.apache.cassandra.thrift.SuperColumn;
 import org.codehaus.jackson.JsonNode;
-import org.mule.api.DefaultMuleException;
+import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.node.ArrayNode;
+import org.codehaus.jackson.node.ObjectNode;
 
 import java.io.UnsupportedEncodingException;
+import java.nio.ByteBuffer;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class CassandraDBUtils {
 
@@ -72,7 +76,14 @@ public class CassandraDBUtils {
     public static Map columnOrSuperColumnToMap(ColumnOrSuperColumn columnOrSuperColumn,
                                                List<ColumnSerializer> columnSerializers) throws Exception {
 
-        Map<String, Serializer> serializerMap = CassandraDBUtils.getSerializationMap(columnSerializers);
+
+        Map<String, Serializer> serializerMap;
+
+        if (columnSerializers != null) {
+            serializerMap = CassandraDBUtils.getSerializationMap(columnSerializers);
+        } else {
+            serializerMap = new HashMap<String, Serializer>();
+        }
 
         if (columnOrSuperColumn.isSetColumn()) {
             return columnToMap(columnOrSuperColumn.getColumn());
@@ -87,7 +98,13 @@ public class CassandraDBUtils {
             List<Column> columns = superColumn.columns;
             for (Column nextColumn : columns) {
                 String name = new String(nextColumn.getName());
-                Object value = serializerMap.get(name).fromBytes(nextColumn.getValue());
+
+                Object value;
+                if (serializerMap.containsKey(name)) {
+                    value = serializerMap.get(name).fromBytes(nextColumn.getValue());
+                } else {
+                    value = new StringSerializer().fromBytes(nextColumn.getValue());
+                }
                 columnsNode.put(name, value);
             }
             superColumnNode.put(superColumnName, columnsNode);
