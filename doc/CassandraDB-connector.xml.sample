@@ -1,12 +1,121 @@
-<!-- BEGIN_INCLUDE(cassandradb:insert) -->
-    <cassandradb:insert/>    
-<!-- END_INCLUDE(cassandradb:insert) -->
+
+<!-- BEGIN_INCLUDE(cassandradb:set-query-keyspace) -->
+    <cassandradb:set-query-keyspace value="CurrentKeyspace"/>    
+<!-- END_INCLUDE(cassandradb:set-query-keyspace) -->
 <!-- BEGIN_INCLUDE(cassandradb:get) -->
-    <cassandradb:get rowKey="xyz" columnPath="ColumnFamily:SuperColumn:Column"/>    
+    <cassandradb:get rowKey="1" columnPath="ColumnFamily:SuperColumn:Column"/>    
 <!-- END_INCLUDE(cassandradb:get) -->
 <!-- BEGIN_INCLUDE(cassandradb:get-slice) -->
-    <cassandradb:get-slice rowKey="xyz" columnParent="ColumnFamily:SuperColumn" start="aaa" finish="bbb" reversed="false" count="100"/>
+    <cassandradb:get-slice rowKey="1" columnParent="ColumnFamily:SuperColumn" start="aaa" finish="bbb" reversed="false" count="100"/>
 <!-- END_INCLUDE(cassandradb:get-slice) -->
+<!-- BEGIN_INCLUDE(cassandradb:multiget-slice) -->
+    <cassandradb:multiget-slice columnParent="ColumnFamily:SuperColumn" start="aaa" finish="bbb" reversed="false" count="100">
+		<cassandradb:row-keys>
+			<cassandradb:row-key>field1</cassandradb:row-key>
+        	<cassandradb:row-key>field2</cassandradb:row-key>
+		</cassandradb:row-keys>
+    </cassandradb:multiget-slice>
+<!-- END_INCLUDE(cassandradb:multiget-slice) -->
 <!-- BEGIN_INCLUDE(cassandradb:remove) -->
-    <cassandradb:remove rowKey="xyz" columnPath="ColumnFamily:SuperColumn"/>
+    <cassandradb:remove rowKey="1" columnPath="ColumnFamily:SuperColumn"/>
 <!-- END_INCLUDE(cassandradb:remove) -->
+<!-- BEGIN_INCLUDE(cassandradb:get-count) -->
+    <cassandradb:get-count rowKey="1" columnParent="ColumnFamily:SuperColumn" start="aaa" finish="bbb" reversed="false" count="100"/>
+<!-- END_INCLUDE(cassandradb:get-count) -->
+<!-- BEGIN_INCLUDE(cassandradb:multiget-count) -->
+    <cassandradb:multiget-count columnParent="ColumnFamily:SuperColumn" start="aaa" finish="bbb" reversed="false" count="100">
+    	<cassandradb:row-keys>
+			<cassandradb:row-key>field1</cassandradb:row-key>
+        	<cassandradb:row-key>field2</cassandradb:row-key>
+		</cassandradb:row-keys>
+	</cassandradb:multiget-count>
+<!-- END_INCLUDE(cassandradb:multiget-count) -->
+<!-- BEGIN_INCLUDE(cassandradb:get-range-slices) -->
+    <cassandradb:get-range-slices columnParent="ColumnFamily:SuperColumn" start="aaa" finish="bbb" reversed="false" count="100"/>
+<!-- END_INCLUDE(cassandradb:get-range-slices) -->
+<!-- BEGIN_INCLUDE(cassandradb:get-indexed-slices) -->
+    <cassandradb:get-indexed-slices columnParent="ColumnFamily:SuperColumn" start="aaa" finish="bbb" reversed="false" count="100" clauseCount="100" clauseStartKey="BLABLABLA">
+    	<cassandradb:expression-list>
+		</cassandradb:expression-list>
+    </cassandradb:get-indexed-slices>
+<!-- END_INCLUDE(cassandradb:get-indexed-slices) -->
+<!-- BEGIN_INCLUDE(cassandradb:insert) -->
+    <cassandradb:insert rowKey="1" columnParent="columnParent" columnName="column" columnValue="value"/>    
+<!-- END_INCLUDE(cassandradb:insert) -->
+<!-- BEGIN_INCLUDE(cassandradb:batch-mutable) -->
+    <cassandradb:batch-mutable/>    
+<!-- END_INCLUDE(cassandradb:batch-mutable) -->
+<!-- BEGIN_INCLUDE(cassandradb:batch-mutable) -->
+    <cassandradb:batch-mutable/>    
+<!-- END_INCLUDE(cassandradb:batch-mutable) -->
+<!-- BEGIN_INCLUDE(cassandradb:add) -->
+    <cassandradb:batch-mutable/>    
+<!-- END_INCLUDE(cassandradb:add) -->
+<!-- BEGIN_INCLUDE(cassandradb:remove) -->
+    <cassandradb:remove rowKey="1" columnPath="ColumnFamily:SuperColumn"/>    
+<!-- END_INCLUDE(cassandradb:remove) -->
+<!-- BEGIN_INCLUDE(cassandradb:remove-counter) -->
+    <cassandradb:remove-counter rowKey="1" columnPath="ColumnFamily:SuperColumn"/>    
+<!-- END_INCLUDE(cassandradb:remove-counter) -->
+<!-- BEGIN_INCLUDE(cassandradb:truncate) -->
+    <cassandradb:truncate columnFamily="ColumnFamily:SuperColumn"/>    
+<!-- END_INCLUDE(cassandradb:truncate) -->
+<!-- BEGIN_INCLUDE(cassandradb:describe-cluster-name) -->
+    <cassandradb:describe-cluster-name/>    
+<!-- END_INCLUDE(cassandradb:describe-cluster-name) -->
+<!-- BEGIN_INCLUDE(cassandradb:describe-schema-versions) -->
+    <cassandradb:describe-schema-versions/>
+<!-- END_INCLUDE(cassandradb:describe-schema-versions) -->
+<!-- BEGIN_INCLUDE(cassandradb:describe-keyspace) -->
+    <cassandradb:describe-keyspace keyspace="Keyspace"/>    
+<!-- END_INCLUDE(cassandradb:describe-keyspace) -->
+<!-- BEGIN_INCLUDE(cassandradb:describe-keyspaces) -->
+    <cassandradb:describe-keyspaces/>    
+<!-- END_INCLUDE(cassandradb:describe-keyspaces) -->
+<!-- BEGIN_INCLUDE(cassandradb:describe-partitioner) -->
+    <cassandradb:describe-partitioner/>    
+<!-- END_INCLUDE(cassandradb:describe-partitioner) -->
+<!-- BEGIN_INCLUDE(cassandradb:describe-ring) -->
+    <cassandradb:describe-ring keyspace="Keyspace"/>    
+<!-- END_INCLUDE(cassandradb:describe-ring) -->
+<!-- BEGIN_INCLUDE(cassandradb:describe-snitch) -->
+    <cassandradb:describe-snitch/>    
+<!-- END_INCLUDE(cassandradb:describe-snitch) -->
+<!-- BEGIN_INCLUDE(cassandradb:describe-version) -->
+    <cassandradb:describe-version/>    
+<!-- END_INCLUDE(cassandradb:describe-version) -->
+<!-- BEGIN_INCLUDE(cassandradb:system-add-column-family-from-object) -->
+    <cassandradb:system-add-column-family-from-object>
+        <cassandradb:cf-definition/>
+    </cassandradb:system-add-column-family-from-object>
+<!-- END_INCLUDE(cassandradb:system-add-column-family-from-object) -->
+<!-- BEGIN_INCLUDE(cassandradb:system-add-column-family-with-params) -->
+    <cassandradb:system-add-column-family-with-params columnFamilyName="aColumn"/>
+<!-- END_INCLUDE(cassandradb:system-add-column-family-with-params) -->
+<!-- BEGIN_INCLUDE(cassandradb:system-drop-column-family) -->
+    <cassandradb:system-drop-column-family columnFamily="ColumnFamily:SuperColumn"/>    
+<!-- END_INCLUDE(cassandradb:system-drop-column-family) -->
+<!-- BEGIN_INCLUDE(cassandradb:system-add-keyspace-from-object) -->
+    <cassandradb:system-add-keyspace-from-object>
+        <cassandradb:keyspace-definition/>
+    </cassandradb:system-add-keyspace-from-object>
+<!-- END_INCLUDE(cassandradb:system-add-keyspace-from-object) -->
+<!-- BEGIN_INCLUDE(cassandradb:system-add-keyspace-with-params) -->
+    <cassandradb:system-add-keyspace-with-params keyspaceName="Keyspace"/>    
+<!-- END_INCLUDE(cassandradb:system-add-keyspace-with-params) -->
+<!-- BEGIN_INCLUDE(cassandradb:system-drop-keyspace) -->
+    <cassandradb:system-drop-keyspace keyspace="Keyspace"/>    
+<!-- END_INCLUDE(cassandradb:system-drop-keyspace) -->
+<!-- BEGIN_INCLUDE(cassandradb:system-update-keyspace) -->
+    <cassandradb:system-update-keyspace>
+        <cassandradb:keyspace-def/>
+    </cassandradb:system-update-keyspace>
+<!-- END_INCLUDE(cassandradb:system-update-keyspace) -->
+<!-- BEGIN_INCLUDE(cassandradb:system-update-column-family) -->
+    <cassandradb:system-update-column-family>
+        <cassandradb:column-family/>
+    </cassandradb:system-update-column-family>
+<!-- END_INCLUDE(cassandradb:system-update-column-family) -->
+<!-- BEGIN_INCLUDE(cassandradb:execute-cql-query) -->
+    <cassandradb:execute-cql-query query="aQuery"/>
+<!-- END_INCLUDE(cassandradb:execute-cql-query) -->

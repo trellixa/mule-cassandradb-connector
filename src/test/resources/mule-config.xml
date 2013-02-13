@@ -39,12 +39,6 @@
                         username="xxx" password="yyy"
                         consistencyLevel="ONE"/>
 
-    <flow name="testFlow">
-        <json:json-to-object-transformer returnClass="java.util.Map"/>
-        <logger level="INFO" message="************** PAYLOAD IS #[payload:]"/>
-        <cassandradb:insert/>
-    </flow>
-
     <flow name="testGetDataFlow">
         <cassandradb:get rowKey="#[payload:]" columnPath="ToyStores:Transformer">
             <cassandradb:column-serializers>
@@ -70,5 +64,9 @@
         <cassandradb:remove rowKey="#[payload:]" columnPath="ToyStores"/>
     </flow>
 
+    <flow name="testDescription">
+        <cassandradb:describe-keyspaces/>
+        <logger message="[#payload]" level="INFO" doc:name="Logger"/>
+    </flow>
 
 </mule>

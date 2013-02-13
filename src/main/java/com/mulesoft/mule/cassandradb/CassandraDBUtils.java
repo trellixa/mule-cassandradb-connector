@@ -10,26 +10,41 @@
 
 package com.mulesoft.mule.cassandradb;
 
+import java.io.UnsupportedEncodingException;
+import java.nio.ByteBuffer;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
 import me.prettyprint.cassandra.serializers.ObjectSerializer;
 import me.prettyprint.cassandra.serializers.SerializerTypeInferer;
 import me.prettyprint.cassandra.serializers.StringSerializer;
 import me.prettyprint.cassandra.serializers.TypeInferringSerializer;
 import me.prettyprint.hector.api.Serializer;
+
+import org.apache.cassandra.thrift.CfDef;
 import org.apache.cassandra.thrift.Column;
+import org.apache.cassandra.thrift.ColumnDef;
 import org.apache.cassandra.thrift.ColumnOrSuperColumn;
+import org.apache.cassandra.thrift.ColumnParent;
+import org.apache.cassandra.thrift.ColumnPath;
+import org.apache.cassandra.thrift.IndexExpression;
+import org.apache.cassandra.thrift.SliceRange;
 import org.apache.cassandra.thrift.SuperColumn;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Transformer;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.node.ArrayNode;
 import org.codehaus.jackson.node.ObjectNode;
 
-import java.io.UnsupportedEncodingException;
-import java.nio.ByteBuffer;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.mulesoft.mule.cassandradb.api.IndexExpresion;
 
+/**
+ *  Utility class to make the transformations from String and collections to the types that the API handles
+ */
 public class CassandraDBUtils {
 
     public static JsonNode columnToJSONNode(Column column) throws Exception {
@@ -42,10 +57,16 @@ public class CassandraDBUtils {
     }
 
     @SuppressWarnings({"unchecked"})
-    public static Map columnToMap(Column column) throws Exception {
-        Map result = new HashMap();
-        result.put(column.getName(), column.getValue());
-        return result;
+    public static void populateMap(Map columnMap,Column column, Map<String, Serializer> serializerMap)  {
+        String name = new String(column.getName());
+        Object value;
+        if (serializerMap.containsKey(name)) {
+            value = serializerMap.get(name).fromBytes(column.getValue());
+        } else {
+            value = new StringSerializer().fromBytes(column.getValue());
+        }
+        
+        columnMap.put(name, value);
     }
 
 
@@ -74,7 +95,7 @@ public class CassandraDBUtils {
 
     @SuppressWarnings({"unchecked"})
     public static Map columnOrSuperColumnToMap(ColumnOrSuperColumn columnOrSuperColumn,
-                                               List<ColumnSerializer> columnSerializers) throws Exception {
+                                               List<ColumnSerializer> columnSerializers)  {
 
 
         Map<String, Serializer> serializerMap;
@@ -86,7 +107,10 @@ public class CassandraDBUtils {
         }
 
         if (columnOrSuperColumn.isSetColumn()) {
-            return columnToMap(columnOrSuperColumn.getColumn());
+        	
+        	Map columnMap = new HashMap();
+        	populateMap(columnMap,columnOrSuperColumn.getColumn(),serializerMap);
+        	return columnMap;
         } else {
             SuperColumn superColumn = columnOrSuperColumn.getSuper_column();
             String superColumnName = new String(superColumn.getName());
@@ -97,15 +121,7 @@ public class CassandraDBUtils {
 
             List<Column> columns = superColumn.columns;
             for (Column nextColumn : columns) {
-                String name = new String(nextColumn.getName());
-
-                Object value;
-                if (serializerMap.containsKey(name)) {
-                    value = serializerMap.get(name).fromBytes(nextColumn.getValue());
-                } else {
-                    value = new StringSerializer().fromBytes(nextColumn.getValue());
-                }
-                columnsNode.put(name, value);
+            	populateMap(columnsNode,nextColumn,serializerMap);
             }
             superColumnNode.put(superColumnName, columnsNode);
 
@@ -147,7 +163,7 @@ public class CassandraDBUtils {
 
     @SuppressWarnings({"unchecked"})
     public static List listOfColumnsToMap(List<ColumnOrSuperColumn> listOfColumns,
-                                          List<ColumnSerializer> columnSerializers) throws Exception {
+                                          List<ColumnSerializer> columnSerializers){
         List results = new ArrayList();
         for (ColumnOrSuperColumn nextColumn : listOfColumns) {
             results.add(columnOrSuperColumnToMap(nextColumn, columnSerializers));
@@ -162,7 +178,126 @@ public class CassandraDBUtils {
 
     @SuppressWarnings({"unchecked"})
     public static ByteBuffer toByteBuffer(Object value) throws UnsupportedEncodingException {
-        TypeInferringSerializer typeInferringSerializer = new TypeInferringSerializer();
+    	if(typeInferringSerializer==null){
+    		typeInferringSerializer = new TypeInferringSerializer();
+    	}
         return typeInferringSerializer.toByteBuffer(value);
     }
+    
+    public static ColumnPath parseColumnPath(String columnPath) throws java.io.UnsupportedEncodingException {
+        String[] pathElements = columnPath.split(":");
+
+        ColumnPath cPath = new ColumnPath();
+        if (pathElements.length > 0)
+            cPath = cPath.setColumn_family(pathElements[0]);
+        if (pathElements.length > 1){
+        	if(pathElements[1].length()>0)
+                cPath = cPath.setSuper_column(CassandraDBUtils.toByteBuffer(pathElements[1]));
+        }
+        if (pathElements.length > 2){
+            cPath = cPath.setColumn(CassandraDBUtils.toByteBuffer(pathElements[2]));
+        }
+        return cPath;
+    }
+    
+	public static ColumnParent generateColumnParent(String columnParent)
+			throws UnsupportedEncodingException {
+		String[] pathElements = columnParent.split(":");
+
+        ColumnParent cParent = new ColumnParent();
+        if (pathElements.length > 0)
+            cParent = cParent.setColumn_family(pathElements[0]);
+        if (pathElements.length > 1)
+            cParent = cParent.setSuper_column(CassandraDBUtils.toByteBuffer(pathElements[1]));
+		return cParent;
+	}
+	
+	public static SliceRange generateSliceRange(String start, String finish,
+			boolean reversed, int count) throws UnsupportedEncodingException {
+		SliceRange range = new SliceRange();
+        if (start == null) {
+             range.setStart(new byte[0]);
+        } else {
+            range.setStart(CassandraDBUtils.toByteBuffer(start));
+        }
+
+        if (finish == null) {
+            range.setFinish(new byte[0]);
+        } else {
+            range.setFinish(CassandraDBUtils.toByteBuffer(finish));
+        }
+        range.setCount(count);
+        range.setReversed(reversed);
+		return range;
+	}
+	
+	private static TypeInferringSerializer typeInferringSerializer;
+
+	public static List<ByteBuffer> toByteBufferList(List<String> rowKeys) throws UnsupportedEncodingException {
+		
+		List<ByteBuffer> list = new ArrayList<ByteBuffer>();
+		
+		for(String key : rowKeys){
+			list.add(toByteBuffer(key));
+		}
+		
+		return list;
+	}
+	
+    @SuppressWarnings("unchecked")
+    public static List<IndexExpression> toIndexExpression(List<IndexExpresion> list)
+    {
+        return (List<IndexExpression>) CollectionUtils.collect((List)list, new Transformer()
+        {
+            @Override
+            public Object transform(Object input)
+            {
+            	IndexExpresion sExp= (IndexExpresion)input;
+            	IndexExpression exp = new IndexExpression();
+            	try {
+					exp.setColumn_name(CassandraDBUtils.toByteBuffer(sExp.getColumnName()));
+					exp.setOp(sExp.getOp());
+					exp.setValue(CassandraDBUtils.toByteBuffer(sExp.getValue()));
+				} catch (UnsupportedEncodingException e) {
+					e.printStackTrace();
+				}
+
+                return exp;
+            }
+        });
+    }
+    @SuppressWarnings("unchecked")
+    public static List<CfDef> toColumnDefinition(List<String> list,final String keyspace)
+    {
+        return (List<CfDef>) CollectionUtils.collect((List)list, new Transformer()
+        {
+            @Override
+            public Object transform(Object input)
+            {
+            	String name= (String)input;
+            	CfDef cfDef = new CfDef();
+            	cfDef.setKeyspace(keyspace);
+            	cfDef.setName(name);
+                return cfDef;
+            }
+        });
+    }
+
+	public static List<ColumnDef> toColumnDefinition(
+			Map<String, String> columnMetadata) {
+		List<ColumnDef> list = new ArrayList<ColumnDef>();
+		Iterator it = columnMetadata.entrySet().iterator();
+	    
+		while (it.hasNext()) {
+	        Map.Entry pairs = (Map.Entry)it.next();
+	        String key = pairs.getKey().toString();
+	        String validationClass = pairs.getValue().toString();
+	        ColumnDef cd=new ColumnDef();
+	        cd.setName(key.getBytes());
+	        cd.setValidation_class(validationClass);
+	        list.add(cd);
+	    }
+		
+	    return list;
+	}
 }

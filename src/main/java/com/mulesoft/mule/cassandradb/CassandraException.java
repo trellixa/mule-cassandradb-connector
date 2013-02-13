@@ -1,3 +1,4 @@
+package com.mulesoft.mule.cassandradb;
 /**
  * Mule Cassandra Connector
  *
@@ -8,8 +9,9 @@
  * LICENSE.txt file.
  */
 
-package com.mulesoft.mule.cassandradb;
-
+/**
+ * Cassandra Custom Exception
+ */
 
 public class CassandraException extends RuntimeException {
 
