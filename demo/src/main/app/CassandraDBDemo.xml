@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:json="http://www.mulesoft.org/schema/mule/json" xmlns:cassandradb="http://www.mulesoft.org/schema/mule/cassandradb" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:tracking="http://www.mulesoft.org/schema/mule/ee/tracking" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:spring="http://www.springframework.org/schema/beans" version="EE-3.4.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/json http://www.mulesoft.org/schema/mule/json/current/mule-json.xsd 
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd 
+http://www.mulesoft.org/schema/mule/cassandradb http://www.mulesoft.org/schema/mule/cassandradb/3.2/mule-cassandradb.xsd 
+http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/mule/ee/tracking/current/mule-tracking-ee.xsd 
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd 
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd ">
+    <cassandradb:config name="Cassandradb" username="dummy" host="localhost" keyspace="system" doc:name="Cassandradb"/>
+    <cassandradb:config name="CassandradbNuevo" username="dummy" host="localhost" keyspace="NewUserKeyspace" doc:name="Cassandradb"/>
+    <flow name="AddKeyspace" doc:name="AddKeyspace">
+        <http:inbound-endpoint exchange-pattern="request-response" host="localhost" port="8081" path="cassandra/addKeyspace" doc:name="HTTP"/>
+        <cassandradb:system-add-keyspace-with-params config-ref="Cassandradb" keyspaceName="#[message.inboundProperties['keyspace']]"  doc:name="Add-Keyspace">
+        </cassandradb:system-add-keyspace-with-params>
+        <set-payload value="New keyspaces #[message.inboundProperties['keyspace']] was added. New schema key #[payload]" doc:name="Set Payload"/>
+    </flow>
+    <flow name="Add-ColumnFamily" doc:name="Add-ColumnFamily">
+        <http:inbound-endpoint exchange-pattern="request-response" host="localhost" port="8081" path="cassandra/addColumnFamily" doc:name="HTTP"/>
+        <cassandradb:system-add-column-family-with-params config-ref="Cassandradb" columnFamilyName="#[message.inboundProperties['cfname']]" keyspace="#[message.inboundProperties['keyspace']]" doc:name="Add-ColumnFamily"/>
+        <set-payload value="Column Family #[message.inboundProperties['cfName']] was added. Schema key: #[payload]" doc:name="Set Payload"/>
+    </flow>
+    <flow name="InsertOrUpdate" doc:name="InsertOrUpdate">
+        <http:inbound-endpoint exchange-pattern="request-response" host="localhost" port="8081" path="cassandra/insert" doc:name="HTTP"/>
+        <cassandradb:insert config-ref="CassandradbNuevo" columnParent="#[message.inboundProperties['parentname']]"  rowKey="#[message.inboundProperties['key']]"  doc:name="Cassandradb" columnName="#[message.inboundProperties['colname']]" columnValue="#[message.inboundProperties['colvalue']]" ttl="0"/>
+        <set-payload value="Value inserted." doc:name="Set Payload"/>
+    </flow>
+    <flow name="GetData" doc:name="GetData">
+        <http:inbound-endpoint exchange-pattern="request-response" host="localhost" port="8081" path="cassandra/getData" doc:name="HTTP"/>
+        <cassandradb:get config-ref="CassandradbNuevo" columnPath="#[message.inboundProperties['columnPath']]" rowKey="#[message.inboundProperties['key']]" doc:name="Cassandradb"/>
+        <json:object-to-json-transformer doc:name="Object to JSON"/>
+    </flow>
+    <flow name="Remove-Row" doc:name="Remove-Row">
+        <http:inbound-endpoint exchange-pattern="request-response" host="localhost" port="8081" path="cassandra/removeRow" doc:name="HTTP"/>
+        <cassandradb:remove config-ref="CassandradbNuevo" columnPath="#[message.inboundProperties['columnpath']]" rowKey="#[message.inboundProperties['key']]" doc:name="Cassandradb"/>
+        <set-payload value="Deleted" doc:name="Set Payload"/>
+    </flow>
+    <flow name="Remove-ColumnFamily" doc:name="Remove-ColumnFamily">
+        <http:inbound-endpoint exchange-pattern="request-response" host="localhost" port="8081" path="cassandra/removecf" doc:name="HTTP"/>
+        <cassandradb:system-drop-column-family config-ref="CassandradbNuevo" columnFamily="#[message.inboundProperties['colf']]" doc:name="Cassandradb"/>
+        <set-payload value="Removed '#[message.inboundProperties['colf']]'. New schema id: #[payload]" doc:name="Set Payload"/>
+    </flow>
+    <flow name="Remove-Keyspace" doc:name="Remove-Keyspace">
+        <http:inbound-endpoint exchange-pattern="request-response" host="localhost" port="8081" path="cassandra/removeKeyspace" doc:name="HTTP"/>
+        <cassandradb:system-drop-keyspace config-ref="CassandradbNuevo" keyspace="#[message.inboundProperties['keyspace']]" doc:name="Cassandradb"/>
+        <set-payload value="Removed '#[message.inboundProperties['keyspace']]'. New schema id: #[payload]" doc:name="Set Payload"/>
+    </flow>
+    <flow name="Execute-CQL" doc:name="Execute-CQL">
+        <http:inbound-endpoint exchange-pattern="request-response" host="localhost" port="8081" path="cassandra/cqlquery" doc:name="HTTP"/>
+        <object-to-string-transformer doc:name="Object to String"/>
+        <cassandradb:execute-cql-query config-ref="CassandradbNuevo" query="#[payload]" doc:name="Execute-CQL"/>
+        <json:object-to-json-transformer doc:name="Object to JSON"/>
+    </flow>
+    <flow name="Get-Slice" doc:name="Get-Slice">
+        <http:inbound-endpoint exchange-pattern="request-response" host="localhost" port="8081" path="cassandra/getslice" doc:name="HTTP"/>
+        <cassandradb:get-slice config-ref="CassandradbNuevo" columnParent="#[message.inboundProperties['columnParent']]" rowKey="#[message.inboundProperties['key']]" doc:name="Cassandradb"/>
+        <object-to-string-transformer doc:name="Object to String"/>
+    </flow>
+</mule>
