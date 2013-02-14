@@ -794,79 +794,16 @@ public class CassandraDBConnector {
 	 * 
 	 * @param content
 	 *            A map<string, map<string, vector<Mutation>>>
-	 * @return the content
+	 *            
 	 * @throws Exception
 	 *             Exception
 	 */
 	@Processor
-	public Map batchMutable(@Optional @Default("#[payload]") Map content)
+	public void batchMutable(@Optional @Default("#[payload]") Map content)
 			throws Exception {
 		logger.debug("Batch mutable called with: " + content);
 
-		// Iterate through ColumnFamilies
-		for (Object key : content.keySet()) {
-			String nextCFName = (String) key;
-
-			Map<ByteBuffer, Map<String, List<Mutation>>> mutationsMap = new HashMap<ByteBuffer, Map<String, List<Mutation>>>();
-
-			try {
-				CfDef cfDef = new CfDef(this.getKeyspace(), nextCFName);
-				cfDef.column_type = "Super";
-				client.system_add_column_family(cfDef);
-			} catch (Exception e) {
-				// Assume CF already exists:
-				logger.warn("ColumnFamily '" + nextCFName
-						+ "' already exists; message: " + e.getMessage());
-			}
-
-			// Get SuperColumns of this CF
-			Map superColumnsMap = (Map) content.get(nextCFName);
-			// Iterate over RowKeys
-			for (Object rowKey : superColumnsMap.keySet()) {
-
-				Map<String, List<Mutation>> insertDataMap = new HashMap<String, List<Mutation>>();
-				List<Mutation> rowData = new ArrayList<Mutation>();
-
-				String nextRowKey = (String) rowKey;
-				Map nextSCMap = (Map) superColumnsMap.get(nextRowKey);
-				// Iterate over super column names
-				for (Object superColumnName : nextSCMap.keySet()) {
-					String nextSCName = (String) superColumnName;
-					List<Column> columnsList = new ArrayList<Column>();
-					// Get Map of Columns
-					Map columnsMap = (Map) nextSCMap.get(nextSCName);
-					for (Object columnName : columnsMap.keySet()) {
-						String nextColumnName = (String) columnName;
-						Object nextColumnValue = columnsMap.get(nextColumnName);
-
-						Column nextColumn = new Column(
-								CassandraDBUtils.toByteBuffer(nextColumnName));
-						nextColumn.setValue(CassandraDBUtils
-								.toByteBuffer(nextColumnValue));
-						nextColumn.setTimestamp(System.currentTimeMillis());
-						columnsList.add(nextColumn);
-					}
-
-					SuperColumn nextSuperColumn = new SuperColumn(
-							CassandraDBUtils.toByteBuffer(nextSCName),
-							columnsList);
-					ColumnOrSuperColumn columnOrSuperColumn = new ColumnOrSuperColumn();
-					columnOrSuperColumn.setSuper_column(nextSuperColumn);
-					Mutation m = new Mutation();
-					m.setColumn_or_supercolumn(columnOrSuperColumn);
-
-					rowData.add(m);
-				}
-
-				insertDataMap.put(nextCFName, rowData);
-				mutationsMap.put(CassandraDBUtils.toByteBuffer(nextRowKey),
-						insertDataMap);
-			}
-
-			client.batch_mutate(mutationsMap, this.getConsistencyLevel());
-		}
-
-		return content;
+		client.batch_mutate(content, this.getConsistencyLevel());
 	}
 
 	/**
