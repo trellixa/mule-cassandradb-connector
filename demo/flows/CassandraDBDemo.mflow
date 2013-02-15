@@ -6,7 +6,7 @@
             <property value="1" name="auxiliary;index"/>
             <property value="dummy" name="username"/>
             <property name="password"/>
-            <property value="localhost" name="host"/>
+            <property name="host"/>
             <property name="port"/>
             <property value="system" name="keyspace"/>
             <property name="consistencyLevel"/>
@@ -18,13 +18,13 @@
             <property value="2" name="auxiliary;index"/>
             <property value="dummy" name="username"/>
             <property name="password"/>
-            <property value="localhost" name="host"/>
+            <property name="host"/>
             <property name="port"/>
             <property value="NewUserKeyspace" name="keyspace"/>
             <property name="consistencyLevel"/>
         </properties>
     </global-element>
-    <flow SubFlow="false" name="AddKeyspace" entity-id="b9089f4f-e2f9-4306-b638-558cc11a9295">
+    <flow SubFlow="false" name="AddKeyspace" entity-id="9680cd4b-e085-4fb7-af3e-95ce877d1bd3">
         <properties>
             <property name="processingStrategy2"/>
             <property name="processingStrategy"/>
@@ -85,7 +85,7 @@
             </pattern>
         </lane>
     </flow>
-    <flow SubFlow="false" name="Add-ColumnFamily" entity-id="fa880de6-384a-4b0f-ac6b-8bcd17fc4dce">
+    <flow SubFlow="false" name="Batch-mutable" entity-id="d1a315f7-73d6-40b0-892b-27e61120eccb">
         <properties>
             <property name="processingStrategy2"/>
             <property name="processingStrategy"/>
@@ -100,6 +100,58 @@
                 <properties>
                     <property value="request-response" name="exchange-pattern"/>
                     <property value="8" name="auxiliary;index"/>
+                    <property value="http://www.mulesoft.org/schema/mule/http/endpoint" name="org.mule.tooling.ui.modules.core.widgets.meta.ModeAttribute"/>
+                    <property name="httpLabel"/>
+                    <property value="localhost" name="host"/>
+                    <property value="8081" name="port"/>
+                    <property name="path"/>
+                    <property name="method"/>
+                    <property name="businessEventsLabel"/>
+                    <property name="tracking:enable-default-events"/>
+                    <property name="address"/>
+                    <property name="encoding"/>
+                    <property name="disableTransportTransformer"/>
+                    <property name="mimeType"/>
+                    <property name="responseTimeout"/>
+                    <property name="followRedirects"/>
+                    <property name="connector-ref"/>
+                    <property name="ref"/>
+                    <property name="transformer-refs"/>
+                    <property name="responseTransformer-refs"/>
+                    <property name="user"/>
+                    <property name="password"/>
+                    <property name="contentType"/>
+                    <property name="keep-alive"/>
+                </properties>
+            </endpoint>
+            <pattern type="http://www.mulesoft.org/schema/mule/cassandradb/cassandradb-connector" name="Cassandradb" entity-id="Cassandradb#4">
+                <graphicalData height="0" width="0" y="0" x="0"/>
+                <properties>
+                    <property value="CassandradbNuevo" name="config-ref"/>
+                    <property value="http://www.mulesoft.org/schema/mule/cassandradb/batch-mutable" name="org.mule.tooling.ui.modules.core.widgets.meta.ModeAttribute"/>
+                    <property value="9" name="auxiliary;index"/>
+                    <property name=""/>
+                    <property name="username"/>
+                    <property name="password"/>
+                </properties>
+            </pattern>
+        </lane>
+    </flow>
+    <flow SubFlow="false" name="Add-ColumnFamily" entity-id="54b65611-ef34-46d6-a317-3cba96a5690d">
+        <properties>
+            <property name="processingStrategy2"/>
+            <property name="processingStrategy"/>
+            <property value="10" name="auxiliary;index"/>
+            <property name="bussinessEventsLabel"/>
+            <property name="tracking:enable-default-events"/>
+        </properties>
+        <lane isChoiceOtherwiseLane="false" index="0" hadOnlyOneElement="false" entity-id="compartment-lane#3">
+            <graphicalData height="0" width="0" y="0" x="0"/>
+            <endpoint message-exchange-pattern="RequestResponse" direction="Inbound" type="http://www.mulesoft.org/schema/mule/http/endpoint" name="HTTP" entity-id="HTTP#3">
+                <graphicalData height="0" width="0" y="0" x="0"/>
+                <properties>
+                    <property value="request-response" name="exchange-pattern"/>
+                    <property value="11" name="auxiliary;index"/>
                     <property value="http://www.mulesoft.org/schema/mule/http/endpoint" name="org.mule.tooling.ui.modules.core.widgets.meta.ModeAttribute"/>
                     <property name="httpLabel"/>
                     <property value="localhost" name="host"/>
@@ -124,12 +176,12 @@
                     <property name="keep-alive"/>
                 </properties>
             </endpoint>
-            <pattern type="http://www.mulesoft.org/schema/mule/cassandradb/cassandradb-connector" name="Add-ColumnFamily" entity-id="Cassandradb#4">
+            <pattern type="http://www.mulesoft.org/schema/mule/cassandradb/cassandradb-connector" name="Add-ColumnFamily" entity-id="Cassandradb#5">
                 <graphicalData height="0" width="0" y="0" x="0"/>
                 <properties>
                     <property value="Cassandradb" name="config-ref"/>
                     <property value="http://www.mulesoft.org/schema/mule/cassandradb/system-add-column-family-with-params" name="org.mule.tooling.ui.modules.core.widgets.meta.ModeAttribute"/>
-                    <property value="9" name="auxiliary;index"/>
+                    <property value="12" name="auxiliary;index"/>
                     <property value="#[message.inboundProperties['cfname']]" name="columnFamilyName"/>
                     <property name="comparatorType"/>
                     <property name="defaultValidationClass"/>
@@ -144,26 +196,26 @@
                 <graphicalData height="0" width="0" y="0" x="0"/>
                 <properties>
                     <property value="Column Family #[message.inboundProperties['cfName']] was added. Schema key: #[payload]" name="value"/>
-                    <property value="10" name="auxiliary;index"/>
+                    <property value="13" name="auxiliary;index"/>
                 </properties>
             </pattern>
         </lane>
     </flow>
-    <flow SubFlow="false" name="InsertOrUpdate" entity-id="c31167bd-67b3-4ad2-b4a0-325a57b40ec4">
+    <flow SubFlow="false" name="InsertOrUpdate" entity-id="418d0b59-78b5-4b44-8af6-cea63364b59d">
         <properties>
             <property name="processingStrategy2"/>
             <property name="processingStrategy"/>
-            <property value="11" name="auxiliary;index"/>
+            <property value="14" name="auxiliary;index"/>
             <property name="bussinessEventsLabel"/>
             <property name="tracking:enable-default-events"/>
         </properties>
-        <lane isChoiceOtherwiseLane="false" index="0" hadOnlyOneElement="false" entity-id="compartment-lane#3">
+        <lane isChoiceOtherwiseLane="false" index="0" hadOnlyOneElement="false" entity-id="compartment-lane#4">
             <graphicalData height="0" width="0" y="0" x="0"/>
-            <endpoint message-exchange-pattern="RequestResponse" direction="Inbound" type="http://www.mulesoft.org/schema/mule/http/endpoint" name="HTTP" entity-id="HTTP#3">
+            <endpoint message-exchange-pattern="RequestResponse" direction="Inbound" type="http://www.mulesoft.org/schema/mule/http/endpoint" name="HTTP" entity-id="HTTP#4">
                 <graphicalData height="0" width="0" y="0" x="0"/>
                 <properties>
                     <property value="request-response" name="exchange-pattern"/>
-                    <property value="12" name="auxiliary;index"/>
+                    <property value="15" name="auxiliary;index"/>
                     <property value="http://www.mulesoft.org/schema/mule/http/endpoint" name="org.mule.tooling.ui.modules.core.widgets.meta.ModeAttribute"/>
                     <property name="httpLabel"/>
                     <property value="localhost" name="host"/>
@@ -188,17 +240,17 @@
                     <property name="keep-alive"/>
                 </properties>
             </endpoint>
-            <pattern type="http://www.mulesoft.org/schema/mule/cassandradb/cassandradb-connector" name="Cassandradb" entity-id="Cassandradb#5">
+            <pattern type="http://www.mulesoft.org/schema/mule/cassandradb/cassandradb-connector" name="Cassandradb" entity-id="Cassandradb#6">
                 <graphicalData height="0" width="0" y="0" x="0"/>
                 <properties>
                     <property value="CassandradbNuevo" name="config-ref"/>
                     <property value="http://www.mulesoft.org/schema/mule/cassandradb/insert" name="org.mule.tooling.ui.modules.core.widgets.meta.ModeAttribute"/>
-                    <property value="13" name="auxiliary;index"/>
+                    <property value="16" name="auxiliary;index"/>
                     <property value="#[message.inboundProperties['colname']]" name="columnName"/>
                     <property value="#[message.inboundProperties['parentname']]" name="columnParent"/>
                     <property value="#[message.inboundProperties['colvalue']]" name="columnValue"/>
                     <property value="#[message.inboundProperties['key']]" name="rowKey"/>
-                    <property value="0" name="ttl"/>
+                    <property name="ttl"/>
                     <property name=""/>
                     <property name="username"/>
                     <property name="password"/>
@@ -208,26 +260,26 @@
                 <graphicalData height="0" width="0" y="0" x="0"/>
                 <properties>
                     <property value="Value inserted." name="value"/>
-                    <property value="14" name="auxiliary;index"/>
+                    <property value="17" name="auxiliary;index"/>
                 </properties>
             </pattern>
         </lane>
     </flow>
-    <flow SubFlow="false" name="GetData" entity-id="246fb201-f1d8-4084-a114-0a0bcb8148b5">
+    <flow SubFlow="false" name="GetData" entity-id="53799ee3-b37f-4ebc-82cd-138643a4e16b">
         <properties>
             <property name="processingStrategy2"/>
             <property name="processingStrategy"/>
-            <property value="15" name="auxiliary;index"/>
+            <property value="18" name="auxiliary;index"/>
             <property name="bussinessEventsLabel"/>
             <property name="tracking:enable-default-events"/>
         </properties>
-        <lane isChoiceOtherwiseLane="false" index="0" hadOnlyOneElement="false" entity-id="compartment-lane#4">
+        <lane isChoiceOtherwiseLane="false" index="0" hadOnlyOneElement="false" entity-id="compartment-lane#5">
             <graphicalData height="0" width="0" y="0" x="0"/>
-            <endpoint message-exchange-pattern="RequestResponse" direction="Inbound" type="http://www.mulesoft.org/schema/mule/http/endpoint" name="HTTP" entity-id="HTTP#4">
+            <endpoint message-exchange-pattern="RequestResponse" direction="Inbound" type="http://www.mulesoft.org/schema/mule/http/endpoint" name="HTTP" entity-id="HTTP#5">
                 <graphicalData height="0" width="0" y="0" x="0"/>
                 <properties>
                     <property value="request-response" name="exchange-pattern"/>
-                    <property value="16" name="auxiliary;index"/>
+                    <property value="19" name="auxiliary;index"/>
                     <property value="http://www.mulesoft.org/schema/mule/http/endpoint" name="org.mule.tooling.ui.modules.core.widgets.meta.ModeAttribute"/>
                     <property name="httpLabel"/>
                     <property value="localhost" name="host"/>
@@ -252,12 +304,12 @@
                     <property name="keep-alive"/>
                 </properties>
             </endpoint>
-            <pattern type="http://www.mulesoft.org/schema/mule/cassandradb/cassandradb-connector" name="Cassandradb" entity-id="Cassandradb#6">
+            <pattern type="http://www.mulesoft.org/schema/mule/cassandradb/cassandradb-connector" name="Cassandradb" entity-id="Cassandradb#7">
                 <graphicalData height="0" width="0" y="0" x="0"/>
                 <properties>
                     <property value="CassandradbNuevo" name="config-ref"/>
                     <property value="http://www.mulesoft.org/schema/mule/cassandradb/get" name="org.mule.tooling.ui.modules.core.widgets.meta.ModeAttribute"/>
-                    <property value="17" name="auxiliary;index"/>
+                    <property value="20" name="auxiliary;index"/>
                     <property value="#[message.inboundProperties['columnPath']]" name="columnPath"/>
                     <property value="#[message.inboundProperties['key']]" name="rowKey"/>
                     <property name=""/>
@@ -271,7 +323,7 @@
                     <property name="returnClass"/>
                     <property name="ignoreBadInput"/>
                     <property name="encoding"/>
-                    <property value="18" name="auxiliary;index"/>
+                    <property value="21" name="auxiliary;index"/>
                     <property name="mimeType"/>
                     <property name="mapper-ref"/>
                     <property name="sourceClass"/>
@@ -279,21 +331,21 @@
             </pattern>
         </lane>
     </flow>
-    <flow SubFlow="false" name="Remove-Row" entity-id="82483d90-6e1a-4336-b828-0531149022ce">
+    <flow SubFlow="false" name="Remove-Row" entity-id="0d911c7e-9a9e-4493-8eee-d51f08f86bb9">
         <properties>
             <property name="processingStrategy2"/>
             <property name="processingStrategy"/>
-            <property value="19" name="auxiliary;index"/>
+            <property value="22" name="auxiliary;index"/>
             <property name="bussinessEventsLabel"/>
             <property name="tracking:enable-default-events"/>
         </properties>
-        <lane isChoiceOtherwiseLane="false" index="0" hadOnlyOneElement="false" entity-id="compartment-lane#5">
+        <lane isChoiceOtherwiseLane="false" index="0" hadOnlyOneElement="false" entity-id="compartment-lane#6">
             <graphicalData height="0" width="0" y="0" x="0"/>
-            <endpoint message-exchange-pattern="RequestResponse" direction="Inbound" type="http://www.mulesoft.org/schema/mule/http/endpoint" name="HTTP" entity-id="HTTP#5">
+            <endpoint message-exchange-pattern="RequestResponse" direction="Inbound" type="http://www.mulesoft.org/schema/mule/http/endpoint" name="HTTP" entity-id="HTTP#6">
                 <graphicalData height="0" width="0" y="0" x="0"/>
                 <properties>
                     <property value="request-response" name="exchange-pattern"/>
-                    <property value="20" name="auxiliary;index"/>
+                    <property value="23" name="auxiliary;index"/>
                     <property value="http://www.mulesoft.org/schema/mule/http/endpoint" name="org.mule.tooling.ui.modules.core.widgets.meta.ModeAttribute"/>
                     <property name="httpLabel"/>
                     <property value="localhost" name="host"/>
@@ -318,12 +370,12 @@
                     <property name="keep-alive"/>
                 </properties>
             </endpoint>
-            <pattern type="http://www.mulesoft.org/schema/mule/cassandradb/cassandradb-connector" name="Cassandradb" entity-id="Cassandradb#7">
+            <pattern type="http://www.mulesoft.org/schema/mule/cassandradb/cassandradb-connector" name="Cassandradb" entity-id="Cassandradb#8">
                 <graphicalData height="0" width="0" y="0" x="0"/>
                 <properties>
                     <property value="CassandradbNuevo" name="config-ref"/>
                     <property value="http://www.mulesoft.org/schema/mule/cassandradb/remove" name="org.mule.tooling.ui.modules.core.widgets.meta.ModeAttribute"/>
-                    <property value="21" name="auxiliary;index"/>
+                    <property value="24" name="auxiliary;index"/>
                     <property value="#[message.inboundProperties['columnpath']]" name="columnPath"/>
                     <property value="#[message.inboundProperties['key']]" name="rowKey"/>
                     <property name=""/>
@@ -335,26 +387,26 @@
                 <graphicalData height="0" width="0" y="0" x="0"/>
                 <properties>
                     <property value="Deleted" name="value"/>
-                    <property value="22" name="auxiliary;index"/>
+                    <property value="25" name="auxiliary;index"/>
                 </properties>
             </pattern>
         </lane>
     </flow>
-    <flow SubFlow="false" name="Remove-ColumnFamily" entity-id="1ab68f94-6a6c-41ed-bba1-b23921dbbbfe">
+    <flow SubFlow="false" name="Remove-ColumnFamily" entity-id="dfde3655-b67b-4b40-8dfc-a675daf64141">
         <properties>
             <property name="processingStrategy2"/>
             <property name="processingStrategy"/>
-            <property value="23" name="auxiliary;index"/>
+            <property value="26" name="auxiliary;index"/>
             <property name="bussinessEventsLabel"/>
             <property name="tracking:enable-default-events"/>
         </properties>
-        <lane isChoiceOtherwiseLane="false" index="0" hadOnlyOneElement="false" entity-id="compartment-lane#6">
+        <lane isChoiceOtherwiseLane="false" index="0" hadOnlyOneElement="false" entity-id="compartment-lane#7">
             <graphicalData height="0" width="0" y="0" x="0"/>
-            <endpoint message-exchange-pattern="RequestResponse" direction="Inbound" type="http://www.mulesoft.org/schema/mule/http/endpoint" name="HTTP" entity-id="HTTP#6">
+            <endpoint message-exchange-pattern="RequestResponse" direction="Inbound" type="http://www.mulesoft.org/schema/mule/http/endpoint" name="HTTP" entity-id="HTTP#7">
                 <graphicalData height="0" width="0" y="0" x="0"/>
                 <properties>
                     <property value="request-response" name="exchange-pattern"/>
-                    <property value="24" name="auxiliary;index"/>
+                    <property value="27" name="auxiliary;index"/>
                     <property value="http://www.mulesoft.org/schema/mule/http/endpoint" name="org.mule.tooling.ui.modules.core.widgets.meta.ModeAttribute"/>
                     <property name="httpLabel"/>
                     <property value="localhost" name="host"/>
@@ -379,12 +431,12 @@
                     <property name="keep-alive"/>
                 </properties>
             </endpoint>
-            <pattern type="http://www.mulesoft.org/schema/mule/cassandradb/cassandradb-connector" name="Cassandradb" entity-id="Cassandradb#8">
+            <pattern type="http://www.mulesoft.org/schema/mule/cassandradb/cassandradb-connector" name="Cassandradb" entity-id="Cassandradb#9">
                 <graphicalData height="0" width="0" y="0" x="0"/>
                 <properties>
                     <property value="CassandradbNuevo" name="config-ref"/>
                     <property value="http://www.mulesoft.org/schema/mule/cassandradb/system-drop-column-family" name="org.mule.tooling.ui.modules.core.widgets.meta.ModeAttribute"/>
-                    <property value="25" name="auxiliary;index"/>
+                    <property value="28" name="auxiliary;index"/>
                     <property value="#[message.inboundProperties['colf']]" name="columnFamily"/>
                     <property name=""/>
                     <property name="username"/>
@@ -395,26 +447,26 @@
                 <graphicalData height="0" width="0" y="0" x="0"/>
                 <properties>
                     <property value="Removed '#[message.inboundProperties['colf']]'. New schema id: #[payload]" name="value"/>
-                    <property value="26" name="auxiliary;index"/>
+                    <property value="29" name="auxiliary;index"/>
                 </properties>
             </pattern>
         </lane>
     </flow>
-    <flow SubFlow="false" name="Remove-Keyspace" entity-id="1afd8a8b-f1ad-4910-90b7-a236a1bd20b5">
+    <flow SubFlow="false" name="Remove-Keyspace" entity-id="0f83d508-6b1c-4ef0-8b97-fa722f66bd3d">
         <properties>
             <property name="processingStrategy2"/>
             <property name="processingStrategy"/>
-            <property value="27" name="auxiliary;index"/>
+            <property value="30" name="auxiliary;index"/>
             <property name="bussinessEventsLabel"/>
             <property name="tracking:enable-default-events"/>
         </properties>
-        <lane isChoiceOtherwiseLane="false" index="0" hadOnlyOneElement="false" entity-id="compartment-lane#7">
+        <lane isChoiceOtherwiseLane="false" index="0" hadOnlyOneElement="false" entity-id="compartment-lane#8">
             <graphicalData height="0" width="0" y="0" x="0"/>
-            <endpoint message-exchange-pattern="RequestResponse" direction="Inbound" type="http://www.mulesoft.org/schema/mule/http/endpoint" name="HTTP" entity-id="HTTP#7">
+            <endpoint message-exchange-pattern="RequestResponse" direction="Inbound" type="http://www.mulesoft.org/schema/mule/http/endpoint" name="HTTP" entity-id="HTTP#8">
                 <graphicalData height="0" width="0" y="0" x="0"/>
                 <properties>
                     <property value="request-response" name="exchange-pattern"/>
-                    <property value="28" name="auxiliary;index"/>
+                    <property value="31" name="auxiliary;index"/>
                     <property value="http://www.mulesoft.org/schema/mule/http/endpoint" name="org.mule.tooling.ui.modules.core.widgets.meta.ModeAttribute"/>
                     <property name="httpLabel"/>
                     <property value="localhost" name="host"/>
@@ -439,12 +491,12 @@
                     <property name="keep-alive"/>
                 </properties>
             </endpoint>
-            <pattern type="http://www.mulesoft.org/schema/mule/cassandradb/cassandradb-connector" name="Cassandradb" entity-id="Cassandradb#9">
+            <pattern type="http://www.mulesoft.org/schema/mule/cassandradb/cassandradb-connector" name="Cassandradb" entity-id="Cassandradb#10">
                 <graphicalData height="0" width="0" y="0" x="0"/>
                 <properties>
                     <property value="CassandradbNuevo" name="config-ref"/>
                     <property value="http://www.mulesoft.org/schema/mule/cassandradb/system-drop-keyspace" name="org.mule.tooling.ui.modules.core.widgets.meta.ModeAttribute"/>
-                    <property value="29" name="auxiliary;index"/>
+                    <property value="32" name="auxiliary;index"/>
                     <property value="#[message.inboundProperties['keyspace']]" name="keyspace"/>
                     <property name=""/>
                     <property name="username"/>
@@ -455,26 +507,26 @@
                 <graphicalData height="0" width="0" y="0" x="0"/>
                 <properties>
                     <property value="Removed '#[message.inboundProperties['keyspace']]'. New schema id: #[payload]" name="value"/>
-                    <property value="30" name="auxiliary;index"/>
+                    <property value="33" name="auxiliary;index"/>
                 </properties>
             </pattern>
         </lane>
     </flow>
-    <flow SubFlow="false" name="Execute-CQL" entity-id="12c81b68-c1ef-4d2a-9508-cea7c080bfaa">
+    <flow SubFlow="false" name="Execute-CQL" entity-id="23cf9058-e635-4798-9ad0-fbd6e501fa77">
         <properties>
             <property name="processingStrategy2"/>
             <property name="processingStrategy"/>
-            <property value="31" name="auxiliary;index"/>
+            <property value="34" name="auxiliary;index"/>
             <property name="bussinessEventsLabel"/>
             <property name="tracking:enable-default-events"/>
         </properties>
-        <lane isChoiceOtherwiseLane="false" index="0" hadOnlyOneElement="false" entity-id="compartment-lane#8">
+        <lane isChoiceOtherwiseLane="false" index="0" hadOnlyOneElement="false" entity-id="compartment-lane#9">
             <graphicalData height="0" width="0" y="0" x="0"/>
-            <endpoint message-exchange-pattern="RequestResponse" direction="Inbound" type="http://www.mulesoft.org/schema/mule/http/endpoint" name="HTTP" entity-id="HTTP#8">
+            <endpoint message-exchange-pattern="RequestResponse" direction="Inbound" type="http://www.mulesoft.org/schema/mule/http/endpoint" name="HTTP" entity-id="HTTP#9">
                 <graphicalData height="0" width="0" y="0" x="0"/>
                 <properties>
                     <property value="request-response" name="exchange-pattern"/>
-                    <property value="32" name="auxiliary;index"/>
+                    <property value="35" name="auxiliary;index"/>
                     <property value="http://www.mulesoft.org/schema/mule/http/endpoint" name="org.mule.tooling.ui.modules.core.widgets.meta.ModeAttribute"/>
                     <property name="httpLabel"/>
                     <property value="localhost" name="host"/>
@@ -505,16 +557,16 @@
                     <property name="returnClass"/>
                     <property name="ignoreBadInput"/>
                     <property name="encoding"/>
-                    <property value="33" name="auxiliary;index"/>
+                    <property value="36" name="auxiliary;index"/>
                     <property name="mimeType"/>
                 </properties>
             </pattern>
-            <pattern type="http://www.mulesoft.org/schema/mule/cassandradb/cassandradb-connector" name="Execute-CQL" entity-id="Cassandradb#10">
+            <pattern type="http://www.mulesoft.org/schema/mule/cassandradb/cassandradb-connector" name="Execute-CQL" entity-id="Cassandradb#11">
                 <graphicalData height="0" width="0" y="0" x="0"/>
                 <properties>
                     <property value="CassandradbNuevo" name="config-ref"/>
                     <property value="http://www.mulesoft.org/schema/mule/cassandradb/execute-cql-query" name="org.mule.tooling.ui.modules.core.widgets.meta.ModeAttribute"/>
-                    <property value="34" name="auxiliary;index"/>
+                    <property value="37" name="auxiliary;index"/>
                     <property value="#[payload]" name="query"/>
                     <property name="compression"/>
                     <property name=""/>
@@ -528,7 +580,7 @@
                     <property name="returnClass"/>
                     <property name="ignoreBadInput"/>
                     <property name="encoding"/>
-                    <property value="35" name="auxiliary;index"/>
+                    <property value="38" name="auxiliary;index"/>
                     <property name="mimeType"/>
                     <property name="mapper-ref"/>
                     <property name="sourceClass"/>
@@ -536,21 +588,342 @@
             </pattern>
         </lane>
     </flow>
-    <flow SubFlow="false" name="Get-Slice" entity-id="cc84e2b7-6423-4f0b-989e-58f8c9555e47">
+    <flow SubFlow="false" name="Add-keyspace-from-object" entity-id="4d4fedfd-7e7a-4475-a647-b0fd33d0fc15">
         <properties>
             <property name="processingStrategy2"/>
             <property name="processingStrategy"/>
-            <property value="36" name="auxiliary;index"/>
+            <property value="39" name="auxiliary;index"/>
             <property name="bussinessEventsLabel"/>
             <property name="tracking:enable-default-events"/>
         </properties>
-        <lane isChoiceOtherwiseLane="false" index="0" hadOnlyOneElement="false" entity-id="compartment-lane#9">
+        <lane isChoiceOtherwiseLane="false" index="0" hadOnlyOneElement="false" entity-id="compartment-lane#10">
             <graphicalData height="0" width="0" y="0" x="0"/>
-            <endpoint message-exchange-pattern="RequestResponse" direction="Inbound" type="http://www.mulesoft.org/schema/mule/http/endpoint" name="HTTP" entity-id="HTTP#9">
+            <endpoint message-exchange-pattern="RequestResponse" direction="Inbound" type="http://www.mulesoft.org/schema/mule/http/endpoint" name="HTTP" entity-id="HTTP#10">
                 <graphicalData height="0" width="0" y="0" x="0"/>
                 <properties>
                     <property value="request-response" name="exchange-pattern"/>
-                    <property value="37" name="auxiliary;index"/>
+                    <property value="40" name="auxiliary;index"/>
+                    <property value="http://www.mulesoft.org/schema/mule/http/endpoint" name="org.mule.tooling.ui.modules.core.widgets.meta.ModeAttribute"/>
+                    <property name="httpLabel"/>
+                    <property value="localhost" name="host"/>
+                    <property value="8081" name="port"/>
+                    <property value="test" name="path"/>
+                    <property name="method"/>
+                    <property name="businessEventsLabel"/>
+                    <property name="tracking:enable-default-events"/>
+                    <property name="address"/>
+                    <property name="encoding"/>
+                    <property name="disableTransportTransformer"/>
+                    <property name="mimeType"/>
+                    <property name="responseTimeout"/>
+                    <property name="followRedirects"/>
+                    <property name="connector-ref"/>
+                    <property name="ref"/>
+                    <property name="transformer-refs"/>
+                    <property name="responseTransformer-refs"/>
+                    <property name="user"/>
+                    <property name="password"/>
+                    <property name="contentType"/>
+                    <property name="keep-alive"/>
+                </properties>
+            </endpoint>
+            <pattern type="http://www.mulesoft.org/schema/mule/cassandradb/cassandradb-connector" name="Cassandradb" entity-id="Cassandradb#12">
+                <graphicalData height="0" width="0" y="0" x="0"/>
+                <properties>
+                    <property value="CassandradbNuevo" name="config-ref"/>
+                    <property value="http://www.mulesoft.org/schema/mule/cassandradb/system-add-keyspace-from-object" name="org.mule.tooling.ui.modules.core.widgets.meta.ModeAttribute"/>
+                    <property value="41" name="auxiliary;index"/>
+                    <property name=""/>
+                    <property name="username"/>
+                    <property name="password"/>
+                    <property-collection name="@http://www.mulesoft.org/schema/mule/cassandradb/keyspace-definition;0">
+                        <property value="true" name="durable_writes"/>
+                        <property value="org.apache.cassandra.locator.SimpleStrategy" name="strategy_class"/>
+                        <property value="WTF" name="name"/>
+                        <property value="1" name="replication_factor"/>
+                        <property value="42" name="auxiliary;wrapIn"/>
+                        <property value="42" name="auxiliary;index"/>
+                        <property-collection name="@http://www.mulesoft.org/schema/mule/cassandradb/configurable-cf_defss;1">
+                            <property value="45" name="auxiliary;wrapIn"/>
+                            <property value="45" name="auxiliary;index"/>
+                        </property-collection>
+                        <property-collection name="@http://www.mulesoft.org/schema/mule/cassandradb/configurable-strategy_optionss;1">
+                            <property value="43" name="auxiliary;wrapIn"/>
+                            <property value="43" name="auxiliary;index"/>
+                            <property-collection name="@http://www.mulesoft.org/schema/mule/cassandradb/configurable-strategy_options;1">
+<property value="1" name="value"/>
+<property value="44" name="auxiliary;wrapIn"/>
+<property value="44" name="auxiliary;index"/>
+<property value="replication_factor" name="key"/>
+                            </property-collection>
+                        </property-collection>
+                    </property-collection>
+                </properties>
+            </pattern>
+        </lane>
+    </flow>
+    <flow SubFlow="false" name="Add-column-family-from-object" entity-id="ab7a7254-ae84-4adb-971d-03ed2d14c352">
+        <properties>
+            <property name="processingStrategy2"/>
+            <property name="processingStrategy"/>
+            <property value="46" name="auxiliary;index"/>
+            <property name="bussinessEventsLabel"/>
+            <property name="tracking:enable-default-events"/>
+        </properties>
+        <lane isChoiceOtherwiseLane="false" index="0" hadOnlyOneElement="false" entity-id="compartment-lane#11">
+            <graphicalData height="0" width="0" y="0" x="0"/>
+            <endpoint message-exchange-pattern="RequestResponse" direction="Inbound" type="http://www.mulesoft.org/schema/mule/http/endpoint" name="HTTP" entity-id="HTTP#11">
+                <graphicalData height="0" width="0" y="0" x="0"/>
+                <properties>
+                    <property value="request-response" name="exchange-pattern"/>
+                    <property value="47" name="auxiliary;index"/>
+                    <property value="http://www.mulesoft.org/schema/mule/http/endpoint" name="org.mule.tooling.ui.modules.core.widgets.meta.ModeAttribute"/>
+                    <property name="httpLabel"/>
+                    <property value="localhost" name="host"/>
+                    <property value="8081" name="port"/>
+                    <property value="test2" name="path"/>
+                    <property name="method"/>
+                    <property name="businessEventsLabel"/>
+                    <property name="tracking:enable-default-events"/>
+                    <property name="address"/>
+                    <property name="encoding"/>
+                    <property name="disableTransportTransformer"/>
+                    <property name="mimeType"/>
+                    <property name="responseTimeout"/>
+                    <property name="followRedirects"/>
+                    <property name="connector-ref"/>
+                    <property name="ref"/>
+                    <property name="transformer-refs"/>
+                    <property name="responseTransformer-refs"/>
+                    <property name="user"/>
+                    <property name="password"/>
+                    <property name="contentType"/>
+                    <property name="keep-alive"/>
+                </properties>
+            </endpoint>
+            <pattern type="http://www.mulesoft.org/schema/mule/cassandradb/cassandradb-connector" name="Cassandradb" entity-id="Cassandradb#13">
+                <graphicalData height="0" width="0" y="0" x="0"/>
+                <properties>
+                    <property value="CassandradbNuevo" name="config-ref"/>
+                    <property value="http://www.mulesoft.org/schema/mule/cassandradb/system-add-column-family-from-object" name="org.mule.tooling.ui.modules.core.widgets.meta.ModeAttribute"/>
+                    <property value="48" name="auxiliary;index"/>
+                    <property name=""/>
+                    <property name="username"/>
+                    <property name="password"/>
+                    <property-collection name="@http://www.mulesoft.org/schema/mule/cassandradb/cf-definition;0">
+                        <property value="100" name="min_compaction_threshold"/>
+                        <property value="0.5" name="read_repair_chance"/>
+                        <property value="0" name="key_cache_save_period_in_seconds"/>
+                        <property value="0.5" name="merge_shards_chance"/>
+                        <property value="0" name="row_cache_keys_to_save"/>
+                        <property value="UTF8Type" name="comparator_type"/>
+                        <property value="64" name="key_cache_size"/>
+                        <property value="120" name="gc_grace_seconds"/>
+                        <property value="64" name="row_cache_size"/>
+                        <property value="1" name="id"/>
+                        <property value="1000" name="max_compaction_threshold"/>
+                        <property value="WTF" name="keyspace"/>
+                        <property value="ColumnFamilyName" name="name"/>
+                        <property value="49" name="auxiliary;wrapIn"/>
+                        <property value="49" name="auxiliary;index"/>
+                        <property value="0" name="row_cache_save_period_in_seconds"/>
+                        <property-collection name="@http://www.mulesoft.org/schema/mule/cassandradb/configurable-column_metadatas;1">
+                            <property value="50" name="auxiliary;wrapIn"/>
+                            <property value="50" name="auxiliary;index"/>
+                            <property-collection name="@http://www.mulesoft.org/schema/mule/cassandradb/configurable-column_metadata;1">
+<property value="" name="value"/>
+<property value="51" name="auxiliary;wrapIn"/>
+<property value="51" name="auxiliary;index"/>
+                            </property-collection>
+                        </property-collection>
+                    </property-collection>
+                </properties>
+            </pattern>
+        </lane>
+    </flow>
+    <flow SubFlow="false" name="Add-column-family-from-object-with-names" entity-id="d36efda0-1581-4183-b1ee-760eefc829a9">
+        <properties>
+            <property name="processingStrategy2"/>
+            <property name="processingStrategy"/>
+            <property value="52" name="auxiliary;index"/>
+            <property name="bussinessEventsLabel"/>
+            <property name="tracking:enable-default-events"/>
+        </properties>
+        <lane isChoiceOtherwiseLane="false" index="0" hadOnlyOneElement="false" entity-id="compartment-lane#12">
+            <graphicalData height="0" width="0" y="0" x="0"/>
+            <endpoint message-exchange-pattern="RequestResponse" direction="Inbound" type="http://www.mulesoft.org/schema/mule/http/endpoint" name="HTTP" entity-id="HTTP#12">
+                <graphicalData height="0" width="0" y="0" x="0"/>
+                <properties>
+                    <property value="request-response" name="exchange-pattern"/>
+                    <property value="53" name="auxiliary;index"/>
+                    <property value="http://www.mulesoft.org/schema/mule/http/endpoint" name="org.mule.tooling.ui.modules.core.widgets.meta.ModeAttribute"/>
+                    <property name="httpLabel"/>
+                    <property value="localhost" name="host"/>
+                    <property value="8081" name="port"/>
+                    <property value="test3" name="path"/>
+                    <property name="method"/>
+                    <property name="businessEventsLabel"/>
+                    <property name="tracking:enable-default-events"/>
+                    <property name="address"/>
+                    <property name="encoding"/>
+                    <property name="disableTransportTransformer"/>
+                    <property name="mimeType"/>
+                    <property name="responseTimeout"/>
+                    <property name="followRedirects"/>
+                    <property name="connector-ref"/>
+                    <property name="ref"/>
+                    <property name="transformer-refs"/>
+                    <property name="responseTransformer-refs"/>
+                    <property name="user"/>
+                    <property name="password"/>
+                    <property name="contentType"/>
+                    <property name="keep-alive"/>
+                </properties>
+            </endpoint>
+            <pattern type="http://www.mulesoft.org/schema/mule/cassandradb/cassandradb-connector" name="Cassandradb" entity-id="Cassandradb#14">
+                <graphicalData height="0" width="0" y="0" x="0"/>
+                <properties>
+                    <property value="CassandradbNuevo" name="config-ref"/>
+                    <property value="http://www.mulesoft.org/schema/mule/cassandradb/system-add-column-family-from-object-with-simple-names" name="org.mule.tooling.ui.modules.core.widgets.meta.ModeAttribute"/>
+                    <property value="54" name="auxiliary;index"/>
+                    <property name=""/>
+                    <property name="username"/>
+                    <property name="password"/>
+                    <property-collection name="@http://www.mulesoft.org/schema/mule/cassandradb/cf-definition;0">
+                        <property value="100" name="min_compaction_threshold"/>
+                        <property value="0.5" name="read_repair_chance"/>
+                        <property value="0" name="key_cache_save_period_in_seconds"/>
+                        <property value="0.5" name="merge_shards_chance"/>
+                        <property value="0" name="row_cache_keys_to_save"/>
+                        <property value="UTF8Type" name="comparator_type"/>
+                        <property value="64" name="key_cache_size"/>
+                        <property value="120" name="gc_grace_seconds"/>
+                        <property value="64" name="row_cache_size"/>
+                        <property value="1" name="id"/>
+                        <property value="1000" name="max_compaction_threshold"/>
+                        <property value="WTF" name="keyspace"/>
+                        <property value="ColumnFamilyName3" name="name"/>
+                        <property value="55" name="auxiliary;wrapIn"/>
+                        <property value="55" name="auxiliary;index"/>
+                        <property value="0" name="row_cache_save_period_in_seconds"/>
+                        <property-collection name="@http://www.mulesoft.org/schema/mule/cassandradb/configurable-column_metadatas;1">
+                            <property value="56" name="auxiliary;wrapIn"/>
+                            <property value="56" name="auxiliary;index"/>
+                            <property-collection name="@http://www.mulesoft.org/schema/mule/cassandradb/configurable-column_metadata;1">
+<property value="" name="value"/>
+<property value="57" name="auxiliary;wrapIn"/>
+<property value="57" name="auxiliary;index"/>
+                            </property-collection>
+                            <property-collection name="@http://www.mulesoft.org/schema/mule/cassandradb/configurable-column_metadata;2">
+<property value="" name="value"/>
+<property value="58" name="auxiliary;wrapIn"/>
+<property value="58" name="auxiliary;index"/>
+                            </property-collection>
+                        </property-collection>
+                    </property-collection>
+                    <property-collection name="@http://www.mulesoft.org/schema/mule/cassandradb/system-add-column-family-from-object-with-simple-names-column-namess;0">
+                        <property value="59" name="auxiliary;wrapIn"/>
+                        <property value="59" name="auxiliary;index"/>
+                        <property-collection name="@http://www.mulesoft.org/schema/mule/cassandradb/system-add-column-family-from-object-with-simple-names-column-names;1">
+                            <property value="UTF8Column" name="value"/>
+                            <property value="60" name="auxiliary;wrapIn"/>
+                            <property value="60" name="auxiliary;index"/>
+                        </property-collection>
+                        <property-collection name="@http://www.mulesoft.org/schema/mule/cassandradb/system-add-column-family-from-object-with-simple-names-column-names;2">
+                            <property value="LongColumn" name="value"/>
+                            <property value="61" name="auxiliary;wrapIn"/>
+                            <property value="61" name="auxiliary;index"/>
+                        </property-collection>
+                    </property-collection>
+                </properties>
+            </pattern>
+        </lane>
+    </flow>
+    <flow SubFlow="false" name="Update-column-family" entity-id="bd32f6c9-5a21-4698-bf8a-cbb872b3411e">
+        <properties>
+            <property name="processingStrategy2"/>
+            <property name="processingStrategy"/>
+            <property value="62" name="auxiliary;index"/>
+            <property name="bussinessEventsLabel"/>
+            <property name="tracking:enable-default-events"/>
+        </properties>
+        <lane isChoiceOtherwiseLane="false" index="0" hadOnlyOneElement="false" entity-id="compartment-lane#13">
+            <graphicalData height="0" width="0" y="0" x="0"/>
+            <endpoint message-exchange-pattern="RequestResponse" direction="Inbound" type="http://www.mulesoft.org/schema/mule/http/endpoint" name="HTTP" entity-id="HTTP#13">
+                <graphicalData height="0" width="0" y="0" x="0"/>
+                <properties>
+                    <property value="request-response" name="exchange-pattern"/>
+                    <property value="63" name="auxiliary;index"/>
+                    <property value="http://www.mulesoft.org/schema/mule/http/endpoint" name="org.mule.tooling.ui.modules.core.widgets.meta.ModeAttribute"/>
+                    <property name="httpLabel"/>
+                    <property value="localhost" name="host"/>
+                    <property value="8081" name="port"/>
+                    <property value="test4" name="path"/>
+                    <property name="method"/>
+                    <property name="businessEventsLabel"/>
+                    <property name="tracking:enable-default-events"/>
+                    <property name="address"/>
+                    <property name="encoding"/>
+                    <property name="disableTransportTransformer"/>
+                    <property name="mimeType"/>
+                    <property name="responseTimeout"/>
+                    <property name="followRedirects"/>
+                    <property name="connector-ref"/>
+                    <property name="ref"/>
+                    <property name="transformer-refs"/>
+                    <property name="responseTransformer-refs"/>
+                    <property name="user"/>
+                    <property name="password"/>
+                    <property name="contentType"/>
+                    <property name="keep-alive"/>
+                </properties>
+            </endpoint>
+            <pattern type="http://www.mulesoft.org/schema/mule/cassandradb/cassandradb-connector" name="Cassandradb" entity-id="Cassandradb#15">
+                <graphicalData height="0" width="0" y="0" x="0"/>
+                <properties>
+                    <property value="CassandradbNuevo" name="config-ref"/>
+                    <property value="http://www.mulesoft.org/schema/mule/cassandradb/system-update-column-family" name="org.mule.tooling.ui.modules.core.widgets.meta.ModeAttribute"/>
+                    <property value="64" name="auxiliary;index"/>
+                    <property name=""/>
+                    <property name="username"/>
+                    <property name="password"/>
+                    <property-collection name="@http://www.mulesoft.org/schema/mule/cassandradb/column-family;0">
+                        <property value="100" name="min_compaction_threshold"/>
+                        <property value="0.5" name="read_repair_chance"/>
+                        <property value="0" name="key_cache_save_period_in_seconds"/>
+                        <property value="0.5" name="merge_shards_chance"/>
+                        <property value="0" name="row_cache_keys_to_save"/>
+                        <property value="BytesType" name="comparator_type"/>
+                        <property value="64" name="key_cache_size"/>
+                        <property value="120" name="gc_grace_seconds"/>
+                        <property value="64" name="row_cache_size"/>
+                        <property value="1" name="id"/>
+                        <property value="1000" name="max_compaction_threshold"/>
+                        <property value="WTF" name="keyspace"/>
+                        <property value="ColumnFamilyName" name="name"/>
+                        <property value="65" name="auxiliary;wrapIn"/>
+                        <property value="65" name="auxiliary;index"/>
+                        <property value="0" name="row_cache_save_period_in_seconds"/>
+                    </property-collection>
+                </properties>
+            </pattern>
+        </lane>
+    </flow>
+    <flow SubFlow="false" name="Get-Slice" entity-id="e9d68f72-c155-40e0-8f61-38b1cc2b038d">
+        <properties>
+            <property name="processingStrategy2"/>
+            <property name="processingStrategy"/>
+            <property value="66" name="auxiliary;index"/>
+            <property name="bussinessEventsLabel"/>
+            <property name="tracking:enable-default-events"/>
+        </properties>
+        <lane isChoiceOtherwiseLane="false" index="0" hadOnlyOneElement="false" entity-id="compartment-lane#14">
+            <graphicalData height="0" width="0" y="0" x="0"/>
+            <endpoint message-exchange-pattern="RequestResponse" direction="Inbound" type="http://www.mulesoft.org/schema/mule/http/endpoint" name="HTTP" entity-id="HTTP#14">
+                <graphicalData height="0" width="0" y="0" x="0"/>
+                <properties>
+                    <property value="request-response" name="exchange-pattern"/>
+                    <property value="67" name="auxiliary;index"/>
                     <property value="http://www.mulesoft.org/schema/mule/http/endpoint" name="org.mule.tooling.ui.modules.core.widgets.meta.ModeAttribute"/>
                     <property name="httpLabel"/>
                     <property value="localhost" name="host"/>
@@ -575,12 +948,12 @@
                     <property name="keep-alive"/>
                 </properties>
             </endpoint>
-            <pattern type="http://www.mulesoft.org/schema/mule/cassandradb/cassandradb-connector" name="Cassandradb" entity-id="Cassandradb#11">
+            <pattern type="http://www.mulesoft.org/schema/mule/cassandradb/cassandradb-connector" name="Cassandradb" entity-id="Cassandradb#16">
                 <graphicalData height="0" width="0" y="0" x="0"/>
                 <properties>
                     <property value="CassandradbNuevo" name="config-ref"/>
                     <property value="http://www.mulesoft.org/schema/mule/cassandradb/get-slice" name="org.mule.tooling.ui.modules.core.widgets.meta.ModeAttribute"/>
-                    <property value="38" name="auxiliary;index"/>
+                    <property value="68" name="auxiliary;index"/>
                     <property value="#[message.inboundProperties['columnParent']]" name="columnParent"/>
                     <property name="finish"/>
                     <property value="#[message.inboundProperties['key']]" name="rowKey"/>
@@ -598,8 +971,81 @@
                     <property name="returnClass"/>
                     <property name="ignoreBadInput"/>
                     <property name="encoding"/>
-                    <property value="39" name="auxiliary;index"/>
+                    <property value="69" name="auxiliary;index"/>
                     <property name="mimeType"/>
+                </properties>
+            </pattern>
+        </lane>
+    </flow>
+    <flow SubFlow="false" name="System-update-keyspace" entity-id="729a938d-9424-4818-9782-2f8d59019166">
+        <properties>
+            <property name="processingStrategy2"/>
+            <property name="processingStrategy"/>
+            <property value="70" name="auxiliary;index"/>
+            <property name="bussinessEventsLabel"/>
+            <property name="tracking:enable-default-events"/>
+        </properties>
+        <lane isChoiceOtherwiseLane="false" index="0" hadOnlyOneElement="false" entity-id="compartment-lane#15">
+            <graphicalData height="0" width="0" y="0" x="0"/>
+            <endpoint message-exchange-pattern="RequestResponse" direction="Inbound" type="http://www.mulesoft.org/schema/mule/http/endpoint" name="HTTP" entity-id="HTTP#15">
+                <graphicalData height="0" width="0" y="0" x="0"/>
+                <properties>
+                    <property value="request-response" name="exchange-pattern"/>
+                    <property value="71" name="auxiliary;index"/>
+                    <property value="http://www.mulesoft.org/schema/mule/http/endpoint" name="org.mule.tooling.ui.modules.core.widgets.meta.ModeAttribute"/>
+                    <property name="httpLabel"/>
+                    <property value="localhost" name="host"/>
+                    <property value="8081" name="port"/>
+                    <property value="test5" name="path"/>
+                    <property name="method"/>
+                    <property name="businessEventsLabel"/>
+                    <property name="tracking:enable-default-events"/>
+                    <property name="address"/>
+                    <property name="encoding"/>
+                    <property name="disableTransportTransformer"/>
+                    <property name="mimeType"/>
+                    <property name="responseTimeout"/>
+                    <property name="followRedirects"/>
+                    <property name="connector-ref"/>
+                    <property name="ref"/>
+                    <property name="transformer-refs"/>
+                    <property name="responseTransformer-refs"/>
+                    <property name="user"/>
+                    <property name="password"/>
+                    <property name="contentType"/>
+                    <property name="keep-alive"/>
+                </properties>
+            </endpoint>
+            <pattern type="http://www.mulesoft.org/schema/mule/cassandradb/cassandradb-connector" name="Cassandradb" entity-id="Cassandradb#17">
+                <graphicalData height="0" width="0" y="0" x="0"/>
+                <properties>
+                    <property value="CassandradbNuevo" name="config-ref"/>
+                    <property value="http://www.mulesoft.org/schema/mule/cassandradb/system-update-keyspace" name="org.mule.tooling.ui.modules.core.widgets.meta.ModeAttribute"/>
+                    <property value="72" name="auxiliary;index"/>
+                    <property name=""/>
+                    <property name="username"/>
+                    <property name="password"/>
+                    <property-collection name="@http://www.mulesoft.org/schema/mule/cassandradb/keyspace-def;0">
+                        <property value="org.apache.cassandra.locator.SimpleStrategy" name="strategy_class"/>
+                        <property value="WTF" name="name"/>
+                        <property value="1" name="replication_factor"/>
+                        <property value="73" name="auxiliary;wrapIn"/>
+                        <property value="73" name="auxiliary;index"/>
+                        <property-collection name="@http://www.mulesoft.org/schema/mule/cassandradb/configurable-cf_defss;1">
+                            <property value="76" name="auxiliary;wrapIn"/>
+                            <property value="76" name="auxiliary;index"/>
+                        </property-collection>
+                        <property-collection name="@http://www.mulesoft.org/schema/mule/cassandradb/configurable-strategy_optionss;1">
+                            <property value="74" name="auxiliary;wrapIn"/>
+                            <property value="74" name="auxiliary;index"/>
+                            <property-collection name="@http://www.mulesoft.org/schema/mule/cassandradb/configurable-strategy_options;1">
+<property value="1" name="value"/>
+<property value="75" name="auxiliary;wrapIn"/>
+<property value="75" name="auxiliary;index"/>
+<property value="replication_factor" name="key"/>
+                            </property-collection>
+                        </property-collection>
+                    </property-collection>
                 </properties>
             </pattern>
         </lane>
