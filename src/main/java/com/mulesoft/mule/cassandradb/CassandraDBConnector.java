@@ -18,6 +18,7 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -220,7 +221,7 @@ public class CassandraDBConnector {
 	}
 
 	/**
-	 * Set the keyspace to use for subsequent requests. *
+	 * Set the keyspace to use for subsequent requests.
 	 * <p/>
 	 * {@sample.xml ../../../doc/CassandraDB-connector.xml.sample
 	 * cassandradb:set-query-keyspace}
@@ -341,15 +342,17 @@ public class CassandraDBConnector {
 	 * @param columnParent
 	 *            Path to the column - must be a name of the ColumnFamily or
 	 *            ColumnFamily:SuperColumn pair
-	 * @param start
-	 *            The column name to start the slice with.
-	 * @param finish
-	 *            The column name to stop the slice at.
-	 * @param reversed
-	 *            Whether the results should be ordered in reversed order.
-	 *            Similar to ORDER BY <Column> DESC in SQL.
-	 * @param count
-	 *            How many columns to return.
+	 * @param start The column name to start the slice with. This attribute is not required, though there is no default value,
+	 *               and can be safely set to '', i.e., an empty byte array, to start with the first column name. Otherwise, it
+	 *               must a valid value under the rules of the Comparator defined for the given ColumnFamily.
+	 * @param finish The column name to stop the slice at. This attribute is not required, though there is no default value,
+	 *                and can be safely set to an empty byte array to not stop until 'count' results are seen. Otherwise, it
+	 *                must also be a valid value to the ColumnFamily Comparator.
+	 * @param reversed Whether the results should be ordered in reversed order. Similar to ORDER BY blah DESC in SQL.
+	 * @param count How many columns to return. Similar to LIMIT in SQL. May be arbitrarily large, but Thrift will
+	 *               materialize the whole result into memory before returning it to the client, so be aware that you may
+	 *               be better served by iterating through slices by passing the last value of one call in as the 'start'
+	 *               of the next instead of increasing 'count' arbitrarily large.
 	 * @param columnSerializers
 	 *            Serializers for each column
 	 * @return the result as a JSON node
@@ -406,15 +409,17 @@ public class CassandraDBConnector {
 	 * @param columnParent
 	 *            Path to the column - must be a name of the ColumnFamily or
 	 *            ColumnFamily:SuperColumn pair
-	 * @param start
-	 *            The column name to start the slice with.
-	 * @param finish
-	 *            The column name to stop the slice at.
-	 * @param reversed
-	 *            Whether the results should be ordered in reversed order.
-	 *            Similar to ORDER BY <Column> DESC in SQL.
-	 * @param count
-	 *            How many columns to return.
+	 * @param start The column name to start the slice with. This attribute is not required, though there is no default value,
+	 *               and can be safely set to '', i.e., an empty byte array, to start with the first column name. Otherwise, it
+	 *               must a valid value under the rules of the Comparator defined for the given ColumnFamily.
+	 * @param finish The column name to stop the slice at. This attribute is not required, though there is no default value,
+	 *                and can be safely set to an empty byte array to not stop until 'count' results are seen. Otherwise, it
+	 *                must also be a valid value to the ColumnFamily Comparator.
+	 * @param reversed Whether the results should be ordered in reversed order. Similar to ORDER BY blah DESC in SQL.
+	 * @param count How many columns to return. Similar to LIMIT in SQL. May be arbitrarily large, but Thrift will
+	 *               materialize the whole result into memory before returning it to the client, so be aware that you may
+	 *               be better served by iterating through slices by passing the last value of one call in as the 'start'
+	 *               of the next instead of increasing 'count' arbitrarily large.
 	 * @param columnSerializers
 	 *            Serializers for each column
 	 * @return A map of keys and ColumnOrSuperColumn
@@ -472,15 +477,17 @@ public class CassandraDBConnector {
 	 * @param columnParent
 	 *            Path to the column - must be a name of the ColumnFamily or
 	 *            ColumnFamily:SuperColumn pair
-	 * @param start
-	 *            The column name to start the slice with.
-	 * @param finish
-	 *            The column name to stop the slice at.
-	 * @param reversed
-	 *            Whether the results should be ordered in reversed order.
-	 *            Similar to ORDER BY <Column> DESC in SQL.
-	 * @param count
-	 *            How many columns to return.
+	 * @param start The column name to start the slice with. This attribute is not required, though there is no default value,
+	 *               and can be safely set to '', i.e., an empty byte array, to start with the first column name. Otherwise, it
+	 *               must a valid value under the rules of the Comparator defined for the given ColumnFamily.
+	 * @param finish The column name to stop the slice at. This attribute is not required, though there is no default value,
+	 *                and can be safely set to an empty byte array to not stop until 'count' results are seen. Otherwise, it
+	 *                must also be a valid value to the ColumnFamily Comparator.
+	 * @param reversed Whether the results should be ordered in reversed order. Similar to ORDER BY blah DESC in SQL.
+	 * @param count How many columns to return. Similar to LIMIT in SQL. May be arbitrarily large, but Thrift will
+	 *               materialize the whole result into memory before returning it to the client, so be aware that you may
+	 *               be better served by iterating through slices by passing the last value of one call in as the 'start'
+	 *               of the next instead of increasing 'count' arbitrarily large.
 	 * @return Count of register that met the conditions
 	 * @throws UnsupportedEncodingException
 	 *             Exception
@@ -525,15 +532,17 @@ public class CassandraDBConnector {
 	 * @param columnParent
 	 *            Path to the column - must be a name of the ColumnFamily or
 	 *            ColumnFamily:SuperColumn pair
-	 * @param start
-	 *            The column name to start the slice with.
-	 * @param finish
-	 *            The column name to stop the slice at.
-	 * @param reversed
-	 *            Whether the results should be ordered in reversed order.
-	 *            Similar to ORDER BY <Column> DESC in SQL.
-	 * @param count
-	 *            How many columns to return.
+	 * @param start The column name to start the slice with. This attribute is not required, though there is no default value,
+	 *               and can be safely set to '', i.e., an empty byte array, to start with the first column name. Otherwise, it
+	 *               must a valid value under the rules of the Comparator defined for the given ColumnFamily.
+	 * @param finish The column name to stop the slice at. This attribute is not required, though there is no default value,
+	 *                and can be safely set to an empty byte array to not stop until 'count' results are seen. Otherwise, it
+	 *                must also be a valid value to the ColumnFamily Comparator.
+	 * @param reversed Whether the results should be ordered in reversed order. Similar to ORDER BY blah DESC in SQL.
+	 * @param count How many columns to return. Similar to LIMIT in SQL. May be arbitrarily large, but Thrift will
+	 *               materialize the whole result into memory before returning it to the client, so be aware that you may
+	 *               be better served by iterating through slices by passing the last value of one call in as the 'start'
+	 *               of the next instead of increasing 'count' arbitrarily large.
 	 * @return A map of keys and integers
 	 * @throws UnsupportedEncodingException
 	 *             Exception
@@ -587,15 +596,17 @@ public class CassandraDBConnector {
 	 * @param columnParent
 	 *            Path to the column - must be a name of the ColumnFamily or
 	 *            ColumnFamily:SuperColumn pair
-	 * @param start
-	 *            The column name to start the slice with.
-	 * @param finish
-	 *            The column name to stop the slice at.
-	 * @param reversed
-	 *            Whether the results should be ordered in reversed order.
-	 *            Similar to ORDER BY <Column> DESC in SQL.
-	 * @param count
-	 *            How many columns to return.
+	 * @param start The column name to start the slice with. This attribute is not required, though there is no default value,
+	 *               and can be safely set to '', i.e., an empty byte array, to start with the first column name. Otherwise, it
+	 *               must a valid value under the rules of the Comparator defined for the given ColumnFamily.
+	 * @param finish The column name to stop the slice at. This attribute is not required, though there is no default value,
+	 *                and can be safely set to an empty byte array to not stop until 'count' results are seen. Otherwise, it
+	 *                must also be a valid value to the ColumnFamily Comparator.
+	 * @param reversed Whether the results should be ordered in reversed order. Similar to ORDER BY blah DESC in SQL.
+	 * @param count How many columns to return. Similar to LIMIT in SQL. May be arbitrarily large, but Thrift will
+	 *               materialize the whole result into memory before returning it to the client, so be aware that you may
+	 *               be better served by iterating through slices by passing the last value of one call in as the 'start'
+	 *               of the next instead of increasing 'count' arbitrarily large.
 	 * @param startKey
 	 *            The first key in the inclusive KeyRange.
 	 * @param endKey
@@ -669,15 +680,17 @@ public class CassandraDBConnector {
 	 * @param columnParent
 	 *            Path to the column - must be a name of the ColumnFamily or
 	 *            ColumnFamily:SuperColumn pair
-	 * @param start
-	 *            The column name to start the slice with.
-	 * @param finish
-	 *            The column name to stop the slice at.
-	 * @param reversed
-	 *            Whether the results should be ordered in reversed order.
-	 *            Similar to ORDER BY <Column> DESC in SQL.
-	 * @param count
-	 *            How many columns to return.
+	 * @param start The column name to start the slice with. This attribute is not required, though there is no default value,
+	 *               and can be safely set to '', i.e., an empty byte array, to start with the first column name. Otherwise, it
+	 *               must a valid value under the rules of the Comparator defined for the given ColumnFamily.
+	 * @param finish The column name to stop the slice at. This attribute is not required, though there is no default value,
+	 *                and can be safely set to an empty byte array to not stop until 'count' results are seen. Otherwise, it
+	 *                must also be a valid value to the ColumnFamily Comparator.
+	 * @param reversed Whether the results should be ordered in reversed order. Similar to ORDER BY blah DESC in SQL.
+	 * @param count How many columns to return. Similar to LIMIT in SQL. May be arbitrarily large, but Thrift will
+	 *               materialize the whole result into memory before returning it to the client, so be aware that you may
+	 *               be better served by iterating through slices by passing the last value of one call in as the 'start'
+	 *               of the next instead of increasing 'count' arbitrarily large.
 	 * @param clauseCount
 	 *            The number of results to which the index query will be
 	 *            constrained
@@ -782,9 +795,9 @@ public class CassandraDBConnector {
 
 	/**
 	 * Executes the specified mutations on the keyspace. content is a
-	 * map<string, map<string, vector<Mutation>>>; the outer map maps the key to
+	 * Map&lt;string, Map&lt;string, List&lt;Mutation&gt;&gt;&gt;; the outer map maps the key to
 	 * the inner map, which maps the column family to the Mutation; can be read
-	 * as: map<key : string, map<column_family : string, vector<Mutation>>>. To
+	 * as: <code> Map&lt;key : string, Map&lt;column_family : string, List&lt;Mutation&gt;&gt;&gt;</code>. To
 	 * be more specific, the outer map key is a row key, the inner map key is
 	 * the column family name. A Mutation specifies either columns to insert or
 	 * columns to delete. See Mutation and Deletion above for more details.
@@ -793,7 +806,7 @@ public class CassandraDBConnector {
 	 * cassandradb:batch-mutable}
 	 * 
 	 * @param content
-	 *            A map<string, map<string, vector<Mutation>>>
+	 *            A Map&lt;ByteBuffer, Map&lt;String, List&lt;Mutation&gt;&gt;&gt;
 	 *            
 	 * @throws Exception
 	 *             Exception
@@ -1084,6 +1097,7 @@ public class CassandraDBConnector {
 	/**
 	 * Adds a column family. This method will throw an exception if a column
 	 * family with the same name is already associated with the keyspace.
+	 * Column names in metadata need to be ByteBuffer. You can achieve this by usin the CassandraDBUtils like in the next example
 	 * <p/>
 	 * {@sample.xml ../../../doc/CassandraDB-connector.xml.sample
 	 * cassandradb:system-add-column-family-from-object}
@@ -1107,6 +1121,41 @@ public class CassandraDBConnector {
 	}
 
 	/**
+	 * Adds a column family. This method will throw an exception if a column
+	 * family with the same name is already associated with the keyspace. This method also recieves a list of string to be used as column names
+	 * <p/>
+	 * {@sample.xml ../../../doc/CassandraDB-connector.xml.sample
+	 * cassandradb:system-add-column-family-from-object-with-simple-names}
+	 * 
+	 * @param cfDefinition
+	 *            An instance of CfDef
+	 * @param columnNames
+	 * 			  A list that contains the columns names for columns defined in column_metadata            
+	 * @return The new Schema version ID.
+	 * @throws InvalidRequestException
+	 *             Invalid request could mean keyspace or column family does not exist, required parameters are missing, or a parameter is malformed.
+	 * @throws SchemaDisagreementException
+	 *             Schemas are not in agreement across all nodes
+	 * @throws TException
+	 *             Generic exception class for Thrift.
+	 * @throws UnsupportedEncodingException 
+	 * 				Exception
+	 */
+	@Processor
+	public String systemAddColumnFamilyFromObjectWithSimpleNames(CfDef cfDefinition, List<String> columnNames)
+			throws InvalidRequestException, SchemaDisagreementException,
+			TException, UnsupportedEncodingException {
+		
+			if(columnNames.size() != cfDefinition.column_metadata.size())
+				throw new InvalidRequestException("Provided column names and column metadata sizes are not the same.");
+			Iterator<String> nameIterator = columnNames.iterator();
+			for(ColumnDef col : cfDefinition.column_metadata){
+				col.setName(CassandraDBUtils.toByteBuffer(nameIterator.next()));
+			}
+		
+		return client.system_add_column_family(cfDefinition);
+	}
+	/**
 	 * Adds a column family to the current keyspace. This method will throw an exception if a column
 	 * family with the same name is already associated with the keyspace.
 	 * <p/>
@@ -1119,63 +1168,66 @@ public class CassandraDBConnector {
   								this column family. For Standard column families it applies to columns, for
   								Super column families applied to  super columns.Default is BytesType, which is a straight forward lexical
   comparison of the bytes in each column.
-
-*  Supported values are:
-*    - AsciiType
-*    - BooleanType
-*    - BytesType
-*    - CounterColumnType (distributed counter column)
-*    - DateType
-*    - DoubleType
-*    - FloatType
-*    - Int32Type
-*    - IntegerType (a generic variable-length integer type)
-*    - LexicalUUIDType
-*    - LongType
-*    - UTF8Type
-*    - CompositeType (should be used with sub-types specified e.g. 'CompositeType(UTF8Type, Int32Type)'
-*      quotes are important (!) in this case)
-
+	
+*  <p>Supported values are:</p>
+*  <ul>
+*  <li>AsciiType</li>
+*  <li>BooleanType</li>
+*  <li>BytesType</li>
+*  <li>CounterColumnType (distributed counter column)</li>
+*  <li>DateType</li>
+*  <li>DoubleType</li>
+*  <li>FloatType</li>
+*  <li>Int32Type</li>
+*  <li>IntegerType (a generic variable-length integer type)</li>
+*  <li>LexicalUUIDType</li>
+*  <li>LongType</li>
+*  <li>UTF8Type</li>
+*  <li>CompositeType (should be used with sub-types specified e.g. 'CompositeType(UTF8Type, Int32Type)'
+*      quotes are important (!) in this case)</li>
+*  </ul>
   It is also valid to specify the fully-qualified class name to a class that
   extends org.apache.cassandra.db.marshal.AbstractType.
 
 	 * @param keyValidationClass Validator to use for keys. Default is BytesType which applies no validation.
 
-  Supported values are:
-    - AsciiType
-    - BooleanType
-    - BytesType
-    - DateType
-    - DoubleType
-    - FloatType
-    - Int32Type
-    - IntegerType (a generic variable-length integer type)
-    - LexicalUUIDType
-    - LongType
-    - UTF8Type
-
+  <p>Supported values are:</p>
+  <ul>
+    <li>AsciiType</li>
+    <li>BooleanType</li>
+    <li>BytesType</li>
+    <li>DateType</li>
+    <li>DoubleType</li>
+    <li>FloatType</li>
+    <li>Int32Type</li>
+    <li>IntegerType (a generic variable-length integer type)</li>
+    <li>LexicalUUIDType</li>
+    <li>LongType</li>
+    <li>UTF8Type</li>
+</ul>
   It is also valid to specify the fully-qualified class name to a class that
   extends org.apache.cassandra.db.marshal.AbstractType.
 	 * @param defaultValidationClass Validator to use for values in columns which are
   not listed in the column_metadata. Default is BytesType which applies
   no validation.
 
-  Supported values are:
-    - AsciiType
-    - BooleanType
-    - BytesType
-    - CounterColumnType (distributed counter column)
-    - DateType
-    - DoubleType
-    - FloatType
-    - Int32Type
-    - IntegerType (a generic variable-length integer type)
-    - LexicalUUIDType
-    - LongType
-    - UTF8Type
-    - CompositeType (should be used with sub-types specified e.g. 'CompositeType(UTF8Type, Int32Type)'
-      quotes are important (!) in this case)
-
+  <p>Supported values are:</p>
+  <ul>
+    <li>AsciiType</li>
+    <li>BooleanType</li>
+    <li>BytesType</li>
+    <li>CounterColumnType (distributed counter column)</li>
+    <li>DateType</li>
+    <li>DoubleType</li>
+    <li>FloatType</li>
+    <li>Int32Type</li>
+    <li>IntegerType (a generic variable-length integer type)</li>
+    <li>LexicalUUIDType</li>
+    <li>LongType</li>
+    <li>UTF8Type</li>
+    <li>CompositeType (should be used with sub-types specified e.g. 'CompositeType(UTF8Type, Int32Type)'
+      quotes are important (!) in this case)</li>
+  </ul>
   It is also valid to specify the fully-qualified class name to a class that
   extends org.apache.cassandra.db.marshal.AbstractType.
 
@@ -1243,6 +1295,7 @@ public class CassandraDBConnector {
 	 * are not required to first create an empty keyspace and then create column
 	 * families for it.
 	 * <p/>
+	 * This will create a keyspace named MyKeyspace with no column families
 	 * {@sample.xml ../../../doc/CassandraDB-connector.xml.sample
 	 * cassandradb:system-add-keyspace-from-object}
 	 * 
@@ -1272,7 +1325,7 @@ public class CassandraDBConnector {
 	 * @param keyspaceName
 	 *            The keyspace name
 	 * @param columnNames List of the column names the keyspace will have
-	 * @param strategyClass The name of the class that handles the Replication Strategy. Check {@link ReplicationStrategy}
+	 * @param strategyClass The name of the class that handles the Replication Strategy.
 	 * @param strategyOptions Map containing the configuration for the strategy class selected.
 	 * @return The new schema version ID.
 	 * @throws InvalidRequestException
