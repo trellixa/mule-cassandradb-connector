@@ -42,6 +42,11 @@
 <!-- BEGIN_INCLUDE(cassandradb:insert) -->
     <cassandradb:insert rowKey="1" columnParent="UserData" columnName="password" columnValue="mypassword"/>    
 <!-- END_INCLUDE(cassandradb:insert) -->
+<!-- BEGIN_INCLUDE(cassandradb:insert-from-map) -->
+    <cassandradb:insert-from-map>
+        <cassandradb:content ref="#[payload]"/>
+    </cassandradb:insert-from-map>
+<!-- END_INCLUDE(cassandradb:insert-from-map) -->
 <!-- BEGIN_INCLUDE(cassandradb:batch-mutable) -->
     <cassandradb:batch-mutable/>    
 <!-- END_INCLUDE(cassandradb:batch-mutable) -->

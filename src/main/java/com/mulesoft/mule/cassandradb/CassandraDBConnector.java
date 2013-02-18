@@ -792,7 +792,114 @@ public class CassandraDBConnector {
 		client.insert(CassandraDBUtils.toByteBuffer(rowKey), cParent, column,
 				this.getConsistencyLevel());
 	}
+    /**
+     * Insert object into the database
+     * <p/>
+     * {@sample.xml ../../../doc/CassandraDB-connector.xml.sample cassandradb:insert-from-map}
+     *
+     * @param content Content to be inserted into the database. Must be an instance of Map in the following format:
+     *                <p/>
+     *                {
+     *                "ToyStores" : {                           - Column Family
+     *                "Ohio Store" : {                        - RowKey
+     *                "Transformer" : {                     - SuperColumn
+     *                "Price" : "29.99",                  - Column
+     *                "Section" : "Action Figures"
+     *                }
+     *                "GumDrop" : {
+     *                "Price" : "0.25",
+     *                "Section" : "Candy"
+     *                }
+     *                "MatchboxCar" : {
+     *                "Price" : "1.49",
+     *                "Section" : "Vehicles"
+     *                }
+     *                }
+     *                "New York Store" : {
+     *                "JawBreaker" : {
+     *                "Price" : "4.25",
+     *                "Section" : "Candy"
+     *                }
+     *                "MatchboxCar" : {
+     *                "Price" : "8.79",
+     *                "Section" : "Vehicles"
+     *                }
+     *                }
+     *                }
+     *                }
+     *                * @param password A password
+     * @return Same content
+     * @throws UnsupportedEncodingException Exception
+     * @throws TException Generic exception class for Thrift.
+     * @throws TimedOutException Time out of the request 
+     * @throws UnavailableException Not all the replicas required could be created and/or read.
+     * @throws InvalidRequestException  Invalid request could mean keyspace or column family does not exist, required parameters are missing, or a parameter is malformed.Why contains an associated error message.
+     */
+    @Processor
+    public Map insertFromMap(@Optional @Default("#[payload]") Map content) throws UnsupportedEncodingException, InvalidRequestException, UnavailableException, TimedOutException, TException{
+        logger.debug("Inserting the data: " + content);
 
+        //Iterate through ColumnFamilies
+        for (Object key : content.keySet()) {
+            String nextCFName = (String) key;
+
+            Map<ByteBuffer, Map<String, List<Mutation>>> mutationsMap = new HashMap<ByteBuffer, Map<String, List<Mutation>>>();
+
+            try {
+                CfDef cfDef = new CfDef(keyspace, nextCFName);
+                cfDef.column_type = "Super";
+                client.system_add_column_family(cfDef);
+            } catch (Exception e) {
+                //Assume CF already exists:
+                logger.warn("ColumnFamily '" + nextCFName + "' already exists; message: " + e.getMessage());
+            }
+
+            //Get SuperColumns of this CF
+            Map superColumnsMap = (Map) content.get(nextCFName);
+            //Iterate over RowKeys
+            for (Object rowKey : superColumnsMap.keySet()) {
+
+                Map<String, List<Mutation>> insertDataMap = new HashMap<String, List<Mutation>>();
+                List<Mutation> rowData = new ArrayList<Mutation>();
+
+                String nextRowKey = (String) rowKey;
+                Map nextSCMap = (Map) superColumnsMap.get(nextRowKey);
+                //Iterate over super column names
+                for (Object superColumnName : nextSCMap.keySet()) {
+                    String nextSCName = (String) superColumnName;
+                    List<Column> columnsList = new ArrayList<Column>();
+                    //Get Map of Columns
+                    Map columnsMap = (Map) nextSCMap.get(nextSCName);
+                    for (Object columnName : columnsMap.keySet()) {
+                        String nextColumnName = (String) columnName;
+                        Object nextColumnValue = columnsMap.get(nextColumnName);
+
+                        Column nextColumn = new Column(CassandraDBUtils.toByteBuffer(nextColumnName));
+                        nextColumn.setValue(CassandraDBUtils.toByteBuffer(nextColumnValue));
+                        nextColumn.setTimestamp(System.currentTimeMillis());
+                        columnsList.add(nextColumn);
+                    }
+
+                    SuperColumn nextSuperColumn = new SuperColumn(CassandraDBUtils.toByteBuffer(nextSCName),
+                            columnsList);
+                    ColumnOrSuperColumn columnOrSuperColumn = new ColumnOrSuperColumn();
+                    columnOrSuperColumn.setSuper_column(nextSuperColumn);
+                    Mutation m = new Mutation();
+                    m.setColumn_or_supercolumn(columnOrSuperColumn);
+
+                    rowData.add(m);
+                }
+
+                insertDataMap.put(nextCFName, rowData);
+                mutationsMap.put(CassandraDBUtils.toByteBuffer(nextRowKey), insertDataMap);
+            }
+
+            client.batch_mutate(mutationsMap, this.getConsistencyLevel());
+        }
+
+        return content;
+    }
+    
 	/**
 	 * Executes the specified mutations on the keyspace. content is a
 	 * Map&lt;string, Map&lt;string, List&lt;Mutation&gt;&gt;&gt;; the outer map maps the key to
