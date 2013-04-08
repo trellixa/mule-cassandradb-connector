@@ -2,7 +2,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.mulesoft.muleesb.modules</groupId>
+    <groupId>org.mule.modules</groupId>
     <artifactId>mule-module-cassandradb</artifactId>
     <version>3.3.0</version>
     <packaging>mule-module</packaging>
@@ -15,6 +15,8 @@
     </parent>
     
     <properties>
+      <category>Community</category>
+      <licensePath>LICENSE.md</licensePath>
       <devkit.studio.package.skip>false</devkit.studio.package.skip>
     </properties>
 
@@ -82,12 +84,12 @@
 
     <scm>
         <connection>
-            scm:git:git://github.com:mulesoft/mule-module-cassandradb.git
+            scm:git:git://github.com:mulesoft/CassandraDB-connector.git
         </connection>
         <developerConnection>
-            scm:git:git@github.com:mulesoft/mule-module-cassandradb.git
+            scm:git:git@github.com:mulesoft/CassandraDB-connector.git
         </developerConnection>
-        <url>http://github.com/mulesoft/mule-module-cassandradb</url>
+        <url>http://github.com/mulesoft/CassandraDB-connector</url>
     </scm>
 
 </project>
