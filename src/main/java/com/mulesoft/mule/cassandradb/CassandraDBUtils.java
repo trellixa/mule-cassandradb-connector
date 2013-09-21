@@ -24,17 +24,17 @@ import me.prettyprint.cassandra.serializers.StringSerializer;
 import me.prettyprint.cassandra.serializers.TypeInferringSerializer;
 import me.prettyprint.hector.api.Serializer;
 
-import org.apache.cassandra.thrift.CfDef;
-import org.apache.cassandra.thrift.Column;
-import org.apache.cassandra.thrift.ColumnDef;
-import org.apache.cassandra.thrift.ColumnOrSuperColumn;
-import org.apache.cassandra.thrift.ColumnParent;
-import org.apache.cassandra.thrift.ColumnPath;
-import org.apache.cassandra.thrift.IndexExpression;
-import org.apache.cassandra.thrift.SliceRange;
-import org.apache.cassandra.thrift.SuperColumn;
+import org.apache.cassandra.thrift.*;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Transformer;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.thrift.TException;
+import org.apache.thrift.protocol.TBinaryProtocol;
+import org.apache.thrift.protocol.TProtocol;
+import org.apache.thrift.transport.TFramedTransport;
+import org.apache.thrift.transport.TSocket;
+import org.apache.thrift.transport.TTransport;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.node.ArrayNode;
@@ -46,6 +46,44 @@ import com.mulesoft.mule.cassandradb.api.IndexExpresion;
  *  Utility class to make the transformations from String and collections to the types that the API handles
  */
 public class CassandraDBUtils {
+
+    protected static final Log logger = LogFactory.getLog(CassandraDBUtils.class);
+
+    public static Cassandra.Client getClient(String host, int port, String keyspace,
+                                      String username, String password,  TTransport tr) throws org.mule.api.ConnectionException{
+        Cassandra.Client client;
+        try {
+            logger.debug("Attempting to connect to Cassandra");
+            tr = new TFramedTransport(new TSocket(host, port));
+            TProtocol proto = new TBinaryProtocol(tr);
+            client = new Cassandra.Client(proto);
+            tr.open();
+            client.set_keyspace(keyspace);
+
+            if (password != null && username != null) {
+                HashMap<String, String> credentials = new HashMap<String, String>();
+                credentials.put("user", username);
+                credentials.put("password", password);
+                AuthenticationRequest loginRequest = new AuthenticationRequest(
+                        credentials);
+                client.login(loginRequest);
+            }
+
+            logger.debug("Connection created: " + tr);
+        } catch (AuthenticationException authEx) {
+            logger.error("Invalid user name and password", authEx);
+            throw new org.mule.api.ConnectionException(
+                    org.mule.api.ConnectionExceptionCode.INCORRECT_CREDENTIALS,
+                    null, authEx.getMessage(), authEx);
+        } catch (Throwable e) {
+            logger.error("Unable to connect to Casssandra DB instance", e);
+            throw new org.mule.api.ConnectionException(
+                    org.mule.api.ConnectionExceptionCode.UNKNOWN, null,
+                    e.getMessage(), e);
+        }
+
+        return client;
+    }
 
     public static JsonNode columnToJSONNode(Column column) throws Exception {
         ObjectMapper mapper = new ObjectMapper();
@@ -178,6 +216,8 @@ public class CassandraDBUtils {
 
     @SuppressWarnings({"unchecked"})
     public static ByteBuffer toByteBuffer(Object value) throws UnsupportedEncodingException {
+
+
     	if(typeInferringSerializer==null){
     		typeInferringSerializer = new TypeInferringSerializer();
     	}

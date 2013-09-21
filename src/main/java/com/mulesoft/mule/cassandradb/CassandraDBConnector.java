@@ -13,41 +13,8 @@
  */
 package com.mulesoft.mule.cassandradb;
 
-import java.io.UnsupportedEncodingException;
-import java.nio.ByteBuffer;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.cassandra.thrift.AuthenticationException;
-import org.apache.cassandra.thrift.AuthenticationRequest;
-import org.apache.cassandra.thrift.AuthorizationException;
-import org.apache.cassandra.thrift.Cassandra;
-import org.apache.cassandra.thrift.CfDef;
-import org.apache.cassandra.thrift.Column;
-import org.apache.cassandra.thrift.ColumnDef;
-import org.apache.cassandra.thrift.ColumnOrSuperColumn;
-import org.apache.cassandra.thrift.ColumnParent;
-import org.apache.cassandra.thrift.ColumnPath;
-import org.apache.cassandra.thrift.Compression;
-import org.apache.cassandra.thrift.ConsistencyLevel;
-import org.apache.cassandra.thrift.CounterColumn;
-import org.apache.cassandra.thrift.IndexClause;
-import org.apache.cassandra.thrift.IndexExpression;
-import org.apache.cassandra.thrift.InvalidRequestException;
-import org.apache.cassandra.thrift.KeyRange;
-import org.apache.cassandra.thrift.KsDef;
-import org.apache.cassandra.thrift.Mutation;
-import org.apache.cassandra.thrift.NotFoundException;
-import org.apache.cassandra.thrift.SchemaDisagreementException;
-import org.apache.cassandra.thrift.SlicePredicate;
-import org.apache.cassandra.thrift.SliceRange;
-import org.apache.cassandra.thrift.SuperColumn;
-import org.apache.cassandra.thrift.TimedOutException;
-import org.apache.cassandra.thrift.UnavailableException;
+import com.mulesoft.mule.cassandradb.api.IndexExpresion;
+import org.apache.cassandra.thrift.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.thrift.TException;
@@ -57,741 +24,619 @@ import org.apache.thrift.transport.TFramedTransport;
 import org.apache.thrift.transport.TSocket;
 import org.apache.thrift.transport.TTransport;
 import org.mule.api.ConnectionException;
-import org.mule.api.annotations.Configurable;
-import org.mule.api.annotations.Connect;
-import org.mule.api.annotations.ConnectionIdentifier;
-import org.mule.api.annotations.Connector;
-import org.mule.api.annotations.Disconnect;
-import org.mule.api.annotations.Processor;
-import org.mule.api.annotations.ValidateConnection;
+import org.mule.api.annotations.*;
 import org.mule.api.annotations.display.Password;
 import org.mule.api.annotations.display.Placement;
 import org.mule.api.annotations.param.ConnectionKey;
 import org.mule.api.annotations.param.Default;
 import org.mule.api.annotations.param.Optional;
 
-import com.mulesoft.mule.cassandradb.api.IndexExpresion;
+import java.io.UnsupportedEncodingException;
+import java.nio.ByteBuffer;
+import java.util.*;
 
 /**
- *  Connector allows the user to interact with any Cassandra DB.
- *  The Apache Cassandra database is the right choice when you need scalability and high availability without compromising performance.
- *  Cassandra's ColumnFamily data model offers the convenience of column indexes with the performance of log-structured updates, strong support for materialized views, and powerful built-in caching. 
- * 
+ * Connector allows the user to interact with any Cassandra DB.
+ * The Apache Cassandra database is the right choice when you need scalability and high availability without compromising performance.
+ * Cassandra's ColumnFamily data model offers the convenience of column indexes with the performance of log-structured updates, strong support for materialized views, and powerful built-in caching.
+ *
  * @author MuleSoft, Inc.
  */
 @Connector(name = "cassandradb", schemaVersion = "3.2")
 public class CassandraDBConnector {
-	protected static final Log logger = LogFactory
-			.getLog(CassandraDBConnector.class);
+    protected static final Log logger = LogFactory
+            .getLog(CassandraDBConnector.class);
 
-	/**
-	 * Host name or IP address
-	 */
-	@Configurable
+    /**
+     * Host name or IP address
+     */
+    @Configurable
     @Optional
     @Default("localhost")
-	private String host;
+    private String host;
 
-	/**
-	 * Port (default is 9160)
-	 */
-	@Configurable
-	@Default("9160")
-	@Optional
-	private int port = 9160;
+    /**
+     * Port (default is 9160)
+     */
+    @Configurable
+    @Default("9160")
+    @Optional
+    private int port = 9160;
 
-	/**
-	 * Cassandra keyspace
-	 */
-	@Configurable
-	private String keyspace;
+    /**
+     * Cassandra keyspace
+     */
+    @Configurable
+    private String keyspace;
 
-	/**
-	 * Consistency Level. Can be one of ANY, ONE (default), TWO, THREE, QUORUM,
-	 * LOCAL_QUORUM, EACH_QUORUM, ALL. See http://wiki.apache.org/cassandra/API
-	 * for more details.
-	 */
-	@Configurable
-	@Optional
-	@Default("ONE")
-	private ConsistencyLevel consistencyLevel;
+    /**
+     * Consistency Level. Can be one of ANY, ONE (default), TWO, THREE, QUORUM,
+     * LOCAL_QUORUM, EACH_QUORUM, ALL. See http://wiki.apache.org/cassandra/API
+     * for more details.
+     */
+    @Configurable
+    @Optional
+    @Default("ONE")
+    private ConsistencyLevel consistencyLevel;
 
-	/**
-	 * Generic class that encapsulates the I/O layer. This is basically a thin
-	 * wrapper around the combined functionality of Java input/output streams.
-	 *
-	 */
-	private TTransport tr;
-	/**
-	 * Cassandra Client
-	 */
-	private Cassandra.Client client;
+    /**
+     * Generic class that encapsulates the I/O layer. This is basically a thin
+     * wrapper around the combined functionality of Java input/output streams.
+     */
+    private TTransport tr;
+    /**
+     * Cassandra Client
+     */
+    private Cassandra.Client client;
 
-	/**
-	 * Method invoked when a connection is required
-	 * 
-	 * @param username
-	 *            A username. NOTE: Please use a dummy username if you have disabled authentication
-	 * @param password
-	 *            A password. NOTE: Leave empty if not required. If specified, the connector will try to login with this credentials
-	 * @throws ConnectionException
-	 */
-	@Connect
-	public void connect(@ConnectionKey String username,
-			@Password String password) throws ConnectionException {
-		try {
-			logger.debug("Attempting to connect to Cassandra");
-			tr = new TFramedTransport(new TSocket(host, port));
-			TProtocol proto = new TBinaryProtocol(tr);
-			client = new Cassandra.Client(proto);
-			tr.open();
-			client.set_keyspace(this.getKeyspace());
+    /**
+     * Method invoked when a connection is required
+     *
+     * @param username A username. NOTE: Please use a dummy username if you have disabled authentication
+     * @param password A password. NOTE: Leave empty if not required. If specified, the connector will try to login with this credentials
+     * @throws ConnectionException
+     */
+    @Connect
+    public void connect(@ConnectionKey String username,
+                        @Password String password) throws ConnectionException {
+        try {
+            logger.debug("Attempting to connect to Cassandra");
+            tr = new TFramedTransport(new TSocket(host, port));
+            TProtocol proto = new TBinaryProtocol(tr);
+            client = CassandraDBUtils.getClient(host, port, keyspace, username, password, tr);
+            tr.open();
+            client.set_keyspace(this.getKeyspace());
+            logger.debug("Connection created: " + tr);
 
-			loginIfRequired(username, password);
+        } catch (Throwable e) {
+            logger.error("Unable to connect to Casssandra DB instance", e);
+            throw new org.mule.api.ConnectionException(
+                    org.mule.api.ConnectionExceptionCode.UNKNOWN, null,
+                    e.getMessage(), e);
+        }
+    }
 
-			logger.debug("Connection created: " + tr);
-		} catch (AuthenticationException authEx) {
-			logger.error("Invalid user name and password", authEx);
-			throw new org.mule.api.ConnectionException(
-					org.mule.api.ConnectionExceptionCode.INCORRECT_CREDENTIALS,
-					null, authEx.getMessage(), authEx);
-		} catch (Throwable e) {
-			logger.error("Unable to connect to Casssandra DB instance", e);
-			throw new org.mule.api.ConnectionException(
-					org.mule.api.ConnectionExceptionCode.UNKNOWN, null,
-					e.getMessage(), e);
-		}
-	}
 
-	/**
-	 * If credential are provided we need to login
-	 * 
-	 * @param username
-	 *            A username
-	 * @param password
-	 *            A password
-	 * @throws AuthenticationException
-	 *             Invalid authentication request (invalid keyspace, user does not exist, or credentials invalid)
-	 * @throws AuthorizationException
-	 *             Invalid authorization request (user does not have access to keyspace)
-	 * @throws TException
-	 *             Generic exception class for Thrift.
-	 */
-	private void loginIfRequired(String username, String password)
-			throws AuthenticationException, AuthorizationException, TException {
-		if (password != null && username != null) {
-			HashMap<String, String> credentials = new HashMap<String, String>();
-			credentials.put("user", username);
-			credentials.put("password", password);
-			AuthenticationRequest loginRequest = new AuthenticationRequest(
-					credentials);
-			client.login(loginRequest);
-		}
-	}
+    /**
+     * Disconnect
+     */
+    @Disconnect
+    public void disconnect() {
+        if (isConnected()) {
+            try {
+                tr.flush();
+                tr.close();
+            } catch (Exception e) {
+                logger.error("Exception thrown while trying to disconnect:", e);
+            }
+        }
+    }
 
-	/**
-	 * Disconnect
-	 */
-	@Disconnect
-	public void disconnect() {
-		if (isConnected()) {
-			try {
-				tr.flush();
-				tr.close();
-			} catch (Exception e) {
-				logger.error("Exception thrown while trying to disconnect:", e);
-			}
-		}
-	}
+    /**
+     * Are we connected
+     */
+    @ValidateConnection
+    public boolean isConnected() {
+        return (tr != null && tr.isOpen());
+    }
 
-	/**
-	 * Are we connected
-	 */
-	@ValidateConnection
-	public boolean isConnected() {
-		return (tr != null && tr.isOpen());
-	}
+    /**
+     * Connection Identifier
+     */
+    @ConnectionIdentifier
+    public String connectionId() {
+        return "unknown";
+    }
 
-	/**
-	 * Connection Identifier
-	 */
-	@ConnectionIdentifier
-	public String connectionId() {
-		return "unknown";
-	}
+    /**
+     * Set the keyspace to use for subsequent requests.
+     * <p/>
+     * {@sample.xml ../../../doc/CassandraDB-connector.xml.sample
+     * cassandradb:set-query-keyspace}
+     *
+     * @param value New value that will be used to all following requests
+     * @throws InvalidRequestException Invalid request could mean keyspace or column family does not exist, required parameters are missing, or a parameter is malformed.
+     * @throws TException              Generic exception class for Thrift.
+     */
+    @Processor
+    public void setQueryKeyspace(String value) throws InvalidRequestException,
+            TException {
+        setKeyspace(value);
+        client.set_keyspace(value);
+    }
 
-	/**
-	 * Set the keyspace to use for subsequent requests.
-	 * <p/>
-	 * {@sample.xml ../../../doc/CassandraDB-connector.xml.sample
-	 * cassandradb:set-query-keyspace}
-	 * 
-	 * @param value
-	 *            New value that will be used to all following requests
-	 * @throws InvalidRequestException
-	 *             Invalid request could mean keyspace or column family does not exist, required parameters are missing, or a parameter is malformed.
-	 * @throws TException
-	 *             Generic exception class for Thrift.
-	 */
-	@Processor
-	public void setQueryKeyspace(String value) throws InvalidRequestException,
-			TException {
-		setKeyspace(value);
-		client.set_keyspace(value);
-	}
+    /**
+     * Get Column or SuperColumn by the path
+     * <p/>
+     * {@sample.xml ../../../doc/CassandraDB-connector.xml.sample
+     * cassandradb:get}
+     *
+     * @param rowKey            the row key
+     * @param columnPath        Path to the column - must be in the form of
+     *                          ColumnFamily:SuperColumn:Column. If you don't need a SuperColumn
+     * @param columnSerializers Serializers for each column
+     * @return the result as a JSON node
+     * @throws UnsupportedEncodingException Exception
+     * @throws InvalidRequestException      Invalid request could mean keyspace or column family does not exist, required parameters are missing, or a parameter is malformed.
+     * @throws UnavailableException         Not all the replicas required could be created and/or read.
+     * @throws TimedOutException            Exception
+     * @throws TException                   Generic exception class for Thrift.
+     * @throws NotFoundException            A specific column was requested that does not exist.
+     */
+    @Processor
+    public Object get(
+            String rowKey,
+            String columnPath,
+            @Placement(group = "Columns Serializars") @Optional List<ColumnSerializer> columnSerializers) throws UnsupportedEncodingException, InvalidRequestException, NotFoundException, UnavailableException, TimedOutException, TException {
+        logger.debug("Retrieving the data from column path: " + columnPath);
 
-	/**
-	 * Get Column or SuperColumn by the path
-	 * <p/>
-	 * {@sample.xml ../../../doc/CassandraDB-connector.xml.sample
-	 * cassandradb:get}
-	 * 
-	 * @param rowKey
-	 *            the row key
-	 * @param columnPath
-	 *            Path to the column - must be in the form of
-	 *            ColumnFamily:SuperColumn:Column. If you don't need a SuperColumn 
-	 * @param columnSerializers
-	 *            Serializers for each column
-	 * @return the result as a JSON node
-	 * @throws UnsupportedEncodingException
-	 *             Exception
-	 * @throws InvalidRequestException
-	 *             Invalid request could mean keyspace or column family does not exist, required parameters are missing, or a parameter is malformed.
-	 * @throws UnavailableException
-	 *             Not all the replicas required could be created and/or read.
-	 * @throws TimedOutException
-	 *             Exception
-	 * @throws TException
-	 *             Generic exception class for Thrift.
-	 * @throws NotFoundException 
-	 * 			   A specific column was requested that does not exist.
-	 */
-	@Processor
-	public Object get(
-			String rowKey,
-			String columnPath,
-			@Placement(group = "Columns Serializars") @Optional List<ColumnSerializer> columnSerializers) throws UnsupportedEncodingException, InvalidRequestException, NotFoundException, UnavailableException, TimedOutException, TException
-			 {
-		logger.debug("Retrieving the data from column path: " + columnPath);
+        ColumnPath cPath = CassandraDBUtils.parseColumnPath(columnPath);
+        ColumnOrSuperColumn result = client.get(
+                CassandraDBUtils.toByteBuffer(rowKey), cPath,
+                this.getConsistencyLevel());
 
-		ColumnPath cPath = CassandraDBUtils.parseColumnPath(columnPath);
-		ColumnOrSuperColumn result = client.get(
-				CassandraDBUtils.toByteBuffer(rowKey), cPath,
-				this.getConsistencyLevel());
+        logger.debug("ColumnPath " + columnPath + " ; result is : " + result);
 
-		logger.debug("ColumnPath " + columnPath + " ; result is : " + result);
+        return CassandraDBUtils.columnOrSuperColumnToMap(result,
+                columnSerializers);
+    }
 
-		return CassandraDBUtils.columnOrSuperColumnToMap(result,
-				columnSerializers);
-	}
+    /**
+     * Get Column or SuperColumn by the path
+     * <p/>
+     * {@sample.xml ../../../doc/CassandraDB-connector.xml.sample
+     * cassandradb:get}
+     *
+     * @param rowKey            the row key
+     * @param columnPath        Path to the column
+     * @param columnSerializers Serializers for each column
+     * @return the result as a JSON node
+     * @throws UnsupportedEncodingException Exception
+     * @throws InvalidRequestException      Invalid request could mean keyspace or column family does not exist, required parameters are missing, or a parameter is malformed.
+     * @throws UnavailableException         Not all the replicas required could be created and/or read.
+     * @throws TimedOutException            Exception
+     * @throws TException                   Generic exception class for Thrift.
+     * @throws NotFoundException            A specific column was requested that does not exist.
+     */
+    @Processor
+    public Object getRow(
+            String rowKey,
+            ColumnPath columnPath,
+            @Placement(group = "Columns Serializars") @Optional List<ColumnSerializer> columnSerializers) throws UnsupportedEncodingException, InvalidRequestException, NotFoundException, UnavailableException, TimedOutException, TException {
+        logger.debug("Retrieving the data from column path: " + columnPath);
 
-	/**
-	 * Get Column or SuperColumn by the path
-	 * <p/>
-	 * {@sample.xml ../../../doc/CassandraDB-connector.xml.sample
-	 * cassandradb:get}
-	 * 
-	 * @param rowKey
-	 *            the row key
-	 * @param columnPath
-	 *            Path to the column 
-	 * @param columnSerializers
-	 *            Serializers for each column
-	 * @return the result as a JSON node
-	 * @throws UnsupportedEncodingException
-	 *             Exception
-	 * @throws InvalidRequestException
-	 *             Invalid request could mean keyspace or column family does not exist, required parameters are missing, or a parameter is malformed.
-	 * @throws UnavailableException
-	 *             Not all the replicas required could be created and/or read.
-	 * @throws TimedOutException
-	 *             Exception
-	 * @throws TException
-	 *             Generic exception class for Thrift.
-	 * @throws NotFoundException 
-	 * 			   A specific column was requested that does not exist.
-	 */
-	@Processor
-	public Object getRow(
-			String rowKey,
-			ColumnPath columnPath,
-			@Placement(group = "Columns Serializars") @Optional List<ColumnSerializer> columnSerializers) throws UnsupportedEncodingException, InvalidRequestException, NotFoundException, UnavailableException, TimedOutException, TException
-			{
-		logger.debug("Retrieving the data from column path: " + columnPath);
+        ColumnOrSuperColumn result = client.get(
+                CassandraDBUtils.toByteBuffer(rowKey), columnPath,
+                this.getConsistencyLevel());
 
-		ColumnOrSuperColumn result = client.get(
-				CassandraDBUtils.toByteBuffer(rowKey), columnPath,
-				this.getConsistencyLevel());
+        logger.debug("ColumnPath " + columnPath + " ; result is : " + result);
 
-		logger.debug("ColumnPath " + columnPath + " ; result is : " + result);
+        return CassandraDBUtils.columnOrSuperColumnToMap(result,
+                columnSerializers);
+    }
 
-		return CassandraDBUtils.columnOrSuperColumnToMap(result,
-				columnSerializers);
-	}
-	/**
-	 * Get the group of columns contained by column_parent (either a
-	 * ColumnFamily name or a ColumnFamily/SuperColumn name pair) specified by
-	 * the given SlicePredicate (start, finish, reversed and count) parameters.
-	 * <p/>
-	 * {@sample.xml ../../../doc/CassandraDB-connector.xml.sample
-	 * cassandradb:get-slice}
-	 * 
-	 * @param rowKey
-	 *            the row key
-	 * @param columnParent
-	 *            Path to the column - must be a name of the ColumnFamily or
-	 *            ColumnFamily:SuperColumn pair
-	 * @param start The column name to start the slice with. This attribute is not required, though there is no default value,
-	 *               and can be safely set to '', i.e., an empty byte array, to start with the first column name. Otherwise, it
-	 *               must a valid value under the rules of the Comparator defined for the given ColumnFamily.
-	 * @param finish The column name to stop the slice at. This attribute is not required, though there is no default value,
-	 *                and can be safely set to an empty byte array to not stop until 'count' results are seen. Otherwise, it
-	 *                must also be a valid value to the ColumnFamily Comparator.
-	 * @param reversed Whether the results should be ordered in reversed order. Similar to ORDER BY blah DESC in SQL.
-	 * @param count How many columns to return. Similar to LIMIT in SQL. May be arbitrarily large, but Thrift will
-	 *               materialize the whole result into memory before returning it to the client, so be aware that you may
-	 *               be better served by iterating through slices by passing the last value of one call in as the 'start'
-	 *               of the next instead of increasing 'count' arbitrarily large.
-	 * @param columnSerializers
-	 *            Serializers for each column
-	 * @return the result as a JSON node
-	 * 
-	 * @throws UnsupportedEncodingException
-	 *             Exception
-	 * @throws InvalidRequestException
-	 *             Invalid request could mean keyspace or column family does not exist, required parameters are missing, or a parameter is malformed.
-	 * @throws UnavailableException
-	 *             Not all the replicas required could be created and/or read.
-	 * @throws TimedOutException
-	 *             Exception
-	 * @throws TException
-	 *             Generic exception class for Thrift.
-	 */
-	@Processor(name = "get-slice")
-	public Object getSlice(String rowKey, String columnParent,
-			@Optional String start, @Optional String finish,
-			@Optional @Default("false") boolean reversed,
-			@Optional @Default("100") int count,
-			@Placement(group = "Columns Serializars") @Optional List<ColumnSerializer> columnSerializers) throws UnsupportedEncodingException, InvalidRequestException, UnavailableException, TimedOutException, TException 
-			{
-		logger.debug("Get Slice: ROW KEY= " + rowKey + " COLUMN PARENT="
-				+ columnParent + " START=" + start + " FINISH=" + finish
-				+ " REVERSED=" + reversed + " COUNT=" + count);
+    /**
+     * Get the group of columns contained by column_parent (either a
+     * ColumnFamily name or a ColumnFamily/SuperColumn name pair) specified by
+     * the given SlicePredicate (start, finish, reversed and count) parameters.
+     * <p/>
+     * {@sample.xml ../../../doc/CassandraDB-connector.xml.sample
+     * cassandradb:get-slice}
+     *
+     * @param rowKey            the row key
+     * @param columnParent      Path to the column - must be a name of the ColumnFamily or
+     *                          ColumnFamily:SuperColumn pair
+     * @param start             The column name to start the slice with. This attribute is not required, though there is no default value,
+     *                          and can be safely set to '', i.e., an empty byte array, to start with the first column name. Otherwise, it
+     *                          must a valid value under the rules of the Comparator defined for the given ColumnFamily.
+     * @param finish            The column name to stop the slice at. This attribute is not required, though there is no default value,
+     *                          and can be safely set to an empty byte array to not stop until 'count' results are seen. Otherwise, it
+     *                          must also be a valid value to the ColumnFamily Comparator.
+     * @param reversed          Whether the results should be ordered in reversed order. Similar to ORDER BY blah DESC in SQL.
+     * @param count             How many columns to return. Similar to LIMIT in SQL. May be arbitrarily large, but Thrift will
+     *                          materialize the whole result into memory before returning it to the client, so be aware that you may
+     *                          be better served by iterating through slices by passing the last value of one call in as the 'start'
+     *                          of the next instead of increasing 'count' arbitrarily large.
+     * @param columnSerializers Serializers for each column
+     * @return the result as a JSON node
+     * @throws UnsupportedEncodingException Exception
+     * @throws InvalidRequestException      Invalid request could mean keyspace or column family does not exist, required parameters are missing, or a parameter is malformed.
+     * @throws UnavailableException         Not all the replicas required could be created and/or read.
+     * @throws TimedOutException            Exception
+     * @throws TException                   Generic exception class for Thrift.
+     */
+    @Processor(name = "get-slice")
+    public Object getSlice(String rowKey, String columnParent,
+                           @Optional String start, @Optional String finish,
+                           @Optional @Default("false") boolean reversed,
+                           @Optional @Default("100") int count,
+                           @Placement(group = "Columns Serializars") @Optional List<ColumnSerializer> columnSerializers) throws UnsupportedEncodingException, InvalidRequestException, UnavailableException, TimedOutException, TException {
+        logger.debug("Get Slice: ROW KEY= " + rowKey + " COLUMN PARENT="
+                + columnParent + " START=" + start + " FINISH=" + finish
+                + " REVERSED=" + reversed + " COUNT=" + count);
 
-		ColumnParent cParent = CassandraDBUtils
-				.generateColumnParent(columnParent);
+        ColumnParent cParent = CassandraDBUtils
+                .generateColumnParent(columnParent);
 
-		SlicePredicate predicate = new SlicePredicate();
-		SliceRange range = CassandraDBUtils.generateSliceRange(start, finish,
-				reversed, count);
+        SlicePredicate predicate = new SlicePredicate();
+        SliceRange range = CassandraDBUtils.generateSliceRange(start, finish,
+                reversed, count);
 
-		predicate.setSlice_range(range);
-		List<ColumnOrSuperColumn> columnsByKey = client.get_slice(
-				CassandraDBUtils.toByteBuffer(rowKey), cParent, predicate,
-				this.getConsistencyLevel());
+        predicate.setSlice_range(range);
+        List<ColumnOrSuperColumn> columnsByKey = client.get_slice(
+                CassandraDBUtils.toByteBuffer(rowKey), cParent, predicate,
+                this.getConsistencyLevel());
 
-		return CassandraDBUtils.listOfColumnsToMap(columnsByKey,
-				columnSerializers);
-	}
+        return CassandraDBUtils.listOfColumnsToMap(columnsByKey,
+                columnSerializers);
+    }
 
-	/**
-	 * Retrieves slices for column_parent and predicate on each of the given
-	 * keys in parallel. Keys are a list<string> of the keys to get slices for.
-	 * This is similar to getRangeSlices, except it operates on a set of
-	 * non-contiguous keys instead of a range of keys.
-	 * <p/>
-	 * {@sample.xml ../../../doc/CassandraDB-connector.xml.sample
-	 * cassandradb:multiget-slice}
-	 * 
-	 * @param rowKeys
-	 *            A list of keys used for
-	 * @param columnParent
-	 *            Path to the column - must be a name of the ColumnFamily or
-	 *            ColumnFamily:SuperColumn pair
-	 * @param start The column name to start the slice with. This attribute is not required, though there is no default value,
-	 *               and can be safely set to '', i.e., an empty byte array, to start with the first column name. Otherwise, it
-	 *               must a valid value under the rules of the Comparator defined for the given ColumnFamily.
-	 * @param finish The column name to stop the slice at. This attribute is not required, though there is no default value,
-	 *                and can be safely set to an empty byte array to not stop until 'count' results are seen. Otherwise, it
-	 *                must also be a valid value to the ColumnFamily Comparator.
-	 * @param reversed Whether the results should be ordered in reversed order. Similar to ORDER BY blah DESC in SQL.
-	 * @param count How many columns to return. Similar to LIMIT in SQL. May be arbitrarily large, but Thrift will
-	 *               materialize the whole result into memory before returning it to the client, so be aware that you may
-	 *               be better served by iterating through slices by passing the last value of one call in as the 'start'
-	 *               of the next instead of increasing 'count' arbitrarily large.
-	 * @param columnSerializers
-	 *            Serializers for each column
-	 * @return A map of keys and ColumnOrSuperColumn
-	 * @throws UnsupportedEncodingException
-	 *             Exception
-	 * @throws InvalidRequestException
-	 *             Invalid request could mean keyspace or column family does not exist, required parameters are missing, or a parameter is malformed.
-	 * @throws UnavailableException
-	 *             Not all the replicas required could be created and/or read.
-	 * @throws TimedOutException
-	 *             Exception
-	 * @throws TException
-	 *             Generic exception class for Thrift.
-	 */
-	@Processor(name = "multiget-slice")
-	public Object multiGetSlice(
-			@Placement(group = "row-keys") List<String> rowKeys,
-			String columnParent,
-			@Optional String start,
-			@Optional String finish,
-			@Optional @Default("false") boolean reversed,
-			@Optional @Default("100") int count,
-			@Optional @Placement(group = "Column Serializers") List<ColumnSerializer> columnSerializers)
-			throws UnsupportedEncodingException, InvalidRequestException,
-			UnavailableException, TimedOutException, TException {
+    /**
+     * Retrieves slices for column_parent and predicate on each of the given
+     * keys in parallel. Keys are a list<string> of the keys to get slices for.
+     * This is similar to getRangeSlices, except it operates on a set of
+     * non-contiguous keys instead of a range of keys.
+     * <p/>
+     * {@sample.xml ../../../doc/CassandraDB-connector.xml.sample
+     * cassandradb:multiget-slice}
+     *
+     * @param rowKeys           A list of keys used for
+     * @param columnParent      Path to the column - must be a name of the ColumnFamily or
+     *                          ColumnFamily:SuperColumn pair
+     * @param start             The column name to start the slice with. This attribute is not required, though there is no default value,
+     *                          and can be safely set to '', i.e., an empty byte array, to start with the first column name. Otherwise, it
+     *                          must a valid value under the rules of the Comparator defined for the given ColumnFamily.
+     * @param finish            The column name to stop the slice at. This attribute is not required, though there is no default value,
+     *                          and can be safely set to an empty byte array to not stop until 'count' results are seen. Otherwise, it
+     *                          must also be a valid value to the ColumnFamily Comparator.
+     * @param reversed          Whether the results should be ordered in reversed order. Similar to ORDER BY blah DESC in SQL.
+     * @param count             How many columns to return. Similar to LIMIT in SQL. May be arbitrarily large, but Thrift will
+     *                          materialize the whole result into memory before returning it to the client, so be aware that you may
+     *                          be better served by iterating through slices by passing the last value of one call in as the 'start'
+     *                          of the next instead of increasing 'count' arbitrarily large.
+     * @param columnSerializers Serializers for each column
+     * @return A map of keys and ColumnOrSuperColumn
+     * @throws UnsupportedEncodingException Exception
+     * @throws InvalidRequestException      Invalid request could mean keyspace or column family does not exist, required parameters are missing, or a parameter is malformed.
+     * @throws UnavailableException         Not all the replicas required could be created and/or read.
+     * @throws TimedOutException            Exception
+     * @throws TException                   Generic exception class for Thrift.
+     */
+    @Processor(name = "multiget-slice")
+    public Object multiGetSlice(
+            @Placement(group = "row-keys") List<String> rowKeys,
+            String columnParent,
+            @Optional String start,
+            @Optional String finish,
+            @Optional @Default("false") boolean reversed,
+            @Optional @Default("100") int count,
+            @Optional @Placement(group = "Column Serializers") List<ColumnSerializer> columnSerializers)
+            throws UnsupportedEncodingException, InvalidRequestException,
+            UnavailableException, TimedOutException, TException {
 
-		List<ByteBuffer> keys = CassandraDBUtils.toByteBufferList(rowKeys);
+        List<ByteBuffer> keys = CassandraDBUtils.toByteBufferList(rowKeys);
 
-		ColumnParent cParent = CassandraDBUtils
-				.generateColumnParent(columnParent);
+        ColumnParent cParent = CassandraDBUtils
+                .generateColumnParent(columnParent);
 
-		SlicePredicate predicate = new SlicePredicate();
-		SliceRange range = CassandraDBUtils.generateSliceRange(start, finish,
-				reversed, count);
+        SlicePredicate predicate = new SlicePredicate();
+        SliceRange range = CassandraDBUtils.generateSliceRange(start, finish,
+                reversed, count);
 
-		predicate.setSlice_range(range);
+        predicate.setSlice_range(range);
 
-		// For now we just return the map...leaving this variable in case we
-		// want to format the data to a new Type
-		Map<ByteBuffer, List<ColumnOrSuperColumn>> result = client
-				.multiget_slice(keys, cParent, predicate,
-						this.getConsistencyLevel());
+        // For now we just return the map...leaving this variable in case we
+        // want to format the data to a new Type
+        Map<ByteBuffer, List<ColumnOrSuperColumn>> result = client
+                .multiget_slice(keys, cParent, predicate,
+                        this.getConsistencyLevel());
 
-		return result;
-	}
+        return result;
+    }
 
-	/**
-	 * Counts the columns present in column_parent within the predicate.
-	 * <p/>
-	 * {@sample.xml ../../../doc/CassandraDB-connector.xml.sample
-	 * cassandradb:get-count}
-	 * 
-	 * @param rowKey
-	 *            the row key
-	 * @param columnParent
-	 *            Path to the column - must be a name of the ColumnFamily or
-	 *            ColumnFamily:SuperColumn pair
-	 * @param start The column name to start the slice with. This attribute is not required, though there is no default value,
-	 *               and can be safely set to '', i.e., an empty byte array, to start with the first column name. Otherwise, it
-	 *               must a valid value under the rules of the Comparator defined for the given ColumnFamily.
-	 * @param finish The column name to stop the slice at. This attribute is not required, though there is no default value,
-	 *                and can be safely set to an empty byte array to not stop until 'count' results are seen. Otherwise, it
-	 *                must also be a valid value to the ColumnFamily Comparator.
-	 * @param reversed Whether the results should be ordered in reversed order. Similar to ORDER BY blah DESC in SQL.
-	 * @param count How many columns to return. Similar to LIMIT in SQL. May be arbitrarily large, but Thrift will
-	 *               materialize the whole result into memory before returning it to the client, so be aware that you may
-	 *               be better served by iterating through slices by passing the last value of one call in as the 'start'
-	 *               of the next instead of increasing 'count' arbitrarily large.
-	 * @return Count of register that met the conditions
-	 * @throws UnsupportedEncodingException
-	 *             Exception
-	 * @throws InvalidRequestException
-	 *             Invalid request could mean keyspace or column family does not exist, required parameters are missing, or a parameter is malformed.
-	 * @throws UnavailableException
-	 *             Not all the replicas required could be created and/or read.
-	 * @throws TimedOutException
-	 *             Exception
-	 * @throws TException
-	 *             Generic exception class for Thrift.
-	 */
-	@Processor(name = "get-count")
-	public int getCount(String rowKey, String columnParent,
-			@Optional String start, @Optional String finish,
-			@Optional @Default("false") boolean reversed,
-			@Optional @Default("100") int count)
-			throws UnsupportedEncodingException, InvalidRequestException,
-			UnavailableException, TimedOutException, TException {
+    /**
+     * Counts the columns present in column_parent within the predicate.
+     * <p/>
+     * {@sample.xml ../../../doc/CassandraDB-connector.xml.sample
+     * cassandradb:get-count}
+     *
+     * @param rowKey       the row key
+     * @param columnParent Path to the column - must be a name of the ColumnFamily or
+     *                     ColumnFamily:SuperColumn pair
+     * @param start        The column name to start the slice with. This attribute is not required, though there is no default value,
+     *                     and can be safely set to '', i.e., an empty byte array, to start with the first column name. Otherwise, it
+     *                     must a valid value under the rules of the Comparator defined for the given ColumnFamily.
+     * @param finish       The column name to stop the slice at. This attribute is not required, though there is no default value,
+     *                     and can be safely set to an empty byte array to not stop until 'count' results are seen. Otherwise, it
+     *                     must also be a valid value to the ColumnFamily Comparator.
+     * @param reversed     Whether the results should be ordered in reversed order. Similar to ORDER BY blah DESC in SQL.
+     * @param count        How many columns to return. Similar to LIMIT in SQL. May be arbitrarily large, but Thrift will
+     *                     materialize the whole result into memory before returning it to the client, so be aware that you may
+     *                     be better served by iterating through slices by passing the last value of one call in as the 'start'
+     *                     of the next instead of increasing 'count' arbitrarily large.
+     * @return Count of register that met the conditions
+     * @throws UnsupportedEncodingException Exception
+     * @throws InvalidRequestException      Invalid request could mean keyspace or column family does not exist, required parameters are missing, or a parameter is malformed.
+     * @throws UnavailableException         Not all the replicas required could be created and/or read.
+     * @throws TimedOutException            Exception
+     * @throws TException                   Generic exception class for Thrift.
+     */
+    @Processor(name = "get-count")
+    public int getCount(String rowKey, String columnParent,
+                        @Optional String start, @Optional String finish,
+                        @Optional @Default("false") boolean reversed,
+                        @Optional @Default("100") int count)
+            throws UnsupportedEncodingException, InvalidRequestException,
+            UnavailableException, TimedOutException, TException {
 
-		ColumnParent cParent = CassandraDBUtils
-				.generateColumnParent(columnParent);
+        ColumnParent cParent = CassandraDBUtils
+                .generateColumnParent(columnParent);
 
-		SlicePredicate predicate = new SlicePredicate();
-		SliceRange range = CassandraDBUtils.generateSliceRange(start, finish,
-				reversed, count);
+        SlicePredicate predicate = new SlicePredicate();
+        SliceRange range = CassandraDBUtils.generateSliceRange(start, finish,
+                reversed, count);
 
-		predicate.setSlice_range(range);
-		return client.get_count(CassandraDBUtils.toByteBuffer(rowKey), cParent,
-				predicate, this.getConsistencyLevel());
-	}
+        predicate.setSlice_range(range);
+        return client.get_count(CassandraDBUtils.toByteBuffer(rowKey), cParent,
+                predicate, this.getConsistencyLevel());
+    }
 
-	/**
-	 * A combination of multiget_slice and get_count.
-	 * 
-	 * <p/>
-	 * {@sample.xml ../../../doc/CassandraDB-connector.xml.sample
-	 * cassandradb:multiget-count}
-	 * 
-	 * @param rowKeys
-	 *            A list of keys used for
-	 * @param columnParent
-	 *            Path to the column - must be a name of the ColumnFamily or
-	 *            ColumnFamily:SuperColumn pair
-	 * @param start The column name to start the slice with. This attribute is not required, though there is no default value,
-	 *               and can be safely set to '', i.e., an empty byte array, to start with the first column name. Otherwise, it
-	 *               must a valid value under the rules of the Comparator defined for the given ColumnFamily.
-	 * @param finish The column name to stop the slice at. This attribute is not required, though there is no default value,
-	 *                and can be safely set to an empty byte array to not stop until 'count' results are seen. Otherwise, it
-	 *                must also be a valid value to the ColumnFamily Comparator.
-	 * @param reversed Whether the results should be ordered in reversed order. Similar to ORDER BY blah DESC in SQL.
-	 * @param count How many columns to return. Similar to LIMIT in SQL. May be arbitrarily large, but Thrift will
-	 *               materialize the whole result into memory before returning it to the client, so be aware that you may
-	 *               be better served by iterating through slices by passing the last value of one call in as the 'start'
-	 *               of the next instead of increasing 'count' arbitrarily large.
-	 * @return A map of keys and integers
-	 * @throws UnsupportedEncodingException
-	 *             Exception
-	 * @throws InvalidRequestException
-	 *             Invalid request could mean keyspace or column family does not exist, required parameters are missing, or a parameter is malformed.
-	 * @throws UnavailableException
-	 *             Not all the replicas required could be created and/or read.
-	 * @throws TimedOutException
-	 *             Exception
-	 * @throws TException
-	 *             Generic exception class for Thrift.
-	 */
-	@Processor(name = "multiget-count")
-	public Object multiGetCount(
-			@Placement(group = "row-keys") List<String> rowKeys,
-			String columnParent,
-			@Optional String start,
-			@Optional String finish,
-			@Optional @Default("false") boolean reversed,
-			@Optional @Default("100") int count)
-			throws UnsupportedEncodingException, InvalidRequestException,
-			UnavailableException, TimedOutException, TException {
+    /**
+     * A combination of multiget_slice and get_count.
+     * <p/>
+     * <p/>
+     * {@sample.xml ../../../doc/CassandraDB-connector.xml.sample
+     * cassandradb:multiget-count}
+     *
+     * @param rowKeys      A list of keys used for
+     * @param columnParent Path to the column - must be a name of the ColumnFamily or
+     *                     ColumnFamily:SuperColumn pair
+     * @param start        The column name to start the slice with. This attribute is not required, though there is no default value,
+     *                     and can be safely set to '', i.e., an empty byte array, to start with the first column name. Otherwise, it
+     *                     must a valid value under the rules of the Comparator defined for the given ColumnFamily.
+     * @param finish       The column name to stop the slice at. This attribute is not required, though there is no default value,
+     *                     and can be safely set to an empty byte array to not stop until 'count' results are seen. Otherwise, it
+     *                     must also be a valid value to the ColumnFamily Comparator.
+     * @param reversed     Whether the results should be ordered in reversed order. Similar to ORDER BY blah DESC in SQL.
+     * @param count        How many columns to return. Similar to LIMIT in SQL. May be arbitrarily large, but Thrift will
+     *                     materialize the whole result into memory before returning it to the client, so be aware that you may
+     *                     be better served by iterating through slices by passing the last value of one call in as the 'start'
+     *                     of the next instead of increasing 'count' arbitrarily large.
+     * @return A map of keys and integers
+     * @throws UnsupportedEncodingException Exception
+     * @throws InvalidRequestException      Invalid request could mean keyspace or column family does not exist, required parameters are missing, or a parameter is malformed.
+     * @throws UnavailableException         Not all the replicas required could be created and/or read.
+     * @throws TimedOutException            Exception
+     * @throws TException                   Generic exception class for Thrift.
+     */
+    @Processor(name = "multiget-count")
+    public Object multiGetCount(
+            @Placement(group = "row-keys") List<String> rowKeys,
+            String columnParent,
+            @Optional String start,
+            @Optional String finish,
+            @Optional @Default("false") boolean reversed,
+            @Optional @Default("100") int count)
+            throws UnsupportedEncodingException, InvalidRequestException,
+            UnavailableException, TimedOutException, TException {
 
-		List<ByteBuffer> keys = CassandraDBUtils.toByteBufferList(rowKeys);
+        List<ByteBuffer> keys = CassandraDBUtils.toByteBufferList(rowKeys);
 
-		ColumnParent cParent = CassandraDBUtils
-				.generateColumnParent(columnParent);
+        ColumnParent cParent = CassandraDBUtils
+                .generateColumnParent(columnParent);
 
-		SlicePredicate predicate = new SlicePredicate();
-		SliceRange range = CassandraDBUtils.generateSliceRange(start, finish,
-				reversed, count);
+        SlicePredicate predicate = new SlicePredicate();
+        SliceRange range = CassandraDBUtils.generateSliceRange(start, finish,
+                reversed, count);
 
-		predicate.setSlice_range(range);
+        predicate.setSlice_range(range);
 
-		return client.multiget_count(keys, cParent,
-				predicate, this.getConsistencyLevel());
-	}
+        return client.multiget_count(keys, cParent,
+                predicate, this.getConsistencyLevel());
+    }
 
-	/**
-	 * Replaces get_range_slice. Returns a list of slices for the keys within
-	 * the specified KeyRange. Unlike get_key_range, this applies the given
-	 * predicate to all keys in the range, not just those with undeleted
-	 * matching data. Note that when using RandomPartitioner, keys are stored in
-	 * the order of their MD5 hash, making it impossible to get a meaningful
-	 * range of keys between two endpoints.
-	 * 
-	 * <p/>
-	 * {@sample.xml ../../../doc/CassandraDB-connector.xml.sample
-	 * cassandradb:get-range-slices}
-	 * 
-	 * @param columnParent
-	 *            Path to the column - must be a name of the ColumnFamily or
-	 *            ColumnFamily:SuperColumn pair
-	 * @param start The column name to start the slice with. This attribute is not required, though there is no default value,
-	 *               and can be safely set to '', i.e., an empty byte array, to start with the first column name. Otherwise, it
-	 *               must a valid value under the rules of the Comparator defined for the given ColumnFamily.
-	 * @param finish The column name to stop the slice at. This attribute is not required, though there is no default value,
-	 *                and can be safely set to an empty byte array to not stop until 'count' results are seen. Otherwise, it
-	 *                must also be a valid value to the ColumnFamily Comparator.
-	 * @param reversed Whether the results should be ordered in reversed order. Similar to ORDER BY blah DESC in SQL.
-	 * @param count How many columns to return. Similar to LIMIT in SQL. May be arbitrarily large, but Thrift will
-	 *               materialize the whole result into memory before returning it to the client, so be aware that you may
-	 *               be better served by iterating through slices by passing the last value of one call in as the 'start'
-	 *               of the next instead of increasing 'count' arbitrarily large.
-	 * @param startKey
-	 *            The first key in the inclusive KeyRange.
-	 * @param endKey
-	 *            The last key in the inclusive KeyRange.
-	 * @param startToken
-	 *            The first token in the exclusive KeyRange.
-	 * @param endToken
-	 *            The last token in the exclusive KeyRange.
-	 * @param keyRangeCount
-	 *            The total number of keys to permit in the KeyRange.
-	 * @return List of objects KeySlice
-	 * @throws UnsupportedEncodingException
-	 *             Exception
-	 * @throws InvalidRequestException
-	 *             Invalid request could mean keyspace or column family does not exist, required parameters are missing, or a parameter is malformed.
-	 * @throws UnavailableException
-	 *             Not all the replicas required could be created and/or read.
-	 * @throws TimedOutException
-	 *             Exception
-	 * @throws TException
-	 *             Generic exception class for Thrift.
-	 */
-	@Processor
-	public Object getRangeSlices(
-			String columnParent,
-			@Optional String start,
-			@Optional String finish,
-			@Optional @Default("false") boolean reversed,
-			@Optional @Default("100") int count,
-			@Optional String startKey,
-			@Optional String endKey,
-			@Optional String startToken,
-			@Optional String endToken,
-			@Optional @Default("100") int keyRangeCount)
-			throws UnsupportedEncodingException, InvalidRequestException,
-			UnavailableException, TimedOutException, TException {
+    /**
+     * Replaces get_range_slice. Returns a list of slices for the keys within
+     * the specified KeyRange. Unlike get_key_range, this applies the given
+     * predicate to all keys in the range, not just those with undeleted
+     * matching data. Note that when using RandomPartitioner, keys are stored in
+     * the order of their MD5 hash, making it impossible to get a meaningful
+     * range of keys between two endpoints.
+     * <p/>
+     * <p/>
+     * {@sample.xml ../../../doc/CassandraDB-connector.xml.sample
+     * cassandradb:get-range-slices}
+     *
+     * @param columnParent  Path to the column - must be a name of the ColumnFamily or
+     *                      ColumnFamily:SuperColumn pair
+     * @param start         The column name to start the slice with. This attribute is not required, though there is no default value,
+     *                      and can be safely set to '', i.e., an empty byte array, to start with the first column name. Otherwise, it
+     *                      must a valid value under the rules of the Comparator defined for the given ColumnFamily.
+     * @param finish        The column name to stop the slice at. This attribute is not required, though there is no default value,
+     *                      and can be safely set to an empty byte array to not stop until 'count' results are seen. Otherwise, it
+     *                      must also be a valid value to the ColumnFamily Comparator.
+     * @param reversed      Whether the results should be ordered in reversed order. Similar to ORDER BY blah DESC in SQL.
+     * @param count         How many columns to return. Similar to LIMIT in SQL. May be arbitrarily large, but Thrift will
+     *                      materialize the whole result into memory before returning it to the client, so be aware that you may
+     *                      be better served by iterating through slices by passing the last value of one call in as the 'start'
+     *                      of the next instead of increasing 'count' arbitrarily large.
+     * @param startKey      The first key in the inclusive KeyRange.
+     * @param endKey        The last key in the inclusive KeyRange.
+     * @param startToken    The first token in the exclusive KeyRange.
+     * @param endToken      The last token in the exclusive KeyRange.
+     * @param keyRangeCount The total number of keys to permit in the KeyRange.
+     * @return List of objects KeySlice
+     * @throws UnsupportedEncodingException Exception
+     * @throws InvalidRequestException      Invalid request could mean keyspace or column family does not exist, required parameters are missing, or a parameter is malformed.
+     * @throws UnavailableException         Not all the replicas required could be created and/or read.
+     * @throws TimedOutException            Exception
+     * @throws TException                   Generic exception class for Thrift.
+     */
+    @Processor
+    public Object getRangeSlices(
+            String columnParent,
+            @Optional String start,
+            @Optional String finish,
+            @Optional @Default("false") boolean reversed,
+            @Optional @Default("100") int count,
+            @Optional String startKey,
+            @Optional String endKey,
+            @Optional String startToken,
+            @Optional String endToken,
+            @Optional @Default("100") int keyRangeCount)
+            throws UnsupportedEncodingException, InvalidRequestException,
+            UnavailableException, TimedOutException, TException {
 
-		ColumnParent cParent = CassandraDBUtils
-				.generateColumnParent(columnParent);
+        ColumnParent cParent = CassandraDBUtils
+                .generateColumnParent(columnParent);
 
-		SlicePredicate predicate = new SlicePredicate();
-		SliceRange range = CassandraDBUtils.generateSliceRange(start, finish,
-				reversed, count);
+        SlicePredicate predicate = new SlicePredicate();
+        SliceRange range = CassandraDBUtils.generateSliceRange(start, finish,
+                reversed, count);
 
-		predicate.setSlice_range(range);
+        predicate.setSlice_range(range);
 
-		KeyRange keyRange = new KeyRange();
-		keyRange.setCount(keyRangeCount)
-				.setStart_key(CassandraDBUtils.toByteBuffer(startKey))
-				.setEnd_key(CassandraDBUtils.toByteBuffer(endKey))
-				.setStart_token(startToken).setEnd_token(endToken);
+        KeyRange keyRange = new KeyRange();
+        keyRange.setCount(keyRangeCount)
+                .setStart_key(CassandraDBUtils.toByteBuffer(startKey))
+                .setEnd_key(CassandraDBUtils.toByteBuffer(endKey))
+                .setStart_token(startToken).setEnd_token(endToken);
 
-		return client.get_range_slices(cParent, predicate, keyRange,
-				this.getConsistencyLevel());
-	}
+        return client.get_range_slices(cParent, predicate, keyRange,
+                this.getConsistencyLevel());
+    }
 
-	/**
-	 * Like get_range_slices, returns a list of slices, but uses IndexClause
-	 * instead of KeyRange. To use this method, the underlying ColumnFamily of
-	 * the ColumnParent must have been configured with a column_metadata
-	 * attribute, specifying at least the name and index_type attributes. See
-	 * CfDef and ColumnDef above for the list of attributes. Note: the
-	 * IndexClause must contain one IndexExpression with an EQ operator on a
-	 * configured index column. Other IndexExpression structs may be added to
-	 * the IndexClause for non-indexed columns to further refine the results of
-	 * the EQ expression.
-	 * <p/>
-	 * {@sample.xml ../../../doc/CassandraDB-connector.xml.sample
-	 * cassandradb:get-indexed-slices}
-	 * 
-	 * @param columnParent
-	 *            Path to the column - must be a name of the ColumnFamily or
-	 *            ColumnFamily:SuperColumn pair
-	 * @param start The column name to start the slice with. This attribute is not required, though there is no default value,
-	 *               and can be safely set to '', i.e., an empty byte array, to start with the first column name. Otherwise, it
-	 *               must a valid value under the rules of the Comparator defined for the given ColumnFamily.
-	 * @param finish The column name to stop the slice at. This attribute is not required, though there is no default value,
-	 *                and can be safely set to an empty byte array to not stop until 'count' results are seen. Otherwise, it
-	 *                must also be a valid value to the ColumnFamily Comparator.
-	 * @param reversed Whether the results should be ordered in reversed order. Similar to ORDER BY blah DESC in SQL.
-	 * @param count How many columns to return. Similar to LIMIT in SQL. May be arbitrarily large, but Thrift will
-	 *               materialize the whole result into memory before returning it to the client, so be aware that you may
-	 *               be better served by iterating through slices by passing the last value of one call in as the 'start'
-	 *               of the next instead of increasing 'count' arbitrarily large.
-	 * @param clauseCount
-	 *            The number of results to which the index query will be
-	 *            constrained
-	 * @param clauseStartKey
-	 *            Start the index query at the specified key - can be set to '',
-	 *            i.e., an empty byte array, to start with the first key
-	 * @param expressionList
-	 *            The list of IndexExpression objects which must contain one EQ
-	 *            IndexOperator among the expressions
-	 * @return List of objects KeySlice
-	 * @throws UnsupportedEncodingException
-	 *             Exception
-	 * @throws InvalidRequestException
-	 *             Invalid request could mean keyspace or column family does not exist, required parameters are missing, or a parameter is malformed.
-	 * @throws UnavailableException
-	 *             Not all the replicas required could be created and/or read.
-	 * @throws TimedOutException
-	 *             Exception
-	 * @throws TException
-	 *             Generic exception class for Thrift.
-	 */
-	@Processor
-	public Object getIndexedSlices(String columnParent, @Optional String start,
-			@Optional String finish,
-			@Optional @Default("false") boolean reversed,
-			@Optional @Default("100") int count,
-			@Optional @Default("100") int clauseCount, String clauseStartKey,
-			List<IndexExpresion> expressionList)
-			throws UnsupportedEncodingException, InvalidRequestException,
-			UnavailableException, TimedOutException, TException {
+    /**
+     * Like get_range_slices, returns a list of slices, but uses IndexClause
+     * instead of KeyRange. To use this method, the underlying ColumnFamily of
+     * the ColumnParent must have been configured with a column_metadata
+     * attribute, specifying at least the name and index_type attributes. See
+     * CfDef and ColumnDef above for the list of attributes. Note: the
+     * IndexClause must contain one IndexExpression with an EQ operator on a
+     * configured index column. Other IndexExpression structs may be added to
+     * the IndexClause for non-indexed columns to further refine the results of
+     * the EQ expression.
+     * <p/>
+     * {@sample.xml ../../../doc/CassandraDB-connector.xml.sample
+     * cassandradb:get-indexed-slices}
+     *
+     * @param columnParent   Path to the column - must be a name of the ColumnFamily or
+     *                       ColumnFamily:SuperColumn pair
+     * @param start          The column name to start the slice with. This attribute is not required, though there is no default value,
+     *                       and can be safely set to '', i.e., an empty byte array, to start with the first column name. Otherwise, it
+     *                       must a valid value under the rules of the Comparator defined for the given ColumnFamily.
+     * @param finish         The column name to stop the slice at. This attribute is not required, though there is no default value,
+     *                       and can be safely set to an empty byte array to not stop until 'count' results are seen. Otherwise, it
+     *                       must also be a valid value to the ColumnFamily Comparator.
+     * @param reversed       Whether the results should be ordered in reversed order. Similar to ORDER BY blah DESC in SQL.
+     * @param count          How many columns to return. Similar to LIMIT in SQL. May be arbitrarily large, but Thrift will
+     *                       materialize the whole result into memory before returning it to the client, so be aware that you may
+     *                       be better served by iterating through slices by passing the last value of one call in as the 'start'
+     *                       of the next instead of increasing 'count' arbitrarily large.
+     * @param clauseCount    The number of results to which the index query will be
+     *                       constrained
+     * @param clauseStartKey Start the index query at the specified key - can be set to '',
+     *                       i.e., an empty byte array, to start with the first key
+     * @param expressionList The list of IndexExpression objects which must contain one EQ
+     *                       IndexOperator among the expressions
+     * @return List of objects KeySlice
+     * @throws UnsupportedEncodingException Exception
+     * @throws InvalidRequestException      Invalid request could mean keyspace or column family does not exist, required parameters are missing, or a parameter is malformed.
+     * @throws UnavailableException         Not all the replicas required could be created and/or read.
+     * @throws TimedOutException            Exception
+     * @throws TException                   Generic exception class for Thrift.
+     */
+    @Processor
+    public Object getIndexedSlices(String columnParent, @Optional String start,
+                                   @Optional String finish,
+                                   @Optional @Default("false") boolean reversed,
+                                   @Optional @Default("100") int count,
+                                   @Optional @Default("100") int clauseCount, String clauseStartKey,
+                                   List<IndexExpresion> expressionList)
+            throws UnsupportedEncodingException, InvalidRequestException,
+            UnavailableException, TimedOutException, TException {
 
-		ColumnParent cParent = CassandraDBUtils
-				.generateColumnParent(columnParent);
+        ColumnParent cParent = CassandraDBUtils
+                .generateColumnParent(columnParent);
 
-		SlicePredicate predicate = new SlicePredicate();
-		SliceRange range = CassandraDBUtils.generateSliceRange(start, finish,
-				reversed, count);
+        SlicePredicate predicate = new SlicePredicate();
+        SliceRange range = CassandraDBUtils.generateSliceRange(start, finish,
+                reversed, count);
 
-		predicate.setSlice_range(range);
+        predicate.setSlice_range(range);
 
-		IndexClause indexClause = new IndexClause();
-		indexClause.setCount(clauseCount);
-		indexClause.setStart_key(CassandraDBUtils.toByteBuffer(clauseStartKey));
-		List<IndexExpression> expList = null;
-		expList = CassandraDBUtils.toIndexExpression(expressionList);
-		indexClause.setExpressions(expList);
+        IndexClause indexClause = new IndexClause();
+        indexClause.setCount(clauseCount);
+        indexClause.setStart_key(CassandraDBUtils.toByteBuffer(clauseStartKey));
+        List<IndexExpression> expList = null;
+        expList = CassandraDBUtils.toIndexExpression(expressionList);
+        indexClause.setExpressions(expList);
 
-		return client.get_indexed_slices(cParent, indexClause, predicate,
-				this.getConsistencyLevel());
-	}
+        return client.get_indexed_slices(cParent, indexClause, predicate,
+                this.getConsistencyLevel());
+    }
 
-	/**
-	 * Insert a Column consisting of (name, value, timestamp, ttl) at the given
-	 * ColumnParent. Note that a SuperColumn cannot directly contain binary
-	 * values -- it can only contain sub-Columns. Only one sub-Column may be
-	 * inserted at a time, as well.
-	 * Any number of columns may be inserted at the same time. When inserting or updating columns in a column family, the client application specifies the row key to identify which column records to update. 
-	 * The row key is similar to a primary key in that it must be unique for each row within a column family. 
-	 * However, unlike a primary key, inserting a duplicate row key will not result in a primary key constraint violation - it will be treated as an UPSERT (update the specified columns in that row if they exist or insert them if they do not).
-	 * For more details check: http://www.datastax.com/docs/0.8/dml/about_writes
-	 * <p/>
-	 * {@sample.xml ../../../doc/CassandraDB-connector.xml.sample
-	 * cassandradb:insert}
-	 * 
-	 * @param rowKey
-	 *            The row key
-	 * @param columnParent
-	 *            The ColumnParent
-	 * @param columnName
-	 *            The name of the column
-	 * @param columnValue
-	 *            The value of the column
-	 * @param ttl
-	 *            An optional, positive delay (in seconds) after which the
-	 *            Column will be automatically deleted.
-	 * @throws UnsupportedEncodingException
-	 *             Exception
-	 * @throws TException
-	 *             Generic exception class for Thrift.
-	 * @throws TimedOutException
-	 *             Exception
-	 * @throws UnavailableException
-	 *             Not all the replicas required could be created and/or read.
-	 * @throws InvalidRequestException
-	 *             Invalid request could mean keyspace or column family does not exist, required parameters are missing, or a parameter is malformed.
-	 */
-	@Processor
-	public void insert(String rowKey, String columnParent, String columnName,
-			String columnValue, @Optional @Default("0") int ttl)
-			throws UnsupportedEncodingException, InvalidRequestException,
-			UnavailableException, TimedOutException, TException {
-		ColumnParent cParent = CassandraDBUtils
-				.generateColumnParent(columnParent);
-		Column column = new Column(CassandraDBUtils.toByteBuffer(columnName));
-		column.setValue(CassandraDBUtils.toByteBuffer(columnValue));
-		column.setTimestamp(System.currentTimeMillis());
-		if( ttl > 0 )
-		 column.setTtl(ttl);
-		client.insert(CassandraDBUtils.toByteBuffer(rowKey), cParent, column,
-				this.getConsistencyLevel());
-	}
+    /**
+     * Insert a Column consisting of (name, value, timestamp, ttl) at the given
+     * ColumnParent. Note that a SuperColumn cannot directly contain binary
+     * values -- it can only contain sub-Columns. Only one sub-Column may be
+     * inserted at a time, as well.
+     * Any number of columns may be inserted at the same time. When inserting or updating columns in a column family, the client application specifies the row key to identify which column records to update.
+     * The row key is similar to a primary key in that it must be unique for each row within a column family.
+     * However, unlike a primary key, inserting a duplicate row key will not result in a primary key constraint violation - it will be treated as an UPSERT (update the specified columns in that row if they exist or insert them if they do not).
+     * For more details check: http://www.datastax.com/docs/0.8/dml/about_writes
+     * <p/>
+     * {@sample.xml ../../../doc/CassandraDB-connector.xml.sample
+     * cassandradb:insert}
+     *
+     * @param rowKey       The row key
+     * @param columnParent The ColumnParent
+     * @param columnName   The name of the column
+     * @param columnValue  The value of the column
+     * @param ttl          An optional, positive delay (in seconds) after which the
+     *                     Column will be automatically deleted.
+     * @throws UnsupportedEncodingException Exception
+     * @throws TException                   Generic exception class for Thrift.
+     * @throws TimedOutException            Exception
+     * @throws UnavailableException         Not all the replicas required could be created and/or read.
+     * @throws InvalidRequestException      Invalid request could mean keyspace or column family does not exist, required parameters are missing, or a parameter is malformed.
+     */
+    @Processor
+    public void insert(String rowKey, String columnParent, String columnName,
+                       String columnValue, @Optional @Default("0") int ttl)
+            throws UnsupportedEncodingException, InvalidRequestException,
+            UnavailableException, TimedOutException, TException {
+        ColumnParent cParent = CassandraDBUtils
+                .generateColumnParent(columnParent);
+        Column column = new Column(CassandraDBUtils.toByteBuffer(columnName));
+        column.setValue(CassandraDBUtils.toByteBuffer(columnValue));
+        column.setTimestamp(System.currentTimeMillis());
+        if (ttl > 0)
+            column.setTtl(ttl);
+        client.insert(CassandraDBUtils.toByteBuffer(rowKey), cParent, column,
+                this.getConsistencyLevel());
+    }
+
     /**
      * Insert object into the database
      * <p/>
@@ -830,13 +675,13 @@ public class CassandraDBConnector {
      *                * @param password A password
      * @return Same content
      * @throws UnsupportedEncodingException Exception
-     * @throws TException Generic exception class for Thrift.
-     * @throws TimedOutException Time out of the request 
-     * @throws UnavailableException Not all the replicas required could be created and/or read.
-     * @throws InvalidRequestException  Invalid request could mean keyspace or column family does not exist, required parameters are missing, or a parameter is malformed.Why contains an associated error message.
+     * @throws TException                   Generic exception class for Thrift.
+     * @throws TimedOutException            Time out of the request
+     * @throws UnavailableException         Not all the replicas required could be created and/or read.
+     * @throws InvalidRequestException      Invalid request could mean keyspace or column family does not exist, required parameters are missing, or a parameter is malformed.Why contains an associated error message.
      */
     @Processor
-    public Map insertFromMap(@Optional @Default("#[payload]") Map content) throws UnsupportedEncodingException, InvalidRequestException, UnavailableException, TimedOutException, TException{
+    public Map insertFromMap(@Optional @Default("#[payload]") Map content) throws UnsupportedEncodingException, InvalidRequestException, UnavailableException, TimedOutException, TException {
         logger.debug("Inserting the data: " + content);
 
         //Iterate through ColumnFamilies
@@ -899,714 +744,625 @@ public class CassandraDBConnector {
 
         return content;
     }
-    
-	/**
-	 * Executes the specified mutations on the keyspace. content is a
-	 * Map&lt;string, Map&lt;string, List&lt;Mutation&gt;&gt;&gt;; the outer map maps the key to
-	 * the inner map, which maps the column family to the Mutation; can be read
-	 * as: <code> Map&lt;key : string, Map&lt;column_family : string, List&lt;Mutation&gt;&gt;&gt;</code>. To
-	 * be more specific, the outer map key is a row key, the inner map key is
-	 * the column family name. A Mutation specifies either columns to insert or
-	 * columns to delete. See Mutation and Deletion above for more details.
-	 * <p/>
-	 * {@sample.xml ../../../doc/CassandraDB-connector.xml.sample
-	 * cassandradb:batch-mutable}
-	 * 
-	 * @param content
-	 *            A Map&lt;ByteBuffer, Map&lt;String, List&lt;Mutation&gt;&gt;&gt;
-	 *            
-	 * @throws Exception
-	 *             Exception
-	 */
-	@Processor
-	public void batchMutable(@Optional @Default("#[payload]") Map content)
-			throws Exception {
-		logger.debug("Batch mutable called with: " + content);
 
-		client.batch_mutate(content, this.getConsistencyLevel());
-	}
+    /**
+     * Executes the specified mutations on the keyspace. content is a
+     * Map&lt;string, Map&lt;string, List&lt;Mutation&gt;&gt;&gt;; the outer map maps the key to
+     * the inner map, which maps the column family to the Mutation; can be read
+     * as: <code> Map&lt;key : string, Map&lt;column_family : string, List&lt;Mutation&gt;&gt;&gt;</code>. To
+     * be more specific, the outer map key is a row key, the inner map key is
+     * the column family name. A Mutation specifies either columns to insert or
+     * columns to delete. See Mutation and Deletion above for more details.
+     * <p/>
+     * {@sample.xml ../../../doc/CassandraDB-connector.xml.sample
+     * cassandradb:batch-mutable}
+     *
+     * @param content A Map&lt;ByteBuffer, Map&lt;String, List&lt;Mutation&gt;&gt;&gt;
+     * @throws Exception Exception
+     */
+    @Processor
+    public void batchMutable(@Optional @Default("#[payload]") Map content)
+            throws Exception {
+        logger.debug("Batch mutable called with: " + content);
 
-	/**
-	 * Increments a CounterColumn consisting of (name, value) at the given
-	 * ColumnParent. Note that a SuperColumn cannot directly contain binary
-	 * values -- it can only contain sub-Columns.
-	 * <p/>
-	 * {@sample.xml ../../../doc/CassandraDB-connector.xml.sample
-	 * cassandradb:add}
-	 * 
-	 * @param rowKey
-	 *            Key of the row
-	 * @param columnParent
-	 *            Column Parent of the CounterColum
-	 * @param counterName
-	 *            Name of the column
-	 * @param counterValue
-	 *            Value of the counter
-	 * @throws UnsupportedEncodingException
-	 *             Exception
-	 * @throws InvalidRequestException
-	 *             Invalid request could mean keyspace or column family does not exist, required parameters are missing, or a parameter is malformed.
-	 * @throws UnavailableException
-	 *             Not all the replicas required could be created and/or read.
-	 * @throws TimedOutException
-	 *             Exception
-	 * @throws TException
-	 *             Generic exception class for Thrift.
-	 */
-	@Processor
-	public void add(String rowKey, String columnParent, String counterName,
-			int counterValue) throws UnsupportedEncodingException,
-			InvalidRequestException, UnavailableException, TimedOutException,
-			TException {
+        client.batch_mutate(content, this.getConsistencyLevel());
+    }
 
-		ColumnParent cParent = CassandraDBUtils
-				.generateColumnParent(columnParent);
+    /**
+     * Increments a CounterColumn consisting of (name, value) at the given
+     * ColumnParent. Note that a SuperColumn cannot directly contain binary
+     * values -- it can only contain sub-Columns.
+     * <p/>
+     * {@sample.xml ../../../doc/CassandraDB-connector.xml.sample
+     * cassandradb:add}
+     *
+     * @param rowKey       Key of the row
+     * @param columnParent Column Parent of the CounterColum
+     * @param counterName  Name of the column
+     * @param counterValue Value of the counter
+     * @throws UnsupportedEncodingException Exception
+     * @throws InvalidRequestException      Invalid request could mean keyspace or column family does not exist, required parameters are missing, or a parameter is malformed.
+     * @throws UnavailableException         Not all the replicas required could be created and/or read.
+     * @throws TimedOutException            Exception
+     * @throws TException                   Generic exception class for Thrift.
+     */
+    @Processor
+    public void add(String rowKey, String columnParent, String counterName,
+                    int counterValue) throws UnsupportedEncodingException,
+            InvalidRequestException, UnavailableException, TimedOutException,
+            TException {
 
-		CounterColumn column = new CounterColumn();
-		column.setName(CassandraDBUtils.toByteBuffer(counterName));
-		column.setValue(counterValue);
+        ColumnParent cParent = CassandraDBUtils
+                .generateColumnParent(columnParent);
 
-		client.add(CassandraDBUtils.toByteBuffer(rowKey), cParent, column,
-				this.getConsistencyLevel());
-	}
+        CounterColumn column = new CounterColumn();
+        column.setName(CassandraDBUtils.toByteBuffer(counterName));
+        column.setValue(counterValue);
 
-	/**
-	 * Remove data from the row specified by key at the granularity specified by
-	 * column_path, and the given timestamp. Note that all the values in
-	 * column_path besides column_path.column_family are truly optional: you can
-	 * remove the entire row by just specifying the ColumnFamily, or you can
-	 * remove a SuperColumn or a single Column by specifying those levels too.
-	 * Note that the timestamp is needed, so that if the commands are replayed
-	 * in a different order on different nodes, the same result is produced.
-	 * <p/>
-	 * {@sample.xml ../../../doc/CassandraDB-connector.xml.sample
-	 * cassandradb:remove}
-	 * 
-	 * @param rowKey
-	 *            the row key
-	 * @param columnPath
-	 *            Path to the column - must be in the form of
-	 *            ColumnFamily:SuperColumn:Column
-	 * @throws Exception
-	 *             IOException
-	 */
-	@Processor
-	public void remove(String rowKey, String columnPath) throws Exception {
-		ColumnPath cPath = CassandraDBUtils.parseColumnPath(columnPath);
-		client.remove(CassandraDBUtils.toByteBuffer(rowKey), cPath,
-				new Date().getTime(), this.getConsistencyLevel());
-	}
+        client.add(CassandraDBUtils.toByteBuffer(rowKey), cParent, column,
+                this.getConsistencyLevel());
+    }
 
-	/**
-	 * Remove a counter from the row specified by key at the granularity
-	 * specified by column_path. Note that all the values in column_path besides
-	 * column_path.column_family are truly optional: you can remove the entire
-	 * row by just specifying the ColumnFamily, or you can remove a SuperColumn
-	 * or a single Column by specifying those levels too. Note that counters
-	 * have limited support for deletes: if you remove a counter, you must wait
-	 * to issue any following update until the delete has reached all the nodes
-	 * and all of them have been fully compacted.
-	 * <p/>
-	 * {@sample.xml ../../../doc/CassandraDB-connector.xml.sample
-	 * cassandradb:remove-counter}
-	 * 
-	 * @param rowKey
-	 *            Key of the row
-	 * @param columnPath
-	 *            Column that will be affected by the remove counter
-	 * @throws UnsupportedEncodingException
-	 *             Exception
-	 * @throws InvalidRequestException
-	 *             Invalid request could mean keyspace or column family does not exist, required parameters are missing, or a parameter is malformed.
-	 * @throws UnavailableException
-	 *             Not all the replicas required could be created and/or read.
-	 * @throws TimedOutException
-	 *             Exception
-	 * @throws TException
-	 *             Generic exception class for Thrift.
-	 */
-	@Processor
-	public void removeCounter(String rowKey, String columnPath)
-			throws UnsupportedEncodingException, InvalidRequestException,
-			UnavailableException, TimedOutException, TException {
-		ColumnPath cPath = CassandraDBUtils.parseColumnPath(columnPath);
-		client.remove_counter(CassandraDBUtils.toByteBuffer(rowKey), cPath,
-				this.getConsistencyLevel());
-	}
+    /**
+     * Remove data from the row specified by key at the granularity specified by
+     * column_path, and the given timestamp. Note that all the values in
+     * column_path besides column_path.column_family are truly optional: you can
+     * remove the entire row by just specifying the ColumnFamily, or you can
+     * remove a SuperColumn or a single Column by specifying those levels too.
+     * Note that the timestamp is needed, so that if the commands are replayed
+     * in a different order on different nodes, the same result is produced.
+     * <p/>
+     * {@sample.xml ../../../doc/CassandraDB-connector.xml.sample
+     * cassandradb:remove}
+     *
+     * @param rowKey     the row key
+     * @param columnPath Path to the column - must be in the form of
+     *                   ColumnFamily:SuperColumn:Column
+     * @throws Exception IOException
+     */
+    @Processor
+    public void remove(String rowKey, String columnPath) throws Exception {
+        ColumnPath cPath = CassandraDBUtils.parseColumnPath(columnPath);
+        client.remove(CassandraDBUtils.toByteBuffer(rowKey), cPath,
+                new Date().getTime(), this.getConsistencyLevel());
+    }
 
-	/**
-	 * Removes all the rows from the given column family.
-	 * <p/>
-	 * {@sample.xml ../../../doc/CassandraDB-connector.xml.sample
-	 * cassandradb:truncate}
-	 * 
-	 * @param columnFamily
-	 *            Column Family
-	 * @throws InvalidRequestException
-	 *             Invalid request could mean keyspace or column family does not exist, required parameters are missing, or a parameter is malformed.
-	 * @throws UnavailableException
-	 *             Not all the replicas required could be created and/or read.
-	 * @throws TException
-	 *             Generic exception class for Thrift.
-	 */
-	@Processor
-	public void truncate(String columnFamily) throws InvalidRequestException,
-			UnavailableException, TException {
-		client.truncate(columnFamily);
-	}
+    /**
+     * Remove a counter from the row specified by key at the granularity
+     * specified by column_path. Note that all the values in column_path besides
+     * column_path.column_family are truly optional: you can remove the entire
+     * row by just specifying the ColumnFamily, or you can remove a SuperColumn
+     * or a single Column by specifying those levels too. Note that counters
+     * have limited support for deletes: if you remove a counter, you must wait
+     * to issue any following update until the delete has reached all the nodes
+     * and all of them have been fully compacted.
+     * <p/>
+     * {@sample.xml ../../../doc/CassandraDB-connector.xml.sample
+     * cassandradb:remove-counter}
+     *
+     * @param rowKey     Key of the row
+     * @param columnPath Column that will be affected by the remove counter
+     * @throws UnsupportedEncodingException Exception
+     * @throws InvalidRequestException      Invalid request could mean keyspace or column family does not exist, required parameters are missing, or a parameter is malformed.
+     * @throws UnavailableException         Not all the replicas required could be created and/or read.
+     * @throws TimedOutException            Exception
+     * @throws TException                   Generic exception class for Thrift.
+     */
+    @Processor
+    public void removeCounter(String rowKey, String columnPath)
+            throws UnsupportedEncodingException, InvalidRequestException,
+            UnavailableException, TimedOutException, TException {
+        ColumnPath cPath = CassandraDBUtils.parseColumnPath(columnPath);
+        client.remove_counter(CassandraDBUtils.toByteBuffer(rowKey), cPath,
+                this.getConsistencyLevel());
+    }
 
-	/**
-	 * Gets the name of the cluster.
-	 * <p/>
-	 * {@sample.xml ../../../doc/CassandraDB-connector.xml.sample
-	 * cassandradb:describe-cluster-name}
-	 * 
-	 * @return the cluster name
-	 * @throws TException
-	 *             Generic exception class for Thrift.
-	 */
-	@Processor
-	public String describeClusterName() throws TException {
-		return client.describe_cluster_name();
-	}
+    /**
+     * Removes all the rows from the given column family.
+     * <p/>
+     * {@sample.xml ../../../doc/CassandraDB-connector.xml.sample
+     * cassandradb:truncate}
+     *
+     * @param columnFamily Column Family
+     * @throws InvalidRequestException Invalid request could mean keyspace or column family does not exist, required parameters are missing, or a parameter is malformed.
+     * @throws UnavailableException    Not all the replicas required could be created and/or read.
+     * @throws TException              Generic exception class for Thrift.
+     */
+    @Processor
+    public void truncate(String columnFamily) throws InvalidRequestException,
+            UnavailableException, TException {
+        client.truncate(columnFamily);
+    }
 
-	/**
-	 * For each schema version present in the cluster, returns a list of nodes
-	 * at that version. Hosts that do not respond will be under the key
-	 * DatabaseDescriptor.INITIAL_VERSION. The cluster is all on the same
-	 * version if the size of the map is 1.
-	 * <p/>
-	 * {@sample.xml ../../../doc/CassandraDB-connector.xml.sample
-	 * cassandradb:describe-schema-versions}
-	 * 
-	 * @return A map of type Map<String,List<String>>
-	 * @throws InvalidRequestException
-	 *             Invalid request could mean keyspace or column family does not exist, required parameters are missing, or a parameter is malformed.
-	 * @throws TException
-	 *             Generic exception class for Thrift.
-	 */
-	@Processor
-	public Map describeSchemaVersions()
-			throws InvalidRequestException, TException {
-		return client.describe_schema_versions();
-	}
+    /**
+     * Gets the name of the cluster.
+     * <p/>
+     * {@sample.xml ../../../doc/CassandraDB-connector.xml.sample
+     * cassandradb:describe-cluster-name}
+     *
+     * @return the cluster name
+     * @throws TException Generic exception class for Thrift.
+     */
+    @Processor
+    public String describeClusterName() throws TException {
+        return client.describe_cluster_name();
+    }
 
-	/**
-	 * Gets information about the specified keyspace.
-	 * <p/>
-	 * {@sample.xml ../../../doc/CassandraDB-connector.xml.sample
-	 * cassandradb:describe-keyspace}
-	 * 
-	 * @param keyspace
-	 *            Name of the keyspace
-	 * @return A KsDef instance
-	 * @throws NotFoundException
-	 *             Exception
-	 * @throws InvalidRequestException
-	 *             Invalid request could mean keyspace or column family does not exist, required parameters are missing, or a parameter is malformed.
-	 * @throws TException
-	 *             Generic exception class for Thrift.
-	 */
-	@Processor
-	public Object describeKeyspace(String keyspace) throws NotFoundException,
-			InvalidRequestException, TException {
-		return client.describe_keyspace(keyspace);
-	}
+    /**
+     * For each schema version present in the cluster, returns a list of nodes
+     * at that version. Hosts that do not respond will be under the key
+     * DatabaseDescriptor.INITIAL_VERSION. The cluster is all on the same
+     * version if the size of the map is 1.
+     * <p/>
+     * {@sample.xml ../../../doc/CassandraDB-connector.xml.sample
+     * cassandradb:describe-schema-versions}
+     *
+     * @return A map of type Map<String,List<String>>
+     * @throws InvalidRequestException Invalid request could mean keyspace or column family does not exist, required parameters are missing, or a parameter is malformed.
+     * @throws TException              Generic exception class for Thrift.
+     */
+    @Processor
+    public Map describeSchemaVersions()
+            throws InvalidRequestException, TException {
+        return client.describe_schema_versions();
+    }
 
-	/**
-	 * Gets a list of all the keyspaces configured for the cluster. (Equivalent
-	 * to calling describe_keyspace(k) for k in keyspaces.)
-	 * <p/>
-	 * {@sample.xml ../../../doc/CassandraDB-connector.xml.sample
-	 * cassandradb:describe-keyspaces}
-	 * 
-	 * @return A list of KsDef
-	 * @throws InvalidRequestException
-	 *             Invalid request could mean keyspace or column family does not exist, required parameters are missing, or a parameter is malformed.
-	 * @throws TException
-	 *             Generic exception class for Thrift.
-	 */
-	@Processor
-	public List describeKeyspaces() throws InvalidRequestException, TException {
-		return client.describe_keyspaces();
-	}
+    /**
+     * Gets information about the specified keyspace.
+     * <p/>
+     * {@sample.xml ../../../doc/CassandraDB-connector.xml.sample
+     * cassandradb:describe-keyspace}
+     *
+     * @param keyspace Name of the keyspace
+     * @return A KsDef instance
+     * @throws NotFoundException       Exception
+     * @throws InvalidRequestException Invalid request could mean keyspace or column family does not exist, required parameters are missing, or a parameter is malformed.
+     * @throws TException              Generic exception class for Thrift.
+     */
+    @Processor
+    public Object describeKeyspace(String keyspace) throws NotFoundException,
+            InvalidRequestException, TException {
+        return client.describe_keyspace(keyspace);
+    }
 
-	/**
-	 * Gets the name of the partitioner for the cluster.
-	 * <p/>
-	 * {@sample.xml ../../../doc/CassandraDB-connector.xml.sample
-	 * cassandradb:describe-partitioner}
-	 * 
-	 * @return Partitioner name
-	 * @throws TException
-	 *             Generic exception class for Thrift.
-	 */
-	@Processor
-	public String describePartitioner() throws TException {
-		return client.describe_partitioner();
-	}
+    /**
+     * Gets a list of all the keyspaces configured for the cluster. (Equivalent
+     * to calling describe_keyspace(k) for k in keyspaces.)
+     * <p/>
+     * {@sample.xml ../../../doc/CassandraDB-connector.xml.sample
+     * cassandradb:describe-keyspaces}
+     *
+     * @return A list of KsDef
+     * @throws InvalidRequestException Invalid request could mean keyspace or column family does not exist, required parameters are missing, or a parameter is malformed.
+     * @throws TException              Generic exception class for Thrift.
+     */
+    @Processor
+    public List describeKeyspaces() throws InvalidRequestException, TException {
+        return client.describe_keyspaces();
+    }
 
-	/**
-	 * Gets the token ring; a map of ranges to host addresses. Represented as a
-	 * set of TokenRange instead of a map from range to list of endpoints,
-	 * because you can't use Thrift structs as map keys:
-	 * https://issues.apache.org/jira/browse/THRIFT-162 for the same reason, we
-	 * can't return a set here, even though order is neither important nor
-	 * predictable.
-	 * <p/>
-	 * {@sample.xml ../../../doc/CassandraDB-connector.xml.sample
-	 * cassandradb:describe-ring}
-	 * 
-	 * @param keyspace
-	 *            Keyspace name
-	 * @return A list of TokenRange
-	 * @throws InvalidRequestException
-	 *             Invalid request could mean keyspace or column family does not exist, required parameters are missing, or a parameter is malformed.
-	 * @throws TException
-	 *             Generic exception class for Thrift.
-	 */
-	@Processor
-	public List describeRing(String keyspace) throws InvalidRequestException,
-			TException {
-		return client.describe_ring(keyspace);
-	}
+    /**
+     * Gets the name of the partitioner for the cluster.
+     * <p/>
+     * {@sample.xml ../../../doc/CassandraDB-connector.xml.sample
+     * cassandradb:describe-partitioner}
+     *
+     * @return Partitioner name
+     * @throws TException Generic exception class for Thrift.
+     */
+    @Processor
+    public String describePartitioner() throws TException {
+        return client.describe_partitioner();
+    }
 
-	/**
-	 * Gets the name of the snitch used for the cluster.
-	 * <p/>
-	 * {@sample.xml ../../../doc/CassandraDB-connector.xml.sample
-	 * cassandradb:describe-snitch}
-	 * 
-	 * @return String with the name of the snitch
-	 * @throws TException
-	 *             Generic exception class for Thrift.
-	 */
-	@Processor
-	public String describeSnitch() throws TException {
-		return client.describe_snitch();
-	}
+    /**
+     * Gets the token ring; a map of ranges to host addresses. Represented as a
+     * set of TokenRange instead of a map from range to list of endpoints,
+     * because you can't use Thrift structs as map keys:
+     * https://issues.apache.org/jira/browse/THRIFT-162 for the same reason, we
+     * can't return a set here, even though order is neither important nor
+     * predictable.
+     * <p/>
+     * {@sample.xml ../../../doc/CassandraDB-connector.xml.sample
+     * cassandradb:describe-ring}
+     *
+     * @param keyspace Keyspace name
+     * @return A list of TokenRange
+     * @throws InvalidRequestException Invalid request could mean keyspace or column family does not exist, required parameters are missing, or a parameter is malformed.
+     * @throws TException              Generic exception class for Thrift.
+     */
+    @Processor
+    public List describeRing(String keyspace) throws InvalidRequestException,
+            TException {
+        return client.describe_ring(keyspace);
+    }
 
-	/**
-	 * Gets the Thrift API version.
-	 * <p/>
-	 * {@sample.xml ../../../doc/CassandraDB-connector.xml.sample
-	 * cassandradb:describe-version}
-	 * 
-	 * @return API Version string representation
-	 * @throws TException
-	 *             Generic exception class for Thrift.
-	 */
-	@Processor
-	public String describeVersion() throws TException {
-		return client.describe_version();
-	}
+    /**
+     * Gets the name of the snitch used for the cluster.
+     * <p/>
+     * {@sample.xml ../../../doc/CassandraDB-connector.xml.sample
+     * cassandradb:describe-snitch}
+     *
+     * @return String with the name of the snitch
+     * @throws TException Generic exception class for Thrift.
+     */
+    @Processor
+    public String describeSnitch() throws TException {
+        return client.describe_snitch();
+    }
 
-	/**
-	 * Adds a column family. This method will throw an exception if a column
-	 * family with the same name is already associated with the keyspace.
-	 * Column names in metadata need to be ByteBuffer. You can achieve this by usin the CassandraDBUtils like in the next example
-	 * <p/>
-	 * {@sample.xml ../../../doc/CassandraDB-connector.xml.sample
-	 * cassandradb:system-add-column-family-from-object}
-	 * 
-	 * @param cfDefinition
-	 *            An instance of CfDef
-	 * @return The new Schema version ID.
-	 * @throws InvalidRequestException
-	 *             Invalid request could mean keyspace or column family does not exist, required parameters are missing, or a parameter is malformed.
-	 * @throws SchemaDisagreementException
-	 *             Schemas are not in agreement across all nodes
-	 * @throws TException
-	 *             Generic exception class for Thrift.
-	 */
-	@Processor
-	public String systemAddColumnFamilyFromObject(CfDef cfDefinition)
-			throws InvalidRequestException, SchemaDisagreementException,
-			TException {
+    /**
+     * Gets the Thrift API version.
+     * <p/>
+     * {@sample.xml ../../../doc/CassandraDB-connector.xml.sample
+     * cassandradb:describe-version}
+     *
+     * @return API Version string representation
+     * @throws TException Generic exception class for Thrift.
+     */
+    @Processor
+    public String describeVersion() throws TException {
+        return client.describe_version();
+    }
 
-		return client.system_add_column_family(cfDefinition);
-	}
+    /**
+     * Adds a column family. This method will throw an exception if a column
+     * family with the same name is already associated with the keyspace.
+     * Column names in metadata need to be ByteBuffer. You can achieve this by usin the CassandraDBUtils like in the next example
+     * <p/>
+     * {@sample.xml ../../../doc/CassandraDB-connector.xml.sample
+     * cassandradb:system-add-column-family-from-object}
+     *
+     * @param cfDefinition An instance of CfDef
+     * @return The new Schema version ID.
+     * @throws InvalidRequestException     Invalid request could mean keyspace or column family does not exist, required parameters are missing, or a parameter is malformed.
+     * @throws SchemaDisagreementException Schemas are not in agreement across all nodes
+     * @throws TException                  Generic exception class for Thrift.
+     */
+    @Processor
+    public String systemAddColumnFamilyFromObject(CfDef cfDefinition)
+            throws InvalidRequestException, SchemaDisagreementException,
+            TException {
 
-	/**
-	 * Adds a column family. This method will throw an exception if a column
-	 * family with the same name is already associated with the keyspace. This method also recieves a list of string to be used as column names
-	 * <p/>
-	 * {@sample.xml ../../../doc/CassandraDB-connector.xml.sample
-	 * cassandradb:system-add-column-family-from-object-with-simple-names}
-	 * 
-	 * @param cfDefinition
-	 *            An instance of CfDef
-	 * @param columnNames
-	 * 			  A list that contains the columns names for columns defined in column_metadata            
-	 * @return The new Schema version ID.
-	 * @throws InvalidRequestException
-	 *             Invalid request could mean keyspace or column family does not exist, required parameters are missing, or a parameter is malformed.
-	 * @throws SchemaDisagreementException
-	 *             Schemas are not in agreement across all nodes
-	 * @throws TException
-	 *             Generic exception class for Thrift.
-	 * @throws UnsupportedEncodingException 
-	 * 				Exception
-	 */
-	@Processor
-	public String systemAddColumnFamilyFromObjectWithSimpleNames(CfDef cfDefinition, List<String> columnNames)
-			throws InvalidRequestException, SchemaDisagreementException,
-			TException, UnsupportedEncodingException {
-		
-			if(columnNames.size() != cfDefinition.column_metadata.size())
-				throw new InvalidRequestException("Provided column names and column metadata sizes are not the same.");
-			Iterator<String> nameIterator = columnNames.iterator();
-			for(ColumnDef col : cfDefinition.column_metadata){
-				col.setName(CassandraDBUtils.toByteBuffer(nameIterator.next()));
-			}
-		
-		return client.system_add_column_family(cfDefinition);
-	}
-	/**
-	 * Adds a column family to the current keyspace. This method will throw an exception if a column
-	 * family with the same name is already associated with the keyspace.
-	 * <p/>
-	 * {@sample.xml ../../../doc/CassandraDB-connector.xml.sample
-	 * cassandradb:system-add-column-family-with-params}
-	 * 
-	 * @param columnFamilyName
-	 *            The name of the column to be added
-	 * @param comparatorType Validator to use to validate and compare column names in
-  								this column family. For Standard column families it applies to columns, for
-  								Super column families applied to  super columns.Default is BytesType, which is a straight forward lexical
-  comparison of the bytes in each column.
-	
-*  <p>Supported values are:</p>
-*  <ul>
-*  <li>AsciiType</li>
-*  <li>BooleanType</li>
-*  <li>BytesType</li>
-*  <li>CounterColumnType (distributed counter column)</li>
-*  <li>DateType</li>
-*  <li>DoubleType</li>
-*  <li>FloatType</li>
-*  <li>Int32Type</li>
-*  <li>IntegerType (a generic variable-length integer type)</li>
-*  <li>LexicalUUIDType</li>
-*  <li>LongType</li>
-*  <li>UTF8Type</li>
-*  <li>CompositeType (should be used with sub-types specified e.g. 'CompositeType(UTF8Type, Int32Type)'
-*      quotes are important (!) in this case)</li>
-*  </ul>
-  It is also valid to specify the fully-qualified class name to a class that
-  extends org.apache.cassandra.db.marshal.AbstractType.
+        return client.system_add_column_family(cfDefinition);
+    }
 
-	 * @param keyValidationClass Validator to use for keys. Default is BytesType which applies no validation.
+    /**
+     * Adds a column family. This method will throw an exception if a column
+     * family with the same name is already associated with the keyspace. This method also recieves a list of string to be used as column names
+     * <p/>
+     * {@sample.xml ../../../doc/CassandraDB-connector.xml.sample
+     * cassandradb:system-add-column-family-from-object-with-simple-names}
+     *
+     * @param cfDefinition An instance of CfDef
+     * @param columnNames  A list that contains the columns names for columns defined in column_metadata
+     * @return The new Schema version ID.
+     * @throws InvalidRequestException      Invalid request could mean keyspace or column family does not exist, required parameters are missing, or a parameter is malformed.
+     * @throws SchemaDisagreementException  Schemas are not in agreement across all nodes
+     * @throws TException                   Generic exception class for Thrift.
+     * @throws UnsupportedEncodingException Exception
+     */
+    @Processor
+    public String systemAddColumnFamilyFromObjectWithSimpleNames(CfDef cfDefinition, List<String> columnNames)
+            throws InvalidRequestException, SchemaDisagreementException,
+            TException, UnsupportedEncodingException {
 
-  <p>Supported values are:</p>
-  <ul>
-    <li>AsciiType</li>
-    <li>BooleanType</li>
-    <li>BytesType</li>
-    <li>DateType</li>
-    <li>DoubleType</li>
-    <li>FloatType</li>
-    <li>Int32Type</li>
-    <li>IntegerType (a generic variable-length integer type)</li>
-    <li>LexicalUUIDType</li>
-    <li>LongType</li>
-    <li>UTF8Type</li>
-</ul>
-  It is also valid to specify the fully-qualified class name to a class that
-  extends org.apache.cassandra.db.marshal.AbstractType.
-	 * @param defaultValidationClass Validator to use for values in columns which are
-  not listed in the column_metadata. Default is BytesType which applies
-  no validation.
+        if (columnNames.size() != cfDefinition.column_metadata.size())
+            throw new InvalidRequestException("Provided column names and column metadata sizes are not the same.");
+        Iterator<String> nameIterator = columnNames.iterator();
+        for (ColumnDef col : cfDefinition.column_metadata) {
+            col.setName(CassandraDBUtils.toByteBuffer(nameIterator.next()));
+        }
 
-  <p>Supported values are:</p>
-  <ul>
-    <li>AsciiType</li>
-    <li>BooleanType</li>
-    <li>BytesType</li>
-    <li>CounterColumnType (distributed counter column)</li>
-    <li>DateType</li>
-    <li>DoubleType</li>
-    <li>FloatType</li>
-    <li>Int32Type</li>
-    <li>IntegerType (a generic variable-length integer type)</li>
-    <li>LexicalUUIDType</li>
-    <li>LongType</li>
-    <li>UTF8Type</li>
-    <li>CompositeType (should be used with sub-types specified e.g. 'CompositeType(UTF8Type, Int32Type)'
-      quotes are important (!) in this case)</li>
-  </ul>
-  It is also valid to specify the fully-qualified class name to a class that
-  extends org.apache.cassandra.db.marshal.AbstractType.
+        return client.system_add_column_family(cfDefinition);
+    }
 
-	 * @param columnMetadata
-	 * 			  A list with the column definitions. If null, a dynamic column family will be created. For more details check http://www.datastax.com/docs/1.0/ddl/column_family
-	 * @param keyspace
-	 *            The name of the keyspace. If null, current keyspace will be used
-	 * @return The new Schema version ID.
-	 * @throws InvalidRequestException
-	 *             Invalid request could mean keyspace or column family does not exist, required parameters are missing, or a parameter is malformed.
-	 * @throws SchemaDisagreementException
-	 *             Schemas are not in agreement across all nodes
-	 * @throws TException
-	 *             Generic exception class for Thrift.
-	 */
-	@Processor
-	public String systemAddColumnFamilyWithParams(String columnFamilyName,@Optional @Default("BytesType") String comparatorType,
-			@Optional @Default("BytesType") String keyValidationClass,
-			@Optional @Default("BytesType") String defaultValidationClass,
-			@Optional List<ColumnDef> columnMetadata,
-			@Optional String keyspace)
-			throws InvalidRequestException, SchemaDisagreementException,
-			TException {
-		
-		if(keyspace==null)
-			keyspace = this.getKeyspace();
-		else
-			this.setQueryKeyspace(keyspace);
-		
-		CfDef columnDefinition=new CfDef(keyspace,columnFamilyName);
+    /**
+     * Adds a column family to the current keyspace. This method will throw an exception if a column
+     * family with the same name is already associated with the keyspace.
+     * <p/>
+     * {@sample.xml ../../../doc/CassandraDB-connector.xml.sample
+     * cassandradb:system-add-column-family-with-params}
+     *
+     * @param columnFamilyName       The name of the column to be added
+     * @param comparatorType         Validator to use to validate and compare column names in
+     *                               this column family. For Standard column families it applies to columns, for
+     *                               Super column families applied to  super columns.Default is BytesType, which is a straight forward lexical
+     *                               comparison of the bytes in each column.
+     *                               <p/>
+     *                               <p>Supported values are:</p>
+     *                               <ul>
+     *                               <li>AsciiType</li>
+     *                               <li>BooleanType</li>
+     *                               <li>BytesType</li>
+     *                               <li>CounterColumnType (distributed counter column)</li>
+     *                               <li>DateType</li>
+     *                               <li>DoubleType</li>
+     *                               <li>FloatType</li>
+     *                               <li>Int32Type</li>
+     *                               <li>IntegerType (a generic variable-length integer type)</li>
+     *                               <li>LexicalUUIDType</li>
+     *                               <li>LongType</li>
+     *                               <li>UTF8Type</li>
+     *                               <li>CompositeType (should be used with sub-types specified e.g. 'CompositeType(UTF8Type, Int32Type)'
+     *                               quotes are important (!) in this case)</li>
+     *                               </ul>
+     *                               It is also valid to specify the fully-qualified class name to a class that
+     *                               extends org.apache.cassandra.db.marshal.AbstractType.
+     * @param keyValidationClass     Validator to use for keys. Default is BytesType which applies no validation.
+     *                               <p/>
+     *                               <p>Supported values are:</p>
+     *                               <ul>
+     *                               <li>AsciiType</li>
+     *                               <li>BooleanType</li>
+     *                               <li>BytesType</li>
+     *                               <li>DateType</li>
+     *                               <li>DoubleType</li>
+     *                               <li>FloatType</li>
+     *                               <li>Int32Type</li>
+     *                               <li>IntegerType (a generic variable-length integer type)</li>
+     *                               <li>LexicalUUIDType</li>
+     *                               <li>LongType</li>
+     *                               <li>UTF8Type</li>
+     *                               </ul>
+     *                               It is also valid to specify the fully-qualified class name to a class that
+     *                               extends org.apache.cassandra.db.marshal.AbstractType.
+     * @param defaultValidationClass Validator to use for values in columns which are
+     *                               not listed in the column_metadata. Default is BytesType which applies
+     *                               no validation.
+     *                               <p/>
+     *                               <p>Supported values are:</p>
+     *                               <ul>
+     *                               <li>AsciiType</li>
+     *                               <li>BooleanType</li>
+     *                               <li>BytesType</li>
+     *                               <li>CounterColumnType (distributed counter column)</li>
+     *                               <li>DateType</li>
+     *                               <li>DoubleType</li>
+     *                               <li>FloatType</li>
+     *                               <li>Int32Type</li>
+     *                               <li>IntegerType (a generic variable-length integer type)</li>
+     *                               <li>LexicalUUIDType</li>
+     *                               <li>LongType</li>
+     *                               <li>UTF8Type</li>
+     *                               <li>CompositeType (should be used with sub-types specified e.g. 'CompositeType(UTF8Type, Int32Type)'
+     *                               quotes are important (!) in this case)</li>
+     *                               </ul>
+     *                               It is also valid to specify the fully-qualified class name to a class that
+     *                               extends org.apache.cassandra.db.marshal.AbstractType.
+     * @param columnMetadata         A list with the column definitions. If null, a dynamic column family will be created. For more details check http://www.datastax.com/docs/1.0/ddl/column_family
+     * @param keyspace               The name of the keyspace. If null, current keyspace will be used
+     * @return The new Schema version ID.
+     * @throws InvalidRequestException     Invalid request could mean keyspace or column family does not exist, required parameters are missing, or a parameter is malformed.
+     * @throws SchemaDisagreementException Schemas are not in agreement across all nodes
+     * @throws TException                  Generic exception class for Thrift.
+     */
+    @Processor
+    public String systemAddColumnFamilyWithParams(String columnFamilyName, @Optional @Default("BytesType") String comparatorType,
+                                                  @Optional @Default("BytesType") String keyValidationClass,
+                                                  @Optional @Default("BytesType") String defaultValidationClass,
+                                                  @Optional List<ColumnDef> columnMetadata,
+                                                  @Optional String keyspace)
+            throws InvalidRequestException, SchemaDisagreementException,
+            TException {
 
-		columnDefinition.setComparator_type(comparatorType);
-		columnDefinition.setKey_validation_class(keyValidationClass);
-		columnDefinition.setDefault_validation_class(defaultValidationClass);
-		
-		return this.systemAddColumnFamilyFromObject(columnDefinition);
-	}
-	/**
-	 * Drops a column family. Creates a snapshot and then submits a 'graveyard'
-	 * compaction during which the abandoned files will be deleted.
-	 * 
-	 * <p/>
-	 * {@sample.xml ../../../doc/CassandraDB-connector.xml.sample
-	 * cassandradb:system-drop-column-family}
-	 * 
-	 * @param columnFamily
-	 *            The name of the column family to be drop
-	 * @return The new schema version ID.
-	 * @throws InvalidRequestException
-	 *             Invalid request could mean keyspace or column family does not exist, required parameters are missing, or a parameter is malformed.
-	 * @throws SchemaDisagreementException
-	 *             Schemas are not in agreement across all nodes
-	 * @throws TException
-	 *             Generic exception class for Thrift.
-	 */
-	@Processor
-	public String systemDropColumnFamily(String columnFamily)
-			throws InvalidRequestException, SchemaDisagreementException,
-			TException {
-		return client.system_drop_column_family(columnFamily);
-	}
+        if (keyspace == null)
+            keyspace = this.getKeyspace();
+        else
+            this.setQueryKeyspace(keyspace);
 
-	/**
-	 * Creates a new keyspace and any column families defined with it. Callers
-	 * are not required to first create an empty keyspace and then create column
-	 * families for it.
-	 * <p/>
-	 * This will create a keyspace named MyKeyspace with no column families
-	 * {@sample.xml ../../../doc/CassandraDB-connector.xml.sample
-	 * cassandradb:system-add-keyspace-from-object}
-	 * 
-	 * @param keyspaceDefinition
-	 *            The keyspace definition that will be added
-	 * @return The new schema version ID.
-	 * @throws InvalidRequestException
-	 *             Invalid request could mean keyspace or column family does not exist, required parameters are missing, or a parameter is malformed.
-	 * @throws SchemaDisagreementException
-	 *             Schemas are not in agreement across all nodes
-	 * @throws TException
-	 *             Generic exception class for Thrift.
-	 */
-	@Processor
-	public String systemAddKeyspaceFromObject(KsDef keyspaceDefinition)
-			throws InvalidRequestException, SchemaDisagreementException,
-			TException {
-		return client.system_add_keyspace(keyspaceDefinition);
-	}
+        CfDef columnDefinition = new CfDef(keyspace, columnFamilyName);
 
-	/**
-	 * Creates a new keyspace with the provided name with all the defaults values
-	 * <p/>
-	 * {@sample.xml ../../../doc/CassandraDB-connector.xml.sample
-	 * cassandradb:system-add-keyspace-with-params}
-	 * 
-	 * @param keyspaceName
-	 *            The keyspace name
-	 * @param columnNames List of the column names the keyspace will have
-	 * @param strategyClass The name of the class that handles the Replication Strategy.
-	 * @param strategyOptions Map containing the configuration for the strategy class selected.
-	 * @return The new schema version ID.
-	 * @throws InvalidRequestException
-	 *             Invalid request could mean keyspace or column family does not exist, required parameters are missing, or a parameter is malformed.
-	 * @throws SchemaDisagreementException
-	 *             Schemas are not in agreement across all nodes
-	 * @throws TException
-	 *             Generic exception class for Thrift.
-	 */
-	@Processor
-	public Object systemAddKeyspaceWithParams(String keyspaceName,
-			@Placement(group="Column Names") @Optional List<String> columnNames,
-			@Optional ReplicationStrategy strategyClass,
-			@Placement(group="Strategy Options") @Optional Map<String,String> strategyOptions)
-			throws InvalidRequestException, SchemaDisagreementException,
-			TException {
-		KsDef ksDef= new KsDef();
-		ksDef.setName(keyspaceName);
-		if(strategyClass==null){			
-			ksDef.setStrategy_class(ReplicationStrategy.SIMPLE.toString());
-			Map<String,String> options = new HashMap<String,String>();
-			options.put("replication_factor", "1");
-			ksDef.setStrategy_options(options);
-		}
-		else{
-			ksDef.setStrategy_class(strategyClass.toString());
-			ksDef.setStrategy_options(strategyOptions);
-		}
-		List<CfDef> list = new ArrayList<CfDef>();
-		
-		if(columnNames!=null && !columnNames.isEmpty() ){
-			list = CassandraDBUtils.toColumnDefinition(columnNames, keyspaceName);			
-		}
-		ksDef.setCf_defs(list);
-		return this.systemAddKeyspaceFromObject(ksDef);
-	}
-	/**
-	 * Drops a keyspace. Creates a snapshot and then submits a 'graveyard'
-	 * compaction during which the abandoned files will be deleted.
-	 * <p/>
-	 * {@sample.xml ../../../doc/CassandraDB-connector.xml.sample
-	 * cassandradb:system-drop-keyspace}
-	 * 
-	 * @param keyspace
-	 *            Name of the keyspace to be dropped
-	 * @return The new schema version ID.
-	 * @throws InvalidRequestException
-	 *             Invalid request could mean keyspace or column family does not exist, required parameters are missing, or a parameter is malformed.
-	 * @throws SchemaDisagreementException
-	 *             Schemas are not in agreement across all nodes
-	 * @throws TException
-	 *             Generic exception class for Thrift.
-	 */
-	@Processor
-	public Object systemDropKeyspace(String keyspace)
-			throws InvalidRequestException, SchemaDisagreementException,
-			TException {
-		return client.system_drop_keyspace(keyspace);
-	}
+        columnDefinition.setComparator_type(comparatorType);
+        columnDefinition.setKey_validation_class(keyValidationClass);
+        columnDefinition.setDefault_validation_class(defaultValidationClass);
 
-	/**
-	 * Updates properties of a keyspace.
-	 * <p/>
-	 * {@sample.xml ../../../doc/CassandraDB-connector.xml.sample
-	 * cassandradb:system-update-keyspace}
-	 * 
-	 * @param keyspaceDef
-	 *            New keyspace to be applied for update
-	 * @return The new schema version ID.
-	 * @throws InvalidRequestException
-	 *             Invalid request could mean keyspace or column family does not exist, required parameters are missing, or a parameter is malformed.
-	 * @throws SchemaDisagreementException
-	 *             Schemas are not in agreement across all nodes
-	 * @throws TException
-	 *             Generic exception class for Thrift.
-	 */
-	@Processor
-	public String systemUpdateKeyspace(KsDef keyspaceDef)
-			throws InvalidRequestException, SchemaDisagreementException,
-			TException {
-		return client.system_update_keyspace(keyspaceDef);
-	}
+        return this.systemAddColumnFamilyFromObject(columnDefinition);
+    }
 
-	/**
-	 * Updates properties of a ColumnFamily.
-	 * <p/>
-	 * {@sample.xml ../../../doc/CassandraDB-connector.xml.sample
-	 * cassandradb:system-update-column-family}
-	 * 
-	 * @param columnFamily
-	 *            CfDef with new settings
-	 * @return The new schema version ID.
-	 * @throws InvalidRequestException
-	 *             Invalid request could mean keyspace or column family does not exist, required parameters are missing, or a parameter is malformed.
-	 * @throws SchemaDisagreementException
-	 *             Schemas are not in agreement across all nodes
-	 * @throws TException
-	 *             Generic exception class for Thrift.
-	 */
-	@Processor
-	public String systemUpdateColumnFamily(CfDef columnFamily)
-			throws InvalidRequestException, SchemaDisagreementException,
-			TException {
-		return client.system_update_column_family(columnFamily);
-	}
+    /**
+     * Drops a column family. Creates a snapshot and then submits a 'graveyard'
+     * compaction during which the abandoned files will be deleted.
+     * <p/>
+     * <p/>
+     * {@sample.xml ../../../doc/CassandraDB-connector.xml.sample
+     * cassandradb:system-drop-column-family}
+     *
+     * @param columnFamily The name of the column family to be drop
+     * @return The new schema version ID.
+     * @throws InvalidRequestException     Invalid request could mean keyspace or column family does not exist, required parameters are missing, or a parameter is malformed.
+     * @throws SchemaDisagreementException Schemas are not in agreement across all nodes
+     * @throws TException                  Generic exception class for Thrift.
+     */
+    @Processor
+    public String systemDropColumnFamily(String columnFamily)
+            throws InvalidRequestException, SchemaDisagreementException,
+            TException {
+        return client.system_drop_column_family(columnFamily);
+    }
 
-	/**
-	 * Executes a CQL (Cassandra Query Language) statement and returns a
-	 * CqlResult containing the results. For more information about CQL please visit: http://cassandra.apache.org/doc/cql/CQL.html
-	 * <p/>
-	 * {@sample.xml ../../../doc/CassandraDB-connector.xml.sample
-	 * cassandradb:execute-cql-query}
-	 * 
-	 * @param query
-	 *            CQL Statement to be executed
-	 * @param compression
-	 *            Compression level, by default we use NONE
-	 * @return CqlResult containing the results of the execution
-	 * @throws UnsupportedEncodingException
-	 *             Exception
-	 * @throws InvalidRequestException
-	 *             Invalid request could mean keyspace or column family does not exist, required parameters are missing, or a parameter is malformed.
-	 * @throws UnavailableException
-	 *             Not all the replicas required could be created and/or read.
-	 * @throws TimedOutException
-	 *             Exception
-	 * @throws SchemaDisagreementException
-	 *             Schemas are not in agreement across all nodes
-	 * @throws TException
-	 *             Generic exception class for Thrift.
-	 */
-	@Processor
-	public Object executeCqlQuery(String query,
-			@Optional @Default("NONE") Compression compression)
-			throws UnsupportedEncodingException, InvalidRequestException,
-			UnavailableException, TimedOutException,
-			SchemaDisagreementException, TException {
-		return client.execute_cql_query(CassandraDBUtils.toByteBuffer(query),
-				compression);
-	}
+    /**
+     * Creates a new keyspace and any column families defined with it. Callers
+     * are not required to first create an empty keyspace and then create column
+     * families for it.
+     * <p/>
+     * This will create a keyspace named MyKeyspace with no column families
+     * {@sample.xml ../../../doc/CassandraDB-connector.xml.sample
+     * cassandradb:system-add-keyspace-from-object}
+     *
+     * @param keyspaceDefinition The keyspace definition that will be added
+     * @return The new schema version ID.
+     * @throws InvalidRequestException     Invalid request could mean keyspace or column family does not exist, required parameters are missing, or a parameter is malformed.
+     * @throws SchemaDisagreementException Schemas are not in agreement across all nodes
+     * @throws TException                  Generic exception class for Thrift.
+     */
+    @Processor
+    public String systemAddKeyspaceFromObject(KsDef keyspaceDefinition)
+            throws InvalidRequestException, SchemaDisagreementException,
+            TException {
+        return client.system_add_keyspace(keyspaceDefinition);
+    }
 
-	public String getHost() {
-		return this.host;
-	}
+    /**
+     * Creates a new keyspace with the provided name with all the defaults values
+     * <p/>
+     * {@sample.xml ../../../doc/CassandraDB-connector.xml.sample
+     * cassandradb:system-add-keyspace-with-params}
+     *
+     * @param keyspaceName    The keyspace name
+     * @param columnNames     List of the column names the keyspace will have
+     * @param strategyClass   The name of the class that handles the Replication Strategy.
+     * @param strategyOptions Map containing the configuration for the strategy class selected.
+     * @return The new schema version ID.
+     * @throws InvalidRequestException     Invalid request could mean keyspace or column family does not exist, required parameters are missing, or a parameter is malformed.
+     * @throws SchemaDisagreementException Schemas are not in agreement across all nodes
+     * @throws TException                  Generic exception class for Thrift.
+     */
+    @Processor
+    public Object systemAddKeyspaceWithParams(String keyspaceName,
+                                              @Placement(group = "Column Names") @Optional List<String> columnNames,
+                                              @Optional ReplicationStrategy strategyClass,
+                                              @Placement(group = "Strategy Options") @Optional Map<String, String> strategyOptions)
+            throws InvalidRequestException, SchemaDisagreementException,
+            TException {
+        KsDef ksDef = new KsDef();
+        ksDef.setName(keyspaceName);
+        if (strategyClass == null) {
+            ksDef.setStrategy_class(ReplicationStrategy.SIMPLE.toString());
+            Map<String, String> options = new HashMap<String, String>();
+            options.put("replication_factor", "1");
+            ksDef.setStrategy_options(options);
+        } else {
+            ksDef.setStrategy_class(strategyClass.toString());
+            ksDef.setStrategy_options(strategyOptions);
+        }
+        List<CfDef> list = new ArrayList<CfDef>();
 
-	public void setHost(String host) {
-		this.host = host;
-	}
+        if (columnNames != null && !columnNames.isEmpty()) {
+            list = CassandraDBUtils.toColumnDefinition(columnNames, keyspaceName);
+        }
+        ksDef.setCf_defs(list);
+        return this.systemAddKeyspaceFromObject(ksDef);
+    }
 
-	public int getPort() {
-		return this.port;
-	}
+    /**
+     * Drops a keyspace. Creates a snapshot and then submits a 'graveyard'
+     * compaction during which the abandoned files will be deleted.
+     * <p/>
+     * {@sample.xml ../../../doc/CassandraDB-connector.xml.sample
+     * cassandradb:system-drop-keyspace}
+     *
+     * @param keyspace Name of the keyspace to be dropped
+     * @return The new schema version ID.
+     * @throws InvalidRequestException     Invalid request could mean keyspace or column family does not exist, required parameters are missing, or a parameter is malformed.
+     * @throws SchemaDisagreementException Schemas are not in agreement across all nodes
+     * @throws TException                  Generic exception class for Thrift.
+     */
+    @Processor
+    public Object systemDropKeyspace(String keyspace)
+            throws InvalidRequestException, SchemaDisagreementException,
+            TException {
+        return client.system_drop_keyspace(keyspace);
+    }
 
-	public void setPort(int port) {
-		this.port = port;
-	}
+    /**
+     * Updates properties of a keyspace.
+     * <p/>
+     * {@sample.xml ../../../doc/CassandraDB-connector.xml.sample
+     * cassandradb:system-update-keyspace}
+     *
+     * @param keyspaceDef New keyspace to be applied for update
+     * @return The new schema version ID.
+     * @throws InvalidRequestException     Invalid request could mean keyspace or column family does not exist, required parameters are missing, or a parameter is malformed.
+     * @throws SchemaDisagreementException Schemas are not in agreement across all nodes
+     * @throws TException                  Generic exception class for Thrift.
+     */
+    @Processor
+    public String systemUpdateKeyspace(KsDef keyspaceDef)
+            throws InvalidRequestException, SchemaDisagreementException,
+            TException {
+        return client.system_update_keyspace(keyspaceDef);
+    }
 
-	public String getKeyspace() {
-		return this.keyspace;
-	}
+    /**
+     * Updates properties of a ColumnFamily.
+     * <p/>
+     * {@sample.xml ../../../doc/CassandraDB-connector.xml.sample
+     * cassandradb:system-update-column-family}
+     *
+     * @param columnFamily CfDef with new settings
+     * @return The new schema version ID.
+     * @throws InvalidRequestException     Invalid request could mean keyspace or column family does not exist, required parameters are missing, or a parameter is malformed.
+     * @throws SchemaDisagreementException Schemas are not in agreement across all nodes
+     * @throws TException                  Generic exception class for Thrift.
+     */
+    @Processor
+    public String systemUpdateColumnFamily(CfDef columnFamily)
+            throws InvalidRequestException, SchemaDisagreementException,
+            TException {
+        return client.system_update_column_family(columnFamily);
+    }
 
-	public void setKeyspace(String keyspace) {
-		this.keyspace = keyspace;
-	}
+    /**
+     * Executes a CQL (Cassandra Query Language) statement and returns a
+     * CqlResult containing the results. For more information about CQL please visit: http://cassandra.apache.org/doc/cql/CQL.html
+     * <p/>
+     * {@sample.xml ../../../doc/CassandraDB-connector.xml.sample
+     * cassandradb:execute-cql-query}
+     *
+     * @param query       CQL Statement to be executed
+     * @param compression Compression level, by default we use NONE
+     * @return CqlResult containing the results of the execution
+     * @throws UnsupportedEncodingException Exception
+     * @throws InvalidRequestException      Invalid request could mean keyspace or column family does not exist, required parameters are missing, or a parameter is malformed.
+     * @throws UnavailableException         Not all the replicas required could be created and/or read.
+     * @throws TimedOutException            Exception
+     * @throws SchemaDisagreementException  Schemas are not in agreement across all nodes
+     * @throws TException                   Generic exception class for Thrift.
+     */
+    @Processor
+    public Object executeCqlQuery(String query,
+                                  @Optional @Default("NONE") Compression compression)
+            throws UnsupportedEncodingException, InvalidRequestException,
+            UnavailableException, TimedOutException,
+            SchemaDisagreementException, TException {
+        return client.execute_cql_query(CassandraDBUtils.toByteBuffer(query),
+                compression);
+    }
 
-	public ConsistencyLevel getConsistencyLevel() {
-		return this.consistencyLevel;
-	}
+    public String getHost() {
+        return this.host;
+    }
 
-	public void setConsistencyLevel(ConsistencyLevel consistencyLevel) {
-		this.consistencyLevel = consistencyLevel;
-	}
+    public void setHost(String host) {
+        this.host = host;
+    }
 
-	public void setClient(Cassandra.Client client){
-		this.client = client;
-	}
+    public int getPort() {
+        return this.port;
+    }
+
+    public void setPort(int port) {
+        this.port = port;
+    }
+
+    public String getKeyspace() {
+        return this.keyspace;
+    }
+
+    public void setKeyspace(String keyspace) {
+        this.keyspace = keyspace;
+    }
+
+    public ConsistencyLevel getConsistencyLevel() {
+        return this.consistencyLevel;
+    }
+
+    public void setConsistencyLevel(ConsistencyLevel consistencyLevel) {
+        this.consistencyLevel = consistencyLevel;
+    }
+
+    public void setClient(Cassandra.Client client) {
+        this.client = client;
+    }
 }
