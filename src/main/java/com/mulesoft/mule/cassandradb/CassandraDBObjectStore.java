@@ -6,13 +6,16 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.thrift.transport.TFramedTransport;
 import org.apache.thrift.transport.TSocket;
 import org.apache.thrift.transport.TTransport;
+import org.mule.RequestContext;
 import org.mule.api.MuleContext;
+import org.mule.api.MuleEvent;
 import org.mule.api.context.MuleContextAware;
 import org.mule.api.store.ObjectStoreException;
 import org.mule.api.store.PartitionableExpirableObjectStore;
 import org.mule.api.store.PartitionableObjectStore;
 import org.mule.api.store.QueueStore;
 import org.mule.util.SerializationUtils;
+import org.mule.util.StringUtils;
 
 import java.io.Serializable;
 import java.nio.ByteBuffer;
@@ -30,11 +33,13 @@ public class CassandraDBObjectStore implements PartitionableObjectStore<Serializ
 
     private String host;
 
+    private String defaultPartitionName;
+
     private int port = 9160;
 
     private String keyspace;
 
-    private static String DEFAULT_PARTITION_NAME = "MULE_OBJECT_STORE";
+    private static String FALLBACK_PARTITION_NAME = "MULE_OBJECT_STORE";
 
     /**
      * Consistency Level. Can be one of ANY, ONE (default), TWO, THREE, QUORUM,
@@ -82,7 +87,7 @@ public class CassandraDBObjectStore implements PartitionableObjectStore<Serializ
 
     @Override
     public void store(Serializable key, Serializable value) throws ObjectStoreException {
-        store(key, value, DEFAULT_PARTITION_NAME);
+        store(key, value, getDefaultPartition());
     }
 
 
@@ -107,7 +112,7 @@ public class CassandraDBObjectStore implements PartitionableObjectStore<Serializ
 
     @Override
     public boolean contains(Serializable key) throws ObjectStoreException {
-        return contains(key, DEFAULT_PARTITION_NAME);
+        return contains(key, getDefaultPartition());
     }
 
     @Override
@@ -133,7 +138,7 @@ public class CassandraDBObjectStore implements PartitionableObjectStore<Serializ
 
     @Override
     public Serializable retrieve(Serializable key) throws ObjectStoreException {
-        return retrieve(key, DEFAULT_PARTITION_NAME);
+        return retrieve(key, getDefaultPartition());
     }
 
     @Override
@@ -154,7 +159,7 @@ public class CassandraDBObjectStore implements PartitionableObjectStore<Serializ
 
     @Override
     public Serializable remove(Serializable key) throws ObjectStoreException {
-        return remove(key, DEFAULT_PARTITION_NAME);
+        return remove(key, getDefaultPartition());
     }
 
     @Override
@@ -188,7 +193,7 @@ public class CassandraDBObjectStore implements PartitionableObjectStore<Serializ
 
     @Override
     public List<Serializable> allKeys() throws ObjectStoreException {
-        return allKeys(DEFAULT_PARTITION_NAME);
+        return allKeys(getDefaultPartition());
     }
 
     @Override
@@ -206,8 +211,7 @@ public class CassandraDBObjectStore implements PartitionableObjectStore<Serializ
     }
 
     @Override
-    public void disposePartition(String s) throws ObjectStoreException {
-        //To change body of implemented methods use File | Settings | File Templates.
+    public void disposePartition(String partitionName) throws ObjectStoreException {
     }
 
     private ColumnParent getColumnFamily(String name) throws Exception {
@@ -261,6 +265,18 @@ public class CassandraDBObjectStore implements PartitionableObjectStore<Serializ
         }
     }
 
+    private String getDefaultPartition() {
+        if (StringUtils.isBlank(defaultPartitionName)) {
+            return FALLBACK_PARTITION_NAME;
+        } else {
+            final MuleEvent muleEvent = RequestContext.getEvent();
+            String parsedPartitionName = context.getExpressionManager().parse(defaultPartitionName, muleEvent);
+            logger.debug("PARSED PARTITION NAME: " + parsedPartitionName);
+            return parsedPartitionName;
+        }
+    }
+
+
     @Override
     public void close() throws ObjectStoreException {
         tr.close();
@@ -298,5 +314,9 @@ public class CassandraDBObjectStore implements PartitionableObjectStore<Serializ
 
     public void setConsistencyLevel(ConsistencyLevel consistencyLevel) {
         this.consistencyLevel = consistencyLevel;
+    }
+
+    public void setDefaultPartitionName(String defaultPartitionName) {
+        this.defaultPartitionName = defaultPartitionName;
     }
 }

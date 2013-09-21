@@ -45,6 +45,8 @@
         <spring:property name="port" value="9160"/>
         <spring:property name="keyspace" value="FirstTest"/>
         <spring:property name="consistencyLevel" value="ONE"/>
+        <spring:property name="defaultPartitionName"
+                         value="idempotentFlow_#[new java.text.SimpleDateFormat('yyyy_MM_dd').format(new Date())]"/>
     </spring:bean>
 
     <flow name="idempotentReception">
