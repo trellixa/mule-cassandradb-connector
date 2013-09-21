@@ -212,6 +212,11 @@ public class CassandraDBObjectStore implements PartitionableObjectStore<Serializ
 
     @Override
     public void disposePartition(String partitionName) throws ObjectStoreException {
+        try {
+            client.truncate(partitionName);
+        } catch (Exception e) {
+            throw new ObjectStoreException(e);
+        }
     }
 
     private ColumnParent getColumnFamily(String name) throws Exception {
