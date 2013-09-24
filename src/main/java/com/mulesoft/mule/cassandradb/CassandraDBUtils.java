@@ -60,6 +60,7 @@ public class CassandraDBUtils {
             tr.open();
             client.set_keyspace(keyspace);
 
+
             if (password != null && username != null) {
                 HashMap<String, String> credentials = new HashMap<String, String>();
                 credentials.put("user", username);

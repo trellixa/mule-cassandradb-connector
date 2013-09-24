@@ -58,10 +58,6 @@ public class CassandraDBObjectStore implements PartitionableObjectStore<Serializ
      */
     private Cassandra.Client client;
 
-    public CassandraDBObjectStore() {
-        logger.info("CREATING OBJECT STORE");
-    }
-
     @Override
     public void setMuleContext(MuleContext muleContext) {
         context = muleContext;
@@ -69,7 +65,6 @@ public class CassandraDBObjectStore implements PartitionableObjectStore<Serializ
 
     @Override
     public void store(Serializable key, Serializable value, String partition) throws ObjectStoreException {
-
         try {
             ColumnParent parent = getColumnFamily(partition);
 
@@ -80,7 +75,6 @@ public class CassandraDBObjectStore implements PartitionableObjectStore<Serializ
 
             client.insert(CassandraDBUtils.toByteBuffer(SerializationUtils.serialize(key)), parent, column, consistencyLevel);
         } catch (Exception e) {
-            logger.error("Couldn't store", e);
             throw new ObjectStoreException(e);
         }
     }
@@ -319,6 +313,10 @@ public class CassandraDBObjectStore implements PartitionableObjectStore<Serializ
 
     public void setConsistencyLevel(ConsistencyLevel consistencyLevel) {
         this.consistencyLevel = consistencyLevel;
+    }
+
+    public ConsistencyLevel getConsistencyLevel() {
+        return consistencyLevel;
     }
 
     public void setDefaultPartitionName(String defaultPartitionName) {
