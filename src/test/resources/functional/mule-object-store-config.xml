@@ -38,37 +38,21 @@
 
     <spring:bean id="cassandraObjectStore" class="com.mulesoft.mule.cassandradb.CassandraDBObjectStore"
                  scope="singleton">
-        <!--<spring:property name="username" value="xxx"/>-->
-        <!--<spring:property name="password" value="xxx"/>-->
-        <spring:property name="host" value="localhost"/>
+        <spring:property name="host" value="cassandradb.acmesoft.com"/>
         <spring:property name="port" value="9160"/>
-        <spring:property name="keyspace" value="FirstTest"/>
-        <spring:property name="consistencyLevel" value="ONE"/>
+        <spring:property name="keyspace" value="MuleState"/>
+        <spring:property name="consistencyLevel" value="ALL"/>
         <spring:property name="defaultPartitionName"
                          value="idempotentFlow_#[new java.text.SimpleDateFormat('yyyy_MM_dd').format(new Date())]"/>
     </spring:bean>
 
     <flow name="idempotentReception">
-        <vm:inbound-endpoint path="in"/>
+        <http:inbound-endpoint address="http://0.0.0.0:8080/orders" exchange-patter="one-way"/>
         <idempotent-message-filter idExpression="#[payload]">
             <spring-object-store ref="cassandraObjectStore"/>
         </idempotent-message-filter>
-        <logger level="INFO" message="FOO"/>
-        <vm:outbound-endpoint path="out"/>
+        <vm:outbound-endpoint path="order.process"/>
     </flow>
-
-    <flow name="untilSuccessful">
-        <vm:inbound-endpoint path="until.in"/>
-
-        <until-successful objectStore-ref="cassandraObjectStore2"
-                          maxRetries="5"
-                          secondsBetweenRetries="1">
-            <test:component exceptionToThrow="java.lang.RuntimeException" throwException="true"/>
-
-        </until-successful>
-
-    </flow>
-
 
 
 </mule>
