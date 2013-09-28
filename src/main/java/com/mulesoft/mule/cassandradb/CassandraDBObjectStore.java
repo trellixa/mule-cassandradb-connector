@@ -322,4 +322,8 @@ public class CassandraDBObjectStore implements PartitionableObjectStore<Serializ
     public void setDefaultPartitionName(String defaultPartitionName) {
         this.defaultPartitionName = defaultPartitionName;
     }
+
+    public void setClient(Cassandra.Client client) {
+        this.client = client;
+    }
 }
