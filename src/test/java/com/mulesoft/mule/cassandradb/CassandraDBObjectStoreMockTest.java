@@ -129,10 +129,8 @@ public class CassandraDBObjectStoreMockTest {
         } catch (Throwable t) {
             exceptionThrown = true;
         }
-
         assertFalse(exceptionThrown);
     }
-
 
     @Test
     @Ignore

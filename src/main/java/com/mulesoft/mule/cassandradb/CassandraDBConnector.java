@@ -588,8 +588,7 @@ public class CassandraDBConnector {
         IndexClause indexClause = new IndexClause();
         indexClause.setCount(clauseCount);
         indexClause.setStart_key(CassandraDBUtils.toByteBuffer(clauseStartKey));
-        List<IndexExpression> expList = null;
-        expList = CassandraDBUtils.toIndexExpression(expressionList);
+        List<IndexExpression> expList  = CassandraDBUtils.toIndexExpression(expressionList);
         indexClause.setExpressions(expList);
 
         return client.get_indexed_slices(cParent, indexClause, predicate,
