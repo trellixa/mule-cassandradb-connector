@@ -42,7 +42,7 @@ import java.util.*;
  *
  * @author MuleSoft, Inc.
  */
-@Connector(name = "cassandradb", schemaVersion = "3.2")
+@Connector(name = "cassandradb", schemaVersion = "3.2", friendlyName = "CassandraDB", minMuleVersion = "3.5")
 public class CassandraDBConnector {
     protected static final Log logger = LogFactory
             .getLog(CassandraDBConnector.class);
@@ -51,7 +51,6 @@ public class CassandraDBConnector {
      * Host name or IP address
      */
     @Configurable
-    @Optional
     @Default("localhost")
     private String host;
 
@@ -60,7 +59,6 @@ public class CassandraDBConnector {
      */
     @Configurable
     @Default("9160")
-    @Optional
     private int port = 9160;
 
     /**
@@ -75,7 +73,6 @@ public class CassandraDBConnector {
      * for more details.
      */
     @Configurable
-    @Optional
     @Default("ONE")
     private ConsistencyLevel consistencyLevel;
 
@@ -268,8 +265,8 @@ public class CassandraDBConnector {
     @Processor(name = "get-slice")
     public Object getSlice(String rowKey, String columnParent,
                            @Optional String start, @Optional String finish,
-                           @Optional @Default("false") boolean reversed,
-                           @Optional @Default("100") int count,
+                           @Default("false") boolean reversed,
+                           @Default("100") int count,
                            @Placement(group = "Columns Serializars") @Optional List<ColumnSerializer> columnSerializers) throws UnsupportedEncodingException, InvalidRequestException, UnavailableException, TimedOutException, TException {
         logger.debug("Get Slice: ROW KEY= " + rowKey + " COLUMN PARENT="
                 + columnParent + " START=" + start + " FINISH=" + finish
@@ -328,9 +325,9 @@ public class CassandraDBConnector {
             String columnParent,
             @Optional String start,
             @Optional String finish,
-            @Optional @Default("false") boolean reversed,
-            @Optional @Default("100") int count,
-            @Optional @Placement(group = "Column Serializers") List<ColumnSerializer> columnSerializers)
+            @Default("false") boolean reversed,
+            @Default("100") int count,
+            @Placement(group = "Column Serializers") List<ColumnSerializer> columnSerializers)
             throws UnsupportedEncodingException, InvalidRequestException,
             UnavailableException, TimedOutException, TException {
 
@@ -384,8 +381,8 @@ public class CassandraDBConnector {
     @Processor(name = "get-count")
     public int getCount(String rowKey, String columnParent,
                         @Optional String start, @Optional String finish,
-                        @Optional @Default("false") boolean reversed,
-                        @Optional @Default("100") int count)
+                        @Default("false") boolean reversed,
+                        @Default("100") int count)
             throws UnsupportedEncodingException, InvalidRequestException,
             UnavailableException, TimedOutException, TException {
 
@@ -435,8 +432,8 @@ public class CassandraDBConnector {
             String columnParent,
             @Optional String start,
             @Optional String finish,
-            @Optional @Default("false") boolean reversed,
-            @Optional @Default("100") int count)
+            @Default("false") boolean reversed,
+            @Default("100") int count)
             throws UnsupportedEncodingException, InvalidRequestException,
             UnavailableException, TimedOutException, TException {
 
@@ -497,13 +494,13 @@ public class CassandraDBConnector {
             String columnParent,
             @Optional String start,
             @Optional String finish,
-            @Optional @Default("false") boolean reversed,
-            @Optional @Default("100") int count,
+            @Default("false") boolean reversed,
+            @Default("100") int count,
             @Optional String startKey,
             @Optional String endKey,
             @Optional String startToken,
             @Optional String endToken,
-            @Optional @Default("100") int keyRangeCount)
+            @Default("100") int keyRangeCount)
             throws UnsupportedEncodingException, InvalidRequestException,
             UnavailableException, TimedOutException, TException {
 
@@ -569,9 +566,9 @@ public class CassandraDBConnector {
     @Processor
     public Object getIndexedSlices(String columnParent, @Optional String start,
                                    @Optional String finish,
-                                   @Optional @Default("false") boolean reversed,
-                                   @Optional @Default("100") int count,
-                                   @Optional @Default("100") int clauseCount, String clauseStartKey,
+                                   @Default("false") boolean reversed,
+                                   @Default("100") int count,
+                                   @Default("100") int clauseCount, String clauseStartKey,
                                    List<IndexExpresion> expressionList)
             throws UnsupportedEncodingException, InvalidRequestException,
             UnavailableException, TimedOutException, TException {
@@ -622,7 +619,7 @@ public class CassandraDBConnector {
      */
     @Processor
     public void insert(String rowKey, String columnParent, String columnName,
-                       String columnValue, @Optional @Default("0") int ttl)
+                       String columnValue, @Default("0") int ttl)
             throws UnsupportedEncodingException, InvalidRequestException,
             UnavailableException, TimedOutException, TException {
         ColumnParent cParent = CassandraDBUtils
@@ -680,7 +677,7 @@ public class CassandraDBConnector {
      * @throws InvalidRequestException      Invalid request could mean keyspace or column family does not exist, required parameters are missing, or a parameter is malformed.Why contains an associated error message.
      */
     @Processor
-    public Map insertFromMap(@Optional @Default("#[payload]") Map content) throws UnsupportedEncodingException, InvalidRequestException, UnavailableException, TimedOutException, TException {
+    public Map insertFromMap(@Default("#[payload]") Map content) throws UnsupportedEncodingException, InvalidRequestException, UnavailableException, TimedOutException, TException {
         logger.debug("Inserting the data: " + content);
 
         //Iterate through ColumnFamilies
@@ -760,7 +757,7 @@ public class CassandraDBConnector {
      * @throws Exception Exception
      */
     @Processor
-    public void batchMutable(@Optional @Default("#[payload]") Map content)
+    public void batchMutable(@Default("#[payload]") Map content)
             throws Exception {
         logger.debug("Batch mutable called with: " + content);
 
@@ -1137,9 +1134,9 @@ public class CassandraDBConnector {
      * @throws TException                  Generic exception class for Thrift.
      */
     @Processor
-    public String systemAddColumnFamilyWithParams(String columnFamilyName, @Optional @Default("BytesType") String comparatorType,
-                                                  @Optional @Default("BytesType") String keyValidationClass,
-                                                  @Optional @Default("BytesType") String defaultValidationClass,
+    public String systemAddColumnFamilyWithParams(String columnFamilyName, @Default("BytesType") String comparatorType,
+                                                  @Default("BytesType") String keyValidationClass,
+                                                  @Default("BytesType") String defaultValidationClass,
                                                   @Optional List<ColumnDef> columnMetadata,
                                                   @Optional String keyspace)
             throws InvalidRequestException, SchemaDisagreementException,
@@ -1321,7 +1318,7 @@ public class CassandraDBConnector {
      */
     @Processor
     public Object executeCqlQuery(String query,
-                                  @Optional @Default("NONE") Compression compression)
+                                  @Default("NONE") Compression compression)
             throws UnsupportedEncodingException, InvalidRequestException,
             UnavailableException, TimedOutException,
             SchemaDisagreementException, TException {

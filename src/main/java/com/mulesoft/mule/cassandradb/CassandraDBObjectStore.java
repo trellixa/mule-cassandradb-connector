@@ -223,6 +223,11 @@ public class CassandraDBObjectStore implements PartitionableObjectStore<Serializ
         }
     }
 
+    @Override
+    public void clear(String partition) throws ObjectStoreException {
+        this.clear(partition);
+    }
+
     private ColumnParent getColumnFamily(String name) throws Exception {
         boolean columnFamilyExists = false;
 
@@ -299,6 +304,11 @@ public class CassandraDBObjectStore implements PartitionableObjectStore<Serializ
     @Override
     public boolean isPersistent() {
         return true;
+    }
+
+    @Override
+    public void clear() throws ObjectStoreException {
+        this.clear(getDefaultPartition());
     }
 
     public void setUsername(String username) {
