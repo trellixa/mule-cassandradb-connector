@@ -3,14 +3,14 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.mule.modules</groupId>
     <artifactId>mule-module-cassandradb</artifactId>
-    <version>1.1.1-SNAPSHOT</version>
+    <version>1.2.0-SNAPSHOT</version>
     <packaging>mule-module</packaging>
     <name>Mule CassandraDB Module</name>
 
     <parent>
         <groupId>org.mule.tools.devkit</groupId>
         <artifactId>mule-devkit-parent</artifactId>
-        <version>3.4.1</version>
+        <version>3.5.0</version>
     </parent>
     
     <properties>
@@ -46,9 +46,9 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>org.mule.tests</groupId>
-            <artifactId>mule-tests-functional</artifactId>
-            <version>${mule.version}</version>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>13.0.1</version>
             <scope>test</scope>
         </dependency>
 
@@ -99,6 +99,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.17</version>
                 <configuration>
                     <excludes>
                         <exclude>**/CassandraDBObjectStoreFunctionalTestCase.java</exclude>

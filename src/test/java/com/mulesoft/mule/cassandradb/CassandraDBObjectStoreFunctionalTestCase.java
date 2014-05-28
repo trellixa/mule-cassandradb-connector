@@ -16,6 +16,7 @@ import org.junit.Test;
 import org.mule.api.MuleMessage;
 import org.mule.api.client.MuleClient;
 import org.mule.api.store.PartitionableObjectStore;
+import org.mule.modules.tests.ConnectorTestCase;
 import org.mule.tck.junit4.FunctionalTestCase;
 import org.mule.util.UUID;
 
@@ -24,7 +25,7 @@ import java.util.List;
 
 import static org.junit.Assert.*;
 
-public class CassandraDBObjectStoreFunctionalTestCase extends FunctionalTestCase {
+public class CassandraDBObjectStoreFunctionalTestCase extends ConnectorTestCase {
 
     @Override
     protected String getConfigResources() {
