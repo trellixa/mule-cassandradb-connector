@@ -327,7 +327,7 @@ public class CassandraDBConnector {
             @Optional String finish,
             @Default("false") boolean reversed,
             @Default("100") int count,
-            @Placement(group = "Column Serializers") List<ColumnSerializer> columnSerializers)
+            @Optional @Placement(group = "Column Serializers") List<ColumnSerializer> columnSerializers)
             throws UnsupportedEncodingException, InvalidRequestException,
             UnavailableException, TimedOutException, TException {
 
