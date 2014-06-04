@@ -170,7 +170,7 @@ public class CassandraDBConnector {
      *
      * @param rowKey            the row key
      * @param columnPath        Path to the column - must be in the form of
-     *                          ColumnFamily:SuperColumn:Column. If you don't need a SuperColumn
+     *                          ColumnFamily:SuperColumn:Column.
      * @param columnSerializers Serializers for each column
      * @return the result as a JSON node
      * @throws UnsupportedEncodingException Exception
@@ -319,7 +319,7 @@ public class CassandraDBConnector {
      * @throws TimedOutException            Exception
      * @throws TException                   Generic exception class for Thrift.
      */
-    @Processor(name = "multiget-slice")
+    @Processor(name = "multiget-slice", friendlyName = "Multiget slice")
     public Object multiGetSlice(
             @Placement(group = "row-keys") List<String> rowKeys,
             String columnParent,
@@ -426,7 +426,7 @@ public class CassandraDBConnector {
      * @throws TimedOutException            Exception
      * @throws TException                   Generic exception class for Thrift.
      */
-    @Processor(name = "multiget-count")
+    @Processor(name = "multiget-count", friendlyName = "Multiget count")
     public Object multiGetCount(
             @Placement(group = "row-keys") List<String> rowKeys,
             String columnParent,
@@ -668,7 +668,6 @@ public class CassandraDBConnector {
      *                }
      *                }
      *                }
-     *                * @param password A password
      * @return Same content
      * @throws UnsupportedEncodingException Exception
      * @throws TException                   Generic exception class for Thrift.
@@ -1004,7 +1003,7 @@ public class CassandraDBConnector {
     /**
      * Adds a column family. This method will throw an exception if a column
      * family with the same name is already associated with the keyspace.
-     * Column names in metadata need to be ByteBuffer. You can achieve this by usin the CassandraDBUtils like in the next example
+     * Column names in metadata need to be ByteBuffer. You can achieve this by using the CassandraDBUtils like in the next example
      * <p/>
      * {@sample.xml ../../../doc/CassandraDB-connector.xml.sample
      * cassandradb:system-add-column-family-from-object}
