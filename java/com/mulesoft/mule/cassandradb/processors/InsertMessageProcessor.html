@@ -63,6 +63,51 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
@@ -84,6 +129,7 @@
 <link href='http://fonts.googleapis.com/css?family=Ubuntu:300' rel='stylesheet' type='text/css'>
 <script src="../../../../../../assets/search_autocomplete.js" type="text/javascript"></script>
 <script src="../../../../../../assets/jquery-resizable.min.js" type="text/javascript"></script>
+<script src="../../../../../../assets/jquery-toc.js" type="text/javascript"></script>
 <script src="../../../../../../assets/mule-developer-docs.js" type="text/javascript"></script>
 <script src="../../../../../../assets/prettify.js" type="text/javascript"></script>
 <script type="text/javascript">
@@ -102,6 +148,27 @@
     #resize-packages-nav{border-bottom:3px solid #666;}
   </style>
 </noscript>
+<script type="text/javascript" charset="utf-8">
+  var is_ssl = ("https:" == document.location.protocol);
+  var asset_host = is_ssl ? "https://s3.amazonaws.com/getsatisfaction.com/" : "http://s3.amazonaws.com/getsatisfaction.com/";
+  document.write(unescape("%3Cscript src='" + asset_host + "javascripts/feedback-v2.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+
+<script type="text/javascript" charset="utf-8">
+  var feedback_widget_options = {};
+
+  feedback_widget_options.display = "overlay";
+  feedback_widget_options.company = "mulesoft";
+  feedback_widget_options.placement = "right";
+  feedback_widget_options.color = "#2F74AE";
+  feedback_widget_options.style = "question";
+
+  feedback_widget_options.tag = "Mule CassandraDB Module";
+
+  feedback_widget_options.limit = "3";
+
+  var feedback_widget = new GSFN.feedback_widget(feedback_widget_options);
+</script>
 </head>
 
 <body class="">
@@ -131,7 +198,7 @@
       <a href="http://www.mulesoft.com" tabindex="-1">
       <img src="../../../../../../assets//images/mulesoft-logo-final.gif" alt="MuleSoft" border="0" id="mulesoftlogo"></a><br/>
       
-  <div id="search" >
+  <div id="searchContainer" >
       <div id="searchForm">
           <form accept-charset="utf-8" class="gsc-search-box" 
                 onsubmit="return submit_search()">
@@ -181,21 +248,37 @@
     <li class="api apilevel-">
   <a href="../../../../../../java/com/mulesoft/mule/cassandradb/package-summary.html">com.mulesoft.mule.cassandradb</a></li>
     <li class="api apilevel-">
+  <a href="../../../../../../java/com/mulesoft/mule/cassandradb/adapter/package-summary.html">com.mulesoft.mule.cassandradb.adapter</a></li>
+    <li class="api apilevel-">
   <a href="../../../../../../java/com/mulesoft/mule/cassandradb/adapters/package-summary.html">com.mulesoft.mule.cassandradb.adapters</a></li>
     <li class="api apilevel-">
   <a href="../../../../../../java/com/mulesoft/mule/cassandradb/agents/package-summary.html">com.mulesoft.mule.cassandradb.agents</a></li>
     <li class="api apilevel-">
+  <a href="../../../../../../java/com/mulesoft/mule/cassandradb/api/package-summary.html">com.mulesoft.mule.cassandradb.api</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../../../java/com/mulesoft/mule/cassandradb/api/holders/package-summary.html">com.mulesoft.mule.cassandradb.api.holders</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../../../java/com/mulesoft/mule/cassandradb/api/transformers/package-summary.html">com.mulesoft.mule.cassandradb.api.transformers</a></li>
+    <li class="api apilevel-">
   <a href="../../../../../../java/com/mulesoft/mule/cassandradb/config/package-summary.html">com.mulesoft.mule.cassandradb.config</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../../../java/com/mulesoft/mule/cassandradb/connection/package-summary.html">com.mulesoft.mule.cassandradb.connection</a></li>
     <li class="api apilevel-">
   <a href="../../../../../../java/com/mulesoft/mule/cassandradb/connectivity/package-summary.html">com.mulesoft.mule.cassandradb.connectivity</a></li>
     <li class="api apilevel-">
+  <a href="../../../../../../java/com/mulesoft/mule/cassandradb/devkit/package-summary.html">com.mulesoft.mule.cassandradb.devkit</a></li>
+    <li class="api apilevel-">
   <a href="../../../../../../java/com/mulesoft/mule/cassandradb/holders/package-summary.html">com.mulesoft.mule.cassandradb.holders</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../../../java/com/mulesoft/mule/cassandradb/pooling/package-summary.html">com.mulesoft.mule.cassandradb.pooling</a></li>
     <li class="api apilevel-">
   <a href="../../../../../../java/com/mulesoft/mule/cassandradb/process/package-summary.html">com.mulesoft.mule.cassandradb.process</a></li>
     <li class="selected api apilevel-">
   <a href="../../../../../../java/com/mulesoft/mule/cassandradb/processors/package-summary.html">com.mulesoft.mule.cassandradb.processors</a></li>
     <li class="api apilevel-">
   <a href="../../../../../../java/com/mulesoft/mule/cassandradb/transformers/package-summary.html">com.mulesoft.mule.cassandradb.transformers</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../../../java/org/apache/cassandra/thrift/holders/package-summary.html">org.apache.cassandra.thrift.holders</a></li>
     <li class="api apilevel-">
   <a href="../../../../../../java/org/apache/cassandra/thrift/transformers/package-summary.html">org.apache.cassandra.thrift.transformers</a></li>
               </ul><br/>
@@ -204,17 +287,50 @@
           <div id="classes-nav">
             <ul>
               
+    <li><h2>Interfaces</h2>
+      <ul>
+          <li class="api apilevel-"><a href="../../../../../../java/com/mulesoft/mule/cassandradb/processors/ConnectivityProcessor.html">ConnectivityProcessor</a></li>
+      </ul>
+    </li>
               
     <li><h2>Classes</h2>
       <ul>
           <li class="api apilevel-"><a href="../../../../../../java/com/mulesoft/mule/cassandradb/processors/AbstractConnectedProcessor.html">AbstractConnectedProcessor</a></li>
-          <li class="api apilevel-"><a href="../../../../../../java/com/mulesoft/mule/cassandradb/processors/AbstractExpressionEvaluator.html">AbstractExpressionEvaluator</a></li>
-          <li class="api apilevel-"><a href="../../../../../../java/com/mulesoft/mule/cassandradb/processors/AbstractListeningMessageProcessor.html">AbstractListeningMessageProcessor</a>&lt;O&gt;</li>
-          <li class="api apilevel-"><a href="../../../../../../java/com/mulesoft/mule/cassandradb/processors/AbstractMessageProcessor.html">AbstractMessageProcessor</a>&lt;O&gt;</li>
+          <li class="api apilevel-"><a href="../../../../../../java/com/mulesoft/mule/cassandradb/processors/AbstractPagedConnectedProcessor.html">AbstractPagedConnectedProcessor</a></li>
+          <li class="api apilevel-"><a href="../../../../../../java/com/mulesoft/mule/cassandradb/processors/AddMessageProcessor.html">AddMessageProcessor</a></li>
+          <li class="api apilevel-"><a href="../../../../../../java/com/mulesoft/mule/cassandradb/processors/BatchMutableMessageProcessor.html">BatchMutableMessageProcessor</a></li>
+          <li class="api apilevel-"><a href="../../../../../../java/com/mulesoft/mule/cassandradb/processors/DescribeClusterNameMessageProcessor.html">DescribeClusterNameMessageProcessor</a></li>
+          <li class="api apilevel-"><a href="../../../../../../java/com/mulesoft/mule/cassandradb/processors/DescribeKeyspaceMessageProcessor.html">DescribeKeyspaceMessageProcessor</a></li>
+          <li class="api apilevel-"><a href="../../../../../../java/com/mulesoft/mule/cassandradb/processors/DescribeKeyspacesMessageProcessor.html">DescribeKeyspacesMessageProcessor</a></li>
+          <li class="api apilevel-"><a href="../../../../../../java/com/mulesoft/mule/cassandradb/processors/DescribePartitionerMessageProcessor.html">DescribePartitionerMessageProcessor</a></li>
+          <li class="api apilevel-"><a href="../../../../../../java/com/mulesoft/mule/cassandradb/processors/DescribeRingMessageProcessor.html">DescribeRingMessageProcessor</a></li>
+          <li class="api apilevel-"><a href="../../../../../../java/com/mulesoft/mule/cassandradb/processors/DescribeSchemaVersionsMessageProcessor.html">DescribeSchemaVersionsMessageProcessor</a></li>
+          <li class="api apilevel-"><a href="../../../../../../java/com/mulesoft/mule/cassandradb/processors/DescribeSnitchMessageProcessor.html">DescribeSnitchMessageProcessor</a></li>
+          <li class="api apilevel-"><a href="../../../../../../java/com/mulesoft/mule/cassandradb/processors/DescribeVersionMessageProcessor.html">DescribeVersionMessageProcessor</a></li>
+          <li class="api apilevel-"><a href="../../../../../../java/com/mulesoft/mule/cassandradb/processors/ExecuteCqlQueryMessageProcessor.html">ExecuteCqlQueryMessageProcessor</a></li>
+          <li class="api apilevel-"><a href="../../../../../../java/com/mulesoft/mule/cassandradb/processors/GetCountMessageProcessor.html">GetCountMessageProcessor</a></li>
+          <li class="api apilevel-"><a href="../../../../../../java/com/mulesoft/mule/cassandradb/processors/GetIndexedSlicesMessageProcessor.html">GetIndexedSlicesMessageProcessor</a></li>
           <li class="api apilevel-"><a href="../../../../../../java/com/mulesoft/mule/cassandradb/processors/GetMessageProcessor.html">GetMessageProcessor</a></li>
+          <li class="api apilevel-"><a href="../../../../../../java/com/mulesoft/mule/cassandradb/processors/GetRangeSlicesMessageProcessor.html">GetRangeSlicesMessageProcessor</a></li>
+          <li class="api apilevel-"><a href="../../../../../../java/com/mulesoft/mule/cassandradb/processors/GetRowMessageProcessor.html">GetRowMessageProcessor</a></li>
           <li class="api apilevel-"><a href="../../../../../../java/com/mulesoft/mule/cassandradb/processors/GetSliceMessageProcessor.html">GetSliceMessageProcessor</a></li>
+          <li class="api apilevel-"><a href="../../../../../../java/com/mulesoft/mule/cassandradb/processors/InsertFromMapMessageProcessor.html">InsertFromMapMessageProcessor</a></li>
           <li class="selected api apilevel-"><a href="../../../../../../java/com/mulesoft/mule/cassandradb/processors/InsertMessageProcessor.html">InsertMessageProcessor</a></li>
+          <li class="api apilevel-"><a href="../../../../../../java/com/mulesoft/mule/cassandradb/processors/MultiGetCountMessageProcessor.html">MultiGetCountMessageProcessor</a></li>
+          <li class="api apilevel-"><a href="../../../../../../java/com/mulesoft/mule/cassandradb/processors/MultiGetSliceMessageProcessor.html">MultiGetSliceMessageProcessor</a></li>
+          <li class="api apilevel-"><a href="../../../../../../java/com/mulesoft/mule/cassandradb/processors/RemoveCounterMessageProcessor.html">RemoveCounterMessageProcessor</a></li>
           <li class="api apilevel-"><a href="../../../../../../java/com/mulesoft/mule/cassandradb/processors/RemoveMessageProcessor.html">RemoveMessageProcessor</a></li>
+          <li class="api apilevel-"><a href="../../../../../../java/com/mulesoft/mule/cassandradb/processors/SetQueryKeyspaceMessageProcessor.html">SetQueryKeyspaceMessageProcessor</a></li>
+          <li class="api apilevel-"><a href="../../../../../../java/com/mulesoft/mule/cassandradb/processors/SystemAddColumnFamilyFromObjectMessageProcessor.html">SystemAddColumnFamilyFromObjectMessageProcessor</a></li>
+          <li class="api apilevel-"><a href="../../../../../../java/com/mulesoft/mule/cassandradb/processors/SystemAddColumnFamilyFromObjectWithSimpleNamesMessageProcessor.html">SystemAddColumnFamilyFromObjectWithSimpleNamesMessageProcessor</a></li>
+          <li class="api apilevel-"><a href="../../../../../../java/com/mulesoft/mule/cassandradb/processors/SystemAddColumnFamilyWithParamsMessageProcessor.html">SystemAddColumnFamilyWithParamsMessageProcessor</a></li>
+          <li class="api apilevel-"><a href="../../../../../../java/com/mulesoft/mule/cassandradb/processors/SystemAddKeyspaceFromObjectMessageProcessor.html">SystemAddKeyspaceFromObjectMessageProcessor</a></li>
+          <li class="api apilevel-"><a href="../../../../../../java/com/mulesoft/mule/cassandradb/processors/SystemAddKeyspaceWithParamsMessageProcessor.html">SystemAddKeyspaceWithParamsMessageProcessor</a></li>
+          <li class="api apilevel-"><a href="../../../../../../java/com/mulesoft/mule/cassandradb/processors/SystemDropColumnFamilyMessageProcessor.html">SystemDropColumnFamilyMessageProcessor</a></li>
+          <li class="api apilevel-"><a href="../../../../../../java/com/mulesoft/mule/cassandradb/processors/SystemDropKeyspaceMessageProcessor.html">SystemDropKeyspaceMessageProcessor</a></li>
+          <li class="api apilevel-"><a href="../../../../../../java/com/mulesoft/mule/cassandradb/processors/SystemUpdateColumnFamilyMessageProcessor.html">SystemUpdateColumnFamilyMessageProcessor</a></li>
+          <li class="api apilevel-"><a href="../../../../../../java/com/mulesoft/mule/cassandradb/processors/SystemUpdateKeyspaceMessageProcessor.html">SystemUpdateKeyspaceMessageProcessor</a></li>
+          <li class="api apilevel-"><a href="../../../../../../java/com/mulesoft/mule/cassandradb/processors/TruncateMessageProcessor.html">TruncateMessageProcessor</a></li>
       </ul>
     </li>
               
@@ -308,17 +424,6 @@
    
   
   
-   
-  
-  
-  
-
-  
-   
-  
-  
-   
-  
   
   
 
@@ -342,6 +447,41 @@
 
   
    
+  
+  
+   
+  
+  
+  
+
+  
+   
+  
+  
+   
+  
+  
+  
+
+  
+   
+  
+  
+  
+  
+
+  
+  
+  
+  
+
+  
+   
+  
+  
+  
+  
+
   
   
   
@@ -421,7 +561,7 @@ Summary:
   
 
   
-    extends <a href="../../../../../../java/com/mulesoft/mule/cassandradb/processors/AbstractMessageProcessor.html">AbstractMessageProcessor</a>&lt;O&gt;<br/>
+    extends <a href="../../../../../../java/com/mulesoft/mule/cassandradb/processors/AbstractConnectedProcessor.html">AbstractConnectedProcessor</a><br/>
   
   
   
@@ -430,15 +570,9 @@ Summary:
   
       implements 
       
-        Disposable 
-      
-        Initialisable 
-      
-        Startable 
-      
-        Stoppable 
-      
         MessageProcessor 
+      
+        OperationMetaDataEnabled 
       
   
   
@@ -454,7 +588,7 @@ Summary:
 
     <tr>
         
-        <td colspan="5" class="jd-inheritance-class-cell"><a href="http://download.oracle.com/javase/6/docs/api/index.html?java/lang/Object.html">java.lang.Object</a></td>
+        <td colspan="5" class="jd-inheritance-class-cell">java.lang.Object</td>
     </tr>
     
 
@@ -462,7 +596,7 @@ Summary:
         
             <td class="jd-inheritance-space">&nbsp;&nbsp;&nbsp;&#x21b3;</td>
         
-        <td colspan="4" class="jd-inheritance-class-cell"><a href="../../../../../../java/com/mulesoft/mule/cassandradb/processors/AbstractExpressionEvaluator.html">com.mulesoft.mule.cassandradb.processors.AbstractExpressionEvaluator</a></td>
+        <td colspan="4" class="jd-inheritance-class-cell">org.mule.devkit.processor.ExpressionEvaluatorSupport</td>
     </tr>
     
 
@@ -472,7 +606,7 @@ Summary:
         
             <td class="jd-inheritance-space">&nbsp;&nbsp;&nbsp;&#x21b3;</td>
         
-        <td colspan="3" class="jd-inheritance-class-cell"><a href="../../../../../../java/com/mulesoft/mule/cassandradb/processors/AbstractConnectedProcessor.html">com.mulesoft.mule.cassandradb.processors.AbstractConnectedProcessor</a></td>
+        <td colspan="3" class="jd-inheritance-class-cell">org.mule.devkit.processor.DevkitBasedMessageProcessor</td>
     </tr>
     
 
@@ -484,7 +618,7 @@ Summary:
         
             <td class="jd-inheritance-space">&nbsp;&nbsp;&nbsp;&#x21b3;</td>
         
-        <td colspan="2" class="jd-inheritance-class-cell"><a href="../../../../../../java/com/mulesoft/mule/cassandradb/processors/AbstractMessageProcessor.html">com.mulesoft.mule.cassandradb.processors.AbstractMessageProcessor</a>&lt;O&gt;</td>
+        <td colspan="2" class="jd-inheritance-class-cell"><a href="../../../../../../java/com/mulesoft/mule/cassandradb/processors/AbstractConnectedProcessor.html">com.mulesoft.mule.cassandradb.processors.AbstractConnectedProcessor</a></td>
     </tr>
     
 
@@ -514,7 +648,7 @@ Summary:
 
 
 <h2>Class Overview</h2>
-<p>InsertMessageProcessor invokes the <code><a href="../../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBConnector.html#insert(java.util.Map)">insert(java.util.Map)</a></code> method in <code><a href="../../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBConnector.html">CassandraDBConnector</a></code>. For each argument there is a field in this processor to match it.  Before invoking the actual method the processor will evaluate and transform where possible to the expected argument type.
+<p>InsertMessageProcessor invokes the <code><a href="../../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBConnector.html#insert(java.lang.String, java.lang.String, java.lang.String, java.lang.String, int)">insert(java.lang.String, java.lang.String, java.lang.String, java.lang.String, int)</a></code> method in <code><a href="../../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBConnector.html">CassandraDBConnector</a></code>. For each argument there is a field in this processor to match it.  Before invoking the actual method the processor will evaluate and transform where possible to the expected argument type.
  
 </p>
 
@@ -577,6 +711,8 @@ Summary:
 
 
 
+
+
 <tr class="api apilevel-" >
 <td colspan="12">
 
@@ -595,7 +731,7 @@ org.mule.api.lifecycle.Disposable
 
     
     <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol"><a href="http://download.oracle.com/javase/6/docs/api/index.html?java/lang/String.html">String</a></td>
+        <td class="jd-typecol">String</td>
         <td class="jd-linkcol">PHASE_NAME</td>
         <td class="jd-descrcol" width="100%"></td>
     </tr>
@@ -626,7 +762,7 @@ org.mule.api.lifecycle.Initialisable
 
     
     <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol"><a href="http://download.oracle.com/javase/6/docs/api/index.html?java/lang/String.html">String</a></td>
+        <td class="jd-typecol">String</td>
         <td class="jd-linkcol">PHASE_NAME</td>
         <td class="jd-descrcol" width="100%"></td>
     </tr>
@@ -657,7 +793,7 @@ org.mule.api.lifecycle.Startable
 
     
     <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol"><a href="http://download.oracle.com/javase/6/docs/api/index.html?java/lang/String.html">String</a></td>
+        <td class="jd-typecol">String</td>
         <td class="jd-linkcol">PHASE_NAME</td>
         <td class="jd-descrcol" width="100%"></td>
     </tr>
@@ -688,7 +824,7 @@ org.mule.api.lifecycle.Stoppable
 
     
     <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol"><a href="http://download.oracle.com/javase/6/docs/api/index.html?java/lang/String.html">String</a></td>
+        <td class="jd-typecol">String</td>
         <td class="jd-linkcol">PHASE_NAME</td>
         <td class="jd-descrcol" width="100%"></td>
     </tr>
@@ -698,6 +834,12 @@ org.mule.api.lifecycle.Stoppable
   </div>
 </div>
 </td></tr>
+
+
+
+
+
+
 
 
 
@@ -717,8 +859,8 @@ org.mule.api.lifecycle.Stoppable
           protected
           
           
-          <a href="http://download.oracle.com/javase/6/docs/api/index.html?java/util/Map.html">Map</a></nobr></td>
-          <td class="jd-linkcol"><a href="../../../../../../com/mulesoft/mule/cassandradb/processors/InsertMessageProcessor.html#_contentType">_contentType</a></td>
+          String</nobr></td>
+          <td class="jd-linkcol"><a href="../../../../../../com/mulesoft/mule/cassandradb/processors/InsertMessageProcessor.html#_columnNameType">_columnNameType</a></td>
           <td class="jd-descrcol" width="100%"></td>
       </tr>
       
@@ -728,8 +870,96 @@ org.mule.api.lifecycle.Stoppable
           protected
           
           
-          <a href="http://download.oracle.com/javase/6/docs/api/index.html?java/lang/Object.html">Object</a></nobr></td>
-          <td class="jd-linkcol"><a href="../../../../../../com/mulesoft/mule/cassandradb/processors/InsertMessageProcessor.html#content">content</a></td>
+          String</nobr></td>
+          <td class="jd-linkcol"><a href="../../../../../../com/mulesoft/mule/cassandradb/processors/InsertMessageProcessor.html#_columnParentType">_columnParentType</a></td>
+          <td class="jd-descrcol" width="100%"></td>
+      </tr>
+      
+    
+      <tr class="alt-color api apilevel-" >
+          <td class="jd-typecol"><nobr>
+          protected
+          
+          
+          String</nobr></td>
+          <td class="jd-linkcol"><a href="../../../../../../com/mulesoft/mule/cassandradb/processors/InsertMessageProcessor.html#_columnValueType">_columnValueType</a></td>
+          <td class="jd-descrcol" width="100%"></td>
+      </tr>
+      
+    
+      <tr class=" api apilevel-" >
+          <td class="jd-typecol"><nobr>
+          protected
+          
+          
+          String</nobr></td>
+          <td class="jd-linkcol"><a href="../../../../../../com/mulesoft/mule/cassandradb/processors/InsertMessageProcessor.html#_rowKeyType">_rowKeyType</a></td>
+          <td class="jd-descrcol" width="100%"></td>
+      </tr>
+      
+    
+      <tr class="alt-color api apilevel-" >
+          <td class="jd-typecol"><nobr>
+          protected
+          
+          
+          int</nobr></td>
+          <td class="jd-linkcol"><a href="../../../../../../com/mulesoft/mule/cassandradb/processors/InsertMessageProcessor.html#_ttlType">_ttlType</a></td>
+          <td class="jd-descrcol" width="100%"></td>
+      </tr>
+      
+    
+      <tr class=" api apilevel-" >
+          <td class="jd-typecol"><nobr>
+          protected
+          
+          
+          Object</nobr></td>
+          <td class="jd-linkcol"><a href="../../../../../../com/mulesoft/mule/cassandradb/processors/InsertMessageProcessor.html#columnName">columnName</a></td>
+          <td class="jd-descrcol" width="100%"></td>
+      </tr>
+      
+    
+      <tr class="alt-color api apilevel-" >
+          <td class="jd-typecol"><nobr>
+          protected
+          
+          
+          Object</nobr></td>
+          <td class="jd-linkcol"><a href="../../../../../../com/mulesoft/mule/cassandradb/processors/InsertMessageProcessor.html#columnParent">columnParent</a></td>
+          <td class="jd-descrcol" width="100%"></td>
+      </tr>
+      
+    
+      <tr class=" api apilevel-" >
+          <td class="jd-typecol"><nobr>
+          protected
+          
+          
+          Object</nobr></td>
+          <td class="jd-linkcol"><a href="../../../../../../com/mulesoft/mule/cassandradb/processors/InsertMessageProcessor.html#columnValue">columnValue</a></td>
+          <td class="jd-descrcol" width="100%"></td>
+      </tr>
+      
+    
+      <tr class="alt-color api apilevel-" >
+          <td class="jd-typecol"><nobr>
+          protected
+          
+          
+          Object</nobr></td>
+          <td class="jd-linkcol"><a href="../../../../../../com/mulesoft/mule/cassandradb/processors/InsertMessageProcessor.html#rowKey">rowKey</a></td>
+          <td class="jd-descrcol" width="100%"></td>
+      </tr>
+      
+    
+      <tr class=" api apilevel-" >
+          <td class="jd-typecol"><nobr>
+          protected
+          
+          
+          Object</nobr></td>
+          <td class="jd-linkcol"><a href="../../../../../../com/mulesoft/mule/cassandradb/processors/InsertMessageProcessor.html#ttl">ttl</a></td>
           <td class="jd-descrcol" width="100%"></td>
       </tr>
       
@@ -745,69 +975,6 @@ org.mule.api.lifecycle.Stoppable
 <table id="inhfields" class="jd-sumtable"><tr><th>
   <a href="#" class="toggle-all" onclick="return toggleAllInherited(this, null)">[Expand]</a>
   <div style="clear:left;">Inherited Fields</div></th></tr>
-
-
-<tr class="api apilevel-" >
-<td colspan="12">
-
-  <a href="#" onclick="return toggleInherited(this, null)" id="inherited-fields-com.mulesoft.mule.cassandradb.processors.AbstractMessageProcessor" class="jd-expando-trigger closed"
-          ><img id="inherited-fields-com.mulesoft.mule.cassandradb.processors.AbstractMessageProcessor-trigger"
-          src="../../../../../../assets/images/triangle-closed.png"
-          class="jd-expando-trigger-img" /></a>From class
-<a href="../../../../../../com/mulesoft/mule/cassandradb/processors/AbstractMessageProcessor.html">com.mulesoft.mule.cassandradb.processors.AbstractMessageProcessor</a>
-<div id="inherited-fields-com.mulesoft.mule.cassandradb.processors.AbstractMessageProcessor">
-  <div id="inherited-fields-com.mulesoft.mule.cassandradb.processors.AbstractMessageProcessor-list"
-        class="jd-inheritedlinks">
-  </div>
-  <div id="inherited-fields-com.mulesoft.mule.cassandradb.processors.AbstractMessageProcessor-summary" style="display: none;">
-    <table class="jd-sumtable-expando">
-    
-
-    
-      <tr class="alt-color api apilevel-" >
-          <td class="jd-typecol"><nobr>
-          protected
-          
-          
-          FlowConstruct</nobr></td>
-          <td class="jd-linkcol"><a href="../../../../../../com/mulesoft/mule/cassandradb/processors/AbstractMessageProcessor.html#flowConstruct">flowConstruct</a></td>
-          <td class="jd-descrcol" width="100%">Flow Construct
- 
-</td>
-      </tr>
-      
-    
-      <tr class=" api apilevel-" >
-          <td class="jd-typecol"><nobr>
-          protected
-          
-          
-          O</nobr></td>
-          <td class="jd-linkcol"><a href="../../../../../../com/mulesoft/mule/cassandradb/processors/AbstractMessageProcessor.html#moduleObject">moduleObject</a></td>
-          <td class="jd-descrcol" width="100%">Module object
- 
-</td>
-      </tr>
-      
-    
-      <tr class="alt-color api apilevel-" >
-          <td class="jd-typecol"><nobr>
-          protected
-          
-          
-          MuleContext</nobr></td>
-          <td class="jd-linkcol"><a href="../../../../../../com/mulesoft/mule/cassandradb/processors/AbstractMessageProcessor.html#muleContext">muleContext</a></td>
-          <td class="jd-descrcol" width="100%">Mule Context
- 
-</td>
-      </tr>
-      
-    
-</table>
-  </div>
-</div>
-</td></tr>
-
 
 
 <tr class="api apilevel-" >
@@ -832,7 +999,7 @@ org.mule.api.lifecycle.Stoppable
           protected
           
           
-          <a href="http://download.oracle.com/javase/6/docs/api/index.html?java/lang/String.html">String</a></nobr></td>
+          String</nobr></td>
           <td class="jd-linkcol"><a href="../../../../../../com/mulesoft/mule/cassandradb/processors/AbstractConnectedProcessor.html#_passwordType">_passwordType</a></td>
           <td class="jd-descrcol" width="100%"></td>
       </tr>
@@ -843,7 +1010,7 @@ org.mule.api.lifecycle.Stoppable
           protected
           
           
-          <a href="http://download.oracle.com/javase/6/docs/api/index.html?java/lang/String.html">String</a></nobr></td>
+          String</nobr></td>
           <td class="jd-linkcol"><a href="../../../../../../com/mulesoft/mule/cassandradb/processors/AbstractConnectedProcessor.html#_usernameType">_usernameType</a></td>
           <td class="jd-descrcol" width="100%"></td>
       </tr>
@@ -854,7 +1021,7 @@ org.mule.api.lifecycle.Stoppable
           protected
           
           
-          <a href="http://download.oracle.com/javase/6/docs/api/index.html?java/lang/Object.html">Object</a></nobr></td>
+          Object</nobr></td>
           <td class="jd-linkcol"><a href="../../../../../../com/mulesoft/mule/cassandradb/processors/AbstractConnectedProcessor.html#password">password</a></td>
           <td class="jd-descrcol" width="100%"></td>
       </tr>
@@ -865,7 +1032,7 @@ org.mule.api.lifecycle.Stoppable
           protected
           
           
-          <a href="http://download.oracle.com/javase/6/docs/api/index.html?java/lang/Object.html">Object</a></nobr></td>
+          Object</nobr></td>
           <td class="jd-linkcol"><a href="../../../../../../com/mulesoft/mule/cassandradb/processors/AbstractConnectedProcessor.html#username">username</a></td>
           <td class="jd-descrcol" width="100%"></td>
       </tr>
@@ -875,6 +1042,93 @@ org.mule.api.lifecycle.Stoppable
   </div>
 </div>
 </td></tr>
+
+
+
+<tr class="api apilevel-" >
+<td colspan="12">
+
+  <a href="#" onclick="return toggleInherited(this, null)" id="inherited-fields-org.mule.devkit.processor.DevkitBasedMessageProcessor" class="jd-expando-trigger closed"
+          ><img id="inherited-fields-org.mule.devkit.processor.DevkitBasedMessageProcessor-trigger"
+          src="../../../../../../assets/images/triangle-closed.png"
+          class="jd-expando-trigger-img" /></a>From class
+org.mule.devkit.processor.DevkitBasedMessageProcessor
+<div id="inherited-fields-org.mule.devkit.processor.DevkitBasedMessageProcessor">
+  <div id="inherited-fields-org.mule.devkit.processor.DevkitBasedMessageProcessor-list"
+        class="jd-inheritedlinks">
+  </div>
+  <div id="inherited-fields-org.mule.devkit.processor.DevkitBasedMessageProcessor-summary" style="display: none;">
+    <table class="jd-sumtable-expando">
+    
+
+    
+      <tr class="alt-color api apilevel-" >
+          <td class="jd-typecol"><nobr>
+          private
+          
+          
+          String</nobr></td>
+          <td class="jd-linkcol">accessTokenId</td>
+          <td class="jd-descrcol" width="100%"></td>
+      </tr>
+      
+    
+      <tr class=" api apilevel-" >
+          <td class="jd-typecol"><nobr>
+          protected
+          
+          
+          FlowConstruct</nobr></td>
+          <td class="jd-linkcol">flowConstruct</td>
+          <td class="jd-descrcol" width="100%"></td>
+      </tr>
+      
+    
+      <tr class="alt-color api apilevel-" >
+          <td class="jd-typecol"><nobr>
+          protected
+          
+          
+          Object</nobr></td>
+          <td class="jd-linkcol">moduleObject</td>
+          <td class="jd-descrcol" width="100%"></td>
+      </tr>
+      
+    
+      <tr class=" api apilevel-" >
+          <td class="jd-typecol"><nobr>
+          protected
+          
+          
+          MuleContext</nobr></td>
+          <td class="jd-linkcol">muleContext</td>
+          <td class="jd-descrcol" width="100%"></td>
+      </tr>
+      
+    
+      <tr class="alt-color api apilevel-" >
+          <td class="jd-typecol"><nobr>
+          private
+          
+          
+          String</nobr></td>
+          <td class="jd-linkcol">operationName</td>
+          <td class="jd-descrcol" width="100%"></td>
+      </tr>
+      
+    
+</table>
+  </div>
+</div>
+</td></tr>
+
+
+
+
+
+
+
+
 
 
 
@@ -916,7 +1170,7 @@ org.mule.api.lifecycle.Stoppable
             </nobr>
         </td>
         <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../../../com/mulesoft/mule/cassandradb/processors/InsertMessageProcessor.html#InsertMessageProcessor()">InsertMessageProcessor</a></span>()</nobr>
+        <span class="sympad"><a href="../../../../../../com/mulesoft/mule/cassandradb/processors/InsertMessageProcessor.html#InsertMessageProcessor(java.lang.String)">InsertMessageProcessor</a></span>(String operationName)</nobr>
         
   </td></tr>
 
@@ -958,6 +1212,72 @@ org.mule.api.lifecycle.Stoppable
             
             
             
+            MuleEvent</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad"><a href="../../../../../../com/mulesoft/mule/cassandradb/processors/InsertMessageProcessor.html#doProcess(org.mule.api.MuleEvent)">doProcess</a></span>(MuleEvent event)</nobr>
+        
+        <div class="jd-descrdiv">Invokes the MessageProcessor.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            
+            
+            
+            
+            
+            Result&lt;MetaData&gt;</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad"><a href="../../../../../../com/mulesoft/mule/cassandradb/processors/InsertMessageProcessor.html#getGenericMetaData(org.mule.common.metadata.MetaDataKey)">getGenericMetaData</a></span>(MetaDataKey metaDataKey)</nobr>
+        
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            
+            
+            
+            
+            
+            Result&lt;MetaData&gt;</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad"><a href="../../../../../../com/mulesoft/mule/cassandradb/processors/InsertMessageProcessor.html#getInputMetaData()">getInputMetaData</a></span>()</nobr>
+        
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            
+            
+            
+            
+            
+            Result&lt;MetaData&gt;</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad"><a href="../../../../../../com/mulesoft/mule/cassandradb/processors/InsertMessageProcessor.html#getOutputMetaData(org.mule.common.metadata.MetaData)">getOutputMetaData</a></span>(MetaData inputMetadata)</nobr>
+        
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            
+            
+            
+            
+            
             void</nobr>
         </td>
         <td class="jd-linkcol" width="100%"><nobr>
@@ -976,12 +1296,12 @@ org.mule.api.lifecycle.Stoppable
             
             
             
-            MuleEvent</nobr>
+            void</nobr>
         </td>
         <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../../../com/mulesoft/mule/cassandradb/processors/InsertMessageProcessor.html#process(org.mule.api.MuleEvent)">process</a></span>(MuleEvent event)</nobr>
+        <span class="sympad"><a href="../../../../../../com/mulesoft/mule/cassandradb/processors/InsertMessageProcessor.html#setColumnName(java.lang.Object)">setColumnName</a></span>(Object value)</nobr>
         
-        <div class="jd-descrdiv">Invokes the MessageProcessor.</div>
+        <div class="jd-descrdiv">Sets columnName</div>
   
   </td></tr>
 
@@ -997,9 +1317,9 @@ org.mule.api.lifecycle.Stoppable
             void</nobr>
         </td>
         <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../../../com/mulesoft/mule/cassandradb/processors/InsertMessageProcessor.html#setContent(java.lang.Object)">setContent</a></span>(<a href="http://download.oracle.com/javase/6/docs/api/index.html?java/lang/Object.html">Object</a> value)</nobr>
+        <span class="sympad"><a href="../../../../../../com/mulesoft/mule/cassandradb/processors/InsertMessageProcessor.html#setColumnParent(java.lang.Object)">setColumnParent</a></span>(Object value)</nobr>
         
-        <div class="jd-descrdiv">Sets content</div>
+        <div class="jd-descrdiv">Sets columnParent</div>
   
   </td></tr>
 
@@ -1015,9 +1335,9 @@ org.mule.api.lifecycle.Stoppable
             void</nobr>
         </td>
         <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../../../com/mulesoft/mule/cassandradb/processors/InsertMessageProcessor.html#setFlowConstruct(org.mule.api.construct.FlowConstruct)">setFlowConstruct</a></span>(FlowConstruct flowConstruct)</nobr>
+        <span class="sympad"><a href="../../../../../../com/mulesoft/mule/cassandradb/processors/InsertMessageProcessor.html#setColumnValue(java.lang.Object)">setColumnValue</a></span>(Object value)</nobr>
         
-        <div class="jd-descrdiv">Sets flow construct</div>
+        <div class="jd-descrdiv">Sets columnValue</div>
   
   </td></tr>
 
@@ -1033,15 +1353,33 @@ org.mule.api.lifecycle.Stoppable
             void</nobr>
         </td>
         <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../../../com/mulesoft/mule/cassandradb/processors/InsertMessageProcessor.html#setMuleContext(org.mule.api.MuleContext)">setMuleContext</a></span>(MuleContext context)</nobr>
+        <span class="sympad"><a href="../../../../../../com/mulesoft/mule/cassandradb/processors/InsertMessageProcessor.html#setRowKey(java.lang.Object)">setRowKey</a></span>(Object value)</nobr>
         
-        <div class="jd-descrdiv">Set the Mule context</div>
+        <div class="jd-descrdiv">Sets rowKey</div>
   
   </td></tr>
 
 
 	 
     <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            
+            
+            
+            
+            
+            void</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad"><a href="../../../../../../com/mulesoft/mule/cassandradb/processors/InsertMessageProcessor.html#setTtl(java.lang.Object)">setTtl</a></span>(Object value)</nobr>
+        
+        <div class="jd-descrdiv">Sets ttl</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
         <td class="jd-typecol"><nobr>
             
             
@@ -1057,7 +1395,7 @@ org.mule.api.lifecycle.Stoppable
 
 
 	 
-    <tr class=" api apilevel-" >
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol"><nobr>
             
             
@@ -1089,184 +1427,6 @@ org.mule.api.lifecycle.Stoppable
 
 <tr class="api apilevel-" >
 <td colspan="12">
-  <a href="#" onclick="return toggleInherited(this, null)" id="inherited-methods-com.mulesoft.mule.cassandradb.processors.AbstractMessageProcessor" class="jd-expando-trigger closed"
-          ><img id="inherited-methods-com.mulesoft.mule.cassandradb.processors.AbstractMessageProcessor-trigger"
-          src="../../../../../../assets/images/triangle-closed.png"
-          class="jd-expando-trigger-img" /></a>
-From class
-
-  <a href="../../../../../../com/mulesoft/mule/cassandradb/processors/AbstractMessageProcessor.html">com.mulesoft.mule.cassandradb.processors.AbstractMessageProcessor</a>
-
-<div id="inherited-methods-com.mulesoft.mule.cassandradb.processors.AbstractMessageProcessor">
-  <div id="inherited-methods-com.mulesoft.mule.cassandradb.processors.AbstractMessageProcessor-list"
-        class="jd-inheritedlinks">
-  </div>
-  <div id="inherited-methods-com.mulesoft.mule.cassandradb.processors.AbstractMessageProcessor-summary" style="display: none;">
-    <table class="jd-sumtable-expando">
-    
-
-
-	 
-    <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol"><nobr>
-            
-            
-            
-            
-            
-            void</nobr>
-        </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../../../com/mulesoft/mule/cassandradb/processors/AbstractMessageProcessor.html#findOrCreate(java.lang.Class, boolean, org.mule.api.MuleEvent)">findOrCreate</a></span>(<a href="http://download.oracle.com/javase/6/docs/api/index.html?java/lang/Class.html">Class</a> moduleClass, boolean shouldAutoCreate, MuleEvent muleEvent)</nobr>
-        
-        <div class="jd-descrdiv">Obtains the expression manager from the Mule context and initialises the connector.</div>
-  
-  </td></tr>
-
-
-	 
-    <tr class=" api apilevel-" >
-        <td class="jd-typecol"><nobr>
-            
-            
-            
-            
-            
-            FlowConstruct</nobr>
-        </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../../../com/mulesoft/mule/cassandradb/processors/AbstractMessageProcessor.html#getFlowConstruct()">getFlowConstruct</a></span>()</nobr>
-        
-        <div class="jd-descrdiv">Retrieves flowConstruct
- 
-</div>
-  
-  </td></tr>
-
-
-	 
-    <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol"><nobr>
-            
-            
-            
-            
-            
-            O</nobr>
-        </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../../../com/mulesoft/mule/cassandradb/processors/AbstractMessageProcessor.html#getModuleObject()">getModuleObject</a></span>()</nobr>
-        
-        <div class="jd-descrdiv">Retrieves moduleObject
- 
-</div>
-  
-  </td></tr>
-
-
-	 
-    <tr class=" api apilevel-" >
-        <td class="jd-typecol"><nobr>
-            
-            
-            
-            
-            
-            MuleContext</nobr>
-        </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../../../com/mulesoft/mule/cassandradb/processors/AbstractMessageProcessor.html#getMuleContext()">getMuleContext</a></span>()</nobr>
-        
-        <div class="jd-descrdiv">Retrieves muleContext
- 
-</div>
-  
-  </td></tr>
-
-
-	 
-    <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol"><nobr>
-            
-            
-            
-            
-            
-            void</nobr>
-        </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../../../com/mulesoft/mule/cassandradb/processors/AbstractMessageProcessor.html#overwritePayload(org.mule.api.MuleEvent, java.lang.Object)">overwritePayload</a></span>(MuleEvent event, <a href="http://download.oracle.com/javase/6/docs/api/index.html?java/lang/Object.html">Object</a> resultPayload)</nobr>
-        
-        <div class="jd-descrdiv">Overwrites the event payload with the specified one
- 
-</div>
-  
-  </td></tr>
-
-
-	 
-    <tr class=" api apilevel-" >
-        <td class="jd-typecol"><nobr>
-            
-            
-            
-            
-            
-            void</nobr>
-        </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../../../com/mulesoft/mule/cassandradb/processors/AbstractMessageProcessor.html#setFlowConstruct(org.mule.api.construct.FlowConstruct)">setFlowConstruct</a></span>(FlowConstruct value)</nobr>
-        
-        <div class="jd-descrdiv">Sets flowConstruct</div>
-  
-  </td></tr>
-
-
-	 
-    <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol"><nobr>
-            
-            
-            
-            
-            
-            void</nobr>
-        </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../../../com/mulesoft/mule/cassandradb/processors/AbstractMessageProcessor.html#setModuleObject(O)">setModuleObject</a></span>(O value)</nobr>
-        
-        <div class="jd-descrdiv">Sets moduleObject</div>
-  
-  </td></tr>
-
-
-	 
-    <tr class=" api apilevel-" >
-        <td class="jd-typecol"><nobr>
-            
-            
-            
-            
-            
-            void</nobr>
-        </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../../../com/mulesoft/mule/cassandradb/processors/AbstractMessageProcessor.html#setMuleContext(org.mule.api.MuleContext)">setMuleContext</a></span>(MuleContext value)</nobr>
-        
-        <div class="jd-descrdiv">Sets muleContext</div>
-  
-  </td></tr>
-
-
-</table>
-  </div>
-</div>
-</td></tr>
-
-
-
-<tr class="api apilevel-" >
-<td colspan="12">
   <a href="#" onclick="return toggleInherited(this, null)" id="inherited-methods-com.mulesoft.mule.cassandradb.processors.AbstractConnectedProcessor" class="jd-expando-trigger closed"
           ><img id="inherited-methods-com.mulesoft.mule.cassandradb.processors.AbstractConnectedProcessor-trigger"
           src="../../../../../../assets/images/triangle-closed.png"
@@ -1292,7 +1452,7 @@ From class
             
             
             
-            <a href="http://download.oracle.com/javase/6/docs/api/index.html?java/lang/Object.html">Object</a></nobr>
+            Object</nobr>
         </td>
         <td class="jd-linkcol" width="100%"><nobr>
         <span class="sympad"><a href="../../../../../../com/mulesoft/mule/cassandradb/processors/AbstractConnectedProcessor.html#getPassword()">getPassword</a></span>()</nobr>
@@ -1312,7 +1472,7 @@ From class
             
             
             
-            <a href="http://download.oracle.com/javase/6/docs/api/index.html?java/lang/Object.html">Object</a></nobr>
+            Object</nobr>
         </td>
         <td class="jd-linkcol" width="100%"><nobr>
         <span class="sympad"><a href="../../../../../../com/mulesoft/mule/cassandradb/processors/AbstractConnectedProcessor.html#getUsername()">getUsername</a></span>()</nobr>
@@ -1335,7 +1495,7 @@ From class
             void</nobr>
         </td>
         <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../../../com/mulesoft/mule/cassandradb/processors/AbstractConnectedProcessor.html#setPassword(java.lang.Object)">setPassword</a></span>(<a href="http://download.oracle.com/javase/6/docs/api/index.html?java/lang/Object.html">Object</a> value)</nobr>
+        <span class="sympad"><a href="../../../../../../com/mulesoft/mule/cassandradb/processors/AbstractConnectedProcessor.html#setPassword(java.lang.Object)">setPassword</a></span>(Object value)</nobr>
         
         <div class="jd-descrdiv">Sets password</div>
   
@@ -1353,9 +1513,29 @@ From class
             void</nobr>
         </td>
         <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../../../com/mulesoft/mule/cassandradb/processors/AbstractConnectedProcessor.html#setUsername(java.lang.Object)">setUsername</a></span>(<a href="http://download.oracle.com/javase/6/docs/api/index.html?java/lang/Object.html">Object</a> value)</nobr>
+        <span class="sympad"><a href="../../../../../../com/mulesoft/mule/cassandradb/processors/AbstractConnectedProcessor.html#setUsername(java.lang.Object)">setUsername</a></span>(Object value)</nobr>
         
         <div class="jd-descrdiv">Sets username</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            
+            
+            
+            
+            
+            Type</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad"><a href="../../../../../../com/mulesoft/mule/cassandradb/processors/AbstractConnectedProcessor.html#typeFor(java.lang.String)">typeFor</a></span>(String fieldName)</nobr>
+        
+        <div class="jd-descrdiv">Retrieves the concrete java.lang.reflect.Type of a connectivity argument, needed for the @Connect
+ 
+</div>
   
   </td></tr>
 
@@ -1369,19 +1549,19 @@ From class
 
 <tr class="api apilevel-" >
 <td colspan="12">
-  <a href="#" onclick="return toggleInherited(this, null)" id="inherited-methods-com.mulesoft.mule.cassandradb.processors.AbstractExpressionEvaluator" class="jd-expando-trigger closed"
-          ><img id="inherited-methods-com.mulesoft.mule.cassandradb.processors.AbstractExpressionEvaluator-trigger"
+  <a href="#" onclick="return toggleInherited(this, null)" id="inherited-methods-org.mule.devkit.processor.DevkitBasedMessageProcessor" class="jd-expando-trigger closed"
+          ><img id="inherited-methods-org.mule.devkit.processor.DevkitBasedMessageProcessor-trigger"
           src="../../../../../../assets/images/triangle-closed.png"
           class="jd-expando-trigger-img" /></a>
 From class
 
-  <a href="../../../../../../com/mulesoft/mule/cassandradb/processors/AbstractExpressionEvaluator.html">com.mulesoft.mule.cassandradb.processors.AbstractExpressionEvaluator</a>
+  org.mule.devkit.processor.DevkitBasedMessageProcessor
 
-<div id="inherited-methods-com.mulesoft.mule.cassandradb.processors.AbstractExpressionEvaluator">
-  <div id="inherited-methods-com.mulesoft.mule.cassandradb.processors.AbstractExpressionEvaluator-list"
+<div id="inherited-methods-org.mule.devkit.processor.DevkitBasedMessageProcessor">
+  <div id="inherited-methods-org.mule.devkit.processor.DevkitBasedMessageProcessor-list"
         class="jd-inheritedlinks">
   </div>
-  <div id="inherited-methods-com.mulesoft.mule.cassandradb.processors.AbstractExpressionEvaluator-summary" style="display: none;">
+  <div id="inherited-methods-org.mule.devkit.processor.DevkitBasedMessageProcessor-summary" style="display: none;">
     <table class="jd-sumtable-expando">
     
 
@@ -1397,10 +1577,40 @@ From class
             void</nobr>
         </td>
         <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../../../com/mulesoft/mule/cassandradb/processors/AbstractExpressionEvaluator.html#computeClassHierarchy(java.lang.Class, java.util.List)">computeClassHierarchy</a></span>(<a href="http://download.oracle.com/javase/6/docs/api/index.html?java/lang/Class.html">Class</a> clazz, <a href="http://download.oracle.com/javase/6/docs/api/index.html?java/util/List.html">List</a> classes)</nobr>
+        <span class="sympad">dispose</span>()</nobr>
         
-        <div class="jd-descrdiv">Get all superclasses and interfaces recursively.</div>
-  
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            abstract
+            
+            
+            
+            
+            MuleEvent</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad">doProcess</span>(MuleEvent arg0)</nobr>
+        
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            
+            
+            final
+            
+            
+            Object</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad">findOrCreate</span>(Class&lt;?&gt; arg0, boolean arg1, MuleEvent arg2)</nobr>
+        
   </td></tr>
 
 
@@ -1412,10 +1622,42 @@ From class
             
             
             
-            <a href="http://download.oracle.com/javase/6/docs/api/index.html?java/lang/Object.html">Object</a></nobr>
+            String</nobr>
         </td>
         <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../../../com/mulesoft/mule/cassandradb/processors/AbstractExpressionEvaluator.html#evaluate(org.mule.util.TemplateParser.PatternInfo, org.mule.api.expression.ExpressionManager, org.mule.api.MuleMessage, java.lang.Object)">evaluate</a></span>(TemplateParser.PatternInfo patternInfo, ExpressionManager expressionManager, MuleMessage muleMessage, <a href="http://download.oracle.com/javase/6/docs/api/index.html?java/lang/Object.html">Object</a> source)</nobr>
+        <span class="sympad">getAccessTokenId</span>()</nobr>
+        
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            
+            
+            final
+            
+            
+            FlowConstruct</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad">getFlowConstruct</span>()</nobr>
+        
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            
+            
+            final
+            
+            
+            MuleContext</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad">getMuleContext</span>()</nobr>
         
   </td></tr>
 
@@ -1428,10 +1670,244 @@ From class
             
             
             
-            <a href="http://download.oracle.com/javase/6/docs/api/index.html?java/lang/Object.html">Object</a></nobr>
+            void</nobr>
         </td>
         <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../../../com/mulesoft/mule/cassandradb/processors/AbstractExpressionEvaluator.html#evaluateAndTransform(org.mule.api.MuleContext, org.mule.api.MuleEvent, java.lang.reflect.Type, java.lang.String, java.lang.Object)">evaluateAndTransform</a></span>(MuleContext muleContext, MuleEvent event, <a href="http://download.oracle.com/javase/6/docs/api/index.html?java/lang/reflect/Type.html">Type</a> expectedType, <a href="http://download.oracle.com/javase/6/docs/api/index.html?java/lang/String.html">String</a> expectedMimeType, <a href="http://download.oracle.com/javase/6/docs/api/index.html?java/lang/Object.html">Object</a> source)</nobr>
+        <span class="sympad">initialise</span>()</nobr>
+        
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            
+            
+            final
+            
+            
+            void</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad">overwritePayload</span>(MuleEvent arg0, Object arg1)</nobr>
+        
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            
+            
+            
+            
+            
+            MuleEvent</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad">process</span>(MuleEvent arg0)</nobr>
+        
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            
+            
+            
+            
+            
+            void</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad">setAccessTokenId</span>(String arg0)</nobr>
+        
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            
+            
+            final
+            
+            
+            void</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad">setFlowConstruct</span>(FlowConstruct arg0)</nobr>
+        
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            
+            
+            final
+            
+            
+            void</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad">setModuleObject</span>(Object arg0)</nobr>
+        
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            
+            
+            final
+            
+            
+            void</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad">setMuleContext</span>(MuleContext arg0)</nobr>
+        
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            
+            
+            
+            
+            
+            void</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad">start</span>()</nobr>
+        
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            
+            
+            
+            
+            
+            void</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad">stop</span>()</nobr>
+        
+  </td></tr>
+
+
+</table>
+  </div>
+</div>
+</td></tr>
+
+
+
+<tr class="api apilevel-" >
+<td colspan="12">
+  <a href="#" onclick="return toggleInherited(this, null)" id="inherited-methods-org.mule.devkit.processor.ExpressionEvaluatorSupport" class="jd-expando-trigger closed"
+          ><img id="inherited-methods-org.mule.devkit.processor.ExpressionEvaluatorSupport-trigger"
+          src="../../../../../../assets/images/triangle-closed.png"
+          class="jd-expando-trigger-img" /></a>
+From class
+
+  org.mule.devkit.processor.ExpressionEvaluatorSupport
+
+<div id="inherited-methods-org.mule.devkit.processor.ExpressionEvaluatorSupport">
+  <div id="inherited-methods-org.mule.devkit.processor.ExpressionEvaluatorSupport-list"
+        class="jd-inheritedlinks">
+  </div>
+  <div id="inherited-methods-org.mule.devkit.processor.ExpressionEvaluatorSupport-summary" style="display: none;">
+    <table class="jd-sumtable-expando">
+    
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            
+            
+            
+            
+            
+            void</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad">computeClassHierarchy</span>(Class arg0, List arg1)</nobr>
+        
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            
+            
+            
+            
+            
+            Object</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad">evaluate</span>(TemplateParser.PatternInfo arg0, ExpressionManager arg1, MuleMessage arg2, Object arg3)</nobr>
+        
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            
+            
+            
+            
+            
+            Object</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad">evaluateAndTransform</span>(MuleContext arg0, MuleEvent arg1, Type arg2, String arg3, Object arg4)</nobr>
+        
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            
+            
+            
+            
+            
+            Object</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad">evaluateAndTransform</span>(MuleContext arg0, MuleMessage arg1, Type arg2, String arg3, Object arg4)</nobr>
+        
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            
+            
+            
+            
+            
+            String</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad">getAccessTokenId</span>(MuleEvent arg0, MessageProcessor arg1, OAuth2Manager&lt;?&gt; arg2)</nobr>
         
   </td></tr>
 
@@ -1447,7 +1923,7 @@ From class
             boolean</nobr>
         </td>
         <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../../../com/mulesoft/mule/cassandradb/processors/AbstractExpressionEvaluator.html#isAssignableFrom(java.lang.reflect.Type, java.lang.Class)">isAssignableFrom</a></span>(<a href="http://download.oracle.com/javase/6/docs/api/index.html?java/lang/reflect/Type.html">Type</a> expectedType, <a href="http://download.oracle.com/javase/6/docs/api/index.html?java/lang/Class.html">Class</a> clazz)</nobr>
+        <span class="sympad">isAssignableFrom</span>(Type arg0, Class arg1)</nobr>
         
   </td></tr>
 
@@ -1463,7 +1939,7 @@ From class
             boolean</nobr>
         </td>
         <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../../../com/mulesoft/mule/cassandradb/processors/AbstractExpressionEvaluator.html#isList(java.lang.reflect.Type)">isList</a></span>(<a href="http://download.oracle.com/javase/6/docs/api/index.html?java/lang/reflect/Type.html">Type</a> type)</nobr>
+        <span class="sympad">isList</span>(Type arg0)</nobr>
         
   </td></tr>
 
@@ -1479,10 +1955,8 @@ From class
             boolean</nobr>
         </td>
         <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../../../com/mulesoft/mule/cassandradb/processors/AbstractExpressionEvaluator.html#isListClass(java.lang.Class)">isListClass</a></span>(<a href="http://download.oracle.com/javase/6/docs/api/index.html?java/lang/Class.html">Class</a> clazz)</nobr>
+        <span class="sympad">isListClass</span>(Class arg0)</nobr>
         
-        <div class="jd-descrdiv">Checks whether the specified class parameter is an instance of <code><a href="http://download.oracle.com/javase/6/docs/api/index.html?java/util/List.html">List</a></code></div>
-  
   </td></tr>
 
 
@@ -1497,7 +1971,7 @@ From class
             boolean</nobr>
         </td>
         <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../../../com/mulesoft/mule/cassandradb/processors/AbstractExpressionEvaluator.html#isMap(java.lang.reflect.Type)">isMap</a></span>(<a href="http://download.oracle.com/javase/6/docs/api/index.html?java/lang/reflect/Type.html">Type</a> type)</nobr>
+        <span class="sympad">isMap</span>(Type arg0)</nobr>
         
   </td></tr>
 
@@ -1513,10 +1987,8 @@ From class
             boolean</nobr>
         </td>
         <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../../../com/mulesoft/mule/cassandradb/processors/AbstractExpressionEvaluator.html#isMapClass(java.lang.Class)">isMapClass</a></span>(<a href="http://download.oracle.com/javase/6/docs/api/index.html?java/lang/Class.html">Class</a> clazz)</nobr>
+        <span class="sympad">isMapClass</span>(Class arg0)</nobr>
         
-        <div class="jd-descrdiv">Checks whether the specified class parameter is an instance of <code><a href="http://download.oracle.com/javase/6/docs/api/index.html?java/util/Map.html">Map</a></code></div>
-  
   </td></tr>
 
 
@@ -1528,10 +2000,10 @@ From class
             
             
             
-            <a href="http://download.oracle.com/javase/6/docs/api/index.html?java/lang/Object.html">Object</a></nobr>
+            Object</nobr>
         </td>
         <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../../../com/mulesoft/mule/cassandradb/processors/AbstractExpressionEvaluator.html#transform(org.mule.api.MuleContext, org.mule.api.MuleEvent, java.lang.reflect.Type, java.lang.String, java.lang.Object)">transform</a></span>(MuleContext muleContext, MuleEvent event, <a href="http://download.oracle.com/javase/6/docs/api/index.html?java/lang/reflect/Type.html">Type</a> expectedType, <a href="http://download.oracle.com/javase/6/docs/api/index.html?java/lang/String.html">String</a> expectedMimeType, <a href="http://download.oracle.com/javase/6/docs/api/index.html?java/lang/Object.html">Object</a> source)</nobr>
+        <span class="sympad">transform</span>(MuleMessage arg0, Type arg1, Object arg2)</nobr>
         
   </td></tr>
 
@@ -1544,10 +2016,26 @@ From class
             
             
             
-            <a href="http://download.oracle.com/javase/6/docs/api/index.html?java/lang/Object.html">Object</a></nobr>
+            Object</nobr>
         </td>
         <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../../../com/mulesoft/mule/cassandradb/processors/AbstractExpressionEvaluator.html#transform(org.mule.api.MuleMessage, java.lang.reflect.Type, java.lang.Object)">transform</a></span>(MuleMessage muleMessage, <a href="http://download.oracle.com/javase/6/docs/api/index.html?java/lang/reflect/Type.html">Type</a> expectedType, <a href="http://download.oracle.com/javase/6/docs/api/index.html?java/lang/Object.html">Object</a> source)</nobr>
+        <span class="sympad">transform</span>(MuleContext arg0, MuleEvent arg1, Type arg2, String arg3, Object arg4)</nobr>
+        
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            
+            
+            
+            
+            
+            Object</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad">transform</span>(MuleContext arg0, MuleMessage arg1, Type arg2, String arg3, Object arg4)</nobr>
         
   </td></tr>
 
@@ -1567,7 +2055,7 @@ From class
           class="jd-expando-trigger-img" /></a>
 From class
 
-  <a href="http://download.oracle.com/javase/6/docs/api/index.html?java/lang/Object.html">java.lang.Object</a>
+  java.lang.Object
 
 <div id="inherited-methods-java.lang.Object">
   <div id="inherited-methods-java.lang.Object-list"
@@ -1586,7 +2074,7 @@ From class
             
             
             
-            <a href="http://download.oracle.com/javase/6/docs/api/index.html?java/lang/Object.html">Object</a></nobr>
+            Object</nobr>
         </td>
         <td class="jd-linkcol" width="100%"><nobr>
         <span class="sympad">clone</span>()</nobr>
@@ -1605,7 +2093,7 @@ From class
             boolean</nobr>
         </td>
         <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad">equals</span>(<a href="http://download.oracle.com/javase/6/docs/api/index.html?java/lang/Object.html">Object</a> arg0)</nobr>
+        <span class="sympad">equals</span>(Object arg0)</nobr>
         
   </td></tr>
 
@@ -1634,7 +2122,7 @@ From class
             final
             
             
-            <a href="http://download.oracle.com/javase/6/docs/api/index.html?java/lang/Class.html">Class</a>&lt;?&gt;</nobr>
+            Class&lt;?&gt;</nobr>
         </td>
         <td class="jd-linkcol" width="100%"><nobr>
         <span class="sympad">getClass</span>()</nobr>
@@ -1698,7 +2186,7 @@ From class
             
             
             
-            <a href="http://download.oracle.com/javase/6/docs/api/index.html?java/lang/String.html">String</a></nobr>
+            String</nobr>
         </td>
         <td class="jd-linkcol" width="100%"><nobr>
         <span class="sympad">toString</span>()</nobr>
@@ -1751,6 +2239,82 @@ From class
         <td class="jd-linkcol" width="100%"><nobr>
         <span class="sympad">wait</span>(long arg0)</nobr>
         
+  </td></tr>
+
+
+</table>
+  </div>
+</div>
+</td></tr>
+
+
+
+<tr class="api apilevel-" >
+<td colspan="12">
+  <a href="#" onclick="return toggleInherited(this, null)" id="inherited-methods-com.mulesoft.mule.cassandradb.processors.ConnectivityProcessor" class="jd-expando-trigger closed"
+          ><img id="inherited-methods-com.mulesoft.mule.cassandradb.processors.ConnectivityProcessor-trigger"
+          src="../../../../../../assets/images/triangle-closed.png"
+          class="jd-expando-trigger-img" /></a>
+From interface
+
+  <a href="../../../../../../com/mulesoft/mule/cassandradb/processors/ConnectivityProcessor.html">com.mulesoft.mule.cassandradb.processors.ConnectivityProcessor</a>
+
+<div id="inherited-methods-com.mulesoft.mule.cassandradb.processors.ConnectivityProcessor">
+  <div id="inherited-methods-com.mulesoft.mule.cassandradb.processors.ConnectivityProcessor-list"
+        class="jd-inheritedlinks">
+  </div>
+  <div id="inherited-methods-com.mulesoft.mule.cassandradb.processors.ConnectivityProcessor-summary" style="display: none;">
+    <table class="jd-sumtable-expando">
+    
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            abstract
+            
+            
+            
+            
+            Object</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad"><a href="../../../../../../com/mulesoft/mule/cassandradb/processors/ConnectivityProcessor.html#getPassword()">getPassword</a></span>()</nobr>
+        
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            abstract
+            
+            
+            
+            
+            Object</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad"><a href="../../../../../../com/mulesoft/mule/cassandradb/processors/ConnectivityProcessor.html#getUsername()">getUsername</a></span>()</nobr>
+        
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            abstract
+            
+            
+            
+            
+            Type</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad"><a href="../../../../../../com/mulesoft/mule/cassandradb/processors/ConnectivityProcessor.html#typeFor(java.lang.String)">typeFor</a></span>(String fieldName)</nobr>
+        
+        <div class="jd-descrdiv">Retrieves the concrete java.lang.reflect.Type of a connectivity argument, needed for the @Connect</div>
+  
   </td></tr>
 
 
@@ -2054,6 +2618,68 @@ From interface
 </td></tr>
 
 
+
+
+
+<tr class="api apilevel-" >
+<td colspan="12">
+  <a href="#" onclick="return toggleInherited(this, null)" id="inherited-methods-org.mule.common.metadata.MetaDataDescriptor" class="jd-expando-trigger closed"
+          ><img id="inherited-methods-org.mule.common.metadata.MetaDataDescriptor-trigger"
+          src="../../../../../../assets/images/triangle-closed.png"
+          class="jd-expando-trigger-img" /></a>
+From interface
+
+  org.mule.common.metadata.MetaDataDescriptor
+
+<div id="inherited-methods-org.mule.common.metadata.MetaDataDescriptor">
+  <div id="inherited-methods-org.mule.common.metadata.MetaDataDescriptor-list"
+        class="jd-inheritedlinks">
+  </div>
+  <div id="inherited-methods-org.mule.common.metadata.MetaDataDescriptor-summary" style="display: none;">
+    <table class="jd-sumtable-expando">
+    
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            abstract
+            
+            
+            
+            
+            Result&lt;MetaData&gt;</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad">getInputMetaData</span>()</nobr>
+        
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            abstract
+            
+            
+            
+            
+            Result&lt;MetaData&gt;</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad">getOutputMetaData</span>(MetaData arg0)</nobr>
+        
+  </td></tr>
+
+
+</table>
+  </div>
+</div>
+</td></tr>
+
+
+
+
 </table>
 
 
@@ -2086,7 +2712,7 @@ From interface
 
 
 
-<A NAME="_contentType"></A>
+<A NAME="_columnNameType"></A>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -2094,9 +2720,9 @@ From interface
         protected 
          
          
-        <a href="http://download.oracle.com/javase/6/docs/api/index.html?java/util/Map.html">Map</a>
+        String
       </span>
-        _contentType
+        _columnNameType
     </h4>
       <div class="api-level">
         
@@ -2116,7 +2742,7 @@ From interface
 
 
 
-<A NAME="content"></A>
+<A NAME="_columnParentType"></A>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -2124,9 +2750,249 @@ From interface
         protected 
          
          
-        <a href="http://download.oracle.com/javase/6/docs/api/index.html?java/lang/Object.html">Object</a>
+        String
       </span>
-        content
+        _columnParentType
+    </h4>
+      <div class="api-level">
+        
+
+
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+
+    
+    </div>
+</div>
+
+
+
+<A NAME="_columnValueType"></A>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        protected 
+         
+         
+        String
+      </span>
+        _columnValueType
+    </h4>
+      <div class="api-level">
+        
+
+
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+
+    
+    </div>
+</div>
+
+
+
+<A NAME="_rowKeyType"></A>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        protected 
+         
+         
+        String
+      </span>
+        _rowKeyType
+    </h4>
+      <div class="api-level">
+        
+
+
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+
+    
+    </div>
+</div>
+
+
+
+<A NAME="_ttlType"></A>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        protected 
+         
+         
+        int
+      </span>
+        _ttlType
+    </h4>
+      <div class="api-level">
+        
+
+
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+
+    
+    </div>
+</div>
+
+
+
+<A NAME="columnName"></A>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        protected 
+         
+         
+        Object
+      </span>
+        columnName
+    </h4>
+      <div class="api-level">
+        
+
+
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+
+    
+    </div>
+</div>
+
+
+
+<A NAME="columnParent"></A>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        protected 
+         
+         
+        Object
+      </span>
+        columnParent
+    </h4>
+      <div class="api-level">
+        
+
+
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+
+    
+    </div>
+</div>
+
+
+
+<A NAME="columnValue"></A>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        protected 
+         
+         
+        Object
+      </span>
+        columnValue
+    </h4>
+      <div class="api-level">
+        
+
+
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+
+    
+    </div>
+</div>
+
+
+
+<A NAME="rowKey"></A>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        protected 
+         
+         
+        Object
+      </span>
+        rowKey
+    </h4>
+      <div class="api-level">
+        
+
+
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+
+    
+    </div>
+</div>
+
+
+
+<A NAME="ttl"></A>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        protected 
+         
+         
+        Object
+      </span>
+        ttl
     </h4>
       <div class="api-level">
         
@@ -2155,7 +3021,7 @@ From interface
 
 
 
-<A NAME="InsertMessageProcessor()"></A>
+<A NAME="InsertMessageProcessor(java.lang.String)"></A>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -2168,7 +3034,7 @@ From interface
         
       </span>
       <span class="sympad">InsertMessageProcessor</span>
-      <span class="normal">()</span>
+      <span class="normal">(String operationName)</span>
     </h4>
       <div class="api-level">
         <div>
@@ -2181,6 +3047,15 @@ From interface
     <div class="jd-details-descr">
       
   <div class="jd-tagdata jd-tagdescr"><p></p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>operationName</td>
+          <td></td>
+        </tr>
+      </table>
+  </div>
 
     </div>
 </div>
@@ -2232,6 +3107,166 @@ From interface
 </div>
 
 
+<A NAME="doProcess(org.mule.api.MuleEvent)"></A>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        MuleEvent
+      </span>
+      <span class="sympad">doProcess</span>
+      <span class="normal">(MuleEvent event)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Invokes the MessageProcessor.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>event</td>
+          <td>MuleEvent to be processed</td>
+        </tr>
+      </table>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Throws</h5>
+      <table class="jd-tagtable">  
+        <tr>
+            <th>Exception</td>
+            <td></td>
+        </tr>
+      </table>
+  </div>
+
+    </div>
+</div>
+
+
+<A NAME="getGenericMetaData(org.mule.common.metadata.MetaDataKey)"></A>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        Result&lt;MetaData&gt;
+      </span>
+      <span class="sympad">getGenericMetaData</span>
+      <span class="normal">(MetaDataKey metaDataKey)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>metaDataKey</td>
+          <td></td>
+        </tr>
+      </table>
+  </div>
+
+    </div>
+</div>
+
+
+<A NAME="getInputMetaData()"></A>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        Result&lt;MetaData&gt;
+      </span>
+      <span class="sympad">getInputMetaData</span>
+      <span class="normal">()</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+
+    </div>
+</div>
+
+
+<A NAME="getOutputMetaData(org.mule.common.metadata.MetaData)"></A>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        Result&lt;MetaData&gt;
+      </span>
+      <span class="sympad">getOutputMetaData</span>
+      <span class="normal">(MetaData inputMetadata)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>inputMetadata</td>
+          <td></td>
+        </tr>
+      </table>
+  </div>
+
+    </div>
+</div>
+
+
 <A NAME="initialise()"></A>
 
 <div class="jd-details api apilevel-"> 
@@ -2272,56 +3307,7 @@ From interface
 </div>
 
 
-<A NAME="process(org.mule.api.MuleEvent)"></A>
-
-<div class="jd-details api apilevel-"> 
-    <h4 class="jd-details-title">
-      <span class="normal">
-        public 
-         
-         
-         
-         
-        MuleEvent
-      </span>
-      <span class="sympad">process</span>
-      <span class="normal">(MuleEvent event)</span>
-    </h4>
-      <div class="api-level">
-        <div>
-
-</div>
-        
-  
-
-      </div>
-    <div class="jd-details-descr">
-      
-  <div class="jd-tagdata jd-tagdescr"><p>Invokes the MessageProcessor.</p></div>
-  <div class="jd-tagdata">
-      <h5 class="jd-tagtitle">Parameters</h5>
-      <table class="jd-tagtable">
-        <tr>
-          <th>event</td>
-          <td>MuleEvent to be processed</td>
-        </tr>
-      </table>
-  </div>
-  <div class="jd-tagdata">
-      <h5 class="jd-tagtitle">Throws</h5>
-      <table class="jd-tagtable">  
-        <tr>
-            <th>MuleException</td>
-            <td></td>
-        </tr>
-      </table>
-  </div>
-
-    </div>
-</div>
-
-
-<A NAME="setContent(java.lang.Object)"></A>
+<A NAME="setColumnName(java.lang.Object)"></A>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -2333,8 +3319,8 @@ From interface
          
         void
       </span>
-      <span class="sympad">setContent</span>
-      <span class="normal">(<a href="http://download.oracle.com/javase/6/docs/api/index.html?java/lang/Object.html">Object</a> value)</span>
+      <span class="sympad">setColumnName</span>
+      <span class="normal">(Object value)</span>
     </h4>
       <div class="api-level">
         <div>
@@ -2346,7 +3332,7 @@ From interface
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p>Sets content</p></div>
+  <div class="jd-tagdata jd-tagdescr"><p>Sets columnName</p></div>
   <div class="jd-tagdata">
       <h5 class="jd-tagtitle">Parameters</h5>
       <table class="jd-tagtable">
@@ -2362,7 +3348,7 @@ From interface
 </div>
 
 
-<A NAME="setFlowConstruct(org.mule.api.construct.FlowConstruct)"></A>
+<A NAME="setColumnParent(java.lang.Object)"></A>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -2374,8 +3360,8 @@ From interface
          
         void
       </span>
-      <span class="sympad">setFlowConstruct</span>
-      <span class="normal">(FlowConstruct flowConstruct)</span>
+      <span class="sympad">setColumnParent</span>
+      <span class="normal">(Object value)</span>
     </h4>
       <div class="api-level">
         <div>
@@ -2387,13 +3373,13 @@ From interface
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p>Sets flow construct</p></div>
+  <div class="jd-tagdata jd-tagdescr"><p>Sets columnParent</p></div>
   <div class="jd-tagdata">
       <h5 class="jd-tagtitle">Parameters</h5>
       <table class="jd-tagtable">
         <tr>
-          <th>flowConstruct</td>
-          <td>Flow construct to set
+          <th>value</td>
+          <td>Value to set
 </td>
         </tr>
       </table>
@@ -2403,7 +3389,7 @@ From interface
 </div>
 
 
-<A NAME="setMuleContext(org.mule.api.MuleContext)"></A>
+<A NAME="setColumnValue(java.lang.Object)"></A>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -2415,8 +3401,8 @@ From interface
          
         void
       </span>
-      <span class="sympad">setMuleContext</span>
-      <span class="normal">(MuleContext context)</span>
+      <span class="sympad">setColumnValue</span>
+      <span class="normal">(Object value)</span>
     </h4>
       <div class="api-level">
         <div>
@@ -2428,13 +3414,95 @@ From interface
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p>Set the Mule context</p></div>
+  <div class="jd-tagdata jd-tagdescr"><p>Sets columnValue</p></div>
   <div class="jd-tagdata">
       <h5 class="jd-tagtitle">Parameters</h5>
       <table class="jd-tagtable">
         <tr>
-          <th>context</td>
-          <td>Mule context to set
+          <th>value</td>
+          <td>Value to set
+</td>
+        </tr>
+      </table>
+  </div>
+
+    </div>
+</div>
+
+
+<A NAME="setRowKey(java.lang.Object)"></A>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        void
+      </span>
+      <span class="sympad">setRowKey</span>
+      <span class="normal">(Object value)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Sets rowKey</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>value</td>
+          <td>Value to set
+</td>
+        </tr>
+      </table>
+  </div>
+
+    </div>
+</div>
+
+
+<A NAME="setTtl(java.lang.Object)"></A>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        void
+      </span>
+      <span class="sympad">setTtl</span>
+      <span class="normal">(Object value)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Sets ttl</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>value</td>
+          <td>Value to set
 </td>
         </tr>
       </table>

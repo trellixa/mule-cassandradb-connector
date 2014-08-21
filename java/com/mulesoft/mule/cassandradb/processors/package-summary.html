@@ -64,6 +64,51 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
@@ -85,6 +130,7 @@
 <link href='http://fonts.googleapis.com/css?family=Ubuntu:300' rel='stylesheet' type='text/css'>
 <script src="../../../../../../assets/search_autocomplete.js" type="text/javascript"></script>
 <script src="../../../../../../assets/jquery-resizable.min.js" type="text/javascript"></script>
+<script src="../../../../../../assets/jquery-toc.js" type="text/javascript"></script>
 <script src="../../../../../../assets/mule-developer-docs.js" type="text/javascript"></script>
 <script src="../../../../../../assets/prettify.js" type="text/javascript"></script>
 <script type="text/javascript">
@@ -103,6 +149,27 @@
     #resize-packages-nav{border-bottom:3px solid #666;}
   </style>
 </noscript>
+<script type="text/javascript" charset="utf-8">
+  var is_ssl = ("https:" == document.location.protocol);
+  var asset_host = is_ssl ? "https://s3.amazonaws.com/getsatisfaction.com/" : "http://s3.amazonaws.com/getsatisfaction.com/";
+  document.write(unescape("%3Cscript src='" + asset_host + "javascripts/feedback-v2.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+
+<script type="text/javascript" charset="utf-8">
+  var feedback_widget_options = {};
+
+  feedback_widget_options.display = "overlay";
+  feedback_widget_options.company = "mulesoft";
+  feedback_widget_options.placement = "right";
+  feedback_widget_options.color = "#2F74AE";
+  feedback_widget_options.style = "question";
+
+  feedback_widget_options.tag = "Mule CassandraDB Module";
+
+  feedback_widget_options.limit = "3";
+
+  var feedback_widget = new GSFN.feedback_widget(feedback_widget_options);
+</script>
 </head>
 
 <body class="">
@@ -132,7 +199,7 @@
       <a href="http://www.mulesoft.com" tabindex="-1">
       <img src="../../../../../../assets//images/mulesoft-logo-final.gif" alt="MuleSoft" border="0" id="mulesoftlogo"></a><br/>
       
-  <div id="search" >
+  <div id="searchContainer" >
       <div id="searchForm">
           <form accept-charset="utf-8" class="gsc-search-box" 
                 onsubmit="return submit_search()">
@@ -182,21 +249,37 @@
     <li class="api apilevel-">
   <a href="../../../../../../java/com/mulesoft/mule/cassandradb/package-summary.html">com.mulesoft.mule.cassandradb</a></li>
     <li class="api apilevel-">
+  <a href="../../../../../../java/com/mulesoft/mule/cassandradb/adapter/package-summary.html">com.mulesoft.mule.cassandradb.adapter</a></li>
+    <li class="api apilevel-">
   <a href="../../../../../../java/com/mulesoft/mule/cassandradb/adapters/package-summary.html">com.mulesoft.mule.cassandradb.adapters</a></li>
     <li class="api apilevel-">
   <a href="../../../../../../java/com/mulesoft/mule/cassandradb/agents/package-summary.html">com.mulesoft.mule.cassandradb.agents</a></li>
     <li class="api apilevel-">
+  <a href="../../../../../../java/com/mulesoft/mule/cassandradb/api/package-summary.html">com.mulesoft.mule.cassandradb.api</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../../../java/com/mulesoft/mule/cassandradb/api/holders/package-summary.html">com.mulesoft.mule.cassandradb.api.holders</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../../../java/com/mulesoft/mule/cassandradb/api/transformers/package-summary.html">com.mulesoft.mule.cassandradb.api.transformers</a></li>
+    <li class="api apilevel-">
   <a href="../../../../../../java/com/mulesoft/mule/cassandradb/config/package-summary.html">com.mulesoft.mule.cassandradb.config</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../../../java/com/mulesoft/mule/cassandradb/connection/package-summary.html">com.mulesoft.mule.cassandradb.connection</a></li>
     <li class="api apilevel-">
   <a href="../../../../../../java/com/mulesoft/mule/cassandradb/connectivity/package-summary.html">com.mulesoft.mule.cassandradb.connectivity</a></li>
     <li class="api apilevel-">
+  <a href="../../../../../../java/com/mulesoft/mule/cassandradb/devkit/package-summary.html">com.mulesoft.mule.cassandradb.devkit</a></li>
+    <li class="api apilevel-">
   <a href="../../../../../../java/com/mulesoft/mule/cassandradb/holders/package-summary.html">com.mulesoft.mule.cassandradb.holders</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../../../java/com/mulesoft/mule/cassandradb/pooling/package-summary.html">com.mulesoft.mule.cassandradb.pooling</a></li>
     <li class="api apilevel-">
   <a href="../../../../../../java/com/mulesoft/mule/cassandradb/process/package-summary.html">com.mulesoft.mule.cassandradb.process</a></li>
     <li class="selected api apilevel-">
   <a href="../../../../../../java/com/mulesoft/mule/cassandradb/processors/package-summary.html">com.mulesoft.mule.cassandradb.processors</a></li>
     <li class="api apilevel-">
   <a href="../../../../../../java/com/mulesoft/mule/cassandradb/transformers/package-summary.html">com.mulesoft.mule.cassandradb.transformers</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../../../java/org/apache/cassandra/thrift/holders/package-summary.html">org.apache.cassandra.thrift.holders</a></li>
     <li class="api apilevel-">
   <a href="../../../../../../java/org/apache/cassandra/thrift/transformers/package-summary.html">org.apache.cassandra.thrift.transformers</a></li>
               </ul><br/>
@@ -205,17 +288,50 @@
           <div id="classes-nav">
             <ul>
               
+    <li><h2>Interfaces</h2>
+      <ul>
+        <li class="api apilevel-"><a href="../../../../../../java/com/mulesoft/mule/cassandradb/processors/ConnectivityProcessor.html">ConnectivityProcessor</a></li>
+      </ul>
+    </li>
               
     <li><h2>Classes</h2>
       <ul>
         <li class="api apilevel-"><a href="../../../../../../java/com/mulesoft/mule/cassandradb/processors/AbstractConnectedProcessor.html">AbstractConnectedProcessor</a></li>
-        <li class="api apilevel-"><a href="../../../../../../java/com/mulesoft/mule/cassandradb/processors/AbstractExpressionEvaluator.html">AbstractExpressionEvaluator</a></li>
-        <li class="api apilevel-"><a href="../../../../../../java/com/mulesoft/mule/cassandradb/processors/AbstractListeningMessageProcessor.html">AbstractListeningMessageProcessor</a>&lt;O&gt;</li>
-        <li class="api apilevel-"><a href="../../../../../../java/com/mulesoft/mule/cassandradb/processors/AbstractMessageProcessor.html">AbstractMessageProcessor</a>&lt;O&gt;</li>
+        <li class="api apilevel-"><a href="../../../../../../java/com/mulesoft/mule/cassandradb/processors/AbstractPagedConnectedProcessor.html">AbstractPagedConnectedProcessor</a></li>
+        <li class="api apilevel-"><a href="../../../../../../java/com/mulesoft/mule/cassandradb/processors/AddMessageProcessor.html">AddMessageProcessor</a></li>
+        <li class="api apilevel-"><a href="../../../../../../java/com/mulesoft/mule/cassandradb/processors/BatchMutableMessageProcessor.html">BatchMutableMessageProcessor</a></li>
+        <li class="api apilevel-"><a href="../../../../../../java/com/mulesoft/mule/cassandradb/processors/DescribeClusterNameMessageProcessor.html">DescribeClusterNameMessageProcessor</a></li>
+        <li class="api apilevel-"><a href="../../../../../../java/com/mulesoft/mule/cassandradb/processors/DescribeKeyspaceMessageProcessor.html">DescribeKeyspaceMessageProcessor</a></li>
+        <li class="api apilevel-"><a href="../../../../../../java/com/mulesoft/mule/cassandradb/processors/DescribeKeyspacesMessageProcessor.html">DescribeKeyspacesMessageProcessor</a></li>
+        <li class="api apilevel-"><a href="../../../../../../java/com/mulesoft/mule/cassandradb/processors/DescribePartitionerMessageProcessor.html">DescribePartitionerMessageProcessor</a></li>
+        <li class="api apilevel-"><a href="../../../../../../java/com/mulesoft/mule/cassandradb/processors/DescribeRingMessageProcessor.html">DescribeRingMessageProcessor</a></li>
+        <li class="api apilevel-"><a href="../../../../../../java/com/mulesoft/mule/cassandradb/processors/DescribeSchemaVersionsMessageProcessor.html">DescribeSchemaVersionsMessageProcessor</a></li>
+        <li class="api apilevel-"><a href="../../../../../../java/com/mulesoft/mule/cassandradb/processors/DescribeSnitchMessageProcessor.html">DescribeSnitchMessageProcessor</a></li>
+        <li class="api apilevel-"><a href="../../../../../../java/com/mulesoft/mule/cassandradb/processors/DescribeVersionMessageProcessor.html">DescribeVersionMessageProcessor</a></li>
+        <li class="api apilevel-"><a href="../../../../../../java/com/mulesoft/mule/cassandradb/processors/ExecuteCqlQueryMessageProcessor.html">ExecuteCqlQueryMessageProcessor</a></li>
+        <li class="api apilevel-"><a href="../../../../../../java/com/mulesoft/mule/cassandradb/processors/GetCountMessageProcessor.html">GetCountMessageProcessor</a></li>
+        <li class="api apilevel-"><a href="../../../../../../java/com/mulesoft/mule/cassandradb/processors/GetIndexedSlicesMessageProcessor.html">GetIndexedSlicesMessageProcessor</a></li>
         <li class="api apilevel-"><a href="../../../../../../java/com/mulesoft/mule/cassandradb/processors/GetMessageProcessor.html">GetMessageProcessor</a></li>
+        <li class="api apilevel-"><a href="../../../../../../java/com/mulesoft/mule/cassandradb/processors/GetRangeSlicesMessageProcessor.html">GetRangeSlicesMessageProcessor</a></li>
+        <li class="api apilevel-"><a href="../../../../../../java/com/mulesoft/mule/cassandradb/processors/GetRowMessageProcessor.html">GetRowMessageProcessor</a></li>
         <li class="api apilevel-"><a href="../../../../../../java/com/mulesoft/mule/cassandradb/processors/GetSliceMessageProcessor.html">GetSliceMessageProcessor</a></li>
+        <li class="api apilevel-"><a href="../../../../../../java/com/mulesoft/mule/cassandradb/processors/InsertFromMapMessageProcessor.html">InsertFromMapMessageProcessor</a></li>
         <li class="api apilevel-"><a href="../../../../../../java/com/mulesoft/mule/cassandradb/processors/InsertMessageProcessor.html">InsertMessageProcessor</a></li>
+        <li class="api apilevel-"><a href="../../../../../../java/com/mulesoft/mule/cassandradb/processors/MultiGetCountMessageProcessor.html">MultiGetCountMessageProcessor</a></li>
+        <li class="api apilevel-"><a href="../../../../../../java/com/mulesoft/mule/cassandradb/processors/MultiGetSliceMessageProcessor.html">MultiGetSliceMessageProcessor</a></li>
+        <li class="api apilevel-"><a href="../../../../../../java/com/mulesoft/mule/cassandradb/processors/RemoveCounterMessageProcessor.html">RemoveCounterMessageProcessor</a></li>
         <li class="api apilevel-"><a href="../../../../../../java/com/mulesoft/mule/cassandradb/processors/RemoveMessageProcessor.html">RemoveMessageProcessor</a></li>
+        <li class="api apilevel-"><a href="../../../../../../java/com/mulesoft/mule/cassandradb/processors/SetQueryKeyspaceMessageProcessor.html">SetQueryKeyspaceMessageProcessor</a></li>
+        <li class="api apilevel-"><a href="../../../../../../java/com/mulesoft/mule/cassandradb/processors/SystemAddColumnFamilyFromObjectMessageProcessor.html">SystemAddColumnFamilyFromObjectMessageProcessor</a></li>
+        <li class="api apilevel-"><a href="../../../../../../java/com/mulesoft/mule/cassandradb/processors/SystemAddColumnFamilyFromObjectWithSimpleNamesMessageProcessor.html">SystemAddColumnFamilyFromObjectWithSimpleNamesMessageProcessor</a></li>
+        <li class="api apilevel-"><a href="../../../../../../java/com/mulesoft/mule/cassandradb/processors/SystemAddColumnFamilyWithParamsMessageProcessor.html">SystemAddColumnFamilyWithParamsMessageProcessor</a></li>
+        <li class="api apilevel-"><a href="../../../../../../java/com/mulesoft/mule/cassandradb/processors/SystemAddKeyspaceFromObjectMessageProcessor.html">SystemAddKeyspaceFromObjectMessageProcessor</a></li>
+        <li class="api apilevel-"><a href="../../../../../../java/com/mulesoft/mule/cassandradb/processors/SystemAddKeyspaceWithParamsMessageProcessor.html">SystemAddKeyspaceWithParamsMessageProcessor</a></li>
+        <li class="api apilevel-"><a href="../../../../../../java/com/mulesoft/mule/cassandradb/processors/SystemDropColumnFamilyMessageProcessor.html">SystemDropColumnFamilyMessageProcessor</a></li>
+        <li class="api apilevel-"><a href="../../../../../../java/com/mulesoft/mule/cassandradb/processors/SystemDropKeyspaceMessageProcessor.html">SystemDropKeyspaceMessageProcessor</a></li>
+        <li class="api apilevel-"><a href="../../../../../../java/com/mulesoft/mule/cassandradb/processors/SystemUpdateColumnFamilyMessageProcessor.html">SystemUpdateColumnFamilyMessageProcessor</a></li>
+        <li class="api apilevel-"><a href="../../../../../../java/com/mulesoft/mule/cassandradb/processors/SystemUpdateKeyspaceMessageProcessor.html">SystemUpdateKeyspaceMessageProcessor</a></li>
+        <li class="api apilevel-"><a href="../../../../../../java/com/mulesoft/mule/cassandradb/processors/TruncateMessageProcessor.html">TruncateMessageProcessor</a></li>
       </ul>
     </li>
               
@@ -281,6 +397,19 @@
 
 
   
+    <h2>Interfaces</h2>
+    <div class="jd-sumtable">
+    
+  <table class="jd-sumtable-expando">
+        <tr class="alt-color api apilevel-" >
+              <td class="jd-linkcol"><a href="../../../../../../java/com/mulesoft/mule/cassandradb/processors/ConnectivityProcessor.html">ConnectivityProcessor</a></td>
+              <td class="jd-descrcol" width="100%">Interface used to unify all message processors (those which use (or not) pagination) from the ManagedConnectionProcessInterceptor
+ 
+&nbsp;</td>
+          </tr>
+  </table>
+    </div>
+  
 
 
   
@@ -293,32 +422,144 @@
               <td class="jd-descrcol" width="100%">&nbsp;</td>
           </tr>
         <tr class=" api apilevel-" >
-              <td class="jd-linkcol"><a href="../../../../../../java/com/mulesoft/mule/cassandradb/processors/AbstractExpressionEvaluator.html">AbstractExpressionEvaluator</a></td>
+              <td class="jd-linkcol"><a href="../../../../../../java/com/mulesoft/mule/cassandradb/processors/AbstractPagedConnectedProcessor.html">AbstractPagedConnectedProcessor</a></td>
               <td class="jd-descrcol" width="100%">&nbsp;</td>
           </tr>
         <tr class="alt-color api apilevel-" >
-              <td class="jd-linkcol"><a href="../../../../../../java/com/mulesoft/mule/cassandradb/processors/AbstractListeningMessageProcessor.html">AbstractListeningMessageProcessor</a>&lt;O&gt;</td>
-              <td class="jd-descrcol" width="100%">&nbsp;</td>
+              <td class="jd-linkcol"><a href="../../../../../../java/com/mulesoft/mule/cassandradb/processors/AddMessageProcessor.html">AddMessageProcessor</a></td>
+              <td class="jd-descrcol" width="100%">AddMessageProcessor invokes the <code><a href="../../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBConnector.html#add(java.lang.String, java.lang.String, java.lang.String, int)">add(java.lang.String, java.lang.String, java.lang.String, int)</a></code> method in <code><a href="../../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBConnector.html">CassandraDBConnector</a></code>.&nbsp;</td>
           </tr>
         <tr class=" api apilevel-" >
-              <td class="jd-linkcol"><a href="../../../../../../java/com/mulesoft/mule/cassandradb/processors/AbstractMessageProcessor.html">AbstractMessageProcessor</a>&lt;O&gt;</td>
-              <td class="jd-descrcol" width="100%">&nbsp;</td>
+              <td class="jd-linkcol"><a href="../../../../../../java/com/mulesoft/mule/cassandradb/processors/BatchMutableMessageProcessor.html">BatchMutableMessageProcessor</a></td>
+              <td class="jd-descrcol" width="100%">BatchMutableMessageProcessor invokes the <code><a href="../../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBConnector.html#batchMutable(java.util.Map)">batchMutable(java.util.Map)</a></code> method in <code><a href="../../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBConnector.html">CassandraDBConnector</a></code>.&nbsp;</td>
           </tr>
         <tr class="alt-color api apilevel-" >
+              <td class="jd-linkcol"><a href="../../../../../../java/com/mulesoft/mule/cassandradb/processors/DescribeClusterNameMessageProcessor.html">DescribeClusterNameMessageProcessor</a></td>
+              <td class="jd-descrcol" width="100%">DescribeClusterNameMessageProcessor invokes the <code><a href="../../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBConnector.html#describeClusterName()">describeClusterName()</a></code> method in <code><a href="../../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBConnector.html">CassandraDBConnector</a></code>.&nbsp;</td>
+          </tr>
+        <tr class=" api apilevel-" >
+              <td class="jd-linkcol"><a href="../../../../../../java/com/mulesoft/mule/cassandradb/processors/DescribeKeyspaceMessageProcessor.html">DescribeKeyspaceMessageProcessor</a></td>
+              <td class="jd-descrcol" width="100%">DescribeKeyspaceMessageProcessor invokes the <code><a href="../../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBConnector.html#describeKeyspace(java.lang.String)">describeKeyspace(java.lang.String)</a></code> method in <code><a href="../../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBConnector.html">CassandraDBConnector</a></code>.&nbsp;</td>
+          </tr>
+        <tr class="alt-color api apilevel-" >
+              <td class="jd-linkcol"><a href="../../../../../../java/com/mulesoft/mule/cassandradb/processors/DescribeKeyspacesMessageProcessor.html">DescribeKeyspacesMessageProcessor</a></td>
+              <td class="jd-descrcol" width="100%">DescribeKeyspacesMessageProcessor invokes the <code><a href="../../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBConnector.html#describeKeyspaces()">describeKeyspaces()</a></code> method in <code><a href="../../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBConnector.html">CassandraDBConnector</a></code>.&nbsp;</td>
+          </tr>
+        <tr class=" api apilevel-" >
+              <td class="jd-linkcol"><a href="../../../../../../java/com/mulesoft/mule/cassandradb/processors/DescribePartitionerMessageProcessor.html">DescribePartitionerMessageProcessor</a></td>
+              <td class="jd-descrcol" width="100%">DescribePartitionerMessageProcessor invokes the <code><a href="../../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBConnector.html#describePartitioner()">describePartitioner()</a></code> method in <code><a href="../../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBConnector.html">CassandraDBConnector</a></code>.&nbsp;</td>
+          </tr>
+        <tr class="alt-color api apilevel-" >
+              <td class="jd-linkcol"><a href="../../../../../../java/com/mulesoft/mule/cassandradb/processors/DescribeRingMessageProcessor.html">DescribeRingMessageProcessor</a></td>
+              <td class="jd-descrcol" width="100%">DescribeRingMessageProcessor invokes the <code><a href="../../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBConnector.html#describeRing(java.lang.String)">describeRing(java.lang.String)</a></code> method in <code><a href="../../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBConnector.html">CassandraDBConnector</a></code>.&nbsp;</td>
+          </tr>
+        <tr class=" api apilevel-" >
+              <td class="jd-linkcol"><a href="../../../../../../java/com/mulesoft/mule/cassandradb/processors/DescribeSchemaVersionsMessageProcessor.html">DescribeSchemaVersionsMessageProcessor</a></td>
+              <td class="jd-descrcol" width="100%">DescribeSchemaVersionsMessageProcessor invokes the <code><a href="../../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBConnector.html#describeSchemaVersions()">describeSchemaVersions()</a></code> method in <code><a href="../../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBConnector.html">CassandraDBConnector</a></code>.&nbsp;</td>
+          </tr>
+        <tr class="alt-color api apilevel-" >
+              <td class="jd-linkcol"><a href="../../../../../../java/com/mulesoft/mule/cassandradb/processors/DescribeSnitchMessageProcessor.html">DescribeSnitchMessageProcessor</a></td>
+              <td class="jd-descrcol" width="100%">DescribeSnitchMessageProcessor invokes the <code><a href="../../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBConnector.html#describeSnitch()">describeSnitch()</a></code> method in <code><a href="../../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBConnector.html">CassandraDBConnector</a></code>.&nbsp;</td>
+          </tr>
+        <tr class=" api apilevel-" >
+              <td class="jd-linkcol"><a href="../../../../../../java/com/mulesoft/mule/cassandradb/processors/DescribeVersionMessageProcessor.html">DescribeVersionMessageProcessor</a></td>
+              <td class="jd-descrcol" width="100%">DescribeVersionMessageProcessor invokes the <code><a href="../../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBConnector.html#describeVersion()">describeVersion()</a></code> method in <code><a href="../../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBConnector.html">CassandraDBConnector</a></code>.&nbsp;</td>
+          </tr>
+        <tr class="alt-color api apilevel-" >
+              <td class="jd-linkcol"><a href="../../../../../../java/com/mulesoft/mule/cassandradb/processors/ExecuteCqlQueryMessageProcessor.html">ExecuteCqlQueryMessageProcessor</a></td>
+              <td class="jd-descrcol" width="100%">ExecuteCqlQueryMessageProcessor invokes the <code><a href="../../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBConnector.html#executeCqlQuery(java.lang.String, org.apache.cassandra.thrift.Compression)">executeCqlQuery(java.lang.String, org.apache.cassandra.thrift.Compression)</a></code> method in <code><a href="../../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBConnector.html">CassandraDBConnector</a></code>.&nbsp;</td>
+          </tr>
+        <tr class=" api apilevel-" >
+              <td class="jd-linkcol"><a href="../../../../../../java/com/mulesoft/mule/cassandradb/processors/GetCountMessageProcessor.html">GetCountMessageProcessor</a></td>
+              <td class="jd-descrcol" width="100%">GetCountMessageProcessor invokes the <code><a href="../../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBConnector.html#getCount(java.lang.String, java.lang.String, java.lang.String, java.lang.String, boolean, int)">getCount(java.lang.String, java.lang.String, java.lang.String, java.lang.String, boolean, int)</a></code> method in <code><a href="../../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBConnector.html">CassandraDBConnector</a></code>.&nbsp;</td>
+          </tr>
+        <tr class="alt-color api apilevel-" >
+              <td class="jd-linkcol"><a href="../../../../../../java/com/mulesoft/mule/cassandradb/processors/GetIndexedSlicesMessageProcessor.html">GetIndexedSlicesMessageProcessor</a></td>
+              <td class="jd-descrcol" width="100%">GetIndexedSlicesMessageProcessor invokes the <code><a href="../../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBConnector.html#getIndexedSlices(java.lang.String, java.lang.String, java.lang.String, boolean, int, int, java.lang.String, java.util.List<com.mulesoft.mule.cassandradb.api.IndexExpresion>)">getIndexedSlices(java.lang.String, java.lang.String, java.lang.String, boolean, int, int, java.lang.String, java.util.List)</a></code> method in <code><a href="../../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBConnector.html">CassandraDBConnector</a></code>.&nbsp;</td>
+          </tr>
+        <tr class=" api apilevel-" >
               <td class="jd-linkcol"><a href="../../../../../../java/com/mulesoft/mule/cassandradb/processors/GetMessageProcessor.html">GetMessageProcessor</a></td>
               <td class="jd-descrcol" width="100%">GetMessageProcessor invokes the <code><a href="../../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBConnector.html#get(java.lang.String, java.lang.String, java.util.List<com.mulesoft.mule.cassandradb.ColumnSerializer>)">get(java.lang.String, java.lang.String, java.util.List)</a></code> method in <code><a href="../../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBConnector.html">CassandraDBConnector</a></code>.&nbsp;</td>
           </tr>
+        <tr class="alt-color api apilevel-" >
+              <td class="jd-linkcol"><a href="../../../../../../java/com/mulesoft/mule/cassandradb/processors/GetRangeSlicesMessageProcessor.html">GetRangeSlicesMessageProcessor</a></td>
+              <td class="jd-descrcol" width="100%">GetRangeSlicesMessageProcessor invokes the <code><a href="../../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBConnector.html#getRangeSlices(java.lang.String, java.lang.String, java.lang.String, boolean, int, java.lang.String, java.lang.String, java.lang.String, java.lang.String, int)">getRangeSlices(java.lang.String, java.lang.String, java.lang.String, boolean, int, java.lang.String, java.lang.String, java.lang.String, java.lang.String, int)</a></code> method in <code><a href="../../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBConnector.html">CassandraDBConnector</a></code>.&nbsp;</td>
+          </tr>
         <tr class=" api apilevel-" >
+              <td class="jd-linkcol"><a href="../../../../../../java/com/mulesoft/mule/cassandradb/processors/GetRowMessageProcessor.html">GetRowMessageProcessor</a></td>
+              <td class="jd-descrcol" width="100%">GetRowMessageProcessor invokes the <code><a href="../../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBConnector.html#getRow(java.lang.String, org.apache.cassandra.thrift.ColumnPath, java.util.List<com.mulesoft.mule.cassandradb.ColumnSerializer>)">getRow(java.lang.String, org.apache.cassandra.thrift.ColumnPath, java.util.List)</a></code> method in <code><a href="../../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBConnector.html">CassandraDBConnector</a></code>.&nbsp;</td>
+          </tr>
+        <tr class="alt-color api apilevel-" >
               <td class="jd-linkcol"><a href="../../../../../../java/com/mulesoft/mule/cassandradb/processors/GetSliceMessageProcessor.html">GetSliceMessageProcessor</a></td>
               <td class="jd-descrcol" width="100%">GetSliceMessageProcessor invokes the <code><a href="../../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBConnector.html#getSlice(java.lang.String, java.lang.String, java.lang.String, java.lang.String, boolean, int, java.util.List<com.mulesoft.mule.cassandradb.ColumnSerializer>)">getSlice(java.lang.String, java.lang.String, java.lang.String, java.lang.String, boolean, int, java.util.List)</a></code> method in <code><a href="../../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBConnector.html">CassandraDBConnector</a></code>.&nbsp;</td>
           </tr>
+        <tr class=" api apilevel-" >
+              <td class="jd-linkcol"><a href="../../../../../../java/com/mulesoft/mule/cassandradb/processors/InsertFromMapMessageProcessor.html">InsertFromMapMessageProcessor</a></td>
+              <td class="jd-descrcol" width="100%">InsertFromMapMessageProcessor invokes the <code><a href="../../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBConnector.html#insertFromMap(java.util.Map)">insertFromMap(java.util.Map)</a></code> method in <code><a href="../../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBConnector.html">CassandraDBConnector</a></code>.&nbsp;</td>
+          </tr>
         <tr class="alt-color api apilevel-" >
               <td class="jd-linkcol"><a href="../../../../../../java/com/mulesoft/mule/cassandradb/processors/InsertMessageProcessor.html">InsertMessageProcessor</a></td>
-              <td class="jd-descrcol" width="100%">InsertMessageProcessor invokes the <code><a href="../../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBConnector.html#insert(java.util.Map)">insert(java.util.Map)</a></code> method in <code><a href="../../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBConnector.html">CassandraDBConnector</a></code>.&nbsp;</td>
+              <td class="jd-descrcol" width="100%">InsertMessageProcessor invokes the <code><a href="../../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBConnector.html#insert(java.lang.String, java.lang.String, java.lang.String, java.lang.String, int)">insert(java.lang.String, java.lang.String, java.lang.String, java.lang.String, int)</a></code> method in <code><a href="../../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBConnector.html">CassandraDBConnector</a></code>.&nbsp;</td>
           </tr>
         <tr class=" api apilevel-" >
+              <td class="jd-linkcol"><a href="../../../../../../java/com/mulesoft/mule/cassandradb/processors/MultiGetCountMessageProcessor.html">MultiGetCountMessageProcessor</a></td>
+              <td class="jd-descrcol" width="100%">MultiGetCountMessageProcessor invokes the <code><a href="../../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBConnector.html#multiGetCount(java.util.List<java.lang.String>, java.lang.String, java.lang.String, java.lang.String, boolean, int)">multiGetCount(java.util.List, java.lang.String, java.lang.String, java.lang.String, boolean, int)</a></code> method in <code><a href="../../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBConnector.html">CassandraDBConnector</a></code>.&nbsp;</td>
+          </tr>
+        <tr class="alt-color api apilevel-" >
+              <td class="jd-linkcol"><a href="../../../../../../java/com/mulesoft/mule/cassandradb/processors/MultiGetSliceMessageProcessor.html">MultiGetSliceMessageProcessor</a></td>
+              <td class="jd-descrcol" width="100%">MultiGetSliceMessageProcessor invokes the <code><a href="../../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBConnector.html#multiGetSlice(java.util.List<java.lang.String>, java.lang.String, java.lang.String, java.lang.String, boolean, int, java.util.List<com.mulesoft.mule.cassandradb.ColumnSerializer>)">multiGetSlice(java.util.List, java.lang.String, java.lang.String, java.lang.String, boolean, int, java.util.List)</a></code> method in <code><a href="../../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBConnector.html">CassandraDBConnector</a></code>.&nbsp;</td>
+          </tr>
+        <tr class=" api apilevel-" >
+              <td class="jd-linkcol"><a href="../../../../../../java/com/mulesoft/mule/cassandradb/processors/RemoveCounterMessageProcessor.html">RemoveCounterMessageProcessor</a></td>
+              <td class="jd-descrcol" width="100%">RemoveCounterMessageProcessor invokes the <code><a href="../../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBConnector.html#removeCounter(java.lang.String, java.lang.String)">removeCounter(java.lang.String, java.lang.String)</a></code> method in <code><a href="../../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBConnector.html">CassandraDBConnector</a></code>.&nbsp;</td>
+          </tr>
+        <tr class="alt-color api apilevel-" >
               <td class="jd-linkcol"><a href="../../../../../../java/com/mulesoft/mule/cassandradb/processors/RemoveMessageProcessor.html">RemoveMessageProcessor</a></td>
               <td class="jd-descrcol" width="100%">RemoveMessageProcessor invokes the <code><a href="../../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBConnector.html#remove(java.lang.String, java.lang.String)">remove(java.lang.String, java.lang.String)</a></code> method in <code><a href="../../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBConnector.html">CassandraDBConnector</a></code>.&nbsp;</td>
+          </tr>
+        <tr class=" api apilevel-" >
+              <td class="jd-linkcol"><a href="../../../../../../java/com/mulesoft/mule/cassandradb/processors/SetQueryKeyspaceMessageProcessor.html">SetQueryKeyspaceMessageProcessor</a></td>
+              <td class="jd-descrcol" width="100%">SetQueryKeyspaceMessageProcessor invokes the <code><a href="../../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBConnector.html#setQueryKeyspace(java.lang.String)">setQueryKeyspace(java.lang.String)</a></code> method in <code><a href="../../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBConnector.html">CassandraDBConnector</a></code>.&nbsp;</td>
+          </tr>
+        <tr class="alt-color api apilevel-" >
+              <td class="jd-linkcol"><a href="../../../../../../java/com/mulesoft/mule/cassandradb/processors/SystemAddColumnFamilyFromObjectMessageProcessor.html">SystemAddColumnFamilyFromObjectMessageProcessor</a></td>
+              <td class="jd-descrcol" width="100%">SystemAddColumnFamilyFromObjectMessageProcessor invokes the <code><a href="../../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBConnector.html#systemAddColumnFamilyFromObject(org.apache.cassandra.thrift.CfDef)">systemAddColumnFamilyFromObject(org.apache.cassandra.thrift.CfDef)</a></code> method in <code><a href="../../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBConnector.html">CassandraDBConnector</a></code>.&nbsp;</td>
+          </tr>
+        <tr class=" api apilevel-" >
+              <td class="jd-linkcol"><a href="../../../../../../java/com/mulesoft/mule/cassandradb/processors/SystemAddColumnFamilyFromObjectWithSimpleNamesMessageProcessor.html">SystemAddColumnFamilyFromObjectWithSimpleNamesMessageProcessor</a></td>
+              <td class="jd-descrcol" width="100%">SystemAddColumnFamilyFromObjectWithSimpleNamesMessageProcessor invokes the <code><a href="../../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBConnector.html#systemAddColumnFamilyFromObjectWithSimpleNames(org.apache.cassandra.thrift.CfDef, java.util.List<java.lang.String>)">systemAddColumnFamilyFromObjectWithSimpleNames(org.apache.cassandra.thrift.CfDef, java.util.List)</a></code> method in <code><a href="../../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBConnector.html">CassandraDBConnector</a></code>.&nbsp;</td>
+          </tr>
+        <tr class="alt-color api apilevel-" >
+              <td class="jd-linkcol"><a href="../../../../../../java/com/mulesoft/mule/cassandradb/processors/SystemAddColumnFamilyWithParamsMessageProcessor.html">SystemAddColumnFamilyWithParamsMessageProcessor</a></td>
+              <td class="jd-descrcol" width="100%">SystemAddColumnFamilyWithParamsMessageProcessor invokes the <code><a href="../../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBConnector.html#systemAddColumnFamilyWithParams(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.util.List<org.apache.cassandra.thrift.ColumnDef>, java.lang.String)">systemAddColumnFamilyWithParams(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.util.List, java.lang.String)</a></code> method in <code><a href="../../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBConnector.html">CassandraDBConnector</a></code>.&nbsp;</td>
+          </tr>
+        <tr class=" api apilevel-" >
+              <td class="jd-linkcol"><a href="../../../../../../java/com/mulesoft/mule/cassandradb/processors/SystemAddKeyspaceFromObjectMessageProcessor.html">SystemAddKeyspaceFromObjectMessageProcessor</a></td>
+              <td class="jd-descrcol" width="100%">SystemAddKeyspaceFromObjectMessageProcessor invokes the <code><a href="../../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBConnector.html#systemAddKeyspaceFromObject(org.apache.cassandra.thrift.KsDef)">systemAddKeyspaceFromObject(org.apache.cassandra.thrift.KsDef)</a></code> method in <code><a href="../../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBConnector.html">CassandraDBConnector</a></code>.&nbsp;</td>
+          </tr>
+        <tr class="alt-color api apilevel-" >
+              <td class="jd-linkcol"><a href="../../../../../../java/com/mulesoft/mule/cassandradb/processors/SystemAddKeyspaceWithParamsMessageProcessor.html">SystemAddKeyspaceWithParamsMessageProcessor</a></td>
+              <td class="jd-descrcol" width="100%">SystemAddKeyspaceWithParamsMessageProcessor invokes the <code><a href="../../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBConnector.html#systemAddKeyspaceWithParams(java.lang.String, java.util.List<java.lang.String>, com.mulesoft.mule.cassandradb.ReplicationStrategy, java.util.Map<java.lang.String, java.lang.String>)">systemAddKeyspaceWithParams(java.lang.String, java.util.List, com.mulesoft.mule.cassandradb.ReplicationStrategy, java.util.Map)</a></code> method in <code><a href="../../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBConnector.html">CassandraDBConnector</a></code>.&nbsp;</td>
+          </tr>
+        <tr class=" api apilevel-" >
+              <td class="jd-linkcol"><a href="../../../../../../java/com/mulesoft/mule/cassandradb/processors/SystemDropColumnFamilyMessageProcessor.html">SystemDropColumnFamilyMessageProcessor</a></td>
+              <td class="jd-descrcol" width="100%">SystemDropColumnFamilyMessageProcessor invokes the <code><a href="../../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBConnector.html#systemDropColumnFamily(java.lang.String)">systemDropColumnFamily(java.lang.String)</a></code> method in <code><a href="../../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBConnector.html">CassandraDBConnector</a></code>.&nbsp;</td>
+          </tr>
+        <tr class="alt-color api apilevel-" >
+              <td class="jd-linkcol"><a href="../../../../../../java/com/mulesoft/mule/cassandradb/processors/SystemDropKeyspaceMessageProcessor.html">SystemDropKeyspaceMessageProcessor</a></td>
+              <td class="jd-descrcol" width="100%">SystemDropKeyspaceMessageProcessor invokes the <code><a href="../../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBConnector.html#systemDropKeyspace(java.lang.String)">systemDropKeyspace(java.lang.String)</a></code> method in <code><a href="../../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBConnector.html">CassandraDBConnector</a></code>.&nbsp;</td>
+          </tr>
+        <tr class=" api apilevel-" >
+              <td class="jd-linkcol"><a href="../../../../../../java/com/mulesoft/mule/cassandradb/processors/SystemUpdateColumnFamilyMessageProcessor.html">SystemUpdateColumnFamilyMessageProcessor</a></td>
+              <td class="jd-descrcol" width="100%">SystemUpdateColumnFamilyMessageProcessor invokes the <code><a href="../../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBConnector.html#systemUpdateColumnFamily(org.apache.cassandra.thrift.CfDef)">systemUpdateColumnFamily(org.apache.cassandra.thrift.CfDef)</a></code> method in <code><a href="../../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBConnector.html">CassandraDBConnector</a></code>.&nbsp;</td>
+          </tr>
+        <tr class="alt-color api apilevel-" >
+              <td class="jd-linkcol"><a href="../../../../../../java/com/mulesoft/mule/cassandradb/processors/SystemUpdateKeyspaceMessageProcessor.html">SystemUpdateKeyspaceMessageProcessor</a></td>
+              <td class="jd-descrcol" width="100%">SystemUpdateKeyspaceMessageProcessor invokes the <code><a href="../../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBConnector.html#systemUpdateKeyspace(org.apache.cassandra.thrift.KsDef)">systemUpdateKeyspace(org.apache.cassandra.thrift.KsDef)</a></code> method in <code><a href="../../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBConnector.html">CassandraDBConnector</a></code>.&nbsp;</td>
+          </tr>
+        <tr class=" api apilevel-" >
+              <td class="jd-linkcol"><a href="../../../../../../java/com/mulesoft/mule/cassandradb/processors/TruncateMessageProcessor.html">TruncateMessageProcessor</a></td>
+              <td class="jd-descrcol" width="100%">TruncateMessageProcessor invokes the <code><a href="../../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBConnector.html#truncate(java.lang.String)">truncate(java.lang.String)</a></code> method in <code><a href="../../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBConnector.html">CassandraDBConnector</a></code>.&nbsp;</td>
           </tr>
   </table>
     </div>

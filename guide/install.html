@@ -64,6 +64,51 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
@@ -83,6 +128,7 @@
 <link href='http://fonts.googleapis.com/css?family=Ubuntu:300' rel='stylesheet' type='text/css'>
 <script src="../assets/search_autocomplete.js" type="text/javascript"></script>
 <script src="../assets/jquery-resizable.min.js" type="text/javascript"></script>
+<script src="../assets/jquery-toc.js" type="text/javascript"></script>
 <script src="../assets/mule-developer-docs.js" type="text/javascript"></script>
 <script src="../assets/prettify.js" type="text/javascript"></script>
 <script type="text/javascript">
@@ -99,6 +145,27 @@
     #resize-packages-nav{border-bottom:3px solid #666;}
   </style>
 </noscript>
+<script type="text/javascript" charset="utf-8">
+  var is_ssl = ("https:" == document.location.protocol);
+  var asset_host = is_ssl ? "https://s3.amazonaws.com/getsatisfaction.com/" : "http://s3.amazonaws.com/getsatisfaction.com/";
+  document.write(unescape("%3Cscript src='" + asset_host + "javascripts/feedback-v2.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+
+<script type="text/javascript" charset="utf-8">
+  var feedback_widget_options = {};
+
+  feedback_widget_options.display = "overlay";
+  feedback_widget_options.company = "mulesoft";
+  feedback_widget_options.placement = "right";
+  feedback_widget_options.color = "#2F74AE";
+  feedback_widget_options.style = "question";
+
+  feedback_widget_options.tag = "Mule CassandraDB Module";
+
+  feedback_widget_options.limit = "3";
+
+  var feedback_widget = new GSFN.feedback_widget(feedback_widget_options);
+</script>
 </head>
 
 <body class="gc-documentation">
@@ -128,7 +195,7 @@
       <a href="http://www.mulesoft.com" tabindex="-1">
       <img src="../assets//images/mulesoft-logo-final.gif" alt="MuleSoft" border="0" id="mulesoftlogo"></a><br/>
       
-  <div id="search" >
+  <div id="searchContainer" >
       <div id="searchForm">
           <form accept-charset="utf-8" class="gsc-search-box" 
                 onsubmit="return submit_search()">
@@ -167,6 +234,9 @@
 
 <div id="jd-content">
 
+<br/>
+<br/>
+
 <p>This module can be used in several different ways depending on your needs and requirements. The following sections
 details how to use and install this module under different scenarios / environments.</p>
 
@@ -184,13 +254,13 @@ information about how the Mule Plugin System works see <a href="http://www.mules
     &lt;repository&gt;
         &lt;id&gt;mulesoft-releases&lt;/id&gt;
         &lt;name&gt;MuleSoft Repository&lt;/name&gt;
-        &lt;url&gt;https://repository.mulesoft.org/releases/&lt;/url&gt;
+        &lt;url&gt;http://repository-master.mulesoft.org/releases/&lt;/url&gt;
         &lt;layout&gt;default&lt;/layout&gt;
     &lt;/repository&gt;
     &lt;repository&gt;
         &lt;id&gt;mulesoft-snapshots&lt;/id&gt;
         &lt;name&gt;MuleSoft Snapshot Repository&lt;/name&gt;
-        &lt;url&gt;https://repository.mulesoft.org/snapshots/&lt;/url&gt;
+        &lt;url&gt;http://repository-master.mulesoft.org/snapshots/&lt;/url&gt;
         &lt;layout&gt;default&lt;/layout&gt;
     &lt;/repository&gt;
 &lt;/repositories&gt;
@@ -201,9 +271,19 @@ element your POM:
 
 <pre>
 &lt;dependency&gt;
-    &lt;groupId&gt;com.mulesoft.muleesb.modules&lt;/groupId&gt;
+    &lt;groupId&gt;org.mule.modules&lt;/groupId&gt;
     &lt;artifactId&gt;mule-module-cassandradb&lt;/artifactId&gt;
-    &lt;version&gt;3.3.0&lt;/version&gt;
+    &lt;version&gt;RELEASE&lt;/version&gt;
+&lt;/dependency&gt;
+</pre>
+
+or if  you want to be on the bleeding edge
+
+<pre>
+&lt;dependency&gt;
+    &lt;groupId&gt;org.mule.modules&lt;/groupId&gt;
+    &lt;artifactId&gt;mule-module-cassandradb&lt;/artifactId&gt;
+    &lt;version&gt;LATEST&lt;/version&gt;
 &lt;/dependency&gt;
 </pre>
 
@@ -221,7 +301,7 @@ Add an special inclusion to the configuration of the Mule Maven plugin for this 
         &lt;excludeMuleDependencies&gt;false&lt;/excludeMuleDependencies&gt;
         &lt;inclusions&gt;
             &lt;inclusion&gt;
-                &lt;groupId&gt;com.mulesoft.muleesb.modules&lt;/groupId&gt;
+                &lt;groupId&gt;org.mule.modules&lt;/groupId&gt;
                 &lt;artifactId&gt;mule-module-cassandradb&lt;/artifactId&gt;
             &lt;/inclusion&gt;
         &lt;/inclusions&gt;
