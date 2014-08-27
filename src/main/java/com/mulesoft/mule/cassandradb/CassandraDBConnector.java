@@ -1151,6 +1151,7 @@ public class CassandraDBConnector {
         columnDefinition.setComparator_type(comparatorType);
         columnDefinition.setKey_validation_class(keyValidationClass);
         columnDefinition.setDefault_validation_class(defaultValidationClass);
+        columnDefinition.setColumn_metadata(columnMetadata);
 
         return this.systemAddColumnFamilyFromObject(columnDefinition);
     }

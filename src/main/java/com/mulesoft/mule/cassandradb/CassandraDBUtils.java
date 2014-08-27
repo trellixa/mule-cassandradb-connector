@@ -10,26 +10,17 @@
 
 package com.mulesoft.mule.cassandradb;
 
-import java.io.UnsupportedEncodingException;
-import java.nio.ByteBuffer;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
+import com.mulesoft.mule.cassandradb.api.IndexExpresion;
 import me.prettyprint.cassandra.serializers.ObjectSerializer;
 import me.prettyprint.cassandra.serializers.SerializerTypeInferer;
 import me.prettyprint.cassandra.serializers.StringSerializer;
 import me.prettyprint.cassandra.serializers.TypeInferringSerializer;
 import me.prettyprint.hector.api.Serializer;
-
 import org.apache.cassandra.thrift.*;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Transformer;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.thrift.TException;
 import org.apache.thrift.protocol.TBinaryProtocol;
 import org.apache.thrift.protocol.TProtocol;
 import org.apache.thrift.transport.TFramedTransport;
@@ -40,7 +31,10 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.node.ArrayNode;
 import org.codehaus.jackson.node.ObjectNode;
 
-import com.mulesoft.mule.cassandradb.api.IndexExpresion;
+import java.io.UnsupportedEncodingException;
+import java.nio.ByteBuffer;
+import java.nio.charset.Charset;
+import java.util.*;
 
 /**
  *  Utility class to make the transformations from String and collections to the types that the API handles
@@ -134,7 +128,7 @@ public class CassandraDBUtils {
 
     @SuppressWarnings({"unchecked"})
     public static Map columnOrSuperColumnToMap(ColumnOrSuperColumn columnOrSuperColumn,
-                                               List<ColumnSerializer> columnSerializers)  {
+                                               List<ColumnSerializer> columnSerializers) throws UnsupportedEncodingException {
 
 
         Map<String, Serializer> serializerMap;
@@ -150,7 +144,7 @@ public class CassandraDBUtils {
         	Map columnMap = new HashMap();
         	populateMap(columnMap,columnOrSuperColumn.getColumn(),serializerMap);
         	return columnMap;
-        } else {
+        } else if (columnOrSuperColumn.isSetSuper_column()) {
             SuperColumn superColumn = columnOrSuperColumn.getSuper_column();
             String superColumnName = new String(superColumn.getName());
 
@@ -165,6 +159,26 @@ public class CassandraDBUtils {
             superColumnNode.put(superColumnName, columnsNode);
 
             return superColumnNode;
+        } else if (columnOrSuperColumn.isSetCounter_column()) {
+            Map counterColumnMap = new HashMap();
+            CounterColumn counterColumn = columnOrSuperColumn.getCounter_column();
+            counterColumnMap.put(new String(counterColumn.getName(), Charset.defaultCharset()), counterColumn.getValue());
+            return counterColumnMap;
+        } else {
+            Map counterSuperColumnMap = new HashMap();
+            CounterSuperColumn counterSuperColumn = columnOrSuperColumn.getCounter_super_column();
+            String counterSuperColumnName = new String(counterSuperColumn.getName(), Charset.defaultCharset());
+
+            Map columnsNode = new HashMap();
+
+            List<CounterColumn> counterColumns = counterSuperColumn.getColumns();
+
+            for (CounterColumn nextColumn : counterColumns) {
+                columnsNode.put(new String(nextColumn.getName(), Charset.defaultCharset()), nextColumn.getValue());
+            }
+            counterSuperColumnMap.put(counterSuperColumnName, columnsNode);
+
+            return counterSuperColumnMap;
         }
     }
 
@@ -202,7 +216,7 @@ public class CassandraDBUtils {
 
     @SuppressWarnings({"unchecked"})
     public static List listOfColumnsToMap(List<ColumnOrSuperColumn> listOfColumns,
-                                          List<ColumnSerializer> columnSerializers){
+                                          List<ColumnSerializer> columnSerializers) throws UnsupportedEncodingException {
         List results = new ArrayList();
         for (ColumnOrSuperColumn nextColumn : listOfColumns) {
             results.add(columnOrSuperColumnToMap(nextColumn, columnSerializers));
@@ -218,13 +232,12 @@ public class CassandraDBUtils {
     @SuppressWarnings({"unchecked"})
     public static ByteBuffer toByteBuffer(Object value) throws UnsupportedEncodingException {
 
-
     	if(typeInferringSerializer==null){
     		typeInferringSerializer = new TypeInferringSerializer();
     	}
         return typeInferringSerializer.toByteBuffer(value);
     }
-    
+
     public static ColumnPath parseColumnPath(String columnPath) throws java.io.UnsupportedEncodingException {
         String[] pathElements = columnPath.split(":");
 
