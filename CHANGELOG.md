@@ -1,9 +1,9 @@
 CassandraDB Connector Release Notes
 ==========================================
 
-Date: 30-May-2014
+Date: 04-Sep-2014
 
-Version: 1.2.1
+Version: 1.2.2
 
 Supported API versions: Cassandra Thrift API v1.0 - http://wiki.apache.org/cassandra/API10
 
@@ -12,9 +12,8 @@ Supported Mule Runtime Versions: 3.5.x
 Closed Issues in this release
 ------------------------------
 
- - Added functional automation test cases.
- - Upgraded Mule Devkit to 3.5.1.
-
+ - Upgraded Mule Devkit to 3.5.2-SNAPSHOT
+ - Fixed issues reported by SonarQube - (CLDCONNECT-2021)
  - The list of operations supported by this version of the connector are
     - Set QueryKeyspace
     - Get
@@ -54,6 +53,12 @@ Known Issues in this release
 ------------------------------
 
  - NA -
+
+1.2.1
+=====
+
+ - Added functional automation test cases.
+ - Upgraded Mule Devkit to 3.5.1.
 
 1.2.0
 =====

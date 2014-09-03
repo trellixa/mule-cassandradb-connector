@@ -1,15 +1,19 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <connector name="CassandraDB">
     <properties>
-    <connectivity-support>true</connectivity-support>
-    <OAuth-authentication>false</OAuth-authentication>
-    <metadata>static</metadata>
-    <datasense-enabled>true</datasense-enabled>
-    <transformer>false</transformer>
-  </properties>
+        <connectivity-support>true</connectivity-support>
+        <OAuth-authentication>false</OAuth-authentication>
+        <metadata>static</metadata>
+        <datasense-enabled>true</datasense-enabled>
+        <transformer>false</transformer>
+    </properties>
     <simpleConfig>
-        <required caption="Name" group="Basic Settings" javaType="java.lang.String" name="name" type="name">CassandraDB</required>
-        <required caption="Keyspace" group="General" javaType="java.lang.String" name="keyspace" prefix="cassandraDB" type="string">MuleState</required>
+        <required caption="Name" group="Basic Settings" javaType="java.lang.String" name="name" type="name">
+            CassandraDB
+        </required>
+        <required caption="Keyspace" group="General" javaType="java.lang.String" name="keyspace" prefix="cassandraDB"
+                  type="string">MuleState
+        </required>
     </simpleConfig>
     <message-processors>
         <set-query-keyspace name="Set query keyspace">
@@ -17,7 +21,9 @@
             <auto-paging>false</auto-paging>
             <query-support>false</query-support>
             <attributes>
-                <required caption="Value" group="General" javaType="java.lang.String" name="value" type="string">MuleState</required>
+                <required caption="Value" group="General" javaType="java.lang.String" name="value" type="string">
+                    MuleState
+                </required>
             </attributes>
             <childElements/>
         </set-query-keyspace>
@@ -26,8 +32,12 @@
             <auto-paging>false</auto-paging>
             <query-support>false</query-support>
             <attributes>
-                <required caption="Row Key" group="General" javaType="java.lang.String" name="rowKey" type="string">Ohio Store</required>
-                <required caption="Column Path" group="General" javaType="java.lang.String" name="columnPath" type="string">ToyStores</required>
+                <required caption="Row Key" group="General" javaType="java.lang.String" name="rowKey" type="string">Ohio
+                    Store
+                </required>
+                <required caption="Column Path" group="General" javaType="java.lang.String" name="columnPath"
+                          type="string">ToyStores
+                </required>
             </attributes>
             <childElements/>
         </get>
@@ -36,13 +46,18 @@
             <auto-paging>false</auto-paging>
             <query-support>false</query-support>
             <attributes>
-                <required caption="Row Key" group="General" javaType="java.lang.String" name="rowKey" type="string">Ohio Store</required>
+                <required caption="Row Key" group="General" javaType="java.lang.String" name="rowKey" type="string">Ohio
+                    Store
+                </required>
             </attributes>
             <childElements>
                 <required group="General" name="column-path">
                     <attributes caption="Define attributes" controlled="complex" controllerType="radioBoolean"/>
-                    <attributes caption="Reference or expression" controlled="useReference" controllerType="radioBoolean">
-                        <required caption="Column Path Reference" javaType="java.lang.String" name="ref" type="string">columnPathRef</required>
+                    <attributes caption="Reference or expression" controlled="useReference"
+                                controllerType="radioBoolean">
+                        <required caption="Column Path Reference" javaType="java.lang.String" name="ref" type="string">
+                            columnPathRef
+                        </required>
                     </attributes>
                     <childElements/>
                 </required>
@@ -53,8 +68,12 @@
             <auto-paging>false</auto-paging>
             <query-support>false</query-support>
             <attributes>
-                <required caption="Row Key" group="General" javaType="java.lang.String" name="rowKey" type="string">Ohio Store</required>
-                <required caption="Column Parent" group="General" javaType="java.lang.String" name="columnParent" type="string">ToyStores</required>
+                <required caption="Row Key" group="General" javaType="java.lang.String" name="rowKey" type="string">Ohio
+                    Store
+                </required>
+                <required caption="Column Parent" group="General" javaType="java.lang.String" name="columnParent"
+                          type="string">ToyStores
+                </required>
             </attributes>
             <childElements/>
         </get-slice>
@@ -63,7 +82,9 @@
             <auto-paging>false</auto-paging>
             <query-support>false</query-support>
             <attributes>
-                <required caption="Column Parent" group="General" javaType="java.lang.String" name="columnParent" type="string">ToyStores</required>
+                <required caption="Column Parent" group="General" javaType="java.lang.String" name="columnParent"
+                          type="string">ToyStores
+                </required>
             </attributes>
             <childElements/>
         </multiget-slice>
@@ -72,8 +93,12 @@
             <auto-paging>false</auto-paging>
             <query-support>false</query-support>
             <attributes>
-                <required caption="Row Key" group="General" javaType="java.lang.String" name="rowKey" type="string">Ohio Store</required>
-                <required caption="Column Parent" group="General" javaType="java.lang.String" name="columnParent" type="string">ToyStores</required>
+                <required caption="Row Key" group="General" javaType="java.lang.String" name="rowKey" type="string">Ohio
+                    Store
+                </required>
+                <required caption="Column Parent" group="General" javaType="java.lang.String" name="columnParent"
+                          type="string">ToyStores
+                </required>
             </attributes>
             <childElements/>
         </get-count>
@@ -82,7 +107,9 @@
             <auto-paging>false</auto-paging>
             <query-support>false</query-support>
             <attributes>
-                <required caption="Column Parent" group="General" javaType="java.lang.String" name="columnParent" type="string">ToyStores</required>
+                <required caption="Column Parent" group="General" javaType="java.lang.String" name="columnParent"
+                          type="string">ToyStores
+                </required>
             </attributes>
             <childElements/>
         </multiget-count>
@@ -91,7 +118,9 @@
             <auto-paging>false</auto-paging>
             <query-support>false</query-support>
             <attributes>
-                <required caption="Column Parent" group="General" javaType="java.lang.String" name="columnParent" type="string">ToyStores</required>
+                <required caption="Column Parent" group="General" javaType="java.lang.String" name="columnParent"
+                          type="string">ToyStores
+                </required>
             </attributes>
             <childElements/>
         </get-range-slices>
@@ -100,8 +129,12 @@
             <auto-paging>false</auto-paging>
             <query-support>false</query-support>
             <attributes>
-                <required caption="Column Parent" group="General" javaType="java.lang.String" name="columnParent" type="string">ToyStores</required>
-                <required caption="Clause Start Key" group="General" javaType="java.lang.String" name="clauseStartKey" type="string">startKey</required>
+                <required caption="Column Parent" group="General" javaType="java.lang.String" name="columnParent"
+                          type="string">ToyStores
+                </required>
+                <required caption="Clause Start Key" group="General" javaType="java.lang.String" name="clauseStartKey"
+                          type="string">startKey
+                </required>
             </attributes>
             <childElements/>
         </get-indexed-slices>
@@ -110,10 +143,18 @@
             <auto-paging>false</auto-paging>
             <query-support>false</query-support>
             <attributes>
-                <required caption="Row Key" group="General" javaType="java.lang.String" name="rowKey" type="string">Ohio Store</required>
-                <required caption="Column Parent" group="General" javaType="java.lang.String" name="columnParent" type="string">ToyStores</required>
-                <required caption="Column Name" group="General" javaType="java.lang.String" name="columnName" type="string">Price</required>
-                <required caption="Column Value" group="General" javaType="java.lang.String" name="columnValue" type="string">29.99</required>
+                <required caption="Row Key" group="General" javaType="java.lang.String" name="rowKey" type="string">Ohio
+                    Store
+                </required>
+                <required caption="Column Parent" group="General" javaType="java.lang.String" name="columnParent"
+                          type="string">ToyStores
+                </required>
+                <required caption="Column Name" group="General" javaType="java.lang.String" name="columnName"
+                          type="string">Price
+                </required>
+                <required caption="Column Value" group="General" javaType="java.lang.String" name="columnValue"
+                          type="string">29.99
+                </required>
             </attributes>
             <childElements/>
         </insert>
@@ -136,10 +177,17 @@
             <auto-paging>false</auto-paging>
             <query-support>false</query-support>
             <attributes>
-                <required caption="Row Key" group="General" javaType="java.lang.String" name="rowKey" type="string"> </required>
-                <required caption="Column Parent" group="General" javaType="java.lang.String" name="columnParent" type="string">ToyStores</required>
-                <required caption="Counter Name" group="General" javaType="java.lang.String" name="counterName" type="string">Price</required>
-                <required caption="Counter Value" group="General" javaType="int" name="counterValue" type="integer">29.99</required>
+                <required caption="Row Key" group="General" javaType="java.lang.String" name="rowKey"
+                          type="string"></required>
+                <required caption="Column Parent" group="General" javaType="java.lang.String" name="columnParent"
+                          type="string">ToyStores
+                </required>
+                <required caption="Counter Name" group="General" javaType="java.lang.String" name="counterName"
+                          type="string">Price
+                </required>
+                <required caption="Counter Value" group="General" javaType="int" name="counterValue" type="integer">
+                    29.99
+                </required>
             </attributes>
             <childElements/>
         </add>
@@ -148,8 +196,12 @@
             <auto-paging>false</auto-paging>
             <query-support>false</query-support>
             <attributes>
-                <required caption="Row Key" group="General" javaType="java.lang.String" name="rowKey" type="string">Ohio Store</required>
-                <required caption="Column Path" group="General" javaType="java.lang.String" name="columnPath" type="string">ToyStores</required>
+                <required caption="Row Key" group="General" javaType="java.lang.String" name="rowKey" type="string">Ohio
+                    Store
+                </required>
+                <required caption="Column Path" group="General" javaType="java.lang.String" name="columnPath"
+                          type="string">ToyStores
+                </required>
             </attributes>
             <childElements/>
         </remove>
@@ -158,8 +210,12 @@
             <auto-paging>false</auto-paging>
             <query-support>false</query-support>
             <attributes>
-                <required caption="Row Key" group="General" javaType="java.lang.String" name="rowKey" type="string">Ohio Store</required>
-                <required caption="Column Path" group="General" javaType="java.lang.String" name="columnPath" type="string">ToyStores</required>
+                <required caption="Row Key" group="General" javaType="java.lang.String" name="rowKey" type="string">Ohio
+                    Store
+                </required>
+                <required caption="Column Path" group="General" javaType="java.lang.String" name="columnPath"
+                          type="string">ToyStores
+                </required>
             </attributes>
             <childElements/>
         </remove-counter>
@@ -168,7 +224,9 @@
             <auto-paging>false</auto-paging>
             <query-support>false</query-support>
             <attributes>
-                <required caption="Column Family" group="General" javaType="java.lang.String" name="columnFamily" type="string">ToyStores</required>
+                <required caption="Column Family" group="General" javaType="java.lang.String" name="columnFamily"
+                          type="string">ToyStores
+                </required>
             </attributes>
             <childElements/>
         </truncate>
@@ -191,7 +249,9 @@
             <auto-paging>false</auto-paging>
             <query-support>false</query-support>
             <attributes>
-                <required caption="Keyspace" group="General" javaType="java.lang.String" name="keyspace" type="string">MuleState</required>
+                <required caption="Keyspace" group="General" javaType="java.lang.String" name="keyspace" type="string">
+                    MuleState
+                </required>
             </attributes>
             <childElements/>
         </describe-keyspace>
@@ -214,7 +274,9 @@
             <auto-paging>false</auto-paging>
             <query-support>false</query-support>
             <attributes>
-                <required caption="Keyspace" group="General" javaType="java.lang.String" name="keyspace" type="string">MuleState</required>
+                <required caption="Keyspace" group="General" javaType="java.lang.String" name="keyspace" type="string">
+                    MuleState
+                </required>
             </attributes>
             <childElements/>
         </describe-ring>
@@ -240,14 +302,18 @@
             <childElements>
                 <required group="General" name="cf-definition">
                     <attributes caption="Define attributes" controlled="complex" controllerType="radioBoolean"/>
-                    <attributes caption="Reference or expression" controlled="useReference" controllerType="radioBoolean">
-                        <required caption="Cf Definition Reference" javaType="java.lang.String" name="ref" type="string">columnFamilyRef</required>
+                    <attributes caption="Reference or expression" controlled="useReference"
+                                controllerType="radioBoolean">
+                        <required caption="Cf Definition Reference" javaType="java.lang.String" name="ref"
+                                  type="string">columnFamilyRef
+                        </required>
                     </attributes>
                     <childElements/>
                 </required>
             </childElements>
         </system-add-column-family-from-object>
-        <system-add-column-family-from-object-with-simple-names name="System add column family from object with simple names">
+        <system-add-column-family-from-object-with-simple-names
+                name="System add column family from object with simple names">
             <datamapper input="" output=""/>
             <auto-paging>false</auto-paging>
             <query-support>false</query-support>
@@ -255,8 +321,11 @@
             <childElements>
                 <required group="General" name="cf-definition">
                     <attributes caption="Define attributes" controlled="complex" controllerType="radioBoolean"/>
-                    <attributes caption="Reference or expression" controlled="useReference" controllerType="radioBoolean">
-                        <required caption="Cf Definition Reference" javaType="java.lang.String" name="ref" type="string">columnFamilyRef</required>
+                    <attributes caption="Reference or expression" controlled="useReference"
+                                controllerType="radioBoolean">
+                        <required caption="Cf Definition Reference" javaType="java.lang.String" name="ref"
+                                  type="string">columnFamilyRef
+                        </required>
                     </attributes>
                     <childElements/>
                 </required>
@@ -267,7 +336,9 @@
             <auto-paging>false</auto-paging>
             <query-support>false</query-support>
             <attributes>
-                <required caption="Column Family Name" group="General" javaType="java.lang.String" name="columnFamilyName" type="string">ToyStores</required>
+                <required caption="Column Family Name" group="General" javaType="java.lang.String"
+                          name="columnFamilyName" type="string">ToyStores
+                </required>
             </attributes>
             <childElements/>
         </system-add-column-family-with-params>
@@ -276,7 +347,9 @@
             <auto-paging>false</auto-paging>
             <query-support>false</query-support>
             <attributes>
-                <required caption="Column Family" group="General" javaType="java.lang.String" name="columnFamily" type="string">ToyStores</required>
+                <required caption="Column Family" group="General" javaType="java.lang.String" name="columnFamily"
+                          type="string">ToyStores
+                </required>
             </attributes>
             <childElements/>
         </system-drop-column-family>
@@ -288,8 +361,11 @@
             <childElements>
                 <required group="General" name="keyspace-definition">
                     <attributes caption="Define attributes" controlled="complex" controllerType="radioBoolean"/>
-                    <attributes caption="Reference or expression" controlled="useReference" controllerType="radioBoolean">
-                        <required caption="Keyspace Definition Reference" javaType="java.lang.String" name="ref" type="string">keyspaceRef</required>
+                    <attributes caption="Reference or expression" controlled="useReference"
+                                controllerType="radioBoolean">
+                        <required caption="Keyspace Definition Reference" javaType="java.lang.String" name="ref"
+                                  type="string">keyspaceRef
+                        </required>
                     </attributes>
                     <childElements/>
                 </required>
@@ -300,7 +376,9 @@
             <auto-paging>false</auto-paging>
             <query-support>false</query-support>
             <attributes>
-                <required caption="Keyspace Name" group="General" javaType="java.lang.String" name="keyspaceName" type="string">MuleState</required>
+                <required caption="Keyspace Name" group="General" javaType="java.lang.String" name="keyspaceName"
+                          type="string">MuleState
+                </required>
             </attributes>
             <childElements/>
         </system-add-keyspace-with-params>
@@ -309,7 +387,9 @@
             <auto-paging>false</auto-paging>
             <query-support>false</query-support>
             <attributes>
-                <required caption="Keyspace" group="General" javaType="java.lang.String" name="keyspace" type="string">MuleState</required>
+                <required caption="Keyspace" group="General" javaType="java.lang.String" name="keyspace" type="string">
+                    MuleState
+                </required>
             </attributes>
             <childElements/>
         </system-drop-keyspace>
@@ -321,8 +401,11 @@
             <childElements>
                 <required group="General" name="keyspace-def">
                     <attributes caption="Define attributes" controlled="complex" controllerType="radioBoolean"/>
-                    <attributes caption="Reference or expression" controlled="useReference" controllerType="radioBoolean">
-                        <required caption="Keyspace Def Reference" javaType="java.lang.String" name="ref" type="string">keyspaceRef</required>
+                    <attributes caption="Reference or expression" controlled="useReference"
+                                controllerType="radioBoolean">
+                        <required caption="Keyspace Def Reference" javaType="java.lang.String" name="ref" type="string">
+                            keyspaceRef
+                        </required>
                     </attributes>
                     <childElements/>
                 </required>
@@ -336,8 +419,11 @@
             <childElements>
                 <required group="General" name="column-family">
                     <attributes caption="Define attributes" controlled="complex" controllerType="radioBoolean"/>
-                    <attributes caption="Reference or expression" controlled="useReference" controllerType="radioBoolean">
-                        <required caption="Column Family Reference" javaType="java.lang.String" name="ref" type="string">columnFamilyRef</required>
+                    <attributes caption="Reference or expression" controlled="useReference"
+                                controllerType="radioBoolean">
+                        <required caption="Column Family Reference" javaType="java.lang.String" name="ref"
+                                  type="string">columnFamilyRef
+                        </required>
                     </attributes>
                     <childElements/>
                 </required>
@@ -348,7 +434,9 @@
             <auto-paging>false</auto-paging>
             <query-support>false</query-support>
             <attributes>
-                <required caption="Query" group="General" javaType="java.lang.String" name="query" type="string">SELECT * FROM ToyStores</required>
+                <required caption="Query" group="General" javaType="java.lang.String" name="query" type="string">SELECT
+                    * FROM ToyStores
+                </required>
             </attributes>
             <childElements/>
         </execute-cql-query>

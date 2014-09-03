@@ -15,28 +15,39 @@ package com.mulesoft.mule.cassandradb;
  */
 public class ColumnSerializer {
 
-	/**
-	 * The column name that needs to be serialized
-	 */
+    /**
+     * The column name that needs to be serialized
+     */
     String key;
-    
+
     /**
      * The type of serializer that will be used to encode the data retrieved from Cassandra DB
      */
     String type;
 
-    public ColumnSerializer(){
-        key=null;
-        type=null;    	
+    /**
+     * Default Constructor
+     */
+    public ColumnSerializer() {
+        key = null;
+        type = null;
     }
-    
-    public ColumnSerializer(String key, String type){
-        this.key=key;
-        this.type=type;    	
+
+    /**
+     * Parametrized Constructor
+     *
+     * @param key  The column name that needs to be serialized
+     * @param type The type of serializer that will be used to encode the data retrieved from Cassandra DB
+     */
+    public ColumnSerializer(String key, String type) {
+        this.key = key;
+        this.type = type;
     }
-    
+
     /**
      * Retrieves the key
+     *
+     * @return the result is a key
      */
     public String getKey() {
         return key;
@@ -44,6 +55,8 @@ public class ColumnSerializer {
 
     /**
      * Sets key
+     *
+     * @param key The column name as key.
      */
     public void setKey(String key) {
         this.key = key;
@@ -51,14 +64,18 @@ public class ColumnSerializer {
 
     /**
      * Retrieves type
+     *
+     * @return the result is a type of serializer.
      */
     public String getType() {
         return type;
     }
 
-    
+
     /**
      * Sets type
+     *
+     * @param type The type of serializer that will be used to encode the data
      */
     public void setType(String type) {
         this.type = type;

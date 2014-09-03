@@ -9,26 +9,22 @@
  */
 package com.mulesoft.mule.cassandradb;
 
-import static junit.framework.Assert.assertNotNull;
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyLong;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.when;
-
-import java.nio.ByteBuffer;
-import java.util.*;
-
 import org.apache.cassandra.thrift.*;
-import org.apache.thrift.TException;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mule.util.SerializationUtils;
+
+import java.nio.ByteBuffer;
+import java.util.*;
+
+import static junit.framework.Assert.assertNotNull;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.*;
+import static org.mockito.Mockito.when;
 
 public class CassandraDBConnectorMockTest {
 
@@ -101,42 +97,27 @@ public class CassandraDBConnectorMockTest {
     }
 
     @Test
-    public void testDescribeSchema() {
-        try {
-            when(client.describe_cluster_name()).thenReturn(fakeDescription);
-            assertEquals(fakeDescription, connector.describeClusterName());
-        } catch (TException e) {
-            e.printStackTrace();
-        }
+    public void testDescribeSchema() throws Exception {
+        when(client.describe_cluster_name()).thenReturn(fakeDescription);
+        assertEquals(fakeDescription, connector.describeClusterName());
     }
 
     @Test
-    public void testAddKeyspace() {
-        try {
-            when(client.system_add_keyspace(keyspaceDefinition)).thenReturn(schemaVersionID1);
-            ArrayList<String> columnNames = new ArrayList<String>();
-            columnNames.add(column1);
-            assertEquals(schemaVersionID1, connector.systemAddKeyspaceWithParams(keyspace, columnNames, null, null));
-        } catch (Exception e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+    public void testAddKeyspace() throws Exception {
+        when(client.system_add_keyspace(keyspaceDefinition)).thenReturn(schemaVersionID1);
+        ArrayList<String> columnNames = new ArrayList<String>();
+        columnNames.add(column1);
+        assertEquals(schemaVersionID1, connector.systemAddKeyspaceWithParams(keyspace, columnNames, null, null));
     }
 
     @Test
-    public void testMultiGetCount() {
+    public void testMultiGetCount() throws Exception {
         Map<ByteBuffer, Integer> map = new HashMap<ByteBuffer, Integer>();
         List<String> rowKeys = new ArrayList<String>();
         rowKeys.add(rowKey);
-        try {
-            List<ByteBuffer> keys = CassandraDBUtils.toByteBufferList(rowKeys);
-            when(client.multiget_count(keys, columnParent, predicate, consistencyLevel)).thenReturn(map);
-
-            assertEquals(map, connector.multiGetCount(rowKeys, columnFamily, null, null, false, 50));
-        } catch (Exception e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+        List<ByteBuffer> keys = CassandraDBUtils.toByteBufferList(rowKeys);
+        when(client.multiget_count(keys, columnParent, predicate, consistencyLevel)).thenReturn(map);
+        assertEquals(map, connector.multiGetCount(rowKeys, columnFamily, null, null, false, 50));
     }
 
     @Test
@@ -228,16 +209,19 @@ public class CassandraDBConnectorMockTest {
         connector.insert("foo", "foo", "foo", "foo", 0);
     }
 
-    @Ignore
     @Test
     public void testInsertFromMap() throws Exception {
         Mockito.doNothing().when(client)
                 .insert(any(ByteBuffer.class), any(ColumnParent.class), any(Column.class), any(ConsistencyLevel.class));
-        Map map = new HashMap();
+        Map contentMap = new HashMap();
+        Map usersMap = new HashMap();
+        Map superColumn = new HashMap();
         Map columns = new HashMap();
         columns.put("foo", "foo");
-        map.put("foo", columns);
-        connector.insertFromMap(map);
+        superColumn.put("foo", columns);
+        usersMap.put("foo", superColumn);
+        contentMap.put("foo", usersMap);
+        connector.insertFromMap(contentMap);
     }
 
     @Test
@@ -377,10 +361,9 @@ public class CassandraDBConnectorMockTest {
     }
 
     @Test
-    public void testExecuteCQLQuery()  throws Exception {
-         connector.executeCqlQuery("foo",null);
+    public void testExecuteCQLQuery() throws Exception {
+        connector.executeCqlQuery("foo", null);
     }
-
 
 
 }
