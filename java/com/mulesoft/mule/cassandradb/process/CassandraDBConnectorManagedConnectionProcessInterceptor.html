@@ -117,7 +117,7 @@
 <link rel="shortcut icon" type="image/x-icon" href="../../../../../../favicon.ico" />
 <title>
 
-  ManagedConnectionProcessTemplate
+  CassandraDBConnectorManagedConnectionProcessInterceptor
 
 
 | Mule CassandraDB Module
@@ -263,7 +263,7 @@
   <a href="../../../../../../java/com/mulesoft/mule/cassandradb/config/package-summary.html">com.mulesoft.mule.cassandradb.config</a></li>
     <li class="api apilevel-">
   <a href="../../../../../../java/com/mulesoft/mule/cassandradb/connection/package-summary.html">com.mulesoft.mule.cassandradb.connection</a></li>
-    <li class="selected api apilevel-">
+    <li class="api apilevel-">
   <a href="../../../../../../java/com/mulesoft/mule/cassandradb/connectivity/package-summary.html">com.mulesoft.mule.cassandradb.connectivity</a></li>
     <li class="api apilevel-">
   <a href="../../../../../../java/com/mulesoft/mule/cassandradb/devkit/package-summary.html">com.mulesoft.mule.cassandradb.devkit</a></li>
@@ -271,7 +271,7 @@
   <a href="../../../../../../java/com/mulesoft/mule/cassandradb/holders/package-summary.html">com.mulesoft.mule.cassandradb.holders</a></li>
     <li class="api apilevel-">
   <a href="../../../../../../java/com/mulesoft/mule/cassandradb/pooling/package-summary.html">com.mulesoft.mule.cassandradb.pooling</a></li>
-    <li class="api apilevel-">
+    <li class="selected api apilevel-">
   <a href="../../../../../../java/com/mulesoft/mule/cassandradb/process/package-summary.html">com.mulesoft.mule.cassandradb.process</a></li>
     <li class="api apilevel-">
   <a href="../../../../../../java/com/mulesoft/mule/cassandradb/processors/package-summary.html">com.mulesoft.mule.cassandradb.processors</a></li>
@@ -290,11 +290,8 @@
               
     <li><h2>Classes</h2>
       <ul>
-          <li class="api apilevel-"><a href="../../../../../../java/com/mulesoft/mule/cassandradb/connectivity/CassandraDBConnectorConnectionFactory.html">CassandraDBConnectorConnectionFactory</a></li>
-          <li class="api apilevel-"><a href="../../../../../../java/com/mulesoft/mule/cassandradb/connectivity/CassandraDBConnectorConnectionKey.html">CassandraDBConnectorConnectionKey</a></li>
-          <li class="api apilevel-"><a href="../../../../../../java/com/mulesoft/mule/cassandradb/connectivity/CassandraDBConnectorConnectionManager.html">CassandraDBConnectorConnectionManager</a></li>
-          <li class="api apilevel-"><a href="../../../../../../java/com/mulesoft/mule/cassandradb/connectivity/CassandraDBConnectorManagedConnectionProcessTemplate.html">CassandraDBConnectorManagedConnectionProcessTemplate</a>&lt;P&gt;</li>
-          <li class="selected api apilevel-"><a href="../../../../../../java/com/mulesoft/mule/cassandradb/connectivity/ManagedConnectionProcessTemplate.html">ManagedConnectionProcessTemplate</a>&lt;P&gt;</li>
+          <li class="selected api apilevel-"><a href="../../../../../../java/com/mulesoft/mule/cassandradb/process/CassandraDBConnectorManagedConnectionProcessInterceptor.html">CassandraDBConnectorManagedConnectionProcessInterceptor</a>&lt;T&gt;</li>
+          <li class="api apilevel-"><a href="../../../../../../java/com/mulesoft/mule/cassandradb/process/ManagedConnectionProcessInterceptor.html">ManagedConnectionProcessInterceptor</a>&lt;T&gt;</li>
       </ul>
     </li>
               
@@ -337,6 +334,13 @@
 <div id="api-info-block">
 
 
+
+  
+   
+  
+  
+  
+  
 
   
    
@@ -403,12 +407,16 @@ Summary:
      
     
     class
-<h1>ManagedConnectionProcessTemplate</h1>
+<h1>CassandraDBConnectorManagedConnectionProcessInterceptor</h1>
 
 
 
   
-    extends Object<br/>
+  
+  
+
+  
+    extends ExpressionEvaluatorSupport<br/>
   
   
   
@@ -417,7 +425,7 @@ Summary:
   
       implements 
       
-        ProcessTemplate&lt;T,&nbsp;O&gt; 
+        ProcessInterceptor&lt;T,&nbsp;O&gt; 
       
   
   
@@ -433,7 +441,7 @@ Summary:
 
     <tr>
         
-        <td colspan="2" class="jd-inheritance-class-cell">java.lang.Object</td>
+        <td colspan="3" class="jd-inheritance-class-cell">java.lang.Object</td>
     </tr>
     
 
@@ -441,7 +449,17 @@ Summary:
         
             <td class="jd-inheritance-space">&nbsp;&nbsp;&nbsp;&#x21b3;</td>
         
-        <td colspan="1" class="jd-inheritance-class-cell">com.mulesoft.mule.cassandradb.connectivity.ManagedConnectionProcessTemplate&lt;P&gt;</td>
+        <td colspan="2" class="jd-inheritance-class-cell">org.mule.devkit.processor.ExpressionEvaluatorSupport</td>
+    </tr>
+    
+
+    <tr>
+        
+            <td class="jd-inheritance-space">&nbsp;</td>
+        
+            <td class="jd-inheritance-space">&nbsp;&nbsp;&nbsp;&#x21b3;</td>
+        
+        <td colspan="1" class="jd-inheritance-class-cell">com.mulesoft.mule.cassandradb.process.CassandraDBConnectorManagedConnectionProcessInterceptor&lt;T&gt;</td>
     </tr>
     
 
@@ -509,8 +527,41 @@ Summary:
           private
           
           final
-          ProcessInterceptor&lt;P,&nbsp;<a href="../../../../../../java/com/mulesoft/mule/cassandradb/adapters/CassandraDBConnectorConnectionIdentifierAdapter.html">CassandraDBConnectorConnectionIdentifierAdapter</a>&gt;</nobr></td>
-          <td class="jd-linkcol"><a href="../../../../../../com/mulesoft/mule/cassandradb/connectivity/ManagedConnectionProcessTemplate.html#processInterceptor">processInterceptor</a></td>
+          <a href="../../../../../../java/com/mulesoft/mule/cassandradb/connection/ConnectionManager.html">ConnectionManager</a>&lt;<a href="../../../../../../java/com/mulesoft/mule/cassandradb/connectivity/CassandraDBConnectorConnectionKey.html">CassandraDBConnectorConnectionKey</a>,&nbsp;<a href="../../../../../../java/com/mulesoft/mule/cassandradb/adapters/CassandraDBConnectorConnectionIdentifierAdapter.html">CassandraDBConnectorConnectionIdentifierAdapter</a>&gt;</nobr></td>
+          <td class="jd-linkcol"><a href="../../../../../../com/mulesoft/mule/cassandradb/process/CassandraDBConnectorManagedConnectionProcessInterceptor.html#connectionManager">connectionManager</a></td>
+          <td class="jd-descrcol" width="100%"></td>
+      </tr>
+      
+    
+      <tr class=" api apilevel-" >
+          <td class="jd-typecol"><nobr>
+          private
+          static
+          
+          Logger</nobr></td>
+          <td class="jd-linkcol"><a href="../../../../../../com/mulesoft/mule/cassandradb/process/CassandraDBConnectorManagedConnectionProcessInterceptor.html#logger">logger</a></td>
+          <td class="jd-descrcol" width="100%"></td>
+      </tr>
+      
+    
+      <tr class="alt-color api apilevel-" >
+          <td class="jd-typecol"><nobr>
+          private
+          
+          final
+          MuleContext</nobr></td>
+          <td class="jd-linkcol"><a href="../../../../../../com/mulesoft/mule/cassandradb/process/CassandraDBConnectorManagedConnectionProcessInterceptor.html#muleContext">muleContext</a></td>
+          <td class="jd-descrcol" width="100%"></td>
+      </tr>
+      
+    
+      <tr class=" api apilevel-" >
+          <td class="jd-typecol"><nobr>
+          private
+          
+          final
+          ProcessInterceptor&lt;T,&nbsp;<a href="../../../../../../java/com/mulesoft/mule/cassandradb/adapters/CassandraDBConnectorConnectionIdentifierAdapter.html">CassandraDBConnectorConnectionIdentifierAdapter</a>&gt;</nobr></td>
+          <td class="jd-linkcol"><a href="../../../../../../com/mulesoft/mule/cassandradb/process/CassandraDBConnectorManagedConnectionProcessInterceptor.html#next">next</a></td>
           <td class="jd-descrcol" width="100%"></td>
       </tr>
       
@@ -540,7 +591,7 @@ Summary:
             </nobr>
         </td>
         <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../../../com/mulesoft/mule/cassandradb/connectivity/ManagedConnectionProcessTemplate.html#ManagedConnectionProcessTemplate(com.mulesoft.mule.cassandradb.connection.ConnectionManager<com.mulesoft.mule.cassandradb.connectivity.CassandraDBConnectorConnectionKey, com.mulesoft.mule.cassandradb.adapters.CassandraDBConnectorConnectionIdentifierAdapter>, org.mule.api.MuleContext)">ManagedConnectionProcessTemplate</a></span>(<a href="../../../../../../java/com/mulesoft/mule/cassandradb/connection/ConnectionManager.html">ConnectionManager</a>&lt;<a href="../../../../../../java/com/mulesoft/mule/cassandradb/connectivity/CassandraDBConnectorConnectionKey.html">CassandraDBConnectorConnectionKey</a>,&nbsp;<a href="../../../../../../java/com/mulesoft/mule/cassandradb/adapters/CassandraDBConnectorConnectionIdentifierAdapter.html">CassandraDBConnectorConnectionIdentifierAdapter</a>&gt; connectionManager, MuleContext muleContext)</nobr>
+        <span class="sympad"><a href="../../../../../../com/mulesoft/mule/cassandradb/process/CassandraDBConnectorManagedConnectionProcessInterceptor.html#CassandraDBConnectorManagedConnectionProcessInterceptor(org.mule.api.devkit.ProcessInterceptor<T, com.mulesoft.mule.cassandradb.adapters.CassandraDBConnectorConnectionIdentifierAdapter>, com.mulesoft.mule.cassandradb.connection.ConnectionManager<com.mulesoft.mule.cassandradb.connectivity.CassandraDBConnectorConnectionKey, com.mulesoft.mule.cassandradb.adapters.CassandraDBConnectorConnectionIdentifierAdapter>, org.mule.api.MuleContext)">CassandraDBConnectorManagedConnectionProcessInterceptor</a></span>(ProcessInterceptor&lt;T,&nbsp;<a href="../../../../../../java/com/mulesoft/mule/cassandradb/adapters/CassandraDBConnectorConnectionIdentifierAdapter.html">CassandraDBConnectorConnectionIdentifierAdapter</a>&gt; next, <a href="../../../../../../java/com/mulesoft/mule/cassandradb/connection/ConnectionManager.html">ConnectionManager</a>&lt;<a href="../../../../../../java/com/mulesoft/mule/cassandradb/connectivity/CassandraDBConnectorConnectionKey.html">CassandraDBConnectorConnectionKey</a>,&nbsp;<a href="../../../../../../java/com/mulesoft/mule/cassandradb/adapters/CassandraDBConnectorConnectionIdentifierAdapter.html">CassandraDBConnectorConnectionIdentifierAdapter</a>&gt; connectionManager, MuleContext muleContext)</nobr>
         
   </td></tr>
 
@@ -566,10 +617,10 @@ Summary:
             
             
             
-            P</nobr>
+            T</nobr>
         </td>
         <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../../../com/mulesoft/mule/cassandradb/connectivity/ManagedConnectionProcessTemplate.html#execute(org.mule.security.oauth.callback.ProcessCallback<P, com.mulesoft.mule.cassandradb.adapters.CassandraDBConnectorConnectionIdentifierAdapter>, org.mule.api.routing.filter.Filter, org.mule.api.MuleMessage)">execute</a></span>(ProcessCallback&lt;P,&nbsp;<a href="../../../../../../java/com/mulesoft/mule/cassandradb/adapters/CassandraDBConnectorConnectionIdentifierAdapter.html">CassandraDBConnectorConnectionIdentifierAdapter</a>&gt; processCallback, Filter filter, MuleMessage message)</nobr>
+        <span class="sympad"><a href="../../../../../../com/mulesoft/mule/cassandradb/process/CassandraDBConnectorManagedConnectionProcessInterceptor.html#execute(org.mule.security.oauth.callback.ProcessCallback<T, com.mulesoft.mule.cassandradb.adapters.CassandraDBConnectorConnectionIdentifierAdapter>, com.mulesoft.mule.cassandradb.adapters.CassandraDBConnectorConnectionIdentifierAdapter, org.mule.api.processor.MessageProcessor, org.mule.api.MuleEvent)">execute</a></span>(ProcessCallback&lt;T,&nbsp;<a href="../../../../../../java/com/mulesoft/mule/cassandradb/adapters/CassandraDBConnectorConnectionIdentifierAdapter.html">CassandraDBConnectorConnectionIdentifierAdapter</a>&gt; processCallback, <a href="../../../../../../java/com/mulesoft/mule/cassandradb/adapters/CassandraDBConnectorConnectionIdentifierAdapter.html">CassandraDBConnectorConnectionIdentifierAdapter</a> object, MessageProcessor messageProcessor, MuleEvent event)</nobr>
         
   </td></tr>
 
@@ -582,10 +633,10 @@ Summary:
             
             
             
-            P</nobr>
+            T</nobr>
         </td>
         <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../../../com/mulesoft/mule/cassandradb/connectivity/ManagedConnectionProcessTemplate.html#execute(org.mule.security.oauth.callback.ProcessCallback<P, com.mulesoft.mule.cassandradb.adapters.CassandraDBConnectorConnectionIdentifierAdapter>, org.mule.api.processor.MessageProcessor, org.mule.api.MuleEvent)">execute</a></span>(ProcessCallback&lt;P,&nbsp;<a href="../../../../../../java/com/mulesoft/mule/cassandradb/adapters/CassandraDBConnectorConnectionIdentifierAdapter.html">CassandraDBConnectorConnectionIdentifierAdapter</a>&gt; processCallback, MessageProcessor messageProcessor, MuleEvent event)</nobr>
+        <span class="sympad"><a href="../../../../../../com/mulesoft/mule/cassandradb/process/CassandraDBConnectorManagedConnectionProcessInterceptor.html#execute(org.mule.security.oauth.callback.ProcessCallback<T, com.mulesoft.mule.cassandradb.adapters.CassandraDBConnectorConnectionIdentifierAdapter>, com.mulesoft.mule.cassandradb.adapters.CassandraDBConnectorConnectionIdentifierAdapter, org.mule.api.routing.filter.Filter, org.mule.api.MuleMessage)">execute</a></span>(ProcessCallback&lt;T,&nbsp;<a href="../../../../../../java/com/mulesoft/mule/cassandradb/adapters/CassandraDBConnectorConnectionIdentifierAdapter.html">CassandraDBConnectorConnectionIdentifierAdapter</a>&gt; processCallback, <a href="../../../../../../java/com/mulesoft/mule/cassandradb/adapters/CassandraDBConnectorConnectionIdentifierAdapter.html">CassandraDBConnectorConnectionIdentifierAdapter</a> object, Filter filter, MuleMessage message)</nobr>
         
   </td></tr>
 
@@ -603,6 +654,240 @@ Summary:
 <table id="inhmethods" class="jd-sumtable"><tr><th>
   <a href="#" class="toggle-all" onclick="return toggleAllInherited(this, null)">[Expand]</a>
   <div style="clear:left;">Inherited Methods</div></th></tr>
+
+
+<tr class="api apilevel-" >
+<td colspan="12">
+  <a href="#" onclick="return toggleInherited(this, null)" id="inherited-methods-org.mule.devkit.processor.ExpressionEvaluatorSupport" class="jd-expando-trigger closed"
+          ><img id="inherited-methods-org.mule.devkit.processor.ExpressionEvaluatorSupport-trigger"
+          src="../../../../../../assets/images/triangle-closed.png"
+          class="jd-expando-trigger-img" /></a>
+From class
+
+  org.mule.devkit.processor.ExpressionEvaluatorSupport
+
+<div id="inherited-methods-org.mule.devkit.processor.ExpressionEvaluatorSupport">
+  <div id="inherited-methods-org.mule.devkit.processor.ExpressionEvaluatorSupport-list"
+        class="jd-inheritedlinks">
+  </div>
+  <div id="inherited-methods-org.mule.devkit.processor.ExpressionEvaluatorSupport-summary" style="display: none;">
+    <table class="jd-sumtable-expando">
+    
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            
+            
+            
+            
+            
+            void</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad">computeClassHierarchy</span>(Class arg0, List arg1)</nobr>
+        
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            
+            
+            
+            
+            
+            Object</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad">evaluate</span>(TemplateParser.PatternInfo arg0, ExpressionManager arg1, MuleMessage arg2, Object arg3)</nobr>
+        
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            
+            
+            
+            
+            
+            Object</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad">evaluateAndTransform</span>(MuleContext arg0, MuleEvent arg1, Type arg2, String arg3, Object arg4)</nobr>
+        
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            
+            
+            
+            
+            
+            Object</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad">evaluateAndTransform</span>(MuleContext arg0, MuleMessage arg1, Type arg2, String arg3, Object arg4)</nobr>
+        
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            
+            
+            
+            
+            
+            String</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad">getAccessTokenId</span>(MuleEvent arg0, MessageProcessor arg1, OAuth2Manager&lt;?&gt; arg2)</nobr>
+        
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            
+            
+            
+            
+            
+            boolean</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad">isAssignableFrom</span>(Type arg0, Class arg1)</nobr>
+        
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            
+            
+            
+            
+            
+            boolean</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad">isList</span>(Type arg0)</nobr>
+        
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            
+            
+            
+            
+            
+            boolean</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad">isListClass</span>(Class arg0)</nobr>
+        
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            
+            
+            
+            
+            
+            boolean</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad">isMap</span>(Type arg0)</nobr>
+        
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            
+            
+            
+            
+            
+            boolean</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad">isMapClass</span>(Class arg0)</nobr>
+        
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            
+            
+            
+            
+            
+            Object</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad">transform</span>(MuleMessage arg0, Type arg1, Object arg2)</nobr>
+        
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            
+            
+            
+            
+            
+            Object</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad">transform</span>(MuleContext arg0, MuleEvent arg1, Type arg2, String arg3, Object arg4)</nobr>
+        
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            
+            
+            
+            
+            
+            Object</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad">transform</span>(MuleContext arg0, MuleMessage arg1, Type arg2, String arg3, Object arg4)</nobr>
+        
+  </td></tr>
+
+
+</table>
+  </div>
+</div>
+</td></tr>
+
 
 
 <tr class="api apilevel-" >
@@ -809,19 +1094,19 @@ From class
 
 <tr class="api apilevel-" >
 <td colspan="12">
-  <a href="#" onclick="return toggleInherited(this, null)" id="inherited-methods-org.mule.api.devkit.ProcessTemplate" class="jd-expando-trigger closed"
-          ><img id="inherited-methods-org.mule.api.devkit.ProcessTemplate-trigger"
+  <a href="#" onclick="return toggleInherited(this, null)" id="inherited-methods-org.mule.api.devkit.ProcessInterceptor" class="jd-expando-trigger closed"
+          ><img id="inherited-methods-org.mule.api.devkit.ProcessInterceptor-trigger"
           src="../../../../../../assets/images/triangle-closed.png"
           class="jd-expando-trigger-img" /></a>
 From interface
 
-  org.mule.api.devkit.ProcessTemplate
+  org.mule.api.devkit.ProcessInterceptor
 
-<div id="inherited-methods-org.mule.api.devkit.ProcessTemplate">
-  <div id="inherited-methods-org.mule.api.devkit.ProcessTemplate-list"
+<div id="inherited-methods-org.mule.api.devkit.ProcessInterceptor">
+  <div id="inherited-methods-org.mule.api.devkit.ProcessInterceptor-list"
         class="jd-inheritedlinks">
   </div>
-  <div id="inherited-methods-org.mule.api.devkit.ProcessTemplate-summary" style="display: none;">
+  <div id="inherited-methods-org.mule.api.devkit.ProcessInterceptor-summary" style="display: none;">
     <table class="jd-sumtable-expando">
     
 
@@ -837,7 +1122,7 @@ From interface
             T</nobr>
         </td>
         <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad">execute</span>(ProcessCallback&lt;T,&nbsp;O&gt; arg0, Filter arg1, MuleMessage arg2)</nobr>
+        <span class="sympad">execute</span>(ProcessCallback&lt;T,&nbsp;O&gt; arg0, O arg1, Filter arg2, MuleMessage arg3)</nobr>
         
   </td></tr>
 
@@ -853,7 +1138,7 @@ From interface
             T</nobr>
         </td>
         <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad">execute</span>(ProcessCallback&lt;T,&nbsp;O&gt; arg0, MessageProcessor arg1, MuleEvent arg2)</nobr>
+        <span class="sympad">execute</span>(ProcessCallback&lt;T,&nbsp;O&gt; arg0, O arg1, MessageProcessor arg2, MuleEvent arg3)</nobr>
         
   </td></tr>
 
@@ -896,7 +1181,7 @@ From interface
 
 
 
-<A NAME="processInterceptor"></A>
+<A NAME="connectionManager"></A>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -904,9 +1189,99 @@ From interface
         private 
          
         final 
-        ProcessInterceptor&lt;P,&nbsp;<a href="../../../../../../java/com/mulesoft/mule/cassandradb/adapters/CassandraDBConnectorConnectionIdentifierAdapter.html">CassandraDBConnectorConnectionIdentifierAdapter</a>&gt;
+        <a href="../../../../../../java/com/mulesoft/mule/cassandradb/connection/ConnectionManager.html">ConnectionManager</a>&lt;<a href="../../../../../../java/com/mulesoft/mule/cassandradb/connectivity/CassandraDBConnectorConnectionKey.html">CassandraDBConnectorConnectionKey</a>,&nbsp;<a href="../../../../../../java/com/mulesoft/mule/cassandradb/adapters/CassandraDBConnectorConnectionIdentifierAdapter.html">CassandraDBConnectorConnectionIdentifierAdapter</a>&gt;
       </span>
-        processInterceptor
+        connectionManager
+    </h4>
+      <div class="api-level">
+        
+
+
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+
+    
+    </div>
+</div>
+
+
+
+<A NAME="logger"></A>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        private 
+        static 
+         
+        Logger
+      </span>
+        logger
+    </h4>
+      <div class="api-level">
+        
+
+
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+
+    
+    </div>
+</div>
+
+
+
+<A NAME="muleContext"></A>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        private 
+         
+        final 
+        MuleContext
+      </span>
+        muleContext
+    </h4>
+      <div class="api-level">
+        
+
+
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+
+    
+    </div>
+</div>
+
+
+
+<A NAME="next"></A>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        private 
+         
+        final 
+        ProcessInterceptor&lt;T,&nbsp;<a href="../../../../../../java/com/mulesoft/mule/cassandradb/adapters/CassandraDBConnectorConnectionIdentifierAdapter.html">CassandraDBConnectorConnectionIdentifierAdapter</a>&gt;
+      </span>
+        next
     </h4>
       <div class="api-level">
         
@@ -935,7 +1310,7 @@ From interface
 
 
 
-<A NAME="ManagedConnectionProcessTemplate(com.mulesoft.mule.cassandradb.connection.ConnectionManager<com.mulesoft.mule.cassandradb.connectivity.CassandraDBConnectorConnectionKey, com.mulesoft.mule.cassandradb.adapters.CassandraDBConnectorConnectionIdentifierAdapter>, org.mule.api.MuleContext)"></A>
+<A NAME="CassandraDBConnectorManagedConnectionProcessInterceptor(org.mule.api.devkit.ProcessInterceptor<T, com.mulesoft.mule.cassandradb.adapters.CassandraDBConnectorConnectionIdentifierAdapter>, com.mulesoft.mule.cassandradb.connection.ConnectionManager<com.mulesoft.mule.cassandradb.connectivity.CassandraDBConnectorConnectionKey, com.mulesoft.mule.cassandradb.adapters.CassandraDBConnectorConnectionIdentifierAdapter>, org.mule.api.MuleContext)"></A>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -947,8 +1322,8 @@ From interface
          
         
       </span>
-      <span class="sympad">ManagedConnectionProcessTemplate</span>
-      <span class="normal">(<a href="../../../../../../java/com/mulesoft/mule/cassandradb/connection/ConnectionManager.html">ConnectionManager</a>&lt;<a href="../../../../../../java/com/mulesoft/mule/cassandradb/connectivity/CassandraDBConnectorConnectionKey.html">CassandraDBConnectorConnectionKey</a>,&nbsp;<a href="../../../../../../java/com/mulesoft/mule/cassandradb/adapters/CassandraDBConnectorConnectionIdentifierAdapter.html">CassandraDBConnectorConnectionIdentifierAdapter</a>&gt; connectionManager, MuleContext muleContext)</span>
+      <span class="sympad">CassandraDBConnectorManagedConnectionProcessInterceptor</span>
+      <span class="normal">(ProcessInterceptor&lt;T,&nbsp;<a href="../../../../../../java/com/mulesoft/mule/cassandradb/adapters/CassandraDBConnectorConnectionIdentifierAdapter.html">CassandraDBConnectorConnectionIdentifierAdapter</a>&gt; next, <a href="../../../../../../java/com/mulesoft/mule/cassandradb/connection/ConnectionManager.html">ConnectionManager</a>&lt;<a href="../../../../../../java/com/mulesoft/mule/cassandradb/connectivity/CassandraDBConnectorConnectionKey.html">CassandraDBConnectorConnectionKey</a>,&nbsp;<a href="../../../../../../java/com/mulesoft/mule/cassandradb/adapters/CassandraDBConnectorConnectionIdentifierAdapter.html">CassandraDBConnectorConnectionIdentifierAdapter</a>&gt; connectionManager, MuleContext muleContext)</span>
     </h4>
       <div class="api-level">
         <div>
@@ -964,6 +1339,10 @@ From interface
   <div class="jd-tagdata">
       <h5 class="jd-tagtitle">Parameters</h5>
       <table class="jd-tagtable">
+        <tr>
+          <th>next</td>
+          <td></td>
+        </tr>
         <tr>
           <th>connectionManager</td>
           <td></td>
@@ -994,7 +1373,7 @@ From interface
 
 
 
-<A NAME="execute(org.mule.security.oauth.callback.ProcessCallback<P, com.mulesoft.mule.cassandradb.adapters.CassandraDBConnectorConnectionIdentifierAdapter>, org.mule.api.routing.filter.Filter, org.mule.api.MuleMessage)"></A>
+<A NAME="execute(org.mule.security.oauth.callback.ProcessCallback<T, com.mulesoft.mule.cassandradb.adapters.CassandraDBConnectorConnectionIdentifierAdapter>, com.mulesoft.mule.cassandradb.adapters.CassandraDBConnectorConnectionIdentifierAdapter, org.mule.api.processor.MessageProcessor, org.mule.api.MuleEvent)"></A>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -1004,10 +1383,10 @@ From interface
          
          
          
-        P
+        T
       </span>
       <span class="sympad">execute</span>
-      <span class="normal">(ProcessCallback&lt;P,&nbsp;<a href="../../../../../../java/com/mulesoft/mule/cassandradb/adapters/CassandraDBConnectorConnectionIdentifierAdapter.html">CassandraDBConnectorConnectionIdentifierAdapter</a>&gt; processCallback, Filter filter, MuleMessage message)</span>
+      <span class="normal">(ProcessCallback&lt;T,&nbsp;<a href="../../../../../../java/com/mulesoft/mule/cassandradb/adapters/CassandraDBConnectorConnectionIdentifierAdapter.html">CassandraDBConnectorConnectionIdentifierAdapter</a>&gt; processCallback, <a href="../../../../../../java/com/mulesoft/mule/cassandradb/adapters/CassandraDBConnectorConnectionIdentifierAdapter.html">CassandraDBConnectorConnectionIdentifierAdapter</a> object, MessageProcessor messageProcessor, MuleEvent event)</span>
     </h4>
       <div class="api-level">
         <div>
@@ -1028,11 +1407,15 @@ From interface
           <td></td>
         </tr>
         <tr>
-          <th>filter</td>
+          <th>object</td>
           <td></td>
         </tr>
         <tr>
-          <th>message</td>
+          <th>messageProcessor</td>
+          <td></td>
+        </tr>
+        <tr>
+          <th>event</td>
           <td></td>
         </tr>
       </table>
@@ -1051,7 +1434,7 @@ From interface
 </div>
 
 
-<A NAME="execute(org.mule.security.oauth.callback.ProcessCallback<P, com.mulesoft.mule.cassandradb.adapters.CassandraDBConnectorConnectionIdentifierAdapter>, org.mule.api.processor.MessageProcessor, org.mule.api.MuleEvent)"></A>
+<A NAME="execute(org.mule.security.oauth.callback.ProcessCallback<T, com.mulesoft.mule.cassandradb.adapters.CassandraDBConnectorConnectionIdentifierAdapter>, com.mulesoft.mule.cassandradb.adapters.CassandraDBConnectorConnectionIdentifierAdapter, org.mule.api.routing.filter.Filter, org.mule.api.MuleMessage)"></A>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
@@ -1061,10 +1444,10 @@ From interface
          
          
          
-        P
+        T
       </span>
       <span class="sympad">execute</span>
-      <span class="normal">(ProcessCallback&lt;P,&nbsp;<a href="../../../../../../java/com/mulesoft/mule/cassandradb/adapters/CassandraDBConnectorConnectionIdentifierAdapter.html">CassandraDBConnectorConnectionIdentifierAdapter</a>&gt; processCallback, MessageProcessor messageProcessor, MuleEvent event)</span>
+      <span class="normal">(ProcessCallback&lt;T,&nbsp;<a href="../../../../../../java/com/mulesoft/mule/cassandradb/adapters/CassandraDBConnectorConnectionIdentifierAdapter.html">CassandraDBConnectorConnectionIdentifierAdapter</a>&gt; processCallback, <a href="../../../../../../java/com/mulesoft/mule/cassandradb/adapters/CassandraDBConnectorConnectionIdentifierAdapter.html">CassandraDBConnectorConnectionIdentifierAdapter</a> object, Filter filter, MuleMessage message)</span>
     </h4>
       <div class="api-level">
         <div>
@@ -1085,11 +1468,15 @@ From interface
           <td></td>
         </tr>
         <tr>
-          <th>messageProcessor</td>
+          <th>object</td>
           <td></td>
         </tr>
         <tr>
-          <th>event</td>
+          <th>filter</td>
+          <td></td>
+        </tr>
+        <tr>
+          <th>message</td>
           <td></td>
         </tr>
       </table>

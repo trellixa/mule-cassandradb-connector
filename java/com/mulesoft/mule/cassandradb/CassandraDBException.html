@@ -117,7 +117,7 @@
 <link rel="shortcut icon" type="image/x-icon" href="../../../../../favicon.ico" />
 <title>
 
-  ReplicationStrategy
+  CassandraDBException
 
 
 | Mule CassandraDB Module
@@ -300,13 +300,13 @@
               
     <li><h2>Enums</h2>
       <ul>
-          <li class="selected api apilevel-"><a href="../../../../../java/com/mulesoft/mule/cassandradb/ReplicationStrategy.html">ReplicationStrategy</a></li>
+          <li class="api apilevel-"><a href="../../../../../java/com/mulesoft/mule/cassandradb/ReplicationStrategy.html">ReplicationStrategy</a></li>
       </ul>
     </li>
               
     <li><h2>Exceptions</h2>
       <ul>
-          <li class="api apilevel-"><a href="../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBException.html">CassandraDBException</a></li>
+          <li class="selected api apilevel-"><a href="../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBException.html">CassandraDBException</a></li>
       </ul>
     </li>
               
@@ -348,8 +348,17 @@
 
 
   
+  
    
   
+  
+  
+
+  
+   
+  
+  
+   
   
   
    
@@ -363,13 +372,6 @@
   
   
 
-  
-  
-  
-  
-
-  
-   
   
   
   
@@ -384,10 +386,10 @@ Summary:
 
 
 
-  <a href="#enumconstants">Enums</a>
+
+
+  <a href="#inhconstants">Inherited Constants</a>
   
-
-
 
 
 
@@ -395,10 +397,10 @@ Summary:
   
 
 
-
-
-  &#124; <a href="#pubmethods">Methods</a>
+  &#124; <a href="#pubctors">Ctors</a>
   
+
+
 
 
 
@@ -425,8 +427,8 @@ Summary:
      
      
     
-    enum
-<h1>ReplicationStrategy</h1>
+    class
+<h1>CassandraDBException</h1>
 
 
 
@@ -435,7 +437,11 @@ Summary:
   
 
   
-    extends Enum&lt;E&nbsp;extends&nbsp;Enum&lt;E&gt;&gt;<br/>
+  
+  
+
+  
+    extends Exception<br/>
   
   
   
@@ -455,7 +461,7 @@ Summary:
 
     <tr>
         
-        <td colspan="3" class="jd-inheritance-class-cell">java.lang.Object</td>
+        <td colspan="4" class="jd-inheritance-class-cell">java.lang.Object</td>
     </tr>
     
 
@@ -463,7 +469,7 @@ Summary:
         
             <td class="jd-inheritance-space">&nbsp;&nbsp;&nbsp;&#x21b3;</td>
         
-        <td colspan="2" class="jd-inheritance-class-cell">java.lang.Enum&lt;E&nbsp;extends&nbsp;java.lang.Enum&lt;E&gt;&gt;</td>
+        <td colspan="3" class="jd-inheritance-class-cell">java.lang.Throwable</td>
     </tr>
     
 
@@ -473,7 +479,19 @@ Summary:
         
             <td class="jd-inheritance-space">&nbsp;&nbsp;&nbsp;&#x21b3;</td>
         
-        <td colspan="1" class="jd-inheritance-class-cell">com.mulesoft.mule.cassandradb.ReplicationStrategy</td>
+        <td colspan="2" class="jd-inheritance-class-cell">java.lang.Exception</td>
+    </tr>
+    
+
+    <tr>
+        
+            <td class="jd-inheritance-space">&nbsp;</td>
+        
+            <td class="jd-inheritance-space">&nbsp;</td>
+        
+            <td class="jd-inheritance-space">&nbsp;&nbsp;&nbsp;&#x21b3;</td>
+        
+        <td colspan="1" class="jd-inheritance-class-cell">com.mulesoft.mule.cassandradb.CassandraDBException</td>
     </tr>
     
 
@@ -489,7 +507,7 @@ Summary:
 
 
 <h2>Class Overview</h2>
-<p>Cassandra supported replica placement strategies
+<p>Generic Exception wrapper class for Thrift Exceptions.
 </p>
 
 
@@ -528,42 +546,83 @@ Summary:
 
 
 
+
+
+
+
+
 <!-- =========== ENUM CONSTANT SUMMARY =========== -->
-<table id="enumconstants" class="jd-sumtable"><tr><th colspan="12">Enum Values</th></tr>
+<table id="inhconstants" class="jd-sumtable"><tr><th>
+  <a href="#" class="toggle-all" onclick="return toggleAllInherited(this, null)">[Expand]</a>
+  <div style="clear:left;">Inherited Constants</div></th></tr>
+
+
+<tr class="api apilevel-" >
+<td colspan="12">
+
+  <a href="#" onclick="return toggleInherited(this, null)" id="inherited-constants-java.lang.Exception" class="jd-expando-trigger closed"
+          ><img id="inherited-constants-java.lang.Exception-trigger"
+          src="../../../../../assets/images/triangle-closed.png"
+          class="jd-expando-trigger-img" /></a>From class
+java.lang.Exception
+<div id="inherited-constants-java.lang.Exception">
+  <div id="inherited-constants-java.lang.Exception-list"
+        class="jd-inheritedlinks">
+  </div>
+  <div id="inherited-constants-java.lang.Exception-summary" style="display: none;">
+    <table class="jd-sumtable-expando">
+    
 
     
     <tr class="alt-color api apilevel-" >
-        <td class="jd-descrcol"><a href="../../../../../java/com/mulesoft/mule/cassandradb/ReplicationStrategy.html">ReplicationStrategy</a>&nbsp;</td>
-        <td class="jd-linkcol">NETWORK_TOPOLOGY&nbsp;</td>
-        <td class="jd-descrcol" width="100%">With NetworkTopologyStrategy, for each datacenter, you can specify
- how many replicas you want on a per-keyspace basis.&nbsp;</td>
+        <td class="jd-typecol">long</td>
+        <td class="jd-linkcol">serialVersionUID</td>
+        <td class="jd-descrcol" width="100%"></td>
     </tr>
     
     
-    <tr class=" api apilevel-" >
-        <td class="jd-descrcol"><a href="../../../../../java/com/mulesoft/mule/cassandradb/ReplicationStrategy.html">ReplicationStrategy</a>&nbsp;</td>
-        <td class="jd-linkcol">OLD_NETWORK_TOPOLOGY&nbsp;</td>
-        <td class="jd-descrcol" width="100%">OldNetworkToplogyStrategy [formerly RackAwareStrategy]
- places one replica in each of two datacenters, and the third on a
- different rack in in the first.&nbsp;</td>
-    </tr>
+</table>
+  </div>
+</div>
+</td></tr>
+
+
+
+<tr class="api apilevel-" >
+<td colspan="12">
+
+  <a href="#" onclick="return toggleInherited(this, null)" id="inherited-constants-java.lang.Throwable" class="jd-expando-trigger closed"
+          ><img id="inherited-constants-java.lang.Throwable-trigger"
+          src="../../../../../assets/images/triangle-closed.png"
+          class="jd-expando-trigger-img" /></a>From class
+java.lang.Throwable
+<div id="inherited-constants-java.lang.Throwable">
+  <div id="inherited-constants-java.lang.Throwable-list"
+        class="jd-inheritedlinks">
+  </div>
+  <div id="inherited-constants-java.lang.Throwable-summary" style="display: none;">
+    <table class="jd-sumtable-expando">
     
+
     
     <tr class="alt-color api apilevel-" >
-        <td class="jd-descrcol"><a href="../../../../../java/com/mulesoft/mule/cassandradb/ReplicationStrategy.html">ReplicationStrategy</a>&nbsp;</td>
-        <td class="jd-linkcol">SIMPLE&nbsp;</td>
-        <td class="jd-descrcol" width="100%">SimpleStrategy merely places the first replica at the node whose
- token is closest to the key (as determined by the Partitioner), and
- additional replicas on subsequent nodes along the ring in increasing
- Token order.&nbsp;</td>
+        <td class="jd-typecol">long</td>
+        <td class="jd-linkcol">serialVersionUID</td>
+        <td class="jd-descrcol" width="100%"></td>
     </tr>
     
     
+</table>
+  </div>
+</div>
+</td></tr>
 
 
 
 
 
+
+</table>
 
 
 
@@ -577,19 +636,21 @@ Summary:
   <div style="clear:left;">Inherited Fields</div></th></tr>
 
 
+
+
 <tr class="api apilevel-" >
 <td colspan="12">
 
-  <a href="#" onclick="return toggleInherited(this, null)" id="inherited-fields-java.lang.Enum" class="jd-expando-trigger closed"
-          ><img id="inherited-fields-java.lang.Enum-trigger"
+  <a href="#" onclick="return toggleInherited(this, null)" id="inherited-fields-java.lang.Throwable" class="jd-expando-trigger closed"
+          ><img id="inherited-fields-java.lang.Throwable-trigger"
           src="../../../../../assets/images/triangle-closed.png"
           class="jd-expando-trigger-img" /></a>From class
-java.lang.Enum
-<div id="inherited-fields-java.lang.Enum">
-  <div id="inherited-fields-java.lang.Enum-list"
+java.lang.Throwable
+<div id="inherited-fields-java.lang.Throwable">
+  <div id="inherited-fields-java.lang.Throwable-list"
         class="jd-inheritedlinks">
   </div>
-  <div id="inherited-fields-java.lang.Enum-summary" style="display: none;">
+  <div id="inherited-fields-java.lang.Throwable-summary" style="display: none;">
     <table class="jd-sumtable-expando">
     
 
@@ -598,9 +659,9 @@ java.lang.Enum
           <td class="jd-typecol"><nobr>
           private
           
-          final
-          String</nobr></td>
-          <td class="jd-linkcol">name</td>
+          
+          Object</nobr></td>
+          <td class="jd-linkcol">backtrace</td>
           <td class="jd-descrcol" width="100%"></td>
       </tr>
       
@@ -609,9 +670,31 @@ java.lang.Enum
           <td class="jd-typecol"><nobr>
           private
           
-          final
-          int</nobr></td>
-          <td class="jd-linkcol">ordinal</td>
+          
+          Throwable</nobr></td>
+          <td class="jd-linkcol">cause</td>
+          <td class="jd-descrcol" width="100%"></td>
+      </tr>
+      
+    
+      <tr class="alt-color api apilevel-" >
+          <td class="jd-typecol"><nobr>
+          private
+          
+          
+          String</nobr></td>
+          <td class="jd-linkcol">detailMessage</td>
+          <td class="jd-descrcol" width="100%"></td>
+      </tr>
+      
+    
+      <tr class=" api apilevel-" >
+          <td class="jd-typecol"><nobr>
+          private
+          
+          
+          StackTraceElement[]</nobr></td>
+          <td class="jd-linkcol">stackTrace</td>
           <td class="jd-descrcol" width="100%"></td>
       </tr>
       
@@ -626,19 +709,13 @@ java.lang.Enum
 
 
 
-
-
 </table>
 
 
 
 
-
-
-
-
-<!-- ========== METHOD SUMMARY =========== -->
-<table id="pubmethods" class="jd-sumtable"><tr><th colspan="12">Public Methods</th></tr>
+<!-- ======== CONSTRUCTOR SUMMARY ======== -->
+<table id="pubctors" class="jd-sumtable"><tr><th colspan="12">Public Constructors</th></tr>
 
 
 
@@ -648,13 +725,15 @@ java.lang.Enum
             
             
             
-            static
             
-            <a href="../../../../../java/com/mulesoft/mule/cassandradb/ReplicationStrategy.html">ReplicationStrategy</a></nobr>
+            
+            </nobr>
         </td>
         <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../../com/mulesoft/mule/cassandradb/ReplicationStrategy.html#valueOf(java.lang.String)">valueOf</a></span>(String name)</nobr>
+        <span class="sympad"><a href="../../../../../com/mulesoft/mule/cassandradb/CassandraDBException.html#CassandraDBException()">CassandraDBException</a></span>()</nobr>
         
+        <div class="jd-descrdiv">Constructs a new exception with null as its detail message.</div>
+  
   </td></tr>
 
 
@@ -663,19 +742,61 @@ java.lang.Enum
         <td class="jd-typecol"><nobr>
             
             
-            final
-            static
             
-            <a href="../../../../../java/com/mulesoft/mule/cassandradb/ReplicationStrategy.html">ReplicationStrategy[]</a></nobr>
+            
+            
+            </nobr>
         </td>
         <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad"><a href="../../../../../com/mulesoft/mule/cassandradb/ReplicationStrategy.html#values()">values</a></span>()</nobr>
+        <span class="sympad"><a href="../../../../../com/mulesoft/mule/cassandradb/CassandraDBException.html#CassandraDBException(java.lang.String)">CassandraDBException</a></span>(String msg)</nobr>
         
+        <div class="jd-descrdiv">Constructs a new exception with the specified detail message.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            
+            
+            
+            
+            
+            </nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad"><a href="../../../../../com/mulesoft/mule/cassandradb/CassandraDBException.html#CassandraDBException(java.lang.String, java.lang.Throwable)">CassandraDBException</a></span>(String msg, Throwable cause)</nobr>
+        
+        <div class="jd-descrdiv">Constructs a new exception with the specified detail message and cause.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            
+            
+            
+            
+            
+            </nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad"><a href="../../../../../com/mulesoft/mule/cassandradb/CassandraDBException.html#CassandraDBException(java.lang.Throwable)">CassandraDBException</a></span>(Throwable cause)</nobr>
+        
+        <div class="jd-descrdiv">Constructs a new exception with the specified cause and a detail message.</div>
+  
   </td></tr>
 
 
 
 </table>
+
+
+
+
 
 
 
@@ -689,21 +810,23 @@ java.lang.Enum
   <div style="clear:left;">Inherited Methods</div></th></tr>
 
 
+
+
 <tr class="api apilevel-" >
 <td colspan="12">
-  <a href="#" onclick="return toggleInherited(this, null)" id="inherited-methods-java.lang.Enum" class="jd-expando-trigger closed"
-          ><img id="inherited-methods-java.lang.Enum-trigger"
+  <a href="#" onclick="return toggleInherited(this, null)" id="inherited-methods-java.lang.Throwable" class="jd-expando-trigger closed"
+          ><img id="inherited-methods-java.lang.Throwable-trigger"
           src="../../../../../assets/images/triangle-closed.png"
           class="jd-expando-trigger-img" /></a>
 From class
 
-  java.lang.Enum
+  java.lang.Throwable
 
-<div id="inherited-methods-java.lang.Enum">
-  <div id="inherited-methods-java.lang.Enum-list"
+<div id="inherited-methods-java.lang.Throwable">
+  <div id="inherited-methods-java.lang.Throwable-list"
         class="jd-inheritedlinks">
   </div>
-  <div id="inherited-methods-java.lang.Enum-summary" style="display: none;">
+  <div id="inherited-methods-java.lang.Throwable-summary" style="display: none;">
     <table class="jd-sumtable-expando">
     
 
@@ -712,14 +835,14 @@ From class
     <tr class="alt-color api apilevel-" >
         <td class="jd-typecol"><nobr>
             
+            synchronized
             
-            final
             
             
-            Object</nobr>
+            Throwable</nobr>
         </td>
         <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad">clone</span>()</nobr>
+        <span class="sympad">fillInStackTrace</span>()</nobr>
         
   </td></tr>
 
@@ -732,10 +855,10 @@ From class
             
             
             
-            int</nobr>
+            Throwable</nobr>
         </td>
         <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad">compareTo</span>(Object arg0)</nobr>
+        <span class="sympad">getCause</span>()</nobr>
         
   </td></tr>
 
@@ -745,93 +868,29 @@ From class
         <td class="jd-typecol"><nobr>
             
             
-            final
             
-            
-            int</nobr>
-        </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad">compareTo</span>(E arg0)</nobr>
-        
-  </td></tr>
-
-
-	 
-    <tr class=" api apilevel-" >
-        <td class="jd-typecol"><nobr>
-            
-            
-            final
-            
-            
-            boolean</nobr>
-        </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad">equals</span>(Object arg0)</nobr>
-        
-  </td></tr>
-
-
-	 
-    <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol"><nobr>
-            
-            
-            final
-            
-            
-            void</nobr>
-        </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad">finalize</span>()</nobr>
-        
-  </td></tr>
-
-
-	 
-    <tr class=" api apilevel-" >
-        <td class="jd-typecol"><nobr>
-            
-            
-            final
-            
-            
-            Class&lt;E&gt;</nobr>
-        </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad">getDeclaringClass</span>()</nobr>
-        
-  </td></tr>
-
-
-	 
-    <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol"><nobr>
-            
-            
-            final
-            
-            
-            int</nobr>
-        </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad">hashCode</span>()</nobr>
-        
-  </td></tr>
-
-
-	 
-    <tr class=" api apilevel-" >
-        <td class="jd-typecol"><nobr>
-            
-            
-            final
             
             
             String</nobr>
         </td>
         <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad">name</span>()</nobr>
+        <span class="sympad">getLocalizedMessage</span>()</nobr>
+        
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            
+            
+            
+            
+            
+            String</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad">getMessage</span>()</nobr>
         
   </td></tr>
 
@@ -841,19 +900,99 @@ From class
         <td class="jd-typecol"><nobr>
             
             
-            final
             
             
-            int</nobr>
+            
+            StackTraceElement[]</nobr>
         </td>
         <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad">ordinal</span>()</nobr>
+        <span class="sympad">getStackTrace</span>()</nobr>
         
   </td></tr>
 
 
 	 
     <tr class=" api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            
+            synchronized
+            
+            
+            
+            Throwable</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad">initCause</span>(Throwable arg0)</nobr>
+        
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            
+            
+            
+            
+            
+            void</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad">printStackTrace</span>(PrintWriter arg0)</nobr>
+        
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            
+            
+            
+            
+            
+            void</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad">printStackTrace</span>(PrintStream arg0)</nobr>
+        
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            
+            
+            
+            
+            
+            void</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad">printStackTrace</span>()</nobr>
+        
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            
+            
+            
+            
+            
+            void</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad">setStackTrace</span>(StackTraceElement[] arg0)</nobr>
+        
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
         <td class="jd-typecol"><nobr>
             
             
@@ -864,22 +1003,6 @@ From class
         </td>
         <td class="jd-linkcol" width="100%"><nobr>
         <span class="sympad">toString</span>()</nobr>
-        
-  </td></tr>
-
-
-	 
-    <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol"><nobr>
-            
-            
-            
-            static
-            &lt;T&nbsp;extends&nbsp;Enum&lt;T&gt;&gt;
-            T</nobr>
-        </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad">valueOf</span>(Class&lt;T&gt; arg0, String arg1)</nobr>
         
   </td></tr>
 
@@ -1094,48 +1217,6 @@ From class
 
 
 
-
-<tr class="api apilevel-" >
-<td colspan="12">
-  <a href="#" onclick="return toggleInherited(this, null)" id="inherited-methods-java.lang.Comparable" class="jd-expando-trigger closed"
-          ><img id="inherited-methods-java.lang.Comparable-trigger"
-          src="../../../../../assets/images/triangle-closed.png"
-          class="jd-expando-trigger-img" /></a>
-From interface
-
-  java.lang.Comparable
-
-<div id="inherited-methods-java.lang.Comparable">
-  <div id="inherited-methods-java.lang.Comparable-list"
-        class="jd-inheritedlinks">
-  </div>
-  <div id="inherited-methods-java.lang.Comparable-summary" style="display: none;">
-    <table class="jd-sumtable-expando">
-    
-
-
-	 
-    <tr class="alt-color api apilevel-" >
-        <td class="jd-typecol"><nobr>
-            abstract
-            
-            
-            
-            
-            int</nobr>
-        </td>
-        <td class="jd-linkcol" width="100%"><nobr>
-        <span class="sympad">compareTo</span>(T arg0)</nobr>
-        
-  </td></tr>
-
-
-</table>
-  </div>
-</div>
-</td></tr>
-
-
 </table>
 
 
@@ -1156,127 +1237,6 @@ From interface
 <!-- Enum Values -->
 
 
-<!-- ========= ENUM CONSTANTS DETAIL ======== -->
-<h2>Enum Values</h2>
-
-
-
-
-<A NAME="NETWORK_TOPOLOGY"></A>
-
-<div class="jd-details api apilevel-"> 
-    <h4 class="jd-details-title">
-      <span class="normal">
-        public 
-        static 
-        final 
-        <a href="../../../../../java/com/mulesoft/mule/cassandradb/ReplicationStrategy.html">ReplicationStrategy</a>
-      </span>
-        NETWORK_TOPOLOGY
-    </h4>
-      <div class="api-level">
-        
-
-
-        
-  
-
-      </div>
-    <div class="jd-details-descr">
-      
-  <div class="jd-tagdata jd-tagdescr"><p>With NetworkTopologyStrategy, for each datacenter, you can specify
- how many replicas you want on a per-keyspace basis. Replicas are
- placed on different racks within each DC, if possible.
- <p/>
- Supports strategy options which specify the replication factor for
- each datacenter. The replication factor for the entire cluster is the
- sum of all per datacenter values. Note that the datacenter names
- must match those used in conf/cassandra-topology.properties.
-</p></div>
-
-    
-    </div>
-</div>
-
-
-
-<A NAME="OLD_NETWORK_TOPOLOGY"></A>
-
-<div class="jd-details api apilevel-"> 
-    <h4 class="jd-details-title">
-      <span class="normal">
-        public 
-        static 
-        final 
-        <a href="../../../../../java/com/mulesoft/mule/cassandradb/ReplicationStrategy.html">ReplicationStrategy</a>
-      </span>
-        OLD_NETWORK_TOPOLOGY
-    </h4>
-      <div class="api-level">
-        
-
-
-        
-  
-
-      </div>
-    <div class="jd-details-descr">
-      
-  <div class="jd-tagdata jd-tagdescr"><p>OldNetworkToplogyStrategy [formerly RackAwareStrategy]
- places one replica in each of two datacenters, and the third on a
- different rack in in the first.  Additional datacenters are not
- guaranteed to get a replica.  Additional replicas after three are
- placed in ring order after the third without regard to rack or
- datacenter.
- <p/>
- Supports a single strategy option 'replication_factor' that
- specifies the replication factor for the cluster.
-</p></div>
-
-    
-    </div>
-</div>
-
-
-
-<A NAME="SIMPLE"></A>
-
-<div class="jd-details api apilevel-"> 
-    <h4 class="jd-details-title">
-      <span class="normal">
-        public 
-        static 
-        final 
-        <a href="../../../../../java/com/mulesoft/mule/cassandradb/ReplicationStrategy.html">ReplicationStrategy</a>
-      </span>
-        SIMPLE
-    </h4>
-      <div class="api-level">
-        
-
-
-        
-  
-
-      </div>
-    <div class="jd-details-descr">
-      
-  <div class="jd-tagdata jd-tagdescr"><p>SimpleStrategy merely places the first replica at the node whose
- token is closest to the key (as determined by the Partitioner), and
- additional replicas on subsequent nodes along the ring in increasing
- Token order.
- <p/>
- Supports a single strategy option 'replication_factor' that
- specifies the replication factor for the cluster.
-</p></div>
-
-    
-    </div>
-</div>
-
-
-
-
 <!-- Constants -->
 
 
@@ -1286,72 +1246,24 @@ From interface
 <!-- Public ctors -->
 
 
-
 <!-- ========= CONSTRUCTOR DETAIL ======== -->
-<!-- Protected ctors -->
+<h2>Public Constructors</h2>
 
 
 
-<!-- ========= METHOD DETAIL ======== -->
-<!-- Public methdos -->
-
-<h2>Public Methods</h2>
-
-
-
-<A NAME="valueOf(java.lang.String)"></A>
+<A NAME="CassandraDBException()"></A>
 
 <div class="jd-details api apilevel-"> 
     <h4 class="jd-details-title">
       <span class="normal">
         public 
-        static 
          
          
          
-        <a href="../../../../../java/com/mulesoft/mule/cassandradb/ReplicationStrategy.html">ReplicationStrategy</a>
-      </span>
-      <span class="sympad">valueOf</span>
-      <span class="normal">(String name)</span>
-    </h4>
-      <div class="api-level">
-        <div>
-
-</div>
+         
         
-  
-
-      </div>
-    <div class="jd-details-descr">
-      
-  <div class="jd-tagdata jd-tagdescr"><p></p></div>
-  <div class="jd-tagdata">
-      <h5 class="jd-tagtitle">Parameters</h5>
-      <table class="jd-tagtable">
-        <tr>
-          <th>name</td>
-          <td></td>
-        </tr>
-      </table>
-  </div>
-
-    </div>
-</div>
-
-
-<A NAME="values()"></A>
-
-<div class="jd-details api apilevel-"> 
-    <h4 class="jd-details-title">
-      <span class="normal">
-        public 
-        static 
-        final 
-         
-         
-        <a href="../../../../../java/com/mulesoft/mule/cassandradb/ReplicationStrategy.html">ReplicationStrategy[]</a>
       </span>
-      <span class="sympad">values</span>
+      <span class="sympad">CassandraDBException</span>
       <span class="normal">()</span>
     </h4>
       <div class="api-level">
@@ -1364,12 +1276,150 @@ From interface
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+  <div class="jd-tagdata jd-tagdescr"><p>Constructs a new exception with null as its detail message.
+</p></div>
 
     </div>
 </div>
 
 
+<A NAME="CassandraDBException(java.lang.String)"></A>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        
+      </span>
+      <span class="sympad">CassandraDBException</span>
+      <span class="normal">(String msg)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Constructs a new exception with the specified detail message.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>msg</td>
+          <td>The detail message.
+</td>
+        </tr>
+      </table>
+  </div>
+
+    </div>
+</div>
+
+
+<A NAME="CassandraDBException(java.lang.String, java.lang.Throwable)"></A>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        
+      </span>
+      <span class="sympad">CassandraDBException</span>
+      <span class="normal">(String msg, Throwable cause)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Constructs a new exception with the specified detail message and cause.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>msg</td>
+          <td>The detail message.</td>
+        </tr>
+        <tr>
+          <th>cause</td>
+          <td>The cause.
+</td>
+        </tr>
+      </table>
+  </div>
+
+    </div>
+</div>
+
+
+<A NAME="CassandraDBException(java.lang.Throwable)"></A>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        
+      </span>
+      <span class="sympad">CassandraDBException</span>
+      <span class="normal">(Throwable cause)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Constructs a new exception with the specified cause and a detail message.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>cause</td>
+          <td>The cause
+</td>
+        </tr>
+      </table>
+  </div>
+
+    </div>
+</div>
+
+
+
+
+
+<!-- ========= CONSTRUCTOR DETAIL ======== -->
+<!-- Protected ctors -->
+
+
+
+<!-- ========= METHOD DETAIL ======== -->
+<!-- Public methdos -->
 
 
 

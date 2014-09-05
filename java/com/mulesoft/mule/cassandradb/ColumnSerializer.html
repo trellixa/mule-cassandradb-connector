@@ -306,7 +306,7 @@
               
     <li><h2>Exceptions</h2>
       <ul>
-          <li class="api apilevel-"><a href="../../../../../java/com/mulesoft/mule/cassandradb/CassandraException.html">CassandraException</a></li>
+          <li class="api apilevel-"><a href="../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBException.html">CassandraDBException</a></li>
       </ul>
     </li>
               
@@ -556,6 +556,9 @@ Summary:
         <td class="jd-linkcol" width="100%"><nobr>
         <span class="sympad"><a href="../../../../../com/mulesoft/mule/cassandradb/ColumnSerializer.html#ColumnSerializer()">ColumnSerializer</a></span>()</nobr>
         
+        <div class="jd-descrdiv">Default Constructor
+</div>
+  
   </td></tr>
 
 
@@ -572,6 +575,8 @@ Summary:
         <td class="jd-linkcol" width="100%"><nobr>
         <span class="sympad"><a href="../../../../../com/mulesoft/mule/cassandradb/ColumnSerializer.html#ColumnSerializer(java.lang.String, java.lang.String)">ColumnSerializer</a></span>(String key, String type)</nobr>
         
+        <div class="jd-descrdiv">Parametrized Constructor</div>
+  
   </td></tr>
 
 
@@ -601,8 +606,7 @@ Summary:
         <td class="jd-linkcol" width="100%"><nobr>
         <span class="sympad"><a href="../../../../../com/mulesoft/mule/cassandradb/ColumnSerializer.html#getKey()">getKey</a></span>()</nobr>
         
-        <div class="jd-descrdiv">Retrieves the key
-</div>
+        <div class="jd-descrdiv">Retrieves the key</div>
   
   </td></tr>
 
@@ -620,8 +624,7 @@ Summary:
         <td class="jd-linkcol" width="100%"><nobr>
         <span class="sympad"><a href="../../../../../com/mulesoft/mule/cassandradb/ColumnSerializer.html#getType()">getType</a></span>()</nobr>
         
-        <div class="jd-descrdiv">Retrieves type
-</div>
+        <div class="jd-descrdiv">Retrieves type</div>
   
   </td></tr>
 
@@ -639,8 +642,7 @@ Summary:
         <td class="jd-linkcol" width="100%"><nobr>
         <span class="sympad"><a href="../../../../../com/mulesoft/mule/cassandradb/ColumnSerializer.html#setKey(java.lang.String)">setKey</a></span>(String key)</nobr>
         
-        <div class="jd-descrdiv">Sets key
-</div>
+        <div class="jd-descrdiv">Sets key</div>
   
   </td></tr>
 
@@ -658,8 +660,7 @@ Summary:
         <td class="jd-linkcol" width="100%"><nobr>
         <span class="sympad"><a href="../../../../../com/mulesoft/mule/cassandradb/ColumnSerializer.html#setType(java.lang.String)">setType</a></span>(String type)</nobr>
         
-        <div class="jd-descrdiv">Sets type
-</div>
+        <div class="jd-descrdiv">Sets type</div>
   
   </td></tr>
 
@@ -1008,7 +1009,8 @@ From class
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+  <div class="jd-tagdata jd-tagdescr"><p>Default Constructor
+</p></div>
 
     </div>
 </div>
@@ -1039,17 +1041,18 @@ From class
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+  <div class="jd-tagdata jd-tagdescr"><p>Parametrized Constructor</p></div>
   <div class="jd-tagdata">
       <h5 class="jd-tagtitle">Parameters</h5>
       <table class="jd-tagtable">
         <tr>
           <th>key</td>
-          <td></td>
+          <td>The column name that needs to be serialized</td>
         </tr>
         <tr>
           <th>type</td>
-          <td></td>
+          <td>The type of serializer that will be used to encode the data retrieved from Cassandra DB
+</td>
         </tr>
       </table>
   </div>
@@ -1098,8 +1101,12 @@ From class
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p>Retrieves the key
-</p></div>
+  <div class="jd-tagdata jd-tagdescr"><p>Retrieves the key</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Returns</h5>
+      <ul class="nolist"><li>the result is a key
+</li></ul>
+  </div>
 
     </div>
 </div>
@@ -1130,8 +1137,12 @@ From class
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p>Retrieves type
-</p></div>
+  <div class="jd-tagdata jd-tagdescr"><p>Retrieves type</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Returns</h5>
+      <ul class="nolist"><li>the result is a type of serializer.
+</li></ul>
+  </div>
 
     </div>
 </div>
@@ -1162,14 +1173,14 @@ From class
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p>Sets key
-</p></div>
+  <div class="jd-tagdata jd-tagdescr"><p>Sets key</p></div>
   <div class="jd-tagdata">
       <h5 class="jd-tagtitle">Parameters</h5>
       <table class="jd-tagtable">
         <tr>
           <th>key</td>
-          <td></td>
+          <td>The column name as key.
+</td>
         </tr>
       </table>
   </div>
@@ -1203,14 +1214,14 @@ From class
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p>Sets type
-</p></div>
+  <div class="jd-tagdata jd-tagdescr"><p>Sets type</p></div>
   <div class="jd-tagdata">
       <h5 class="jd-tagtitle">Parameters</h5>
       <table class="jd-tagtable">
         <tr>
           <th>type</td>
-          <td></td>
+          <td>The type of serializer that will be used to encode the data
+</td>
         </tr>
       </table>
   </div>

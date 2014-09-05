@@ -306,7 +306,7 @@
               
     <li><h2>Exceptions</h2>
       <ul>
-          <li class="api apilevel-"><a href="../../../../../java/com/mulesoft/mule/cassandradb/CassandraException.html">CassandraException</a></li>
+          <li class="api apilevel-"><a href="../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBException.html">CassandraDBException</a></li>
       </ul>
     </li>
               
@@ -534,8 +534,7 @@ Summary:
 
 
 <h2>Class Overview</h2>
-<p>Connector allows the user to interact with any Cassandra DB.
- The Apache Cassandra database is the right choice when you need scalability and high availability without compromising performance.
+<p>The Apache Cassandra database is the right choice when you need scalability and high availability without compromising performance.
  Cassandra's ColumnFamily data model offers the convenience of column indexes with the performance of log-structured updates, strong support for materialized views, and powerful built-in caching.</p>
 
 
@@ -589,6 +588,17 @@ Summary:
       <tr class="alt-color api apilevel-" >
           <td class="jd-typecol"><nobr>
           private
+          static
+          final
+          Logger</nobr></td>
+          <td class="jd-linkcol"><a href="../../../../../com/mulesoft/mule/cassandradb/CassandraDBConnector.html#LOGGER">LOGGER</a></td>
+          <td class="jd-descrcol" width="100%"></td>
+      </tr>
+      
+    
+      <tr class=" api apilevel-" >
+          <td class="jd-typecol"><nobr>
+          private
           
           
           Cassandra.Client</nobr></td>
@@ -598,7 +608,7 @@ Summary:
       </tr>
       
     
-      <tr class=" api apilevel-" >
+      <tr class="alt-color api apilevel-" >
           <td class="jd-typecol"><nobr>
           private
           
@@ -609,7 +619,7 @@ Summary:
       </tr>
       
     
-      <tr class="alt-color api apilevel-" >
+      <tr class=" api apilevel-" >
           <td class="jd-typecol"><nobr>
           private
           
@@ -621,7 +631,7 @@ Summary:
       </tr>
       
     
-      <tr class=" api apilevel-" >
+      <tr class="alt-color api apilevel-" >
           <td class="jd-typecol"><nobr>
           private
           
@@ -630,17 +640,6 @@ Summary:
           <td class="jd-linkcol"><a href="../../../../../com/mulesoft/mule/cassandradb/CassandraDBConnector.html#keyspace">keyspace</a></td>
           <td class="jd-descrcol" width="100%">Cassandra keyspace
 </td>
-      </tr>
-      
-    
-      <tr class="alt-color api apilevel-" >
-          <td class="jd-typecol"><nobr>
-          protected
-          static
-          final
-          Log</nobr></td>
-          <td class="jd-linkcol"><a href="../../../../../com/mulesoft/mule/cassandradb/CassandraDBConnector.html#logger">logger</a></td>
-          <td class="jd-descrcol" width="100%"></td>
       </tr>
       
     
@@ -778,8 +777,7 @@ Summary:
         <td class="jd-linkcol" width="100%"><nobr>
         <span class="sympad"><a href="../../../../../com/mulesoft/mule/cassandradb/CassandraDBConnector.html#connectionId()">connectionId</a></span>()</nobr>
         
-        <div class="jd-descrdiv">Connection Identifier
-</div>
+        <div class="jd-descrdiv">Connection Identifier</div>
   
   </td></tr>
 
@@ -1000,6 +998,8 @@ Summary:
         <td class="jd-linkcol" width="100%"><nobr>
         <span class="sympad"><a href="../../../../../com/mulesoft/mule/cassandradb/CassandraDBConnector.html#getConsistencyLevel()">getConsistencyLevel</a></span>()</nobr>
         
+        <div class="jd-descrdiv">Retrieves the Cassandra DB consistency level.</div>
+  
   </td></tr>
 
 
@@ -1069,6 +1069,8 @@ Summary:
         <td class="jd-linkcol" width="100%"><nobr>
         <span class="sympad"><a href="../../../../../com/mulesoft/mule/cassandradb/CassandraDBConnector.html#getKeyspace()">getKeyspace</a></span>()</nobr>
         
+        <div class="jd-descrdiv">Retrieves the Keyspace.</div>
+  
   </td></tr>
 
 
@@ -1085,6 +1087,8 @@ Summary:
         <td class="jd-linkcol" width="100%"><nobr>
         <span class="sympad"><a href="../../../../../com/mulesoft/mule/cassandradb/CassandraDBConnector.html#getPort()">getPort</a></span>()</nobr>
         
+        <div class="jd-descrdiv">Retrieves the Port.</div>
+  
   </td></tr>
 
 
@@ -1198,8 +1202,7 @@ Summary:
         <td class="jd-linkcol" width="100%"><nobr>
         <span class="sympad"><a href="../../../../../com/mulesoft/mule/cassandradb/CassandraDBConnector.html#isConnected()">isConnected</a></span>()</nobr>
         
-        <div class="jd-descrdiv">Are we connected
-</div>
+        <div class="jd-descrdiv">Are we connected</div>
   
   </td></tr>
 
@@ -1308,6 +1311,8 @@ Summary:
         <td class="jd-linkcol" width="100%"><nobr>
         <span class="sympad"><a href="../../../../../com/mulesoft/mule/cassandradb/CassandraDBConnector.html#setConsistencyLevel(org.apache.cassandra.thrift.ConsistencyLevel)">setConsistencyLevel</a></span>(ConsistencyLevel consistencyLevel)</nobr>
         
+        <div class="jd-descrdiv">Set the consistency level.</div>
+  
   </td></tr>
 
 
@@ -1340,6 +1345,8 @@ Summary:
         <td class="jd-linkcol" width="100%"><nobr>
         <span class="sympad"><a href="../../../../../com/mulesoft/mule/cassandradb/CassandraDBConnector.html#setKeyspace(java.lang.String)">setKeyspace</a></span>(String keyspace)</nobr>
         
+        <div class="jd-descrdiv">Set the keyspace</div>
+  
   </td></tr>
 
 
@@ -1807,6 +1814,36 @@ From class
 
 
 
+<A NAME="LOGGER"></A>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        private 
+        static 
+        final 
+        Logger
+      </span>
+        LOGGER
+    </h4>
+      <div class="api-level">
+        
+
+
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+
+    
+    </div>
+</div>
+
+
+
 <A NAME="client"></A>
 
 <div class="jd-details api apilevel-"> 
@@ -1926,36 +1963,6 @@ From class
       
   <div class="jd-tagdata jd-tagdescr"><p>Cassandra keyspace
 </p></div>
-
-    
-    </div>
-</div>
-
-
-
-<A NAME="logger"></A>
-
-<div class="jd-details api apilevel-"> 
-    <h4 class="jd-details-title">
-      <span class="normal">
-        protected 
-        static 
-        final 
-        Log
-      </span>
-        logger
-    </h4>
-      <div class="api-level">
-        
-
-
-        
-  
-
-      </div>
-    <div class="jd-details-descr">
-      
-  <div class="jd-tagdata jd-tagdescr"><p></p></div>
 
     
     </div>
@@ -2136,24 +2143,8 @@ From class
       <h5 class="jd-tagtitle">Throws</h5>
       <table class="jd-tagtable">  
         <tr>
-            <th>UnsupportedEncodingException</td>
-            <td>Exception</td>
-        </tr>  
-        <tr>
-            <th>InvalidRequestException</td>
-            <td>Invalid request could mean keyspace or column family does not exist, required parameters are missing, or a parameter is malformed.</td>
-        </tr>  
-        <tr>
-            <th>UnavailableException</td>
-            <td>Not all the replicas required could be created and/or read.</td>
-        </tr>  
-        <tr>
-            <th>TimedOutException</td>
-            <td>Exception</td>
-        </tr>  
-        <tr>
-            <th>TException</td>
-            <td>Generic exception class for Thrift.
+            <th><a href="../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBException.html">CassandraDBException</a></td>
+            <td>Generic Exception wrapper class for Thrift Exceptions.
 </td>
         </tr>
       </table>
@@ -2210,8 +2201,8 @@ From class
       <h5 class="jd-tagtitle">Throws</h5>
       <table class="jd-tagtable">  
         <tr>
-            <th>Exception</td>
-            <td>Exception
+            <th><a href="../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBException.html">CassandraDBException</a></td>
+            <td>Generic Exception wrapper class for Thrift Exceptions.
 </td>
         </tr>
       </table>
@@ -2299,8 +2290,12 @@ From class
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p>Connection Identifier
-</p></div>
+  <div class="jd-tagdata jd-tagdescr"><p>Connection Identifier</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Returns</h5>
+      <ul class="nolist"><li>the connection identifier.
+</li></ul>
+  </div>
 
     </div>
 </div>
@@ -2342,8 +2337,8 @@ From class
       <h5 class="jd-tagtitle">Throws</h5>
       <table class="jd-tagtable">  
         <tr>
-            <th>TException</td>
-            <td>Generic exception class for Thrift.
+            <th><a href="../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBException.html">CassandraDBException</a></td>
+            <td>Generic Exception wrapper class for Thrift Exceptions.
 </td>
         </tr>
       </table>
@@ -2398,16 +2393,8 @@ From class
       <h5 class="jd-tagtitle">Throws</h5>
       <table class="jd-tagtable">  
         <tr>
-            <th>NotFoundException</td>
-            <td>Exception</td>
-        </tr>  
-        <tr>
-            <th>InvalidRequestException</td>
-            <td>Invalid request could mean keyspace or column family does not exist, required parameters are missing, or a parameter is malformed.</td>
-        </tr>  
-        <tr>
-            <th>TException</td>
-            <td>Generic exception class for Thrift.
+            <th><a href="../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBException.html">CassandraDBException</a></td>
+            <td>Generic Exception wrapper class for Thrift Exceptions.
 </td>
         </tr>
       </table>
@@ -2454,12 +2441,8 @@ From class
       <h5 class="jd-tagtitle">Throws</h5>
       <table class="jd-tagtable">  
         <tr>
-            <th>InvalidRequestException</td>
-            <td>Invalid request could mean keyspace or column family does not exist, required parameters are missing, or a parameter is malformed.</td>
-        </tr>  
-        <tr>
-            <th>TException</td>
-            <td>Generic exception class for Thrift.
+            <th><a href="../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBException.html">CassandraDBException</a></td>
+            <td>Generic Exception wrapper class for Thrift Exceptions.
 </td>
         </tr>
       </table>
@@ -2505,8 +2488,8 @@ From class
       <h5 class="jd-tagtitle">Throws</h5>
       <table class="jd-tagtable">  
         <tr>
-            <th>TException</td>
-            <td>Generic exception class for Thrift.
+            <th><a href="../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBException.html">CassandraDBException</a></td>
+            <td>Generic Exception wrapper class for Thrift Exceptions.
 </td>
         </tr>
       </table>
@@ -2566,12 +2549,8 @@ From class
       <h5 class="jd-tagtitle">Throws</h5>
       <table class="jd-tagtable">  
         <tr>
-            <th>InvalidRequestException</td>
-            <td>Invalid request could mean keyspace or column family does not exist, required parameters are missing, or a parameter is malformed.</td>
-        </tr>  
-        <tr>
-            <th>TException</td>
-            <td>Generic exception class for Thrift.
+            <th><a href="../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBException.html">CassandraDBException</a></td>
+            <td>Generic Exception wrapper class for Thrift Exceptions.
 </td>
         </tr>
       </table>
@@ -2620,12 +2599,8 @@ From class
       <h5 class="jd-tagtitle">Throws</h5>
       <table class="jd-tagtable">  
         <tr>
-            <th>InvalidRequestException</td>
-            <td>Invalid request could mean keyspace or column family does not exist, required parameters are missing, or a parameter is malformed.</td>
-        </tr>  
-        <tr>
-            <th>TException</td>
-            <td>Generic exception class for Thrift.
+            <th><a href="../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBException.html">CassandraDBException</a></td>
+            <td>Generic Exception wrapper class for Thrift Exceptions.
 </td>
         </tr>
       </table>
@@ -2671,8 +2646,8 @@ From class
       <h5 class="jd-tagtitle">Throws</h5>
       <table class="jd-tagtable">  
         <tr>
-            <th>TException</td>
-            <td>Generic exception class for Thrift.
+            <th><a href="../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBException.html">CassandraDBException</a></td>
+            <td>Generic Exception wrapper class for Thrift Exceptions.
 </td>
         </tr>
       </table>
@@ -2718,8 +2693,8 @@ From class
       <h5 class="jd-tagtitle">Throws</h5>
       <table class="jd-tagtable">  
         <tr>
-            <th>TException</td>
-            <td>Generic exception class for Thrift.
+            <th><a href="../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBException.html">CassandraDBException</a></td>
+            <td>Generic Exception wrapper class for Thrift Exceptions.
 </td>
         </tr>
       </table>
@@ -2811,28 +2786,8 @@ From class
       <h5 class="jd-tagtitle">Throws</h5>
       <table class="jd-tagtable">  
         <tr>
-            <th>UnsupportedEncodingException</td>
-            <td>Exception</td>
-        </tr>  
-        <tr>
-            <th>InvalidRequestException</td>
-            <td>Invalid request could mean keyspace or column family does not exist, required parameters are missing, or a parameter is malformed.</td>
-        </tr>  
-        <tr>
-            <th>UnavailableException</td>
-            <td>Not all the replicas required could be created and/or read.</td>
-        </tr>  
-        <tr>
-            <th>TimedOutException</td>
-            <td>Exception</td>
-        </tr>  
-        <tr>
-            <th>SchemaDisagreementException</td>
-            <td>Schemas are not in agreement across all nodes</td>
-        </tr>  
-        <tr>
-            <th>TException</td>
-            <td>Generic exception class for Thrift.
+            <th><a href="../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBException.html">CassandraDBException</a></td>
+            <td>Generic Exception wrapper class for Thrift Exceptions.
 </td>
         </tr>
       </table>
@@ -2896,28 +2851,8 @@ From class
       <h5 class="jd-tagtitle">Throws</h5>
       <table class="jd-tagtable">  
         <tr>
-            <th>UnsupportedEncodingException</td>
-            <td>Exception</td>
-        </tr>  
-        <tr>
-            <th>InvalidRequestException</td>
-            <td>Invalid request could mean keyspace or column family does not exist, required parameters are missing, or a parameter is malformed.</td>
-        </tr>  
-        <tr>
-            <th>UnavailableException</td>
-            <td>Not all the replicas required could be created and/or read.</td>
-        </tr>  
-        <tr>
-            <th>TimedOutException</td>
-            <td>Exception</td>
-        </tr>  
-        <tr>
-            <th>TException</td>
-            <td>Generic exception class for Thrift.</td>
-        </tr>  
-        <tr>
-            <th>NotFoundException</td>
-            <td>A specific column was requested that does not exist.
+            <th><a href="../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBException.html">CassandraDBException</a></td>
+            <td>Generic Exception wrapper class for Thrift Exceptions.
 </td>
         </tr>
       </table>
@@ -2952,7 +2887,12 @@ From class
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+  <div class="jd-tagdata jd-tagdescr"><p>Retrieves the Cassandra DB consistency level.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Returns</h5>
+      <ul class="nolist"><li>the consistency level.
+</li></ul>
+  </div>
 
     </div>
 </div>
@@ -3031,24 +2971,8 @@ From class
       <h5 class="jd-tagtitle">Throws</h5>
       <table class="jd-tagtable">  
         <tr>
-            <th>UnsupportedEncodingException</td>
-            <td>Exception</td>
-        </tr>  
-        <tr>
-            <th>InvalidRequestException</td>
-            <td>Invalid request could mean keyspace or column family does not exist, required parameters are missing, or a parameter is malformed.</td>
-        </tr>  
-        <tr>
-            <th>UnavailableException</td>
-            <td>Not all the replicas required could be created and/or read.</td>
-        </tr>  
-        <tr>
-            <th>TimedOutException</td>
-            <td>Exception</td>
-        </tr>  
-        <tr>
-            <th>TException</td>
-            <td>Generic exception class for Thrift.
+            <th><a href="../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBException.html">CassandraDBException</a></td>
+            <td>Generic Exception wrapper class for Thrift Exceptions.
 </td>
         </tr>
       </table>
@@ -3084,6 +3008,11 @@ From class
     <div class="jd-details-descr">
       
   <div class="jd-tagdata jd-tagdescr"><p></p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Returns</h5>
+      <ul class="nolist"><li>the host connection url.
+</li></ul>
+  </div>
 
     </div>
 </div>
@@ -3181,24 +3110,8 @@ From class
       <h5 class="jd-tagtitle">Throws</h5>
       <table class="jd-tagtable">  
         <tr>
-            <th>UnsupportedEncodingException</td>
-            <td>Exception</td>
-        </tr>  
-        <tr>
-            <th>InvalidRequestException</td>
-            <td>Invalid request could mean keyspace or column family does not exist, required parameters are missing, or a parameter is malformed.</td>
-        </tr>  
-        <tr>
-            <th>UnavailableException</td>
-            <td>Not all the replicas required could be created and/or read.</td>
-        </tr>  
-        <tr>
-            <th>TimedOutException</td>
-            <td>Exception</td>
-        </tr>  
-        <tr>
-            <th>TException</td>
-            <td>Generic exception class for Thrift.
+            <th><a href="../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBException.html">CassandraDBException</a></td>
+            <td>Generic Exception wrapper class for Thrift Exceptions.
 </td>
         </tr>
       </table>
@@ -3233,7 +3146,12 @@ From class
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+  <div class="jd-tagdata jd-tagdescr"><p>Retrieves the Keyspace.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Returns</h5>
+      <ul class="nolist"><li>the keyspace.
+</li></ul>
+  </div>
 
     </div>
 </div>
@@ -3264,7 +3182,12 @@ From class
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+  <div class="jd-tagdata jd-tagdescr"><p>Retrieves the Port.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Returns</h5>
+      <ul class="nolist"><li>the connection port.
+</li></ul>
+  </div>
 
     </div>
 </div>
@@ -3365,24 +3288,8 @@ From class
       <h5 class="jd-tagtitle">Throws</h5>
       <table class="jd-tagtable">  
         <tr>
-            <th>UnsupportedEncodingException</td>
-            <td>Exception</td>
-        </tr>  
-        <tr>
-            <th>InvalidRequestException</td>
-            <td>Invalid request could mean keyspace or column family does not exist, required parameters are missing, or a parameter is malformed.</td>
-        </tr>  
-        <tr>
-            <th>UnavailableException</td>
-            <td>Not all the replicas required could be created and/or read.</td>
-        </tr>  
-        <tr>
-            <th>TimedOutException</td>
-            <td>Exception</td>
-        </tr>  
-        <tr>
-            <th>TException</td>
-            <td>Generic exception class for Thrift.
+            <th><a href="../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBException.html">CassandraDBException</a></td>
+            <td>Generic Exception wrapper class for Thrift Exceptions.
 </td>
         </tr>
       </table>
@@ -3445,28 +3352,8 @@ From class
       <h5 class="jd-tagtitle">Throws</h5>
       <table class="jd-tagtable">  
         <tr>
-            <th>UnsupportedEncodingException</td>
-            <td>Exception</td>
-        </tr>  
-        <tr>
-            <th>InvalidRequestException</td>
-            <td>Invalid request could mean keyspace or column family does not exist, required parameters are missing, or a parameter is malformed.</td>
-        </tr>  
-        <tr>
-            <th>UnavailableException</td>
-            <td>Not all the replicas required could be created and/or read.</td>
-        </tr>  
-        <tr>
-            <th>TimedOutException</td>
-            <td>Exception</td>
-        </tr>  
-        <tr>
-            <th>TException</td>
-            <td>Generic exception class for Thrift.</td>
-        </tr>  
-        <tr>
-            <th>NotFoundException</td>
-            <td>A specific column was requested that does not exist.
+            <th><a href="../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBException.html">CassandraDBException</a></td>
+            <td>Generic Exception wrapper class for Thrift Exceptions.
 </td>
         </tr>
       </table>
@@ -3555,24 +3442,8 @@ From class
       <h5 class="jd-tagtitle">Throws</h5>
       <table class="jd-tagtable">  
         <tr>
-            <th>UnsupportedEncodingException</td>
-            <td>Exception</td>
-        </tr>  
-        <tr>
-            <th>InvalidRequestException</td>
-            <td>Invalid request could mean keyspace or column family does not exist, required parameters are missing, or a parameter is malformed.</td>
-        </tr>  
-        <tr>
-            <th>UnavailableException</td>
-            <td>Not all the replicas required could be created and/or read.</td>
-        </tr>  
-        <tr>
-            <th>TimedOutException</td>
-            <td>Exception</td>
-        </tr>  
-        <tr>
-            <th>TException</td>
-            <td>Generic exception class for Thrift.
+            <th><a href="../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBException.html">CassandraDBException</a></td>
+            <td>Generic Exception wrapper class for Thrift Exceptions.
 </td>
         </tr>
       </table>
@@ -3647,24 +3518,8 @@ From class
       <h5 class="jd-tagtitle">Throws</h5>
       <table class="jd-tagtable">  
         <tr>
-            <th>UnsupportedEncodingException</td>
-            <td>Exception</td>
-        </tr>  
-        <tr>
-            <th>TException</td>
-            <td>Generic exception class for Thrift.</td>
-        </tr>  
-        <tr>
-            <th>TimedOutException</td>
-            <td>Exception</td>
-        </tr>  
-        <tr>
-            <th>UnavailableException</td>
-            <td>Not all the replicas required could be created and/or read.</td>
-        </tr>  
-        <tr>
-            <th>InvalidRequestException</td>
-            <td>Invalid request could mean keyspace or column family does not exist, required parameters are missing, or a parameter is malformed.
+            <th><a href="../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBException.html">CassandraDBException</a></td>
+            <td>Generic Exception wrapper class for Thrift Exceptions.
 </td>
         </tr>
       </table>
@@ -3748,24 +3603,8 @@ From class
       <h5 class="jd-tagtitle">Throws</h5>
       <table class="jd-tagtable">  
         <tr>
-            <th>UnsupportedEncodingException</td>
-            <td>Exception</td>
-        </tr>  
-        <tr>
-            <th>TException</td>
-            <td>Generic exception class for Thrift.</td>
-        </tr>  
-        <tr>
-            <th>TimedOutException</td>
-            <td>Time out of the request</td>
-        </tr>  
-        <tr>
-            <th>UnavailableException</td>
-            <td>Not all the replicas required could be created and/or read.</td>
-        </tr>  
-        <tr>
-            <th>InvalidRequestException</td>
-            <td>Invalid request could mean keyspace or column family does not exist, required parameters are missing, or a parameter is malformed.Why contains an associated error message.
+            <th><a href="../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBException.html">CassandraDBException</a></td>
+            <td>Generic Exception wrapper class for Thrift Exceptions.
 </td>
         </tr>
       </table>
@@ -3800,8 +3639,12 @@ From class
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p>Are we connected
-</p></div>
+  <div class="jd-tagdata jd-tagdescr"><p>Are we connected</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Returns</h5>
+      <ul class="nolist"><li>the connection status of the connector.
+</li></ul>
+  </div>
 
     </div>
 </div>
@@ -3881,24 +3724,8 @@ From class
       <h5 class="jd-tagtitle">Throws</h5>
       <table class="jd-tagtable">  
         <tr>
-            <th>UnsupportedEncodingException</td>
-            <td>Exception</td>
-        </tr>  
-        <tr>
-            <th>InvalidRequestException</td>
-            <td>Invalid request could mean keyspace or column family does not exist, required parameters are missing, or a parameter is malformed.</td>
-        </tr>  
-        <tr>
-            <th>UnavailableException</td>
-            <td>Not all the replicas required could be created and/or read.</td>
-        </tr>  
-        <tr>
-            <th>TimedOutException</td>
-            <td>Exception</td>
-        </tr>  
-        <tr>
-            <th>TException</td>
-            <td>Generic exception class for Thrift.
+            <th><a href="../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBException.html">CassandraDBException</a></td>
+            <td>Generic Exception wrapper class for Thrift Exceptions.
 </td>
         </tr>
       </table>
@@ -3988,24 +3815,8 @@ From class
       <h5 class="jd-tagtitle">Throws</h5>
       <table class="jd-tagtable">  
         <tr>
-            <th>UnsupportedEncodingException</td>
-            <td>Exception</td>
-        </tr>  
-        <tr>
-            <th>InvalidRequestException</td>
-            <td>Invalid request could mean keyspace or column family does not exist, required parameters are missing, or a parameter is malformed.</td>
-        </tr>  
-        <tr>
-            <th>UnavailableException</td>
-            <td>Not all the replicas required could be created and/or read.</td>
-        </tr>  
-        <tr>
-            <th>TimedOutException</td>
-            <td>Exception</td>
-        </tr>  
-        <tr>
-            <th>TException</td>
-            <td>Generic exception class for Thrift.
+            <th><a href="../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBException.html">CassandraDBException</a></td>
+            <td>Generic Exception wrapper class for Thrift Exceptions.
 </td>
         </tr>
       </table>
@@ -4067,8 +3878,8 @@ From class
       <h5 class="jd-tagtitle">Throws</h5>
       <table class="jd-tagtable">  
         <tr>
-            <th>Exception</td>
-            <td>IOException
+            <th><a href="../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBException.html">CassandraDBException</a></td>
+            <td>Generic Exception wrapper class for Thrift Exceptions.
 </td>
         </tr>
       </table>
@@ -4130,24 +3941,8 @@ From class
       <h5 class="jd-tagtitle">Throws</h5>
       <table class="jd-tagtable">  
         <tr>
-            <th>UnsupportedEncodingException</td>
-            <td>Exception</td>
-        </tr>  
-        <tr>
-            <th>InvalidRequestException</td>
-            <td>Invalid request could mean keyspace or column family does not exist, required parameters are missing, or a parameter is malformed.</td>
-        </tr>  
-        <tr>
-            <th>UnavailableException</td>
-            <td>Not all the replicas required could be created and/or read.</td>
-        </tr>  
-        <tr>
-            <th>TimedOutException</td>
-            <td>Exception</td>
-        </tr>  
-        <tr>
-            <th>TException</td>
-            <td>Generic exception class for Thrift.
+            <th><a href="../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBException.html">CassandraDBException</a></td>
+            <td>Generic Exception wrapper class for Thrift Exceptions.
 </td>
         </tr>
       </table>
@@ -4222,13 +4017,14 @@ From class
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+  <div class="jd-tagdata jd-tagdescr"><p>Set the consistency level.</p></div>
   <div class="jd-tagdata">
       <h5 class="jd-tagtitle">Parameters</h5>
       <table class="jd-tagtable">
         <tr>
           <th>consistencyLevel</td>
-          <td></td>
+          <td>Set the consistency level.
+</td>
         </tr>
       </table>
   </div>
@@ -4302,13 +4098,14 @@ From class
       </div>
     <div class="jd-details-descr">
       
-  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+  <div class="jd-tagdata jd-tagdescr"><p>Set the keyspace</p></div>
   <div class="jd-tagdata">
       <h5 class="jd-tagtitle">Parameters</h5>
       <table class="jd-tagtable">
         <tr>
           <th>keyspace</td>
-          <td></td>
+          <td>Set the keyspace.
+</td>
         </tr>
       </table>
   </div>
@@ -4398,12 +4195,8 @@ From class
       <h5 class="jd-tagtitle">Throws</h5>
       <table class="jd-tagtable">  
         <tr>
-            <th>InvalidRequestException</td>
-            <td>Invalid request could mean keyspace or column family does not exist, required parameters are missing, or a parameter is malformed.</td>
-        </tr>  
-        <tr>
-            <th>TException</td>
-            <td>Generic exception class for Thrift.
+            <th><a href="../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBException.html">CassandraDBException</a></td>
+            <td>Generic Exception wrapper class for Thrift Exceptions.
 </td>
         </tr>
       </table>
@@ -4454,22 +4247,14 @@ From class
   </div>
   <div class="jd-tagdata">
       <h5 class="jd-tagtitle">Returns</h5>
-      <ul class="nolist"><li>The new Schema version ID.</li></ul>
+      <ul class="nolist"><li>String The new Schema version ID.</li></ul>
   </div>
   <div class="jd-tagdata">
       <h5 class="jd-tagtitle">Throws</h5>
       <table class="jd-tagtable">  
         <tr>
-            <th>InvalidRequestException</td>
-            <td>Invalid request could mean keyspace or column family does not exist, required parameters are missing, or a parameter is malformed.</td>
-        </tr>  
-        <tr>
-            <th>SchemaDisagreementException</td>
-            <td>Schemas are not in agreement across all nodes</td>
-        </tr>  
-        <tr>
-            <th>TException</td>
-            <td>Generic exception class for Thrift.
+            <th><a href="../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBException.html">CassandraDBException</a></td>
+            <td>Generic Exception wrapper class for Thrift Exceptions.
 </td>
         </tr>
       </table>
@@ -4529,20 +4314,8 @@ From class
       <h5 class="jd-tagtitle">Throws</h5>
       <table class="jd-tagtable">  
         <tr>
-            <th>InvalidRequestException</td>
-            <td>Invalid request could mean keyspace or column family does not exist, required parameters are missing, or a parameter is malformed.</td>
-        </tr>  
-        <tr>
-            <th>SchemaDisagreementException</td>
-            <td>Schemas are not in agreement across all nodes</td>
-        </tr>  
-        <tr>
-            <th>TException</td>
-            <td>Generic exception class for Thrift.</td>
-        </tr>  
-        <tr>
-            <th>UnsupportedEncodingException</td>
-            <td>Exception
+            <th><a href="../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBException.html">CassandraDBException</a></td>
+            <td>Generic Exception wrapper class for Thrift Exceptions.
 </td>
         </tr>
       </table>
@@ -4680,16 +4453,8 @@ From class
       <h5 class="jd-tagtitle">Throws</h5>
       <table class="jd-tagtable">  
         <tr>
-            <th>InvalidRequestException</td>
-            <td>Invalid request could mean keyspace or column family does not exist, required parameters are missing, or a parameter is malformed.</td>
-        </tr>  
-        <tr>
-            <th>SchemaDisagreementException</td>
-            <td>Schemas are not in agreement across all nodes</td>
-        </tr>  
-        <tr>
-            <th>TException</td>
-            <td>Generic exception class for Thrift.
+            <th><a href="../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBException.html">CassandraDBException</a></td>
+            <td>Generic Exception wrapper class for Thrift Exceptions.
 </td>
         </tr>
       </table>
@@ -4747,16 +4512,8 @@ From class
       <h5 class="jd-tagtitle">Throws</h5>
       <table class="jd-tagtable">  
         <tr>
-            <th>InvalidRequestException</td>
-            <td>Invalid request could mean keyspace or column family does not exist, required parameters are missing, or a parameter is malformed.</td>
-        </tr>  
-        <tr>
-            <th>SchemaDisagreementException</td>
-            <td>Schemas are not in agreement across all nodes</td>
-        </tr>  
-        <tr>
-            <th>TException</td>
-            <td>Generic exception class for Thrift.
+            <th><a href="../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBException.html">CassandraDBException</a></td>
+            <td>Generic Exception wrapper class for Thrift Exceptions.
 </td>
         </tr>
       </table>
@@ -4823,16 +4580,8 @@ From class
       <h5 class="jd-tagtitle">Throws</h5>
       <table class="jd-tagtable">  
         <tr>
-            <th>InvalidRequestException</td>
-            <td>Invalid request could mean keyspace or column family does not exist, required parameters are missing, or a parameter is malformed.</td>
-        </tr>  
-        <tr>
-            <th>SchemaDisagreementException</td>
-            <td>Schemas are not in agreement across all nodes</td>
-        </tr>  
-        <tr>
-            <th>TException</td>
-            <td>Generic exception class for Thrift.
+            <th><a href="../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBException.html">CassandraDBException</a></td>
+            <td>Generic Exception wrapper class for Thrift Exceptions.
 </td>
         </tr>
       </table>
@@ -4870,7 +4619,6 @@ From class
   <div class="jd-tagdata jd-tagdescr"><p>Drops a column family. Creates a snapshot and then submits a 'graveyard'
  compaction during which the abandoned files will be deleted.
  <p/>
- <p/>
  </p></div>
   <div class="jd-tagdata">
       <h5 class="jd-tagtitle">Parameters</h5>
@@ -4889,16 +4637,8 @@ From class
       <h5 class="jd-tagtitle">Throws</h5>
       <table class="jd-tagtable">  
         <tr>
-            <th>InvalidRequestException</td>
-            <td>Invalid request could mean keyspace or column family does not exist, required parameters are missing, or a parameter is malformed.</td>
-        </tr>  
-        <tr>
-            <th>SchemaDisagreementException</td>
-            <td>Schemas are not in agreement across all nodes</td>
-        </tr>  
-        <tr>
-            <th>TException</td>
-            <td>Generic exception class for Thrift.
+            <th><a href="../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBException.html">CassandraDBException</a></td>
+            <td>Generic Exception wrapper class for Thrift Exceptions.
 </td>
         </tr>
       </table>
@@ -4954,16 +4694,8 @@ From class
       <h5 class="jd-tagtitle">Throws</h5>
       <table class="jd-tagtable">  
         <tr>
-            <th>InvalidRequestException</td>
-            <td>Invalid request could mean keyspace or column family does not exist, required parameters are missing, or a parameter is malformed.</td>
-        </tr>  
-        <tr>
-            <th>SchemaDisagreementException</td>
-            <td>Schemas are not in agreement across all nodes</td>
-        </tr>  
-        <tr>
-            <th>TException</td>
-            <td>Generic exception class for Thrift.
+            <th><a href="../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBException.html">CassandraDBException</a></td>
+            <td>Generic Exception wrapper class for Thrift Exceptions.
 </td>
         </tr>
       </table>
@@ -5018,16 +4750,8 @@ From class
       <h5 class="jd-tagtitle">Throws</h5>
       <table class="jd-tagtable">  
         <tr>
-            <th>InvalidRequestException</td>
-            <td>Invalid request could mean keyspace or column family does not exist, required parameters are missing, or a parameter is malformed.</td>
-        </tr>  
-        <tr>
-            <th>SchemaDisagreementException</td>
-            <td>Schemas are not in agreement across all nodes</td>
-        </tr>  
-        <tr>
-            <th>TException</td>
-            <td>Generic exception class for Thrift.
+            <th><a href="../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBException.html">CassandraDBException</a></td>
+            <td>Generic Exception wrapper class for Thrift Exceptions.
 </td>
         </tr>
       </table>
@@ -5082,16 +4806,8 @@ From class
       <h5 class="jd-tagtitle">Throws</h5>
       <table class="jd-tagtable">  
         <tr>
-            <th>InvalidRequestException</td>
-            <td>Invalid request could mean keyspace or column family does not exist, required parameters are missing, or a parameter is malformed.</td>
-        </tr>  
-        <tr>
-            <th>SchemaDisagreementException</td>
-            <td>Schemas are not in agreement across all nodes</td>
-        </tr>  
-        <tr>
-            <th>TException</td>
-            <td>Generic exception class for Thrift.
+            <th><a href="../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBException.html">CassandraDBException</a></td>
+            <td>Generic Exception wrapper class for Thrift Exceptions.
 </td>
         </tr>
       </table>
@@ -5142,16 +4858,8 @@ From class
       <h5 class="jd-tagtitle">Throws</h5>
       <table class="jd-tagtable">  
         <tr>
-            <th>InvalidRequestException</td>
-            <td>Invalid request could mean keyspace or column family does not exist, required parameters are missing, or a parameter is malformed.</td>
-        </tr>  
-        <tr>
-            <th>UnavailableException</td>
-            <td>Not all the replicas required could be created and/or read.</td>
-        </tr>  
-        <tr>
-            <th>TException</td>
-            <td>Generic exception class for Thrift.
+            <th><a href="../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBException.html">CassandraDBException</a></td>
+            <td>Generic Exception wrapper class for Thrift Exceptions.
 </td>
         </tr>
       </table>
