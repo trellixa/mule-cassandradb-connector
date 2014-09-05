@@ -12,7 +12,6 @@ package com.mulesoft.mule.cassandradb;
 
 import org.apache.cassandra.thrift.*;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -24,6 +23,7 @@ import java.util.*;
 
 import static junit.framework.Assert.*;
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.when;
 
@@ -36,9 +36,8 @@ public class CassandraDBObjectStoreMockTest {
     private static String superColumn1 = "SuperColumn1";
     private static String column1 = "Column1";
     private static String columnFamily = "ColumnFamily";
-    private static String rowKey = "001";
     private static String columnPath1 = columnFamily + ":" + superColumn1 + ":" + column1;
-
+    private static String rowKey = "001";
     private ColumnParent columnParent;
     private CassandraDBObjectStore objectStore;
     private KsDef keyspaceDefinition;
@@ -124,8 +123,7 @@ public class CassandraDBObjectStoreMockTest {
         result.setColumn(column);
         when(client.get(any(ByteBuffer.class), any(cPath.getClass()), any(ConsistencyLevel.class))).
                 thenReturn(result);
-        String key = "foo";
-        assertNotNull(objectStore.retrieve(key));
+        assertNotNull(objectStore.retrieve("foo"));
     }
 
     @Test
@@ -143,7 +141,6 @@ public class CassandraDBObjectStoreMockTest {
     }
 
     @Test
-    @Ignore
     public void testRemove() throws Exception {
         ColumnOrSuperColumn result = new ColumnOrSuperColumn();
         Column column = new Column();
@@ -153,8 +150,8 @@ public class CassandraDBObjectStoreMockTest {
         try {
             Mockito.when(client.get(any(ByteBuffer.class), any(ColumnPath.class), any(ConsistencyLevel.class)))
                     .thenReturn(result);
-            Mockito.doNothing().when(client)
-                    .remove(any(ByteBuffer.class), any(ColumnPath.class), any(Long.class), any(ConsistencyLevel.class));
+            Mockito.doNothing().when(client).remove(any(ByteBuffer.class), any(ColumnPath.class), anyLong(),
+                    any(ConsistencyLevel.class));
         } catch (Exception e) {
             e.printStackTrace();
         }

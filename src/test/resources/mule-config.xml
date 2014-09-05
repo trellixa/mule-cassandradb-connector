@@ -20,18 +20,11 @@
 
 <mule xmlns="http://www.mulesoft.org/schema/mule/core"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      xmlns:spring="http://www.springframework.org/schema/beans"
-      xmlns:json="http://www.mulesoft.org/schema/mule/json"
       xmlns:cassandradb="http://www.mulesoft.org/schema/mule/cassandradb"
-      xsi:schemaLocation="
-        http://www.springframework.org/schema/beans
-        http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
-        http://www.mulesoft.org/schema/mule/core
+      xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core
         http://www.mulesoft.org/schema/mule/core/current/mule.xsd
         http://www.mulesoft.org/schema/mule/cassandradb
-        http://www.mulesoft.org/schema/mule/cassandradb/current/mule-cassandradb.xsd
-        http://www.mulesoft.org/schema/mule/json
-        http://www.mulesoft.org/schema/mule/json/current/mule-json.xsd">
+        http://www.mulesoft.org/schema/mule/cassandradb/current/mule-cassandradb.xsd">
 
     <cassandradb:config name="myCassandraDB"
                         host="localhost" port="9160"

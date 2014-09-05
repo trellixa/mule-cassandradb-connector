@@ -4,14 +4,14 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.mule.modules</groupId>
     <artifactId>mule-module-cassandradb</artifactId>
-    <version>1.2.1-SNAPSHOT</version>
+    <version>1.2.2-SNAPSHOT</version>
     <packaging>mule-module</packaging>
     <name>Mule CassandraDB Module</name>
 
     <parent>
         <groupId>org.mule.tools.devkit</groupId>
         <artifactId>mule-devkit-parent</artifactId>
-        <version>3.5.1</version>
+        <version>3.5.2-SNAPSHOT</version>
     </parent>
 
     <properties>

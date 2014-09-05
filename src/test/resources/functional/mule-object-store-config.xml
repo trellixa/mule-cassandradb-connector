@@ -1,18 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<mule xmlns:vm="http://www.mulesoft.org/schema/mule/vm" xmlns:tracking="http://www.mulesoft.org/schema/mule/ee/tracking" xmlns:cassandradb="http://www.mulesoft.org/schema/mule/cassandradb" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+<mule xmlns:vm="http://www.mulesoft.org/schema/mule/vm"
+      xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core"
+      xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
       xmlns:spring="http://www.springframework.org/schema/beans" version="EE-3.5.0"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
 http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
 http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
-http://www.mulesoft.org/schema/mule/cassandradb http://www.mulesoft.org/schema/mule/cassandradb/current/mule-cassandradb.xsd
-http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/mule/ee/tracking/current/mule-tracking-ee.xsd
+
+
 http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/current/mule-vm.xsd">
     <spring:beans>
-        <spring:bean id="cassandraObjectStore" name="cassandraObjectStore" class="com.mulesoft.mule.cassandradb.CassandraDBObjectStore" scope="singleton">
+        <spring:bean id="cassandraObjectStore" name="cassandraObjectStore"
+                     class="com.mulesoft.mule.cassandradb.CassandraDBObjectStore" scope="singleton">
             <spring:property name="consistencyLevel" value="ALL"/>
-            <spring:property name="defaultPartitionName" value="idempotentFlow_#[new java.text.SimpleDateFormat('yyyy_MM_dd').format(new Date())]"/>
+            <spring:property name="defaultPartitionName"
+                             value="idempotentFlow_#[new java.text.SimpleDateFormat('yyyy_MM_dd').format(new Date())]"/>
             <spring:property name="host" value="localhost"/>
             <spring:property name="keyspace" value="MuleState"/>
             <spring:property name="port" value="9160"/>

@@ -15,33 +15,41 @@ package com.mulesoft.mule.cassandradb;
  */
 public enum ReplicationStrategy {
     /**
-     *   SimpleStrategy merely places the first replica at the node whose
-     *   token is closest to the key (as determined by the Partitioner), and
-     *   additional replicas on subsequent nodes along the ring in increasing
-     *   Token order.
-     *   
-     *   Supports a single strategy option 'replication_factor' that
-     *   specifies the replication factor for the cluster.
+     * SimpleStrategy merely places the first replica at the node whose
+     * token is closest to the key (as determined by the Partitioner), and
+     * additional replicas on subsequent nodes along the ring in increasing
+     * Token order.
+     * <p/>
+     * Supports a single strategy option 'replication_factor' that
+     * specifies the replication factor for the cluster.
      */
     SIMPLE {
-    	public String toString() {
-    		return "org.apache.cassandra.locator.SimpleStrategy";
-    	}
+        /**
+         * Returns a string representation of the object.
+         * @return a string.
+         */
+        public String toString() {
+            return "org.apache.cassandra.locator.SimpleStrategy";
+        }
     },
     /**
      * With NetworkTopologyStrategy, for each datacenter, you can specify
      * how many replicas you want on a per-keyspace basis. Replicas are
      * placed on different racks within each DC, if possible.
-     * 
+     * <p/>
      * Supports strategy options which specify the replication factor for
      * each datacenter. The replication factor for the entire cluster is the
      * sum of all per datacenter values. Note that the datacenter names
      * must match those used in conf/cassandra-topology.properties.
      */
     NETWORK_TOPOLOGY {
-    	public String toString() {
-    		return "org.apache.cassandra.locator.NetworkTopologyStrategy";
-    	}
+        /**
+         * Returns a string representation of the object.
+         * @return a string.
+         */
+        public String toString() {
+            return "org.apache.cassandra.locator.NetworkTopologyStrategy";
+        }
     },
     /**
      * OldNetworkToplogyStrategy [formerly RackAwareStrategy]
@@ -50,13 +58,17 @@ public enum ReplicationStrategy {
      * guaranteed to get a replica.  Additional replicas after three are
      * placed in ring order after the third without regard to rack or
      * datacenter.
-     * 
+     * <p/>
      * Supports a single strategy option 'replication_factor' that
      * specifies the replication factor for the cluster.
      */
-    OLD_NETWORK_TOPOLOGY{
-    	public String toString() {
-			return "org.apache.cassandra.locator.OldNetworkTopologyStrategy";
-    	}
+    OLD_NETWORK_TOPOLOGY {
+        /**
+         * Returns a string representation of the object.
+         * @return a string.
+         */
+        public String toString() {
+            return "org.apache.cassandra.locator.OldNetworkTopologyStrategy";
+        }
     }
 }

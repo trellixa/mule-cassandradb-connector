@@ -11,8 +11,7 @@
 package com.mulesoft.mule.cassandradb;
 
 import org.apache.cassandra.thrift.*;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.thrift.TException;
 import org.apache.thrift.transport.TFramedTransport;
 import org.apache.thrift.transport.TSocket;
 import org.apache.thrift.transport.TTransport;
@@ -21,21 +20,27 @@ import org.mule.api.MuleContext;
 import org.mule.api.MuleEvent;
 import org.mule.api.context.MuleContextAware;
 import org.mule.api.store.ObjectStoreException;
-import org.mule.api.store.PartitionableExpirableObjectStore;
 import org.mule.api.store.PartitionableObjectStore;
-import org.mule.api.store.QueueStore;
 import org.mule.util.SerializationUtils;
 import org.mule.util.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
 import java.nio.ByteBuffer;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
 
+/**
+ * Cassandra DB Object Store to manipulate object stores with Mule Context.
+ */
 public class CassandraDBObjectStore implements PartitionableObjectStore<Serializable>, MuleContextAware {
 
-    private MuleContext context;
+    private static final Logger LOGGER = LoggerFactory.getLogger(CassandraDBObjectStore.class);
 
-    protected static final Log logger = LogFactory.getLog(CassandraDBObjectStore.class);
+    private MuleContext context;
 
     private String username;
 
@@ -50,6 +55,8 @@ public class CassandraDBObjectStore implements PartitionableObjectStore<Serializ
     private String keyspace;
 
     private static String FALLBACK_PARTITION_NAME = "MULE_OBJECT_STORE";
+
+    private static final String OBJECT = "object";
 
     /**
      * Consistency Level. Can be one of ANY, ONE (default), TWO, THREE, QUORUM,
@@ -79,7 +86,7 @@ public class CassandraDBObjectStore implements PartitionableObjectStore<Serializ
             ColumnParent parent = getColumnFamily(partition);
 
             Column column = new Column();
-            column.setName(CassandraDBUtils.toByteBuffer("object"));
+            column.setName(CassandraDBUtils.toByteBuffer(OBJECT));
             column.setValue(SerializationUtils.serialize(value));
             column.setTimestamp(System.currentTimeMillis());
 
@@ -102,7 +109,7 @@ public class CassandraDBObjectStore implements PartitionableObjectStore<Serializ
             ColumnParent parent = getColumnFamily(partition);
 
             SlicePredicate predicate = new SlicePredicate();
-            predicate.setColumn_names(Collections.singletonList(CassandraDBUtils.toByteBuffer("object")));
+            predicate.setColumn_names(Collections.singletonList(CassandraDBUtils.toByteBuffer(OBJECT)));
 
             return client.get_count(
                     CassandraDBUtils.toByteBuffer(CassandraDBUtils.toByteBuffer(SerializationUtils.serialize(key))),
@@ -124,7 +131,7 @@ public class CassandraDBObjectStore implements PartitionableObjectStore<Serializ
         try {
             ColumnPath cPath = new ColumnPath();
             cPath.setColumn_family(partition);
-            cPath.setColumn(CassandraDBUtils.toByteBuffer("object"));
+            cPath.setColumn(CassandraDBUtils.toByteBuffer(OBJECT));
             ColumnOrSuperColumn result = client.get(
                     CassandraDBUtils.toByteBuffer(CassandraDBUtils.toByteBuffer(SerializationUtils.serialize(key))),
                     cPath,
@@ -168,10 +175,9 @@ public class CassandraDBObjectStore implements PartitionableObjectStore<Serializ
 
     @Override
     public List<Serializable> allKeys(String partition) throws ObjectStoreException {
-
-        List<Serializable> keys = new ArrayList<Serializable>();
-
         try {
+            List<Serializable> keys = new ArrayList<Serializable>();
+
             SlicePredicate predicate = new SlicePredicate();
             predicate.setSlice_range(new SliceRange(ByteBuffer.wrap(new byte[0]), ByteBuffer.wrap(new byte[0]),
                     false, 100));
@@ -184,15 +190,14 @@ public class CassandraDBObjectStore implements PartitionableObjectStore<Serializ
             List<KeySlice> keySlices = client.get_range_slices(parent, predicate, keyRange, ConsistencyLevel.ONE);
 
             for (KeySlice slice : keySlices) {
-                if (slice.getColumns().size() > 0) {
+                if (!slice.getColumns().isEmpty()) {
                     keys.add((Serializable) SerializationUtils.deserialize(slice.getKey()));
                 }
             }
+            return keys;
         } catch (Exception e) {
             throw new ObjectStoreException(e);
         }
-
-        return keys;
     }
 
     @Override
@@ -224,39 +229,42 @@ public class CassandraDBObjectStore implements PartitionableObjectStore<Serializ
     }
 
     @Override
-    public void clear(String partition) throws ObjectStoreException {
-        this.clear(partition);
+    public void clear(String keyspace) throws ObjectStoreException {
+        try {
+            client.system_drop_keyspace(keyspace);
+        } catch (Exception e) {
+            throw new ObjectStoreException(e);
+        }
     }
 
-    private ColumnParent getColumnFamily(String name) throws Exception {
+    private ColumnParent getColumnFamily(String name) throws CassandraDBException { // NOSONAR
         boolean columnFamilyExists = false;
-
-        for (CfDef cfDef : client.describe_keyspace(keyspace).getCf_defs()) {
-            if (cfDef.getName().equals(name)) {
-                columnFamilyExists = true;
+        try {
+            for (CfDef cfDef : client.describe_keyspace(keyspace).getCf_defs()) {
+                if (cfDef.getName().equals(name)) {
+                    columnFamilyExists = true;
+                }
             }
-        }
 
-        if (!columnFamilyExists) {
-            CfDef cfDef = new CfDef();
-            cfDef.setKeyspace(keyspace);
-            cfDef.setName(name);
-            client.system_add_column_family(cfDef);
-        }
+            if (!columnFamilyExists) {
+                CfDef cfDef = new CfDef();
+                cfDef.setKeyspace(keyspace);
+                cfDef.setName(name);
+                client.system_add_column_family(cfDef);
+            }
 
-        return CassandraDBUtils
-                .generateColumnParent(name);
+            return CassandraDBUtils
+                    .generateColumnParent(name);
+        } catch (SchemaDisagreementException e) {
+            throw new CassandraDBException(e.getMessage(), e);
+        } catch (InvalidRequestException e) {
+            throw new CassandraDBException(e.getMessage(), e);
+        } catch (TException e) {
+            throw new CassandraDBException(e.getMessage(), e);
+        } catch (NotFoundException e) {
+            throw new CassandraDBException(e.getMessage(), e);
+        }
     }
-
-//    @Override
-//    public void expire(int entryTTL, int maxEntries, String s) throws ObjectStoreException {
-//        //To change body of implemented methods use File | Settings | File Templates.
-//    }
-//
-//    @Override
-//    public void expire(int entryTTL, int maxEntries) throws ObjectStoreException {
-//        //To change body of implemented methods use File | Settings | File Templates.
-//    }
 
     @Override
     public void open(String partition) throws ObjectStoreException {
@@ -265,16 +273,16 @@ public class CassandraDBObjectStore implements PartitionableObjectStore<Serializ
 
     @Override
     public void open() throws ObjectStoreException {
-        logger.info("Opening connection");
+        LOGGER.info("Opening connection");
         try {
             tr = new TFramedTransport(new TSocket(host, port));
             client = CassandraDBUtils.getClient(host, port, keyspace, username, password, tr);
             client.set_keyspace(keyspace);
-            logger.debug("Connection created: " + tr);
+            LOGGER.debug("Connection created: " + tr);
             tr.open();
 
-        } catch (Throwable e) {
-            logger.error("Unable to connect to Casssandra DB instance", e);
+        } catch (Exception e) {
+            LOGGER.error("Unable to connect to Casssandra DB instance", e);
             throw new ObjectStoreException(e);
         }
     }
@@ -285,7 +293,7 @@ public class CassandraDBObjectStore implements PartitionableObjectStore<Serializ
         } else {
             final MuleEvent muleEvent = RequestContext.getEvent();
             String parsedPartitionName = context.getExpressionManager().parse(defaultPartitionName, muleEvent);
-            logger.debug("PARSED PARTITION NAME: " + parsedPartitionName);
+            LOGGER.debug("PARSED PARTITION NAME: " + parsedPartitionName);
             return parsedPartitionName;
         }
     }

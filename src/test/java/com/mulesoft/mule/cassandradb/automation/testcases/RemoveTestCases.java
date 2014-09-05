@@ -54,8 +54,8 @@ public class RemoveTestCases extends CassandraDBTestParent {
         try {
             runFlowAndGetPayload("get");
         } catch (Exception e) {
-            if (e.getCause() instanceof NotFoundException) {
-                NotFoundException nfe = (NotFoundException) e.getCause();
+            if ((e.getCause()).getCause() instanceof NotFoundException) {
+                NotFoundException nfe = (NotFoundException) (e.getCause()).getCause();
                 assertNull(nfe.getMessage());
             } else {
                 fail(ConnectorTestUtils.getStackTrace(e));
