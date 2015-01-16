@@ -24,16 +24,15 @@ import org.apache.thrift.protocol.TProtocol;
 import org.apache.thrift.transport.TFramedTransport;
 import org.apache.thrift.transport.TSocket;
 import org.apache.thrift.transport.TTransport;
-import org.codehaus.jackson.JsonNode;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.node.ArrayNode;
-import org.codehaus.jackson.node.ObjectNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Utility class to make the transformations from String and collections to the types that the API handles
@@ -93,25 +92,6 @@ public class CassandraDBUtils {
         }
 
         return client;
-    }
-
-    /**
-     * Utility method that converts a Cassandra Column to a JSON Node.
-     *
-     * @param column Basic unit of data within a ColumnFamily.
-     * @return A JSON Node representation of a Cassandra Column.
-     * @throws CassandraDBException Generic Exception wrapper class for Thrift Exceptions.
-     */
-    public static JsonNode columnToJSONNode(Column column) throws CassandraDBException {
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            ObjectNode node = mapper.createObjectNode();
-            node.put(new String(column.getName(), Charset.defaultCharset()), new String(column.getValue(), Charset.defaultCharset()));
-
-            return node;
-        } catch (Exception e) {
-            throw new CassandraDBException(e.getMessage(), e);
-        }
     }
 
     /**
@@ -212,7 +192,7 @@ public class CassandraDBUtils {
             CounterSuperColumn counterSuperColumn = columnOrSuperColumn.getCounter_super_column();
             String counterSuperColumnName = new String(counterSuperColumn.getName(), Charset.defaultCharset());
 
-            Map columnsNode = new HashMap();
+            Map<String, Long> columnsNode = new HashMap<String, Long>();
 
             List<CounterColumn> counterColumns = counterSuperColumn.getColumns();
 
@@ -226,61 +206,6 @@ public class CassandraDBUtils {
     }
 
     /**
-     * Utility method that converts a Column or SuperColumn to a JSON Node representation.
-     *
-     * @param columnOrSuperColumn Column or SuperColumn to be represented as a JSON Node.
-     * @return A JSONNode representation of Column or SuperColumn.
-     * @throws CassandraDBException Generic Exception wrapper class for Thrift Exceptions.
-     */
-    public static JsonNode columnOrSuperColumnToJSONNode(ColumnOrSuperColumn columnOrSuperColumn) throws CassandraDBException {
-
-        if (columnOrSuperColumn.isSetColumn()) {
-            return CassandraDBUtils.columnToJSONNode(columnOrSuperColumn.getColumn());
-        } else {
-            try {
-                ObjectMapper mapper = new ObjectMapper();
-                ObjectNode superColumnNode = mapper.createObjectNode();
-                SuperColumn superColumn = columnOrSuperColumn.getSuper_column();
-                String superColumnName = new String(superColumn.getName(), Charset.defaultCharset());
-                ObjectNode columnsNode = mapper.createObjectNode();
-
-                List<Column> columns = superColumn.columns;
-                for (Column nextColumn : columns) {
-                    String name = new String(nextColumn.getName(), Charset.defaultCharset());
-                    String value = new String(nextColumn.getValue(), Charset.defaultCharset());
-                    columnsNode.put(name, value);
-                }
-                superColumnNode.put(superColumnName, columnsNode);
-
-                return superColumnNode;
-            } catch (Exception e) {
-                throw new CassandraDBException(e.getMessage(), e);
-            }
-        }
-    }
-
-    /**
-     * Utility method that transforms a List<ColumnOrSuperColumn> to a JSON Node.
-     *
-     * @param listOfColumns List of Column or SuperColumn to be transformed.
-     * @return A JSONNode representation of a List of Column or SuperColumn.
-     * @throws CassandraDBException Generic Exception wrapper class for Thrift Exceptions.
-     */
-    public static JsonNode listOfColumnsToJSONNode(List<ColumnOrSuperColumn> listOfColumns) throws CassandraDBException {
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            ArrayNode arrayNode = mapper.createArrayNode();
-            for (ColumnOrSuperColumn nextCol : listOfColumns) {
-                arrayNode.add(columnOrSuperColumnToJSONNode(nextCol));
-            }
-
-            return arrayNode;
-        } catch (Exception e) {
-            throw new CassandraDBException(e.getMessage(), e);
-        }
-    }
-
-    /**
      * Utility method that transforms a List<ColumnOrSuperColumn> to a List of Maps of Column or SuperColumn.
      *
      * @param listOfColumns     List of Column or SuperColumn to be transformed.
@@ -289,29 +214,13 @@ public class CassandraDBUtils {
      * @throws CassandraDBException Generic Exception wrapper class for Thrift Exceptions.
      */
     @SuppressWarnings({"unchecked"})
-    public static List listOfColumnsToMap(List<ColumnOrSuperColumn> listOfColumns,
-                                          List<ColumnSerializer> columnSerializers) throws CassandraDBException {
-        List results = new ArrayList();
+    public static List<Map<Object, Object>> listOfColumnsToMap(List<ColumnOrSuperColumn> listOfColumns,
+                                                               List<ColumnSerializer> columnSerializers) throws CassandraDBException {
+        List<Map<Object, Object>> results = new ArrayList<Map<Object, Object>>();
         for (ColumnOrSuperColumn nextColumn : listOfColumns) {
             results.add(columnOrSuperColumnToMap(nextColumn, columnSerializers));
         }
         return results;
-    }
-
-    /**
-     * Utility method that transforms a JSON Node to a String
-     *
-     * @param node A JSON Node to be transformed.
-     * @return A String representation of a JSON Node.
-     * @throws CassandraDBException Generic Exception wrapper class for Thrift Exceptions.
-     */
-    public static String jsonNodeToString(JsonNode node) throws CassandraDBException {
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            return mapper.writeValueAsString(node);
-        } catch (Exception e) {
-            throw new CassandraDBException(e.getMessage(), e);
-        }
     }
 
     /**
@@ -426,7 +335,7 @@ public class CassandraDBUtils {
      */
     @SuppressWarnings("unchecked")
     public static List<IndexExpression> toIndexExpression(List<IndexExpresion> list) {
-        return (List<IndexExpression>) CollectionUtils.collect((List) list, new Transformer() {
+        return (List<IndexExpression>) CollectionUtils.collect((List<IndexExpresion>) list, new Transformer() {
             @Override
             public Object transform(Object input) {
                 IndexExpresion sExp = (IndexExpresion) input;
@@ -448,7 +357,7 @@ public class CassandraDBUtils {
      */
     @SuppressWarnings("unchecked")
     public static List<CfDef> toColumnDefinition(List<String> list, final String keyspace) {
-        return (List<CfDef>) CollectionUtils.collect((List) list, new Transformer() {
+        return (List<CfDef>) CollectionUtils.collect((List<String>) list, new Transformer() {
             @Override
             public Object transform(Object input) {
                 String name = (String) input;
@@ -460,26 +369,4 @@ public class CassandraDBUtils {
         });
     }
 
-    /**
-     * Utility method to retrieve a ColumnDef list from Column Metadata Map.
-     *
-     * @param columnMetadata a map of column metadata.
-     * @return the result as a List of ColumnDef.
-     */
-    public static List<ColumnDef> toColumnDefinition(Map<String, String> columnMetadata) {
-        List<ColumnDef> list = new ArrayList<ColumnDef>();
-        Iterator it = columnMetadata.entrySet().iterator();
-
-        while (it.hasNext()) {
-            Map.Entry pairs = (Map.Entry) it.next();
-            String key = pairs.getKey().toString();
-            String validationClass = pairs.getValue().toString();
-            ColumnDef cd = new ColumnDef();
-            cd.setName(key.getBytes(Charset.defaultCharset()));
-            cd.setValidation_class(validationClass);
-            list.add(cd);
-        }
-
-        return list;
-    }
 }
