@@ -37,7 +37,7 @@ import java.util.*;
  */
 @Connector(name = "cassandradb", schemaVersion = "3.2", friendlyName = "CassandraDB", minMuleVersion = "3.5")
 public class CassandraDBConnector {
-    private static final Logger LOGGER = LoggerFactory.getLogger(CassandraDBConnector.class);
+    private static final Logger logger = LoggerFactory.getLogger(CassandraDBConnector.class);
 
     /**
      * Host name or IP address
@@ -89,15 +89,15 @@ public class CassandraDBConnector {
     public void connect(@ConnectionKey String username,
                         @Password String password) throws ConnectionException {
         try {
-            LOGGER.debug("Attempting to connect to Cassandra");
+            logger.debug("Attempting to connect to Cassandra");
             tr = new TFramedTransport(new TSocket(host, port)); // NOSONAR
             client = CassandraDBUtils.getClient(host, port, keyspace, username, password, tr);
             tr.open();
             client.set_keyspace(this.getKeyspace());
-            LOGGER.debug("Connection created: " + tr);
+            logger.debug("Connection created: " + tr);
 
         } catch (Exception e) {
-            LOGGER.error("Unable to connect to Casssandra DB instance", e);
+            logger.error("Unable to connect to Casssandra DB instance", e);
             throw new org.mule.api.ConnectionException(
                     org.mule.api.ConnectionExceptionCode.UNKNOWN, null,
                     e.getMessage(), e);
@@ -115,7 +115,7 @@ public class CassandraDBConnector {
                 tr.flush();
                 tr.close();
             } catch (Exception e) {
-                LOGGER.error("Exception thrown while trying to disconnect:", e);
+                logger.error("Exception thrown while trying to disconnect:", e);
             }
         }
     }
@@ -178,14 +178,14 @@ public class CassandraDBConnector {
     public Object get(String rowKey, String columnPath, @Placement(group = "Columns Serializars")
     @Optional List<ColumnSerializer> columnSerializers) throws CassandraDBException {
 
-        LOGGER.debug("Retrieving the data from column path: " + columnPath);
+        logger.debug("Retrieving the data from column path: " + columnPath);
         ColumnPath cPath = CassandraDBUtils.parseColumnPath(columnPath);
         ColumnOrSuperColumn result;
         try {
             result = client.get(
                     CassandraDBUtils.toByteBuffer(rowKey), cPath,
                     this.getConsistencyLevel());
-            LOGGER.debug("ColumnPath : " + cPath + " ; result is : " + result);
+            logger.debug("ColumnPath : " + cPath + " ; result is : " + result);
         } catch (InvalidRequestException e) {
             throw new CassandraDBException(e.getMessage(), e);
         } catch (NotFoundException e) {
@@ -217,14 +217,14 @@ public class CassandraDBConnector {
     @Processor
     public Object getRow(String rowKey, ColumnPath columnPath, @Placement(group = "Columns Serializars")
     @Optional List<ColumnSerializer> columnSerializers) throws CassandraDBException {
-        LOGGER.debug("Retrieving the data from column path: " + columnPath);
+        logger.debug("Retrieving the data from column path: " + columnPath);
 
         ColumnOrSuperColumn result;
         try {
             result = client.get(
                     CassandraDBUtils.toByteBuffer(rowKey), columnPath,
                     this.getConsistencyLevel());
-            LOGGER.debug("ColumnPath : " + columnPath + " ; result is : " + result);
+            logger.debug("ColumnPath : " + columnPath + " ; result is : " + result);
         } catch (InvalidRequestException e) {
             throw new CassandraDBException(e.getMessage(), e);
         } catch (UnavailableException e) {
@@ -273,7 +273,7 @@ public class CassandraDBConnector {
                            @Default("false") boolean reversed,
                            @Default("100") int count,
                            @Placement(group = "Columns Serializars") @Optional List<ColumnSerializer> columnSerializers) throws CassandraDBException {
-        LOGGER.debug("Get Slice: ROW KEY= " + rowKey + " COLUMN PARENT="
+        logger.debug("Get Slice: ROW KEY= " + rowKey + " COLUMN PARENT="
                 + columnParent + " START=" + start + " FINISH=" + finish
                 + " REVERSED=" + reversed + " COUNT=" + count);
 
@@ -710,7 +710,7 @@ public class CassandraDBConnector {
      */
     @Processor
     public Map insertFromMap(@Default("#[payload]") Map content) throws CassandraDBException {
-        LOGGER.debug("Inserting the data: " + content);
+        logger.debug("Inserting the data: " + content);
 
         //Iterate through ColumnFamilies
         for (Object key : content.keySet()) {
@@ -724,7 +724,7 @@ public class CassandraDBConnector {
                 client.system_add_column_family(cfDef);
             } catch (Exception e) {
                 //Assume CF already exists:
-                LOGGER.warn("ColumnFamily '" + nextCFName + "' already exists; message: " + e);
+                logger.warn("ColumnFamily '" + nextCFName + "' already exists; message: " + e);
             }
 
             //Get SuperColumns of this CF
@@ -800,7 +800,7 @@ public class CassandraDBConnector {
      */
     @Processor
     public void batchMutable(@Default("#[payload]") Map content) throws CassandraDBException {
-        LOGGER.debug("Batch mutable called with: " + content);
+        logger.debug("Batch mutable called with: " + content);
 
         try {
             client.batch_mutate(content, this.getConsistencyLevel());

@@ -40,7 +40,7 @@ import java.util.*;
  */
 public class CassandraDBUtils {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(CassandraDBUtils.class);
+    private static final Logger logger = LoggerFactory.getLogger(CassandraDBUtils.class);
 
     private CassandraDBUtils() {
         // Utility class not meant to be instantiated.
@@ -62,7 +62,7 @@ public class CassandraDBUtils {
                                              String username, String password, TTransport tr) throws org.mule.api.ConnectionException {
         Cassandra.Client client;
         try {
-            LOGGER.debug("Attempting to connect to Cassandra");
+            logger.debug("Attempting to connect to Cassandra");
             tr = new TFramedTransport(new TSocket(host, port)); // NOSONAR
             TProtocol proto = new TBinaryProtocol(tr);
             client = new Cassandra.Client(proto);
@@ -79,14 +79,14 @@ public class CassandraDBUtils {
                 client.login(loginRequest);
             }
 
-            LOGGER.debug("Connection created: " + tr);
+            logger.debug("Connection created: " + tr);
         } catch (AuthenticationException authEx) {
-            LOGGER.error("Invalid user name and password", authEx);
+            logger.error("Invalid user name and password", authEx);
             throw new org.mule.api.ConnectionException(
                     org.mule.api.ConnectionExceptionCode.INCORRECT_CREDENTIALS,
                     null, authEx.getMessage(), authEx);
         } catch (Exception e) {
-            LOGGER.error("Unable to connect to Casssandra DB instance", e);
+            logger.error("Unable to connect to Casssandra DB instance", e);
             throw new org.mule.api.ConnectionException(
                     org.mule.api.ConnectionExceptionCode.UNKNOWN, null,
                     e.getMessage(), e);

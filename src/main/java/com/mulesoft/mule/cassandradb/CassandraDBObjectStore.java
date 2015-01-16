@@ -38,7 +38,7 @@ import java.util.List;
  */
 public class CassandraDBObjectStore implements PartitionableObjectStore<Serializable>, MuleContextAware {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(CassandraDBObjectStore.class);
+    private static final Logger logger = LoggerFactory.getLogger(CassandraDBObjectStore.class);
 
     private MuleContext context;
 
@@ -273,16 +273,16 @@ public class CassandraDBObjectStore implements PartitionableObjectStore<Serializ
 
     @Override
     public void open() throws ObjectStoreException {
-        LOGGER.info("Opening connection");
+        logger.info("Opening connection");
         try {
             tr = new TFramedTransport(new TSocket(host, port));
             client = CassandraDBUtils.getClient(host, port, keyspace, username, password, tr);
             client.set_keyspace(keyspace);
-            LOGGER.debug("Connection created: " + tr);
+            logger.debug("Connection created: " + tr);
             tr.open();
 
         } catch (Exception e) {
-            LOGGER.error("Unable to connect to Casssandra DB instance", e);
+            logger.error("Unable to connect to Casssandra DB instance", e);
             throw new ObjectStoreException(e);
         }
     }
@@ -293,7 +293,7 @@ public class CassandraDBObjectStore implements PartitionableObjectStore<Serializ
         } else {
             final MuleEvent muleEvent = RequestContext.getEvent();
             String parsedPartitionName = context.getExpressionManager().parse(defaultPartitionName, muleEvent);
-            LOGGER.debug("PARSED PARTITION NAME: " + parsedPartitionName);
+            logger.debug("PARSED PARTITION NAME: " + parsedPartitionName);
             return parsedPartitionName;
         }
     }
