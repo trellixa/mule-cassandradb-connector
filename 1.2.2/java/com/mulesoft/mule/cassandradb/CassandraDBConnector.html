@@ -1,0 +1,4897 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+  <meta name="description" content="Documentation for Mule CassandraDB Module." />
+
+<link rel="shortcut icon" type="image/x-icon" href="../../../../../favicon.ico" />
+<title>
+
+  CassandraDBConnector
+
+
+| Mule CassandraDB Module
+
+</title>
+<link href="../../../../../assets/mule-developer-docs.css" rel="stylesheet" type="text/css" />
+<link href="../../../../../assets/mule-developer-prettify.css" rel="stylesheet" type="text/css" />
+<link href="../../../../../assets/customizations.css" rel="stylesheet" type="text/css" />
+<link href='http://fonts.googleapis.com/css?family=Ubuntu:300' rel='stylesheet' type='text/css'>
+<script src="../../../../../assets/search_autocomplete.js" type="text/javascript"></script>
+<script src="../../../../../assets/jquery-resizable.min.js" type="text/javascript"></script>
+<script src="../../../../../assets/jquery-toc.js" type="text/javascript"></script>
+<script src="../../../../../assets/mule-developer-docs.js" type="text/javascript"></script>
+<script src="../../../../../assets/prettify.js" type="text/javascript"></script>
+<script type="text/javascript">
+  setToRoot("../../../../../", "../../../../../assets/");
+</script>
+<script src="../../../../../assets/mule-developer-reference.js" type="text/javascript"></script>
+<script src="../../../../../assets/navtree_data.js" type="text/javascript"></script>
+<script src="../../../../../assets/customizations.js" type="text/javascript"></script>
+<noscript>
+  <style type="text/css">
+    html,body{overflow:auto;}
+    #body-content{position:relative; top:0;}
+    #doc-content{overflow:visible;border-left:3px solid #666;}
+    #side-nav{padding:0;}
+    #side-nav .toggle-list ul {display:block;}
+    #resize-packages-nav{border-bottom:3px solid #666;}
+  </style>
+</noscript>
+<script type="text/javascript" charset="utf-8">
+  var is_ssl = ("https:" == document.location.protocol);
+  var asset_host = is_ssl ? "https://s3.amazonaws.com/getsatisfaction.com/" : "http://s3.amazonaws.com/getsatisfaction.com/";
+  document.write(unescape("%3Cscript src='" + asset_host + "javascripts/feedback-v2.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+
+<script type="text/javascript" charset="utf-8">
+  var feedback_widget_options = {};
+
+  feedback_widget_options.display = "overlay";
+  feedback_widget_options.company = "mulesoft";
+  feedback_widget_options.placement = "right";
+  feedback_widget_options.color = "#2F74AE";
+  feedback_widget_options.style = "question";
+
+  feedback_widget_options.tag = "Mule CassandraDB Module";
+
+  feedback_widget_options.limit = "3";
+
+  var feedback_widget = new GSFN.feedback_widget(feedback_widget_options);
+</script>
+</head>
+
+<body class="">
+
+<div id="header">
+    <div id="headerLeft">
+    
+      <span id="masthead-title">Mule CassandraDB Module</span>
+    
+    <ul id="header-tabs" class="">
+    
+    	<li id="guide"><a href="../../../../../guide/install.html">
+	    	<span class="en">Install Guide</span>
+    	</a></li>
+    
+    	<li id="java"><a href="../../../../../java/packages.html">
+	    	<span class="en">Java API Reference</span>
+    	</a></li>
+    
+    	<li id="mule"><a href="../../../../../mule/modules.html">
+	    	<span class="en">Mule API Reference</span>
+    	</a></li>
+    
+    </ul>
+    </div>
+    <div id="headerRight">
+      <a href="http://www.mulesoft.com" tabindex="-1">
+      <img src="../../../../../assets//images/mulesoft-logo-final.gif" alt="MuleSoft" border="0" id="mulesoftlogo"></a><br/>
+      
+  <div id="searchContainer" >
+      <div id="searchForm">
+          <form accept-charset="utf-8" class="gsc-search-box" 
+                onsubmit="return submit_search()">
+            <table class="gsc-search-box" cellpadding="0" cellspacing="0"><tbody>
+                <tr>
+                  <td class="gsc-input">
+                    <input id="search_autocomplete" class="gsc-input" type="text" size="33" autocomplete="off"
+                      title="search developer docs" name="q"
+                      value="search developer docs"
+                      onFocus="search_focus_changed(this, true)"
+                      onBlur="search_focus_changed(this, false)"
+                      onkeydown="return search_changed(event, true, '../../../../../')"
+                      onkeyup="return search_changed(event, false, '../../../../../')" />
+                  <div id="search_filtered_div" class="no-display">
+                      <table id="search_filtered" cellspacing=0>
+                      </table>
+                  </div>
+                  </td>
+                  <td class="gsc-search-button">
+                    <input type="submit" value="Search" title="search" id="search-button" class="gsc-search-button" />
+                  </td>
+                  <td class="gsc-clear-button">
+                    <div title="clear results" class="gsc-clear-button">&nbsp;</div>
+                  </td>
+                </tr></tbody>
+              </table>
+          </form>
+      </div><!-- searchForm -->
+  </div><!-- search -->
+      
+    </div>
+</div><!-- header -->
+
+
+  <div class="g-section g-tpl-240" id="body-content">
+    <div class="g-unit g-first side-nav-resizable" id="side-nav">
+      <div id="swapper">
+        <div id="nav-panels">
+          <div id="resize-packages-nav">
+            <div id="packages-nav">
+              <div id="index-links">
+                <a href="../../../../../java/packages.html"  >Package Index</a> |
+                <a href="../../../../../java/classes.html" >Class Index</a>
+              </div>
+              <ul>
+                
+    <li class="selected api apilevel-">
+  <a href="../../../../../java/com/mulesoft/mule/cassandradb/package-summary.html">com.mulesoft.mule.cassandradb</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../../java/com/mulesoft/mule/cassandradb/adapter/package-summary.html">com.mulesoft.mule.cassandradb.adapter</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../../java/com/mulesoft/mule/cassandradb/adapters/package-summary.html">com.mulesoft.mule.cassandradb.adapters</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../../java/com/mulesoft/mule/cassandradb/agents/package-summary.html">com.mulesoft.mule.cassandradb.agents</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../../java/com/mulesoft/mule/cassandradb/api/package-summary.html">com.mulesoft.mule.cassandradb.api</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../../java/com/mulesoft/mule/cassandradb/api/holders/package-summary.html">com.mulesoft.mule.cassandradb.api.holders</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../../java/com/mulesoft/mule/cassandradb/api/transformers/package-summary.html">com.mulesoft.mule.cassandradb.api.transformers</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../../java/com/mulesoft/mule/cassandradb/config/package-summary.html">com.mulesoft.mule.cassandradb.config</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../../java/com/mulesoft/mule/cassandradb/connection/package-summary.html">com.mulesoft.mule.cassandradb.connection</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../../java/com/mulesoft/mule/cassandradb/connectivity/package-summary.html">com.mulesoft.mule.cassandradb.connectivity</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../../java/com/mulesoft/mule/cassandradb/devkit/package-summary.html">com.mulesoft.mule.cassandradb.devkit</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../../java/com/mulesoft/mule/cassandradb/holders/package-summary.html">com.mulesoft.mule.cassandradb.holders</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../../java/com/mulesoft/mule/cassandradb/pooling/package-summary.html">com.mulesoft.mule.cassandradb.pooling</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../../java/com/mulesoft/mule/cassandradb/process/package-summary.html">com.mulesoft.mule.cassandradb.process</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../../java/com/mulesoft/mule/cassandradb/processors/package-summary.html">com.mulesoft.mule.cassandradb.processors</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../../java/com/mulesoft/mule/cassandradb/transformers/package-summary.html">com.mulesoft.mule.cassandradb.transformers</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../../java/org/apache/cassandra/thrift/holders/package-summary.html">org.apache.cassandra.thrift.holders</a></li>
+    <li class="api apilevel-">
+  <a href="../../../../../java/org/apache/cassandra/thrift/transformers/package-summary.html">org.apache.cassandra.thrift.transformers</a></li>
+              </ul><br/>
+            </div> <!-- end packages -->
+          </div> <!-- end resize-packages -->
+          <div id="classes-nav">
+            <ul>
+              
+              
+    <li><h2>Classes</h2>
+      <ul>
+          <li class="selected api apilevel-"><a href="../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBConnector.html">CassandraDBConnector</a></li>
+          <li class="api apilevel-"><a href="../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBObjectStore.html">CassandraDBObjectStore</a></li>
+          <li class="api apilevel-"><a href="../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBUtils.html">CassandraDBUtils</a></li>
+          <li class="api apilevel-"><a href="../../../../../java/com/mulesoft/mule/cassandradb/ColumnSerializer.html">ColumnSerializer</a></li>
+      </ul>
+    </li>
+              
+              
+    <li><h2>Enums</h2>
+      <ul>
+          <li class="api apilevel-"><a href="../../../../../java/com/mulesoft/mule/cassandradb/ReplicationStrategy.html">ReplicationStrategy</a></li>
+      </ul>
+    </li>
+              
+    <li><h2>Exceptions</h2>
+      <ul>
+          <li class="api apilevel-"><a href="../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBException.html">CassandraDBException</a></li>
+      </ul>
+    </li>
+              
+            </ul><br/>
+          </div><!-- end classes -->
+        </div><!-- end nav-panels -->
+        <div id="nav-tree" style="display:none">
+          <div id="index-links">
+            <a href="../../../../../packages.html"  >Package Index</a> | 
+            <a href="../../../../../classes.html" >Class Index</a>
+          </div>
+        </div><!-- end nav-tree -->
+      </div><!-- end swapper -->
+    </div> <!-- end side-nav -->
+    <script>
+      if (!isMobile) {
+        $("<a href='#' id='nav-swap' onclick='swapNav();return false;' style='font-size:10px;line-height:9px;margin-left:1em;text-decoration:none;'><span id='tree-link'>Use Tree Navigation</span><span id='panel-link' style='display:none'>Use Panel Navigation</span></a>").appendTo("#side-nav");
+        chooseDefaultNav();
+        if ($("#nav-tree").is(':visible')) {
+          init_default_navtree("../../../../../");
+        } else {
+          addLoadEvent(function() {
+            scrollIntoView("packages-nav");
+            scrollIntoView("classes-nav");
+          });
+        }
+        $("#swapper").css({borderBottom:"2px solid #aaa"});
+      } else {
+        swapNav(); // tree view should be used on mobile
+      }
+    </script>
+
+
+
+<div class="g-unit" id="doc-content">
+
+<div id="api-info-block">
+
+
+
+  
+   
+  
+  
+  
+  
+
+
+<div class="sum-details-links">
+
+
+Summary:
+
+
+
+
+
+
+
+  <a href="#lfields">Fields</a>
+  
+
+
+
+  &#124; <a href="#pubctors">Ctors</a>
+  
+
+
+
+  &#124; <a href="#pubmethods">Methods</a>
+  
+
+
+
+  &#124; <a href="#inhmethods">Inherited Methods</a>
+
+&#124; <a href="#" onclick="return toggleAllClassInherited()" id="toggleAllClassInherited">[Expand All]</a>
+
+</div><!-- end sum-details-links -->
+<div class="api-level">
+  
+
+
+  
+  
+
+</div>
+</div><!-- end api-info-block -->
+
+
+<!-- ======== START OF CLASS DATA ======== -->
+
+<div id="jd-header">
+    public
+     
+     
+    
+    class
+<h1>CassandraDBConnector</h1>
+
+
+
+  
+    extends Object<br/>
+  
+  
+  
+
+  
+  
+  
+
+
+</div><!-- end header -->
+
+<div id="naMessage"></div>
+
+<div id="jd-content" class="api apilevel-">
+<table class="jd-inheritance-table">
+
+
+    <tr>
+        
+        <td colspan="2" class="jd-inheritance-class-cell">java.lang.Object</td>
+    </tr>
+    
+
+    <tr>
+        
+            <td class="jd-inheritance-space">&nbsp;&nbsp;&nbsp;&#x21b3;</td>
+        
+        <td colspan="1" class="jd-inheritance-class-cell">com.mulesoft.mule.cassandradb.CassandraDBConnector</td>
+    </tr>
+    
+
+</table>
+
+
+
+
+<table class="jd-sumtable jd-sumtable-subclasses"><tr><td colspan="12" style="border:none;margin:0;padding:0;">
+
+  <a href="#" onclick="return toggleInherited(this, null)" id="subclasses-direct" class="jd-expando-trigger closed"
+          ><img id="subclasses-direct-trigger"
+          src="../../../../../assets/images/triangle-closed.png"
+          class="jd-expando-trigger-img" /></a>Known Direct Subclasses
+
+  <div id="subclasses-direct">
+      <div id="subclasses-direct-list"
+              class="jd-inheritedlinks"
+              
+              >
+          
+            
+              <a href="../../../../../java/com/mulesoft/mule/cassandradb/adapters/CassandraDBConnectorCapabilitiesAdapter.html">CassandraDBConnectorCapabilitiesAdapter</a>
+            
+          
+      </div>
+      <div id="subclasses-direct-summary"
+              style="display: none;"
+              >
+  <table class="jd-sumtable-expando">
+        <tr class="alt-color api apilevel-" >
+              <td class="jd-linkcol"><a href="../../../../../java/com/mulesoft/mule/cassandradb/adapters/CassandraDBConnectorCapabilitiesAdapter.html">CassandraDBConnectorCapabilitiesAdapter</a></td>
+              <td class="jd-descrcol" width="100%">A <code>CassandraDBConnectorCapabilitiesAdapter</code> is a wrapper around <code><a href="../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBConnector.html">CassandraDBConnector</a></code> that implements org.mule.api.Capabilities interface.&nbsp;</td>
+          </tr>
+  </table>
+      </div>
+  </div>
+</td></tr></table>
+
+
+
+<table class="jd-sumtable jd-sumtable-subclasses"><tr><td colspan="12" style="border:none;margin:0;padding:0;">
+
+  <a href="#" onclick="return toggleInherited(this, null)" id="subclasses-indirect" class="jd-expando-trigger closed"
+          ><img id="subclasses-indirect-trigger"
+          src="../../../../../assets/images/triangle-closed.png"
+          class="jd-expando-trigger-img" /></a>Known Indirect Subclasses
+
+  <div id="subclasses-indirect">
+      <div id="subclasses-indirect-list"
+              class="jd-inheritedlinks"
+              
+              >
+          
+            
+              <a href="../../../../../java/com/mulesoft/mule/cassandradb/adapters/CassandraDBConnectorConnectionIdentifierAdapter.html">CassandraDBConnectorConnectionIdentifierAdapter</a>,
+            
+              <a href="../../../../../java/com/mulesoft/mule/cassandradb/adapters/CassandraDBConnectorLifecycleAdapter.html">CassandraDBConnectorLifecycleAdapter</a>,
+            
+              <a href="../../../../../java/com/mulesoft/mule/cassandradb/adapters/CassandraDBConnectorMetadataAdapater.html">CassandraDBConnectorMetadataAdapater</a>,
+            
+              <a href="../../../../../java/com/mulesoft/mule/cassandradb/adapters/CassandraDBConnectorProcessAdapter.html">CassandraDBConnectorProcessAdapter</a>
+            
+          
+      </div>
+      <div id="subclasses-indirect-summary"
+              style="display: none;"
+              >
+  <table class="jd-sumtable-expando">
+        <tr class="alt-color api apilevel-" >
+              <td class="jd-linkcol"><a href="../../../../../java/com/mulesoft/mule/cassandradb/adapters/CassandraDBConnectorConnectionIdentifierAdapter.html">CassandraDBConnectorConnectionIdentifierAdapter</a></td>
+              <td class="jd-descrcol" width="100%">A <code>CassandraDBConnectorConnectionIdentifierAdapter</code> is a wrapper around <code><a href="../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBConnector.html">CassandraDBConnector</a></code> that implements org.mule.devkit.dynamic.api.helper.Connection interface.&nbsp;</td>
+          </tr>
+        <tr class=" api apilevel-" >
+              <td class="jd-linkcol"><a href="../../../../../java/com/mulesoft/mule/cassandradb/adapters/CassandraDBConnectorLifecycleAdapter.html">CassandraDBConnectorLifecycleAdapter</a></td>
+              <td class="jd-descrcol" width="100%">A <code>CassandraDBConnectorLifecycleAdapter</code> is a wrapper around <code><a href="../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBConnector.html">CassandraDBConnector</a></code> that adds lifecycle methods to the pojo.&nbsp;</td>
+          </tr>
+        <tr class="alt-color api apilevel-" >
+              <td class="jd-linkcol"><a href="../../../../../java/com/mulesoft/mule/cassandradb/adapters/CassandraDBConnectorMetadataAdapater.html">CassandraDBConnectorMetadataAdapater</a></td>
+              <td class="jd-descrcol" width="100%">A <code>CassandraDBConnectorMetadataAdapater</code> is a wrapper around <code><a href="../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBConnector.html">CassandraDBConnector</a></code> that adds support for querying metadata about the extension.&nbsp;</td>
+          </tr>
+        <tr class=" api apilevel-" >
+              <td class="jd-linkcol"><a href="../../../../../java/com/mulesoft/mule/cassandradb/adapters/CassandraDBConnectorProcessAdapter.html">CassandraDBConnectorProcessAdapter</a></td>
+              <td class="jd-descrcol" width="100%">A <code>CassandraDBConnectorProcessAdapter</code> is a wrapper around <code><a href="../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBConnector.html">CassandraDBConnector</a></code> that enables custom processing strategies.&nbsp;</td>
+          </tr>
+  </table>
+      </div>
+  </div>
+</td></tr></table>
+
+
+<div class="jd-descr">
+
+
+<h2>Class Overview</h2>
+<p>The Apache Cassandra database is the right choice when you need scalability and high availability without compromising performance.
+ Cassandra's ColumnFamily data model offers the convenience of column indexes with the performance of log-structured updates, strong support for materialized views, and powerful built-in caching.</p>
+
+
+
+
+
+</div><!-- jd-descr -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="jd-descr">
+
+
+<h2>Summary</h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- =========== FIELD SUMMARY =========== -->
+<table id="lfields" class="jd-sumtable"><tr><th colspan="12">Fields</th></tr>
+
+
+    
+      <tr class="alt-color api apilevel-" >
+          <td class="jd-typecol"><nobr>
+          private
+          static
+          final
+          Logger</nobr></td>
+          <td class="jd-linkcol"><a href="../../../../../com/mulesoft/mule/cassandradb/CassandraDBConnector.html#LOGGER">LOGGER</a></td>
+          <td class="jd-descrcol" width="100%"></td>
+      </tr>
+      
+    
+      <tr class=" api apilevel-" >
+          <td class="jd-typecol"><nobr>
+          private
+          
+          
+          Cassandra.Client</nobr></td>
+          <td class="jd-linkcol"><a href="../../../../../com/mulesoft/mule/cassandradb/CassandraDBConnector.html#client">client</a></td>
+          <td class="jd-descrcol" width="100%">Cassandra Client
+</td>
+      </tr>
+      
+    
+      <tr class="alt-color api apilevel-" >
+          <td class="jd-typecol"><nobr>
+          private
+          
+          
+          ConsistencyLevel</nobr></td>
+          <td class="jd-linkcol"><a href="../../../../../com/mulesoft/mule/cassandradb/CassandraDBConnector.html#consistencyLevel">consistencyLevel</a></td>
+          <td class="jd-descrcol" width="100%">Consistency Level.</td>
+      </tr>
+      
+    
+      <tr class=" api apilevel-" >
+          <td class="jd-typecol"><nobr>
+          private
+          
+          
+          String</nobr></td>
+          <td class="jd-linkcol"><a href="../../../../../com/mulesoft/mule/cassandradb/CassandraDBConnector.html#host">host</a></td>
+          <td class="jd-descrcol" width="100%">Host name or IP address
+</td>
+      </tr>
+      
+    
+      <tr class="alt-color api apilevel-" >
+          <td class="jd-typecol"><nobr>
+          private
+          
+          
+          String</nobr></td>
+          <td class="jd-linkcol"><a href="../../../../../com/mulesoft/mule/cassandradb/CassandraDBConnector.html#keyspace">keyspace</a></td>
+          <td class="jd-descrcol" width="100%">Cassandra keyspace
+</td>
+      </tr>
+      
+    
+      <tr class=" api apilevel-" >
+          <td class="jd-typecol"><nobr>
+          private
+          
+          
+          int</nobr></td>
+          <td class="jd-linkcol"><a href="../../../../../com/mulesoft/mule/cassandradb/CassandraDBConnector.html#port">port</a></td>
+          <td class="jd-descrcol" width="100%">Port (default is 9160)
+</td>
+      </tr>
+      
+    
+      <tr class="alt-color api apilevel-" >
+          <td class="jd-typecol"><nobr>
+          private
+          
+          
+          TTransport</nobr></td>
+          <td class="jd-linkcol"><a href="../../../../../com/mulesoft/mule/cassandradb/CassandraDBConnector.html#tr">tr</a></td>
+          <td class="jd-descrcol" width="100%">Generic class that encapsulates the I/O layer.</td>
+      </tr>
+      
+    
+
+</table>
+
+
+
+
+
+
+
+<!-- ======== CONSTRUCTOR SUMMARY ======== -->
+<table id="pubctors" class="jd-sumtable"><tr><th colspan="12">Public Constructors</th></tr>
+
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            
+            
+            
+            
+            
+            </nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad"><a href="../../../../../com/mulesoft/mule/cassandradb/CassandraDBConnector.html#CassandraDBConnector()">CassandraDBConnector</a></span>()</nobr>
+        
+  </td></tr>
+
+
+
+</table>
+
+
+
+
+
+
+<!-- ========== METHOD SUMMARY =========== -->
+<table id="pubmethods" class="jd-sumtable"><tr><th colspan="12">Public Methods</th></tr>
+
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            
+            
+            
+            
+            
+            void</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad"><a href="../../../../../com/mulesoft/mule/cassandradb/CassandraDBConnector.html#add(java.lang.String, java.lang.String, java.lang.String, int)">add</a></span>(String rowKey, String columnParent, String counterName, int counterValue)</nobr>
+        
+        <div class="jd-descrdiv">Increments a CounterColumn consisting of (name, value) at the given
+ ColumnParent.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            
+            
+            
+            
+            
+            void</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad"><a href="../../../../../com/mulesoft/mule/cassandradb/CassandraDBConnector.html#batchMutable(java.util.Map)">batchMutable</a></span>(Map content)</nobr>
+        
+        <div class="jd-descrdiv">Executes the specified mutations on the keyspace.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            
+            
+            
+            
+            
+            void</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad"><a href="../../../../../com/mulesoft/mule/cassandradb/CassandraDBConnector.html#connect(java.lang.String, java.lang.String)">connect</a></span>(String username, String password)</nobr>
+        
+        <div class="jd-descrdiv">Method invoked when a connection is required</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            
+            
+            
+            
+            
+            String</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad"><a href="../../../../../com/mulesoft/mule/cassandradb/CassandraDBConnector.html#connectionId()">connectionId</a></span>()</nobr>
+        
+        <div class="jd-descrdiv">Connection Identifier</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            
+            
+            
+            
+            
+            String</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad"><a href="../../../../../com/mulesoft/mule/cassandradb/CassandraDBConnector.html#describeClusterName()">describeClusterName</a></span>()</nobr>
+        
+        <div class="jd-descrdiv">Gets the name of the cluster.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            
+            
+            
+            
+            
+            Object</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad"><a href="../../../../../com/mulesoft/mule/cassandradb/CassandraDBConnector.html#describeKeyspace(java.lang.String)">describeKeyspace</a></span>(String keyspace)</nobr>
+        
+        <div class="jd-descrdiv">Gets information about the specified keyspace.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            
+            
+            
+            
+            
+            List</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad"><a href="../../../../../com/mulesoft/mule/cassandradb/CassandraDBConnector.html#describeKeyspaces()">describeKeyspaces</a></span>()</nobr>
+        
+        <div class="jd-descrdiv">Gets a list of all the keyspaces configured for the cluster.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            
+            
+            
+            
+            
+            String</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad"><a href="../../../../../com/mulesoft/mule/cassandradb/CassandraDBConnector.html#describePartitioner()">describePartitioner</a></span>()</nobr>
+        
+        <div class="jd-descrdiv">Gets the name of the partitioner for the cluster.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            
+            
+            
+            
+            
+            List</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad"><a href="../../../../../com/mulesoft/mule/cassandradb/CassandraDBConnector.html#describeRing(java.lang.String)">describeRing</a></span>(String keyspace)</nobr>
+        
+        <div class="jd-descrdiv">Gets the token ring; a map of ranges to host addresses.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            
+            
+            
+            
+            
+            Map</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad"><a href="../../../../../com/mulesoft/mule/cassandradb/CassandraDBConnector.html#describeSchemaVersions()">describeSchemaVersions</a></span>()</nobr>
+        
+        <div class="jd-descrdiv">For each schema version present in the cluster, returns a list of nodes
+ at that version.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            
+            
+            
+            
+            
+            String</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad"><a href="../../../../../com/mulesoft/mule/cassandradb/CassandraDBConnector.html#describeSnitch()">describeSnitch</a></span>()</nobr>
+        
+        <div class="jd-descrdiv">Gets the name of the snitch used for the cluster.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            
+            
+            
+            
+            
+            String</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad"><a href="../../../../../com/mulesoft/mule/cassandradb/CassandraDBConnector.html#describeVersion()">describeVersion</a></span>()</nobr>
+        
+        <div class="jd-descrdiv">Gets the Thrift API version.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            
+            
+            
+            
+            
+            void</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad"><a href="../../../../../com/mulesoft/mule/cassandradb/CassandraDBConnector.html#disconnect()">disconnect</a></span>()</nobr>
+        
+        <div class="jd-descrdiv">Disconnect
+</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            
+            
+            
+            
+            
+            Object</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad"><a href="../../../../../com/mulesoft/mule/cassandradb/CassandraDBConnector.html#executeCqlQuery(java.lang.String, org.apache.cassandra.thrift.Compression)">executeCqlQuery</a></span>(String query, Compression compression)</nobr>
+        
+        <div class="jd-descrdiv">Executes a CQL (Cassandra Query Language) statement and returns a
+ CqlResult containing the results.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            
+            
+            
+            
+            
+            Object</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad"><a href="../../../../../com/mulesoft/mule/cassandradb/CassandraDBConnector.html#get(java.lang.String, java.lang.String, java.util.List<com.mulesoft.mule.cassandradb.ColumnSerializer>)">get</a></span>(String rowKey, String columnPath, List&lt;<a href="../../../../../java/com/mulesoft/mule/cassandradb/ColumnSerializer.html">ColumnSerializer</a>&gt; columnSerializers)</nobr>
+        
+        <div class="jd-descrdiv">Get Column or SuperColumn by the path
+ <p/>
+ </div>
+  
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            
+            
+            
+            
+            
+            ConsistencyLevel</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad"><a href="../../../../../com/mulesoft/mule/cassandradb/CassandraDBConnector.html#getConsistencyLevel()">getConsistencyLevel</a></span>()</nobr>
+        
+        <div class="jd-descrdiv">Retrieves the Cassandra DB consistency level.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            
+            
+            
+            
+            
+            int</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad"><a href="../../../../../com/mulesoft/mule/cassandradb/CassandraDBConnector.html#getCount(java.lang.String, java.lang.String, java.lang.String, java.lang.String, boolean, int)">getCount</a></span>(String rowKey, String columnParent, String start, String finish, boolean reversed, int count)</nobr>
+        
+        <div class="jd-descrdiv">Counts the columns present in column_parent within the predicate.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            
+            
+            
+            
+            
+            String</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad"><a href="../../../../../com/mulesoft/mule/cassandradb/CassandraDBConnector.html#getHost()">getHost</a></span>()</nobr>
+        
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            
+            
+            
+            
+            
+            Object</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad"><a href="../../../../../com/mulesoft/mule/cassandradb/CassandraDBConnector.html#getIndexedSlices(java.lang.String, java.lang.String, java.lang.String, boolean, int, int, java.lang.String, java.util.List<com.mulesoft.mule.cassandradb.api.IndexExpresion>)">getIndexedSlices</a></span>(String columnParent, String start, String finish, boolean reversed, int count, int clauseCount, String clauseStartKey, List&lt;<a href="../../../../../java/com/mulesoft/mule/cassandradb/api/IndexExpresion.html">IndexExpresion</a>&gt; expressionList)</nobr>
+        
+        <div class="jd-descrdiv">Like get_range_slices, returns a list of slices, but uses IndexClause
+ instead of KeyRange.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            
+            
+            
+            
+            
+            String</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad"><a href="../../../../../com/mulesoft/mule/cassandradb/CassandraDBConnector.html#getKeyspace()">getKeyspace</a></span>()</nobr>
+        
+        <div class="jd-descrdiv">Retrieves the Keyspace.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            
+            
+            
+            
+            
+            int</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad"><a href="../../../../../com/mulesoft/mule/cassandradb/CassandraDBConnector.html#getPort()">getPort</a></span>()</nobr>
+        
+        <div class="jd-descrdiv">Retrieves the Port.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            
+            
+            
+            
+            
+            Object</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad"><a href="../../../../../com/mulesoft/mule/cassandradb/CassandraDBConnector.html#getRangeSlices(java.lang.String, java.lang.String, java.lang.String, boolean, int, java.lang.String, java.lang.String, java.lang.String, java.lang.String, int)">getRangeSlices</a></span>(String columnParent, String start, String finish, boolean reversed, int count, String startKey, String endKey, String startToken, String endToken, int keyRangeCount)</nobr>
+        
+        <div class="jd-descrdiv">Replaces get_range_slice.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            
+            
+            
+            
+            
+            Object</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad"><a href="../../../../../com/mulesoft/mule/cassandradb/CassandraDBConnector.html#getRow(java.lang.String, org.apache.cassandra.thrift.ColumnPath, java.util.List<com.mulesoft.mule.cassandradb.ColumnSerializer>)">getRow</a></span>(String rowKey, ColumnPath columnPath, List&lt;<a href="../../../../../java/com/mulesoft/mule/cassandradb/ColumnSerializer.html">ColumnSerializer</a>&gt; columnSerializers)</nobr>
+        
+        <div class="jd-descrdiv">Get Column or SuperColumn by the path
+ <p/>
+ </div>
+  
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            
+            
+            
+            
+            
+            Object</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad"><a href="../../../../../com/mulesoft/mule/cassandradb/CassandraDBConnector.html#getSlice(java.lang.String, java.lang.String, java.lang.String, java.lang.String, boolean, int, java.util.List<com.mulesoft.mule.cassandradb.ColumnSerializer>)">getSlice</a></span>(String rowKey, String columnParent, String start, String finish, boolean reversed, int count, List&lt;<a href="../../../../../java/com/mulesoft/mule/cassandradb/ColumnSerializer.html">ColumnSerializer</a>&gt; columnSerializers)</nobr>
+        
+        <div class="jd-descrdiv">Get the group of columns contained by column_parent (either a
+ ColumnFamily name or a ColumnFamily/SuperColumn name pair) specified by
+ the given SlicePredicate (start, finish, reversed and count) parameters.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            
+            
+            
+            
+            
+            void</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad"><a href="../../../../../com/mulesoft/mule/cassandradb/CassandraDBConnector.html#insert(java.lang.String, java.lang.String, java.lang.String, java.lang.String, int)">insert</a></span>(String rowKey, String columnParent, String columnName, String columnValue, int ttl)</nobr>
+        
+        <div class="jd-descrdiv">Insert a Column consisting of (name, value, timestamp, ttl) at the given
+ ColumnParent.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            
+            
+            
+            
+            
+            Map</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad"><a href="../../../../../com/mulesoft/mule/cassandradb/CassandraDBConnector.html#insertFromMap(java.util.Map)">insertFromMap</a></span>(Map content)</nobr>
+        
+        <div class="jd-descrdiv">Insert object into the database
+ <p/>
+ </div>
+  
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            
+            
+            
+            
+            
+            boolean</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad"><a href="../../../../../com/mulesoft/mule/cassandradb/CassandraDBConnector.html#isConnected()">isConnected</a></span>()</nobr>
+        
+        <div class="jd-descrdiv">Are we connected</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            
+            
+            
+            
+            
+            Object</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad"><a href="../../../../../com/mulesoft/mule/cassandradb/CassandraDBConnector.html#multiGetCount(java.util.List<java.lang.String>, java.lang.String, java.lang.String, java.lang.String, boolean, int)">multiGetCount</a></span>(List&lt;String&gt; rowKeys, String columnParent, String start, String finish, boolean reversed, int count)</nobr>
+        
+        <div class="jd-descrdiv">A combination of multiget_slice and get_count.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            
+            
+            
+            
+            
+            Object</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad"><a href="../../../../../com/mulesoft/mule/cassandradb/CassandraDBConnector.html#multiGetSlice(java.util.List<java.lang.String>, java.lang.String, java.lang.String, java.lang.String, boolean, int, java.util.List<com.mulesoft.mule.cassandradb.ColumnSerializer>)">multiGetSlice</a></span>(List&lt;String&gt; rowKeys, String columnParent, String start, String finish, boolean reversed, int count, List&lt;<a href="../../../../../java/com/mulesoft/mule/cassandradb/ColumnSerializer.html">ColumnSerializer</a>&gt; columnSerializers)</nobr>
+        
+        <div class="jd-descrdiv">Retrieves slices for column_parent and predicate on each of the given
+ keys in parallel.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            
+            
+            
+            
+            
+            void</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad"><a href="../../../../../com/mulesoft/mule/cassandradb/CassandraDBConnector.html#remove(java.lang.String, java.lang.String)">remove</a></span>(String rowKey, String columnPath)</nobr>
+        
+        <div class="jd-descrdiv">Remove data from the row specified by key at the granularity specified by
+ column_path, and the given timestamp.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            
+            
+            
+            
+            
+            void</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad"><a href="../../../../../com/mulesoft/mule/cassandradb/CassandraDBConnector.html#removeCounter(java.lang.String, java.lang.String)">removeCounter</a></span>(String rowKey, String columnPath)</nobr>
+        
+        <div class="jd-descrdiv">Remove a counter from the row specified by key at the granularity
+ specified by column_path.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            
+            
+            
+            
+            
+            void</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad"><a href="../../../../../com/mulesoft/mule/cassandradb/CassandraDBConnector.html#setClient(org.apache.cassandra.thrift.Cassandra.Client)">setClient</a></span>(Cassandra.Client client)</nobr>
+        
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            
+            
+            
+            
+            
+            void</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad"><a href="../../../../../com/mulesoft/mule/cassandradb/CassandraDBConnector.html#setConsistencyLevel(org.apache.cassandra.thrift.ConsistencyLevel)">setConsistencyLevel</a></span>(ConsistencyLevel consistencyLevel)</nobr>
+        
+        <div class="jd-descrdiv">Set the consistency level.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            
+            
+            
+            
+            
+            void</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad"><a href="../../../../../com/mulesoft/mule/cassandradb/CassandraDBConnector.html#setHost(java.lang.String)">setHost</a></span>(String host)</nobr>
+        
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            
+            
+            
+            
+            
+            void</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad"><a href="../../../../../com/mulesoft/mule/cassandradb/CassandraDBConnector.html#setKeyspace(java.lang.String)">setKeyspace</a></span>(String keyspace)</nobr>
+        
+        <div class="jd-descrdiv">Set the keyspace</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            
+            
+            
+            
+            
+            void</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad"><a href="../../../../../com/mulesoft/mule/cassandradb/CassandraDBConnector.html#setPort(int)">setPort</a></span>(int port)</nobr>
+        
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            
+            
+            
+            
+            
+            void</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad"><a href="../../../../../com/mulesoft/mule/cassandradb/CassandraDBConnector.html#setQueryKeyspace(java.lang.String)">setQueryKeyspace</a></span>(String value)</nobr>
+        
+        <div class="jd-descrdiv">Set the keyspace to use for subsequent requests.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            
+            
+            
+            
+            
+            String</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad"><a href="../../../../../com/mulesoft/mule/cassandradb/CassandraDBConnector.html#systemAddColumnFamilyFromObject(org.apache.cassandra.thrift.CfDef)">systemAddColumnFamilyFromObject</a></span>(CfDef cfDefinition)</nobr>
+        
+        <div class="jd-descrdiv">Adds a column family.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            
+            
+            
+            
+            
+            String</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad"><a href="../../../../../com/mulesoft/mule/cassandradb/CassandraDBConnector.html#systemAddColumnFamilyFromObjectWithSimpleNames(org.apache.cassandra.thrift.CfDef, java.util.List<java.lang.String>)">systemAddColumnFamilyFromObjectWithSimpleNames</a></span>(CfDef cfDefinition, List&lt;String&gt; columnNames)</nobr>
+        
+        <div class="jd-descrdiv">Adds a column family.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            
+            
+            
+            
+            
+            String</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad"><a href="../../../../../com/mulesoft/mule/cassandradb/CassandraDBConnector.html#systemAddColumnFamilyWithParams(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.util.List<org.apache.cassandra.thrift.ColumnDef>, java.lang.String)">systemAddColumnFamilyWithParams</a></span>(String columnFamilyName, String comparatorType, String keyValidationClass, String defaultValidationClass, List&lt;ColumnDef&gt; columnMetadata, String keyspace)</nobr>
+        
+        <div class="jd-descrdiv">Adds a column family to the current keyspace.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            
+            
+            
+            
+            
+            String</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad"><a href="../../../../../com/mulesoft/mule/cassandradb/CassandraDBConnector.html#systemAddKeyspaceFromObject(org.apache.cassandra.thrift.KsDef)">systemAddKeyspaceFromObject</a></span>(KsDef keyspaceDefinition)</nobr>
+        
+        <div class="jd-descrdiv">Creates a new keyspace and any column families defined with it.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            
+            
+            
+            
+            
+            Object</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad"><a href="../../../../../com/mulesoft/mule/cassandradb/CassandraDBConnector.html#systemAddKeyspaceWithParams(java.lang.String, java.util.List<java.lang.String>, com.mulesoft.mule.cassandradb.ReplicationStrategy, java.util.Map<java.lang.String, java.lang.String>)">systemAddKeyspaceWithParams</a></span>(String keyspaceName, List&lt;String&gt; columnNames, <a href="../../../../../java/com/mulesoft/mule/cassandradb/ReplicationStrategy.html">ReplicationStrategy</a> strategyClass, Map&lt;String,&nbsp;String&gt; strategyOptions)</nobr>
+        
+        <div class="jd-descrdiv">Creates a new keyspace with the provided name with all the defaults values
+ <p/>
+ </div>
+  
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            
+            
+            
+            
+            
+            String</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad"><a href="../../../../../com/mulesoft/mule/cassandradb/CassandraDBConnector.html#systemDropColumnFamily(java.lang.String)">systemDropColumnFamily</a></span>(String columnFamily)</nobr>
+        
+        <div class="jd-descrdiv">Drops a column family.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            
+            
+            
+            
+            
+            Object</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad"><a href="../../../../../com/mulesoft/mule/cassandradb/CassandraDBConnector.html#systemDropKeyspace(java.lang.String)">systemDropKeyspace</a></span>(String keyspace)</nobr>
+        
+        <div class="jd-descrdiv">Drops a keyspace.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            
+            
+            
+            
+            
+            String</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad"><a href="../../../../../com/mulesoft/mule/cassandradb/CassandraDBConnector.html#systemUpdateColumnFamily(org.apache.cassandra.thrift.CfDef)">systemUpdateColumnFamily</a></span>(CfDef columnFamily)</nobr>
+        
+        <div class="jd-descrdiv">Updates properties of a ColumnFamily.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            
+            
+            
+            
+            
+            String</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad"><a href="../../../../../com/mulesoft/mule/cassandradb/CassandraDBConnector.html#systemUpdateKeyspace(org.apache.cassandra.thrift.KsDef)">systemUpdateKeyspace</a></span>(KsDef keyspaceDef)</nobr>
+        
+        <div class="jd-descrdiv">Updates properties of a keyspace.</div>
+  
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            
+            
+            
+            
+            
+            void</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad"><a href="../../../../../com/mulesoft/mule/cassandradb/CassandraDBConnector.html#truncate(java.lang.String)">truncate</a></span>(String columnFamily)</nobr>
+        
+        <div class="jd-descrdiv">Removes all the rows from the given column family.</div>
+  
+  </td></tr>
+
+
+
+</table>
+
+
+
+
+
+
+
+<!-- ========== METHOD SUMMARY =========== -->
+<table id="inhmethods" class="jd-sumtable"><tr><th>
+  <a href="#" class="toggle-all" onclick="return toggleAllInherited(this, null)">[Expand]</a>
+  <div style="clear:left;">Inherited Methods</div></th></tr>
+
+
+<tr class="api apilevel-" >
+<td colspan="12">
+  <a href="#" onclick="return toggleInherited(this, null)" id="inherited-methods-java.lang.Object" class="jd-expando-trigger closed"
+          ><img id="inherited-methods-java.lang.Object-trigger"
+          src="../../../../../assets/images/triangle-closed.png"
+          class="jd-expando-trigger-img" /></a>
+From class
+
+  java.lang.Object
+
+<div id="inherited-methods-java.lang.Object">
+  <div id="inherited-methods-java.lang.Object-list"
+        class="jd-inheritedlinks">
+  </div>
+  <div id="inherited-methods-java.lang.Object-summary" style="display: none;">
+    <table class="jd-sumtable-expando">
+    
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            
+            
+            
+            
+            
+            Object</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad">clone</span>()</nobr>
+        
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            
+            
+            
+            
+            
+            boolean</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad">equals</span>(Object arg0)</nobr>
+        
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            
+            
+            
+            
+            
+            void</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad">finalize</span>()</nobr>
+        
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            
+            
+            final
+            
+            
+            Class&lt;?&gt;</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad">getClass</span>()</nobr>
+        
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            
+            
+            
+            
+            
+            int</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad">hashCode</span>()</nobr>
+        
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            
+            
+            final
+            
+            
+            void</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad">notify</span>()</nobr>
+        
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            
+            
+            final
+            
+            
+            void</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad">notifyAll</span>()</nobr>
+        
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            
+            
+            
+            
+            
+            String</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad">toString</span>()</nobr>
+        
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            
+            
+            final
+            
+            
+            void</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad">wait</span>()</nobr>
+        
+  </td></tr>
+
+
+	 
+    <tr class=" api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            
+            
+            final
+            
+            
+            void</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad">wait</span>(long arg0, int arg1)</nobr>
+        
+  </td></tr>
+
+
+	 
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-typecol"><nobr>
+            
+            
+            final
+            
+            
+            void</nobr>
+        </td>
+        <td class="jd-linkcol" width="100%"><nobr>
+        <span class="sympad">wait</span>(long arg0)</nobr>
+        
+  </td></tr>
+
+
+</table>
+  </div>
+</div>
+</td></tr>
+
+
+</table>
+
+
+</div><!-- jd-descr (summary) -->
+
+<!-- Details -->
+
+
+
+
+
+
+
+
+<!-- XML Attributes -->
+
+
+<!-- Enum Values -->
+
+
+<!-- Constants -->
+
+
+<!-- Fields -->
+
+
+<!-- ========= FIELD DETAIL ======== -->
+<h2>Fields</h2>
+
+
+
+
+<A NAME="LOGGER"></A>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        private 
+        static 
+        final 
+        Logger
+      </span>
+        LOGGER
+    </h4>
+      <div class="api-level">
+        
+
+
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+
+    
+    </div>
+</div>
+
+
+
+<A NAME="client"></A>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        private 
+         
+         
+        Cassandra.Client
+      </span>
+        client
+    </h4>
+      <div class="api-level">
+        
+
+
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Cassandra Client
+</p></div>
+
+    
+    </div>
+</div>
+
+
+
+<A NAME="consistencyLevel"></A>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        private 
+         
+         
+        ConsistencyLevel
+      </span>
+        consistencyLevel
+    </h4>
+      <div class="api-level">
+        
+
+
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Consistency Level. Can be one of ANY, ONE (default), TWO, THREE, QUORUM,
+ LOCAL_QUORUM, EACH_QUORUM, ALL. See http://wiki.apache.org/cassandra/API
+ for more details.
+</p></div>
+
+    
+    </div>
+</div>
+
+
+
+<A NAME="host"></A>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        private 
+         
+         
+        String
+      </span>
+        host
+    </h4>
+      <div class="api-level">
+        
+
+
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Host name or IP address
+</p></div>
+
+    
+    </div>
+</div>
+
+
+
+<A NAME="keyspace"></A>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        private 
+         
+         
+        String
+      </span>
+        keyspace
+    </h4>
+      <div class="api-level">
+        
+
+
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Cassandra keyspace
+</p></div>
+
+    
+    </div>
+</div>
+
+
+
+<A NAME="port"></A>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        private 
+         
+         
+        int
+      </span>
+        port
+    </h4>
+      <div class="api-level">
+        
+
+
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Port (default is 9160)
+</p></div>
+
+    
+    </div>
+</div>
+
+
+
+<A NAME="tr"></A>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        private 
+         
+         
+        TTransport
+      </span>
+        tr
+    </h4>
+      <div class="api-level">
+        
+
+
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Generic class that encapsulates the I/O layer. This is basically a thin
+ wrapper around the combined functionality of Java input/output streams.
+</p></div>
+
+    
+    </div>
+</div>
+
+
+
+
+<!-- Public ctors -->
+
+
+<!-- ========= CONSTRUCTOR DETAIL ======== -->
+<h2>Public Constructors</h2>
+
+
+
+<A NAME="CassandraDBConnector()"></A>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        
+      </span>
+      <span class="sympad">CassandraDBConnector</span>
+      <span class="normal">()</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+
+    </div>
+</div>
+
+
+
+
+
+<!-- ========= CONSTRUCTOR DETAIL ======== -->
+<!-- Protected ctors -->
+
+
+
+<!-- ========= METHOD DETAIL ======== -->
+<!-- Public methdos -->
+
+<h2>Public Methods</h2>
+
+
+
+<A NAME="add(java.lang.String, java.lang.String, java.lang.String, int)"></A>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        void
+      </span>
+      <span class="sympad">add</span>
+      <span class="normal">(String rowKey, String columnParent, String counterName, int counterValue)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Increments a CounterColumn consisting of (name, value) at the given
+ ColumnParent. Note that a SuperColumn cannot directly contain binary
+ values -- it can only contain sub-Columns.
+ <p/>
+ </p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>rowKey</td>
+          <td>Key of the row</td>
+        </tr>
+        <tr>
+          <th>columnParent</td>
+          <td>Column Parent of the CounterColum</td>
+        </tr>
+        <tr>
+          <th>counterName</td>
+          <td>Name of the column</td>
+        </tr>
+        <tr>
+          <th>counterValue</td>
+          <td>Value of the counter</td>
+        </tr>
+      </table>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Throws</h5>
+      <table class="jd-tagtable">  
+        <tr>
+            <th><a href="../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBException.html">CassandraDBException</a></td>
+            <td>Generic Exception wrapper class for Thrift Exceptions.
+</td>
+        </tr>
+      </table>
+  </div>
+
+    </div>
+</div>
+
+
+<A NAME="batchMutable(java.util.Map)"></A>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        void
+      </span>
+      <span class="sympad">batchMutable</span>
+      <span class="normal">(Map content)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Executes the specified mutations on the keyspace. content is a
+ Map&lt;string, Map&lt;string, List&lt;Mutation&gt;&gt;&gt;; the outer map maps the key to
+ the inner map, which maps the column family to the Mutation; can be read
+ as: <code> Map&lt;key : string, Map&lt;column_family : string, List&lt;Mutation&gt;&gt;&gt;</code>. To
+ be more specific, the outer map key is a row key, the inner map key is
+ the column family name. A Mutation specifies either columns to insert or
+ columns to delete. See Mutation and Deletion above for more details.
+ <p/>
+ </p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>content</td>
+          <td>A Map&lt;ByteBuffer, Map&lt;String, List&lt;Mutation&gt;&gt;&gt;</td>
+        </tr>
+      </table>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Throws</h5>
+      <table class="jd-tagtable">  
+        <tr>
+            <th><a href="../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBException.html">CassandraDBException</a></td>
+            <td>Generic Exception wrapper class for Thrift Exceptions.
+</td>
+        </tr>
+      </table>
+  </div>
+
+    </div>
+</div>
+
+
+<A NAME="connect(java.lang.String, java.lang.String)"></A>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        void
+      </span>
+      <span class="sympad">connect</span>
+      <span class="normal">(String username, String password)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Method invoked when a connection is required</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>username</td>
+          <td>A username. NOTE: Please use a dummy username if you have disabled authentication</td>
+        </tr>
+        <tr>
+          <th>password</td>
+          <td>A password. NOTE: Leave empty if not required. If specified, the connector will try to login with this credentials</td>
+        </tr>
+      </table>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Throws</h5>
+      <table class="jd-tagtable">  
+        <tr>
+            <th>ConnectionException</td>
+            <td></td>
+        </tr>
+      </table>
+  </div>
+
+    </div>
+</div>
+
+
+<A NAME="connectionId()"></A>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        String
+      </span>
+      <span class="sympad">connectionId</span>
+      <span class="normal">()</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Connection Identifier</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Returns</h5>
+      <ul class="nolist"><li>the connection identifier.
+</li></ul>
+  </div>
+
+    </div>
+</div>
+
+
+<A NAME="describeClusterName()"></A>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        String
+      </span>
+      <span class="sympad">describeClusterName</span>
+      <span class="normal">()</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Gets the name of the cluster.
+ <p/>
+ </p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Returns</h5>
+      <ul class="nolist"><li>the cluster name</li></ul>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Throws</h5>
+      <table class="jd-tagtable">  
+        <tr>
+            <th><a href="../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBException.html">CassandraDBException</a></td>
+            <td>Generic Exception wrapper class for Thrift Exceptions.
+</td>
+        </tr>
+      </table>
+  </div>
+
+    </div>
+</div>
+
+
+<A NAME="describeKeyspace(java.lang.String)"></A>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        Object
+      </span>
+      <span class="sympad">describeKeyspace</span>
+      <span class="normal">(String keyspace)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Gets information about the specified keyspace.
+ <p/>
+ </p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>keyspace</td>
+          <td>Name of the keyspace</td>
+        </tr>
+      </table>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Returns</h5>
+      <ul class="nolist"><li>A KsDef instance</li></ul>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Throws</h5>
+      <table class="jd-tagtable">  
+        <tr>
+            <th><a href="../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBException.html">CassandraDBException</a></td>
+            <td>Generic Exception wrapper class for Thrift Exceptions.
+</td>
+        </tr>
+      </table>
+  </div>
+
+    </div>
+</div>
+
+
+<A NAME="describeKeyspaces()"></A>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        List
+      </span>
+      <span class="sympad">describeKeyspaces</span>
+      <span class="normal">()</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Gets a list of all the keyspaces configured for the cluster. (Equivalent
+ to calling describe_keyspace(k) for k in keyspaces.)
+ <p/>
+ </p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Returns</h5>
+      <ul class="nolist"><li>A list of KsDef</li></ul>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Throws</h5>
+      <table class="jd-tagtable">  
+        <tr>
+            <th><a href="../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBException.html">CassandraDBException</a></td>
+            <td>Generic Exception wrapper class for Thrift Exceptions.
+</td>
+        </tr>
+      </table>
+  </div>
+
+    </div>
+</div>
+
+
+<A NAME="describePartitioner()"></A>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        String
+      </span>
+      <span class="sympad">describePartitioner</span>
+      <span class="normal">()</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Gets the name of the partitioner for the cluster.
+ <p/>
+ </p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Returns</h5>
+      <ul class="nolist"><li>Partitioner name</li></ul>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Throws</h5>
+      <table class="jd-tagtable">  
+        <tr>
+            <th><a href="../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBException.html">CassandraDBException</a></td>
+            <td>Generic Exception wrapper class for Thrift Exceptions.
+</td>
+        </tr>
+      </table>
+  </div>
+
+    </div>
+</div>
+
+
+<A NAME="describeRing(java.lang.String)"></A>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        List
+      </span>
+      <span class="sympad">describeRing</span>
+      <span class="normal">(String keyspace)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Gets the token ring; a map of ranges to host addresses. Represented as a
+ set of TokenRange instead of a map from range to list of endpoints,
+ because you can't use Thrift structs as map keys:
+ https://issues.apache.org/jira/browse/THRIFT-162 for the same reason, we
+ can't return a set here, even though order is neither important nor
+ predictable.
+ <p/>
+ </p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>keyspace</td>
+          <td>Keyspace name</td>
+        </tr>
+      </table>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Returns</h5>
+      <ul class="nolist"><li>A list of TokenRange</li></ul>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Throws</h5>
+      <table class="jd-tagtable">  
+        <tr>
+            <th><a href="../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBException.html">CassandraDBException</a></td>
+            <td>Generic Exception wrapper class for Thrift Exceptions.
+</td>
+        </tr>
+      </table>
+  </div>
+
+    </div>
+</div>
+
+
+<A NAME="describeSchemaVersions()"></A>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        Map
+      </span>
+      <span class="sympad">describeSchemaVersions</span>
+      <span class="normal">()</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>For each schema version present in the cluster, returns a list of nodes
+ at that version. Hosts that do not respond will be under the key
+ DatabaseDescriptor.INITIAL_VERSION. The cluster is all on the same
+ version if the size of the map is 1.
+ <p/>
+ </p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Returns</h5>
+      <ul class="nolist"><li>A map of type Map<String,List<String>></li></ul>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Throws</h5>
+      <table class="jd-tagtable">  
+        <tr>
+            <th><a href="../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBException.html">CassandraDBException</a></td>
+            <td>Generic Exception wrapper class for Thrift Exceptions.
+</td>
+        </tr>
+      </table>
+  </div>
+
+    </div>
+</div>
+
+
+<A NAME="describeSnitch()"></A>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        String
+      </span>
+      <span class="sympad">describeSnitch</span>
+      <span class="normal">()</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Gets the name of the snitch used for the cluster.
+ <p/>
+ </p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Returns</h5>
+      <ul class="nolist"><li>String with the name of the snitch</li></ul>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Throws</h5>
+      <table class="jd-tagtable">  
+        <tr>
+            <th><a href="../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBException.html">CassandraDBException</a></td>
+            <td>Generic Exception wrapper class for Thrift Exceptions.
+</td>
+        </tr>
+      </table>
+  </div>
+
+    </div>
+</div>
+
+
+<A NAME="describeVersion()"></A>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        String
+      </span>
+      <span class="sympad">describeVersion</span>
+      <span class="normal">()</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Gets the Thrift API version.
+ <p/>
+ </p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Returns</h5>
+      <ul class="nolist"><li>API Version string representation</li></ul>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Throws</h5>
+      <table class="jd-tagtable">  
+        <tr>
+            <th><a href="../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBException.html">CassandraDBException</a></td>
+            <td>Generic Exception wrapper class for Thrift Exceptions.
+</td>
+        </tr>
+      </table>
+  </div>
+
+    </div>
+</div>
+
+
+<A NAME="disconnect()"></A>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        void
+      </span>
+      <span class="sympad">disconnect</span>
+      <span class="normal">()</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Disconnect
+</p></div>
+
+    </div>
+</div>
+
+
+<A NAME="executeCqlQuery(java.lang.String, org.apache.cassandra.thrift.Compression)"></A>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        Object
+      </span>
+      <span class="sympad">executeCqlQuery</span>
+      <span class="normal">(String query, Compression compression)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Executes a CQL (Cassandra Query Language) statement and returns a
+ CqlResult containing the results. For more information about CQL please visit: http://cassandra.apache.org/doc/cql/CQL.html
+ <p/>
+ </p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>query</td>
+          <td>CQL Statement to be executed</td>
+        </tr>
+        <tr>
+          <th>compression</td>
+          <td>Compression level, by default we use NONE</td>
+        </tr>
+      </table>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Returns</h5>
+      <ul class="nolist"><li>CqlResult containing the results of the execution</li></ul>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Throws</h5>
+      <table class="jd-tagtable">  
+        <tr>
+            <th><a href="../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBException.html">CassandraDBException</a></td>
+            <td>Generic Exception wrapper class for Thrift Exceptions.
+</td>
+        </tr>
+      </table>
+  </div>
+
+    </div>
+</div>
+
+
+<A NAME="get(java.lang.String, java.lang.String, java.util.List<com.mulesoft.mule.cassandradb.ColumnSerializer>)"></A>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        Object
+      </span>
+      <span class="sympad">get</span>
+      <span class="normal">(String rowKey, String columnPath, List&lt;<a href="../../../../../java/com/mulesoft/mule/cassandradb/ColumnSerializer.html">ColumnSerializer</a>&gt; columnSerializers)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Get Column or SuperColumn by the path
+ <p/>
+ </p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>rowKey</td>
+          <td>The row key</td>
+        </tr>
+        <tr>
+          <th>columnPath</td>
+          <td>Path to the column - must be in the form of
+                          ColumnFamily:SuperColumn:Column.</td>
+        </tr>
+        <tr>
+          <th>columnSerializers</td>
+          <td>Serializers for each column</td>
+        </tr>
+      </table>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Returns</h5>
+      <ul class="nolist"><li>the result as a JSON node</li></ul>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Throws</h5>
+      <table class="jd-tagtable">  
+        <tr>
+            <th><a href="../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBException.html">CassandraDBException</a></td>
+            <td>Generic Exception wrapper class for Thrift Exceptions.
+</td>
+        </tr>
+      </table>
+  </div>
+
+    </div>
+</div>
+
+
+<A NAME="getConsistencyLevel()"></A>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        ConsistencyLevel
+      </span>
+      <span class="sympad">getConsistencyLevel</span>
+      <span class="normal">()</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Retrieves the Cassandra DB consistency level.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Returns</h5>
+      <ul class="nolist"><li>the consistency level.
+</li></ul>
+  </div>
+
+    </div>
+</div>
+
+
+<A NAME="getCount(java.lang.String, java.lang.String, java.lang.String, java.lang.String, boolean, int)"></A>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        int
+      </span>
+      <span class="sympad">getCount</span>
+      <span class="normal">(String rowKey, String columnParent, String start, String finish, boolean reversed, int count)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Counts the columns present in column_parent within the predicate.
+ <p/>
+ </p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>rowKey</td>
+          <td>The row key</td>
+        </tr>
+        <tr>
+          <th>columnParent</td>
+          <td>Path to the column - must be a name of the ColumnFamily or
+                     ColumnFamily:SuperColumn pair</td>
+        </tr>
+        <tr>
+          <th>start</td>
+          <td>The column name to start the slice with. This attribute is not required, though there is no default value,
+                     and can be safely set to '', i.e., an empty byte array, to start with the first column name. Otherwise, it
+                     must a valid value under the rules of the Comparator defined for the given ColumnFamily.</td>
+        </tr>
+        <tr>
+          <th>finish</td>
+          <td>The column name to stop the slice at. This attribute is not required, though there is no default value,
+                     and can be safely set to an empty byte array to not stop until 'count' results are seen. Otherwise, it
+                     must also be a valid value to the ColumnFamily Comparator.</td>
+        </tr>
+        <tr>
+          <th>reversed</td>
+          <td>Whether the results should be ordered in reversed order. Similar to ORDER BY blah DESC in SQL.</td>
+        </tr>
+        <tr>
+          <th>count</td>
+          <td>How many columns to return. Similar to LIMIT in SQL. May be arbitrarily large, but Thrift will
+                     materialize the whole result into memory before returning it to the client, so be aware that you may
+                     be better served by iterating through slices by passing the last value of one call in as the 'start'
+                     of the next instead of increasing 'count' arbitrarily large.</td>
+        </tr>
+      </table>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Returns</h5>
+      <ul class="nolist"><li>Count of register that met the conditions</li></ul>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Throws</h5>
+      <table class="jd-tagtable">  
+        <tr>
+            <th><a href="../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBException.html">CassandraDBException</a></td>
+            <td>Generic Exception wrapper class for Thrift Exceptions.
+</td>
+        </tr>
+      </table>
+  </div>
+
+    </div>
+</div>
+
+
+<A NAME="getHost()"></A>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        String
+      </span>
+      <span class="sympad">getHost</span>
+      <span class="normal">()</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Returns</h5>
+      <ul class="nolist"><li>the host connection url.
+</li></ul>
+  </div>
+
+    </div>
+</div>
+
+
+<A NAME="getIndexedSlices(java.lang.String, java.lang.String, java.lang.String, boolean, int, int, java.lang.String, java.util.List<com.mulesoft.mule.cassandradb.api.IndexExpresion>)"></A>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        Object
+      </span>
+      <span class="sympad">getIndexedSlices</span>
+      <span class="normal">(String columnParent, String start, String finish, boolean reversed, int count, int clauseCount, String clauseStartKey, List&lt;<a href="../../../../../java/com/mulesoft/mule/cassandradb/api/IndexExpresion.html">IndexExpresion</a>&gt; expressionList)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Like get_range_slices, returns a list of slices, but uses IndexClause
+ instead of KeyRange. To use this method, the underlying ColumnFamily of
+ the ColumnParent must have been configured with a column_metadata
+ attribute, specifying at least the name and index_type attributes. See
+ CfDef and ColumnDef above for the list of attributes. Note: the
+ IndexClause must contain one IndexExpression with an EQ operator on a
+ configured index column. Other IndexExpression structs may be added to
+ the IndexClause for non-indexed columns to further refine the results of
+ the EQ expression.
+ <p/>
+ </p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>columnParent</td>
+          <td>Path to the column - must be a name of the ColumnFamily or
+                       ColumnFamily:SuperColumn pair</td>
+        </tr>
+        <tr>
+          <th>start</td>
+          <td>The column name to start the slice with. This attribute is not required, though there is no default value,
+                       and can be safely set to '', i.e., an empty byte array, to start with the first column name. Otherwise, it
+                       must a valid value under the rules of the Comparator defined for the given ColumnFamily.</td>
+        </tr>
+        <tr>
+          <th>finish</td>
+          <td>The column name to stop the slice at. This attribute is not required, though there is no default value,
+                       and can be safely set to an empty byte array to not stop until 'count' results are seen. Otherwise, it
+                       must also be a valid value to the ColumnFamily Comparator.</td>
+        </tr>
+        <tr>
+          <th>reversed</td>
+          <td>Whether the results should be ordered in reversed order. Similar to ORDER BY blah DESC in SQL.</td>
+        </tr>
+        <tr>
+          <th>count</td>
+          <td>How many columns to return. Similar to LIMIT in SQL. May be arbitrarily large, but Thrift will
+                       materialize the whole result into memory before returning it to the client, so be aware that you may
+                       be better served by iterating through slices by passing the last value of one call in as the 'start'
+                       of the next instead of increasing 'count' arbitrarily large.</td>
+        </tr>
+        <tr>
+          <th>clauseCount</td>
+          <td>The number of results to which the index query will be
+                       constrained</td>
+        </tr>
+        <tr>
+          <th>clauseStartKey</td>
+          <td>Start the index query at the specified key - can be set to '',
+                       i.e., an empty byte array, to start with the first key</td>
+        </tr>
+        <tr>
+          <th>expressionList</td>
+          <td>The list of IndexExpression objects which must contain one EQ
+                       IndexOperator among the expressions</td>
+        </tr>
+      </table>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Returns</h5>
+      <ul class="nolist"><li>List of objects KeySlice</li></ul>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Throws</h5>
+      <table class="jd-tagtable">  
+        <tr>
+            <th><a href="../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBException.html">CassandraDBException</a></td>
+            <td>Generic Exception wrapper class for Thrift Exceptions.
+</td>
+        </tr>
+      </table>
+  </div>
+
+    </div>
+</div>
+
+
+<A NAME="getKeyspace()"></A>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        String
+      </span>
+      <span class="sympad">getKeyspace</span>
+      <span class="normal">()</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Retrieves the Keyspace.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Returns</h5>
+      <ul class="nolist"><li>the keyspace.
+</li></ul>
+  </div>
+
+    </div>
+</div>
+
+
+<A NAME="getPort()"></A>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        int
+      </span>
+      <span class="sympad">getPort</span>
+      <span class="normal">()</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Retrieves the Port.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Returns</h5>
+      <ul class="nolist"><li>the connection port.
+</li></ul>
+  </div>
+
+    </div>
+</div>
+
+
+<A NAME="getRangeSlices(java.lang.String, java.lang.String, java.lang.String, boolean, int, java.lang.String, java.lang.String, java.lang.String, java.lang.String, int)"></A>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        Object
+      </span>
+      <span class="sympad">getRangeSlices</span>
+      <span class="normal">(String columnParent, String start, String finish, boolean reversed, int count, String startKey, String endKey, String startToken, String endToken, int keyRangeCount)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Replaces get_range_slice. Returns a list of slices for the keys within
+ the specified KeyRange. Unlike get_key_range, this applies the given
+ predicate to all keys in the range, not just those with undeleted
+ matching data. Note that when using RandomPartitioner, keys are stored in
+ the order of their MD5 hash, making it impossible to get a meaningful
+ range of keys between two endpoints.
+ <p/>
+ <p/>
+ </p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>columnParent</td>
+          <td>Path to the column - must be a name of the ColumnFamily or
+                      ColumnFamily:SuperColumn pair</td>
+        </tr>
+        <tr>
+          <th>start</td>
+          <td>The column name to start the slice with. This attribute is not required, though there is no default value,
+                      and can be safely set to '', i.e., an empty byte array, to start with the first column name. Otherwise, it
+                      must a valid value under the rules of the Comparator defined for the given ColumnFamily.</td>
+        </tr>
+        <tr>
+          <th>finish</td>
+          <td>The column name to stop the slice at. This attribute is not required, though there is no default value,
+                      and can be safely set to an empty byte array to not stop until 'count' results are seen. Otherwise, it
+                      must also be a valid value to the ColumnFamily Comparator.</td>
+        </tr>
+        <tr>
+          <th>reversed</td>
+          <td>Whether the results should be ordered in reversed order. Similar to ORDER BY blah DESC in SQL.</td>
+        </tr>
+        <tr>
+          <th>count</td>
+          <td>How many columns to return. Similar to LIMIT in SQL. May be arbitrarily large, but Thrift will
+                      materialize the whole result into memory before returning it to the client, so be aware that you may
+                      be better served by iterating through slices by passing the last value of one call in as the 'start'
+                      of the next instead of increasing 'count' arbitrarily large.</td>
+        </tr>
+        <tr>
+          <th>startKey</td>
+          <td>The first key in the inclusive KeyRange.</td>
+        </tr>
+        <tr>
+          <th>endKey</td>
+          <td>The last key in the inclusive KeyRange.</td>
+        </tr>
+        <tr>
+          <th>startToken</td>
+          <td>The first token in the exclusive KeyRange.</td>
+        </tr>
+        <tr>
+          <th>endToken</td>
+          <td>The last token in the exclusive KeyRange.</td>
+        </tr>
+        <tr>
+          <th>keyRangeCount</td>
+          <td>The total number of keys to permit in the KeyRange.</td>
+        </tr>
+      </table>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Returns</h5>
+      <ul class="nolist"><li>List of objects KeySlice</li></ul>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Throws</h5>
+      <table class="jd-tagtable">  
+        <tr>
+            <th><a href="../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBException.html">CassandraDBException</a></td>
+            <td>Generic Exception wrapper class for Thrift Exceptions.
+</td>
+        </tr>
+      </table>
+  </div>
+
+    </div>
+</div>
+
+
+<A NAME="getRow(java.lang.String, org.apache.cassandra.thrift.ColumnPath, java.util.List<com.mulesoft.mule.cassandradb.ColumnSerializer>)"></A>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        Object
+      </span>
+      <span class="sympad">getRow</span>
+      <span class="normal">(String rowKey, ColumnPath columnPath, List&lt;<a href="../../../../../java/com/mulesoft/mule/cassandradb/ColumnSerializer.html">ColumnSerializer</a>&gt; columnSerializers)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Get Column or SuperColumn by the path
+ <p/>
+ </p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>rowKey</td>
+          <td>The row key</td>
+        </tr>
+        <tr>
+          <th>columnPath</td>
+          <td>Path to the column</td>
+        </tr>
+        <tr>
+          <th>columnSerializers</td>
+          <td>Serializers for each column</td>
+        </tr>
+      </table>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Returns</h5>
+      <ul class="nolist"><li>the result as a JSON node</li></ul>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Throws</h5>
+      <table class="jd-tagtable">  
+        <tr>
+            <th><a href="../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBException.html">CassandraDBException</a></td>
+            <td>Generic Exception wrapper class for Thrift Exceptions.
+</td>
+        </tr>
+      </table>
+  </div>
+
+    </div>
+</div>
+
+
+<A NAME="getSlice(java.lang.String, java.lang.String, java.lang.String, java.lang.String, boolean, int, java.util.List<com.mulesoft.mule.cassandradb.ColumnSerializer>)"></A>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        Object
+      </span>
+      <span class="sympad">getSlice</span>
+      <span class="normal">(String rowKey, String columnParent, String start, String finish, boolean reversed, int count, List&lt;<a href="../../../../../java/com/mulesoft/mule/cassandradb/ColumnSerializer.html">ColumnSerializer</a>&gt; columnSerializers)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Get the group of columns contained by column_parent (either a
+ ColumnFamily name or a ColumnFamily/SuperColumn name pair) specified by
+ the given SlicePredicate (start, finish, reversed and count) parameters.
+ <p/>
+ </p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>rowKey</td>
+          <td>The row key</td>
+        </tr>
+        <tr>
+          <th>columnParent</td>
+          <td>Path to the column - must be a name of the ColumnFamily or
+                          ColumnFamily:SuperColumn pair</td>
+        </tr>
+        <tr>
+          <th>start</td>
+          <td>The column name to start the slice with. This attribute is not required, though there is no default value,
+                          and can be safely set to '', i.e., an empty byte array, to start with the first column name. Otherwise, it
+                          must a valid value under the rules of the Comparator defined for the given ColumnFamily.</td>
+        </tr>
+        <tr>
+          <th>finish</td>
+          <td>The column name to stop the slice at. This attribute is not required, though there is no default value,
+                          and can be safely set to an empty byte array to not stop until 'count' results are seen. Otherwise, it
+                          must also be a valid value to the ColumnFamily Comparator.</td>
+        </tr>
+        <tr>
+          <th>reversed</td>
+          <td>Whether the results should be ordered in reversed order. Similar to ORDER BY blah DESC in SQL.</td>
+        </tr>
+        <tr>
+          <th>count</td>
+          <td>How many columns to return. Similar to LIMIT in SQL. May be arbitrarily large, but Thrift will
+                          materialize the whole result into memory before returning it to the client, so be aware that you may
+                          be better served by iterating through slices by passing the last value of one call in as the 'start'
+                          of the next instead of increasing 'count' arbitrarily large.</td>
+        </tr>
+        <tr>
+          <th>columnSerializers</td>
+          <td>Serializers for each column</td>
+        </tr>
+      </table>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Returns</h5>
+      <ul class="nolist"><li>the result as a JSON node</li></ul>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Throws</h5>
+      <table class="jd-tagtable">  
+        <tr>
+            <th><a href="../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBException.html">CassandraDBException</a></td>
+            <td>Generic Exception wrapper class for Thrift Exceptions.
+</td>
+        </tr>
+      </table>
+  </div>
+
+    </div>
+</div>
+
+
+<A NAME="insert(java.lang.String, java.lang.String, java.lang.String, java.lang.String, int)"></A>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        void
+      </span>
+      <span class="sympad">insert</span>
+      <span class="normal">(String rowKey, String columnParent, String columnName, String columnValue, int ttl)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Insert a Column consisting of (name, value, timestamp, ttl) at the given
+ ColumnParent. Note that a SuperColumn cannot directly contain binary
+ values -- it can only contain sub-Columns. Only one sub-Column may be
+ inserted at a time, as well.
+ Any number of columns may be inserted at the same time. When inserting or updating columns in a column family, the client application specifies the row key to identify which column records to update.
+ The row key is similar to a primary key in that it must be unique for each row within a column family.
+ However, unlike a primary key, inserting a duplicate row key will not result in a primary key constraint violation - it will be treated as an UPSERT (update the specified columns in that row if they exist or insert them if they do not).
+ For more details check: http://www.datastax.com/docs/0.8/dml/about_writes
+ <p/>
+ </p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>rowKey</td>
+          <td>The row key</td>
+        </tr>
+        <tr>
+          <th>columnParent</td>
+          <td>The ColumnParent</td>
+        </tr>
+        <tr>
+          <th>columnName</td>
+          <td>The name of the column</td>
+        </tr>
+        <tr>
+          <th>columnValue</td>
+          <td>The value of the column</td>
+        </tr>
+        <tr>
+          <th>ttl</td>
+          <td>An optional, positive delay (in seconds) after which the
+                     Column will be automatically deleted.</td>
+        </tr>
+      </table>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Throws</h5>
+      <table class="jd-tagtable">  
+        <tr>
+            <th><a href="../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBException.html">CassandraDBException</a></td>
+            <td>Generic Exception wrapper class for Thrift Exceptions.
+</td>
+        </tr>
+      </table>
+  </div>
+
+    </div>
+</div>
+
+
+<A NAME="insertFromMap(java.util.Map)"></A>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        Map
+      </span>
+      <span class="sympad">insertFromMap</span>
+      <span class="normal">(Map content)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Insert object into the database
+ <p/>
+ </p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>content</td>
+          <td>Content to be inserted into the database. Must be an instance of Map in the following format:
+                <p/>
+                {
+                "ToyStores" : {                           - Column Family
+                "Ohio Store" : {                        - RowKey
+                "Transformer" : {                     - SuperColumn
+                "Price" : "29.99",                  - Column
+                "Section" : "Action Figures"
+                }
+                "GumDrop" : {
+                "Price" : "0.25",
+                "Section" : "Candy"
+                }
+                "MatchboxCar" : {
+                "Price" : "1.49",
+                "Section" : "Vehicles"
+                }
+                }
+                "New York Store" : {
+                "JawBreaker" : {
+                "Price" : "4.25",
+                "Section" : "Candy"
+                }
+                "MatchboxCar" : {
+                "Price" : "8.79",
+                "Section" : "Vehicles"
+                }
+                }
+                }
+                }</td>
+        </tr>
+      </table>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Returns</h5>
+      <ul class="nolist"><li>Same content</li></ul>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Throws</h5>
+      <table class="jd-tagtable">  
+        <tr>
+            <th><a href="../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBException.html">CassandraDBException</a></td>
+            <td>Generic Exception wrapper class for Thrift Exceptions.
+</td>
+        </tr>
+      </table>
+  </div>
+
+    </div>
+</div>
+
+
+<A NAME="isConnected()"></A>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        boolean
+      </span>
+      <span class="sympad">isConnected</span>
+      <span class="normal">()</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Are we connected</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Returns</h5>
+      <ul class="nolist"><li>the connection status of the connector.
+</li></ul>
+  </div>
+
+    </div>
+</div>
+
+
+<A NAME="multiGetCount(java.util.List<java.lang.String>, java.lang.String, java.lang.String, java.lang.String, boolean, int)"></A>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        Object
+      </span>
+      <span class="sympad">multiGetCount</span>
+      <span class="normal">(List&lt;String&gt; rowKeys, String columnParent, String start, String finish, boolean reversed, int count)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>A combination of multiget_slice and get_count.
+ <p/>
+ <p/>
+ </p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>rowKeys</td>
+          <td>A list of keys used for</td>
+        </tr>
+        <tr>
+          <th>columnParent</td>
+          <td>Path to the column - must be a name of the ColumnFamily or
+                     ColumnFamily:SuperColumn pair</td>
+        </tr>
+        <tr>
+          <th>start</td>
+          <td>The column name to start the slice with. This attribute is not required, though there is no default value,
+                     and can be safely set to '', i.e., an empty byte array, to start with the first column name. Otherwise, it
+                     must a valid value under the rules of the Comparator defined for the given ColumnFamily.</td>
+        </tr>
+        <tr>
+          <th>finish</td>
+          <td>The column name to stop the slice at. This attribute is not required, though there is no default value,
+                     and can be safely set to an empty byte array to not stop until 'count' results are seen. Otherwise, it
+                     must also be a valid value to the ColumnFamily Comparator.</td>
+        </tr>
+        <tr>
+          <th>reversed</td>
+          <td>Whether the results should be ordered in reversed order. Similar to ORDER BY blah DESC in SQL.</td>
+        </tr>
+        <tr>
+          <th>count</td>
+          <td>How many columns to return. Similar to LIMIT in SQL. May be arbitrarily large, but Thrift will
+                     materialize the whole result into memory before returning it to the client, so be aware that you may
+                     be better served by iterating through slices by passing the last value of one call in as the 'start'
+                     of the next instead of increasing 'count' arbitrarily large.</td>
+        </tr>
+      </table>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Returns</h5>
+      <ul class="nolist"><li>A map of keys and integers</li></ul>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Throws</h5>
+      <table class="jd-tagtable">  
+        <tr>
+            <th><a href="../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBException.html">CassandraDBException</a></td>
+            <td>Generic Exception wrapper class for Thrift Exceptions.
+</td>
+        </tr>
+      </table>
+  </div>
+
+    </div>
+</div>
+
+
+<A NAME="multiGetSlice(java.util.List<java.lang.String>, java.lang.String, java.lang.String, java.lang.String, boolean, int, java.util.List<com.mulesoft.mule.cassandradb.ColumnSerializer>)"></A>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        Object
+      </span>
+      <span class="sympad">multiGetSlice</span>
+      <span class="normal">(List&lt;String&gt; rowKeys, String columnParent, String start, String finish, boolean reversed, int count, List&lt;<a href="../../../../../java/com/mulesoft/mule/cassandradb/ColumnSerializer.html">ColumnSerializer</a>&gt; columnSerializers)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Retrieves slices for column_parent and predicate on each of the given
+ keys in parallel. Keys are a list<string> of the keys to get slices for.
+ This is similar to getRangeSlices, except it operates on a set of
+ non-contiguous keys instead of a range of keys.
+ <p/>
+ </p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>rowKeys</td>
+          <td>A list of keys used for</td>
+        </tr>
+        <tr>
+          <th>columnParent</td>
+          <td>Path to the column - must be a name of the ColumnFamily or
+                          ColumnFamily:SuperColumn pair</td>
+        </tr>
+        <tr>
+          <th>start</td>
+          <td>The column name to start the slice with. This attribute is not required, though there is no default value,
+                          and can be safely set to '', i.e., an empty byte array, to start with the first column name. Otherwise, it
+                          must a valid value under the rules of the Comparator defined for the given ColumnFamily.</td>
+        </tr>
+        <tr>
+          <th>finish</td>
+          <td>The column name to stop the slice at. This attribute is not required, though there is no default value,
+                          and can be safely set to an empty byte array to not stop until 'count' results are seen. Otherwise, it
+                          must also be a valid value to the ColumnFamily Comparator.</td>
+        </tr>
+        <tr>
+          <th>reversed</td>
+          <td>Whether the results should be ordered in reversed order. Similar to ORDER BY blah DESC in SQL.</td>
+        </tr>
+        <tr>
+          <th>count</td>
+          <td>How many columns to return. Similar to LIMIT in SQL. May be arbitrarily large, but Thrift will
+                          materialize the whole result into memory before returning it to the client, so be aware that you may
+                          be better served by iterating through slices by passing the last value of one call in as the 'start'
+                          of the next instead of increasing 'count' arbitrarily large.</td>
+        </tr>
+        <tr>
+          <th>columnSerializers</td>
+          <td>Serializers for each column</td>
+        </tr>
+      </table>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Returns</h5>
+      <ul class="nolist"><li>A map of keys and ColumnOrSuperColumn</li></ul>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Throws</h5>
+      <table class="jd-tagtable">  
+        <tr>
+            <th><a href="../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBException.html">CassandraDBException</a></td>
+            <td>Generic Exception wrapper class for Thrift Exceptions.
+</td>
+        </tr>
+      </table>
+  </div>
+
+    </div>
+</div>
+
+
+<A NAME="remove(java.lang.String, java.lang.String)"></A>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        void
+      </span>
+      <span class="sympad">remove</span>
+      <span class="normal">(String rowKey, String columnPath)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Remove data from the row specified by key at the granularity specified by
+ column_path, and the given timestamp. Note that all the values in
+ column_path besides column_path.column_family are truly optional: you can
+ remove the entire row by just specifying the ColumnFamily, or you can
+ remove a SuperColumn or a single Column by specifying those levels too.
+ Note that the timestamp is needed, so that if the commands are replayed
+ in a different order on different nodes, the same result is produced.
+ <p/>
+ </p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>rowKey</td>
+          <td>The row key</td>
+        </tr>
+        <tr>
+          <th>columnPath</td>
+          <td>Path to the column - must be in the form of
+                   ColumnFamily:SuperColumn:Column</td>
+        </tr>
+      </table>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Throws</h5>
+      <table class="jd-tagtable">  
+        <tr>
+            <th><a href="../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBException.html">CassandraDBException</a></td>
+            <td>Generic Exception wrapper class for Thrift Exceptions.
+</td>
+        </tr>
+      </table>
+  </div>
+
+    </div>
+</div>
+
+
+<A NAME="removeCounter(java.lang.String, java.lang.String)"></A>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        void
+      </span>
+      <span class="sympad">removeCounter</span>
+      <span class="normal">(String rowKey, String columnPath)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Remove a counter from the row specified by key at the granularity
+ specified by column_path. Note that all the values in column_path besides
+ column_path.column_family are truly optional: you can remove the entire
+ row by just specifying the ColumnFamily, or you can remove a SuperColumn
+ or a single Column by specifying those levels too. Note that counters
+ have limited support for deletes: if you remove a counter, you must wait
+ to issue any following update until the delete has reached all the nodes
+ and all of them have been fully compacted.
+ <p/>
+ </p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>rowKey</td>
+          <td>Key of the row</td>
+        </tr>
+        <tr>
+          <th>columnPath</td>
+          <td>Column that will be affected by the remove counter</td>
+        </tr>
+      </table>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Throws</h5>
+      <table class="jd-tagtable">  
+        <tr>
+            <th><a href="../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBException.html">CassandraDBException</a></td>
+            <td>Generic Exception wrapper class for Thrift Exceptions.
+</td>
+        </tr>
+      </table>
+  </div>
+
+    </div>
+</div>
+
+
+<A NAME="setClient(org.apache.cassandra.thrift.Cassandra.Client)"></A>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        void
+      </span>
+      <span class="sympad">setClient</span>
+      <span class="normal">(Cassandra.Client client)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>client</td>
+          <td></td>
+        </tr>
+      </table>
+  </div>
+
+    </div>
+</div>
+
+
+<A NAME="setConsistencyLevel(org.apache.cassandra.thrift.ConsistencyLevel)"></A>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        void
+      </span>
+      <span class="sympad">setConsistencyLevel</span>
+      <span class="normal">(ConsistencyLevel consistencyLevel)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Set the consistency level.</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>consistencyLevel</td>
+          <td>Set the consistency level.
+</td>
+        </tr>
+      </table>
+  </div>
+
+    </div>
+</div>
+
+
+<A NAME="setHost(java.lang.String)"></A>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        void
+      </span>
+      <span class="sympad">setHost</span>
+      <span class="normal">(String host)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>host</td>
+          <td></td>
+        </tr>
+      </table>
+  </div>
+
+    </div>
+</div>
+
+
+<A NAME="setKeyspace(java.lang.String)"></A>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        void
+      </span>
+      <span class="sympad">setKeyspace</span>
+      <span class="normal">(String keyspace)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Set the keyspace</p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>keyspace</td>
+          <td>Set the keyspace.
+</td>
+        </tr>
+      </table>
+  </div>
+
+    </div>
+</div>
+
+
+<A NAME="setPort(int)"></A>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        void
+      </span>
+      <span class="sympad">setPort</span>
+      <span class="normal">(int port)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p></p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>port</td>
+          <td></td>
+        </tr>
+      </table>
+  </div>
+
+    </div>
+</div>
+
+
+<A NAME="setQueryKeyspace(java.lang.String)"></A>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        void
+      </span>
+      <span class="sympad">setQueryKeyspace</span>
+      <span class="normal">(String value)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Set the keyspace to use for subsequent requests.
+ <p/>
+ </p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>value</td>
+          <td>New value that will be used to all following requests</td>
+        </tr>
+      </table>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Throws</h5>
+      <table class="jd-tagtable">  
+        <tr>
+            <th><a href="../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBException.html">CassandraDBException</a></td>
+            <td>Generic Exception wrapper class for Thrift Exceptions.
+</td>
+        </tr>
+      </table>
+  </div>
+
+    </div>
+</div>
+
+
+<A NAME="systemAddColumnFamilyFromObject(org.apache.cassandra.thrift.CfDef)"></A>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        String
+      </span>
+      <span class="sympad">systemAddColumnFamilyFromObject</span>
+      <span class="normal">(CfDef cfDefinition)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Adds a column family. This method will throw an exception if a column
+ family with the same name is already associated with the keyspace.
+ Column names in metadata need to be ByteBuffer. You can achieve this by using the CassandraDBUtils like in the next example
+ <p/>
+ </p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>cfDefinition</td>
+          <td>An instance of CfDef</td>
+        </tr>
+      </table>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Returns</h5>
+      <ul class="nolist"><li>String The new Schema version ID.</li></ul>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Throws</h5>
+      <table class="jd-tagtable">  
+        <tr>
+            <th><a href="../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBException.html">CassandraDBException</a></td>
+            <td>Generic Exception wrapper class for Thrift Exceptions.
+</td>
+        </tr>
+      </table>
+  </div>
+
+    </div>
+</div>
+
+
+<A NAME="systemAddColumnFamilyFromObjectWithSimpleNames(org.apache.cassandra.thrift.CfDef, java.util.List<java.lang.String>)"></A>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        String
+      </span>
+      <span class="sympad">systemAddColumnFamilyFromObjectWithSimpleNames</span>
+      <span class="normal">(CfDef cfDefinition, List&lt;String&gt; columnNames)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Adds a column family. This method will throw an exception if a column
+ family with the same name is already associated with the keyspace. This method also recieves a list of string to be used as column names
+ <p/>
+ </p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>cfDefinition</td>
+          <td>An instance of CfDef</td>
+        </tr>
+        <tr>
+          <th>columnNames</td>
+          <td>A list that contains the columns names for columns defined in column_metadata</td>
+        </tr>
+      </table>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Returns</h5>
+      <ul class="nolist"><li>The new Schema version ID.</li></ul>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Throws</h5>
+      <table class="jd-tagtable">  
+        <tr>
+            <th><a href="../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBException.html">CassandraDBException</a></td>
+            <td>Generic Exception wrapper class for Thrift Exceptions.
+</td>
+        </tr>
+      </table>
+  </div>
+
+    </div>
+</div>
+
+
+<A NAME="systemAddColumnFamilyWithParams(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.util.List<org.apache.cassandra.thrift.ColumnDef>, java.lang.String)"></A>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        String
+      </span>
+      <span class="sympad">systemAddColumnFamilyWithParams</span>
+      <span class="normal">(String columnFamilyName, String comparatorType, String keyValidationClass, String defaultValidationClass, List&lt;ColumnDef&gt; columnMetadata, String keyspace)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Adds a column family to the current keyspace. This method will throw an exception if a column
+ family with the same name is already associated with the keyspace.
+ <p/>
+ </p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>columnFamilyName</td>
+          <td>The name of the column to be added</td>
+        </tr>
+        <tr>
+          <th>comparatorType</td>
+          <td>Validator to use to validate and compare column names in
+                               this column family. For Standard column families it applies to columns, for
+                               Super column families applied to  super columns.Default is BytesType, which is a straight forward lexical
+                               comparison of the bytes in each column.
+                               <p/>
+                               <p>Supported values are:</p>
+                               <ul>
+                               <li>AsciiType</li>
+                               <li>BooleanType</li>
+                               <li>BytesType</li>
+                               <li>CounterColumnType (distributed counter column)</li>
+                               <li>DateType</li>
+                               <li>DoubleType</li>
+                               <li>FloatType</li>
+                               <li>Int32Type</li>
+                               <li>IntegerType (a generic variable-length integer type)</li>
+                               <li>LexicalUUIDType</li>
+                               <li>LongType</li>
+                               <li>UTF8Type</li>
+                               <li>CompositeType (should be used with sub-types specified e.g. 'CompositeType(UTF8Type, Int32Type)'
+                               quotes are important (!) in this case)</li>
+                               </ul>
+                               It is also valid to specify the fully-qualified class name to a class that
+                               extends org.apache.cassandra.db.marshal.AbstractType.</td>
+        </tr>
+        <tr>
+          <th>keyValidationClass</td>
+          <td>Validator to use for keys. Default is BytesType which applies no validation.
+                               <p/>
+                               <p>Supported values are:</p>
+                               <ul>
+                               <li>AsciiType</li>
+                               <li>BooleanType</li>
+                               <li>BytesType</li>
+                               <li>DateType</li>
+                               <li>DoubleType</li>
+                               <li>FloatType</li>
+                               <li>Int32Type</li>
+                               <li>IntegerType (a generic variable-length integer type)</li>
+                               <li>LexicalUUIDType</li>
+                               <li>LongType</li>
+                               <li>UTF8Type</li>
+                               </ul>
+                               It is also valid to specify the fully-qualified class name to a class that
+                               extends org.apache.cassandra.db.marshal.AbstractType.</td>
+        </tr>
+        <tr>
+          <th>defaultValidationClass</td>
+          <td>Validator to use for values in columns which are
+                               not listed in the column_metadata. Default is BytesType which applies
+                               no validation.
+                               <p/>
+                               <p>Supported values are:</p>
+                               <ul>
+                               <li>AsciiType</li>
+                               <li>BooleanType</li>
+                               <li>BytesType</li>
+                               <li>CounterColumnType (distributed counter column)</li>
+                               <li>DateType</li>
+                               <li>DoubleType</li>
+                               <li>FloatType</li>
+                               <li>Int32Type</li>
+                               <li>IntegerType (a generic variable-length integer type)</li>
+                               <li>LexicalUUIDType</li>
+                               <li>LongType</li>
+                               <li>UTF8Type</li>
+                               <li>CompositeType (should be used with sub-types specified e.g. 'CompositeType(UTF8Type, Int32Type)'
+                               quotes are important (!) in this case)</li>
+                               </ul>
+                               It is also valid to specify the fully-qualified class name to a class that
+                               extends org.apache.cassandra.db.marshal.AbstractType.</td>
+        </tr>
+        <tr>
+          <th>columnMetadata</td>
+          <td>A list with the column definitions. If null, a dynamic column family will be created. For more details check http://www.datastax.com/docs/1.0/ddl/column_family</td>
+        </tr>
+        <tr>
+          <th>keyspace</td>
+          <td>The name of the keyspace. If null, current keyspace will be used</td>
+        </tr>
+      </table>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Returns</h5>
+      <ul class="nolist"><li>The new Schema version ID.</li></ul>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Throws</h5>
+      <table class="jd-tagtable">  
+        <tr>
+            <th><a href="../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBException.html">CassandraDBException</a></td>
+            <td>Generic Exception wrapper class for Thrift Exceptions.
+</td>
+        </tr>
+      </table>
+  </div>
+
+    </div>
+</div>
+
+
+<A NAME="systemAddKeyspaceFromObject(org.apache.cassandra.thrift.KsDef)"></A>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        String
+      </span>
+      <span class="sympad">systemAddKeyspaceFromObject</span>
+      <span class="normal">(KsDef keyspaceDefinition)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Creates a new keyspace and any column families defined with it. Callers
+ are not required to first create an empty keyspace and then create column
+ families for it.
+ <p/>
+ This will create a keyspace named MyKeyspace with no column families
+ </p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>keyspaceDefinition</td>
+          <td>The keyspace definition that will be added</td>
+        </tr>
+      </table>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Returns</h5>
+      <ul class="nolist"><li>The new schema version ID.</li></ul>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Throws</h5>
+      <table class="jd-tagtable">  
+        <tr>
+            <th><a href="../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBException.html">CassandraDBException</a></td>
+            <td>Generic Exception wrapper class for Thrift Exceptions.
+</td>
+        </tr>
+      </table>
+  </div>
+
+    </div>
+</div>
+
+
+<A NAME="systemAddKeyspaceWithParams(java.lang.String, java.util.List<java.lang.String>, com.mulesoft.mule.cassandradb.ReplicationStrategy, java.util.Map<java.lang.String, java.lang.String>)"></A>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        Object
+      </span>
+      <span class="sympad">systemAddKeyspaceWithParams</span>
+      <span class="normal">(String keyspaceName, List&lt;String&gt; columnNames, <a href="../../../../../java/com/mulesoft/mule/cassandradb/ReplicationStrategy.html">ReplicationStrategy</a> strategyClass, Map&lt;String,&nbsp;String&gt; strategyOptions)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Creates a new keyspace with the provided name with all the defaults values
+ <p/>
+ </p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>keyspaceName</td>
+          <td>The keyspace name</td>
+        </tr>
+        <tr>
+          <th>columnNames</td>
+          <td>List of the column names the keyspace will have</td>
+        </tr>
+        <tr>
+          <th>strategyClass</td>
+          <td>The name of the class that handles the Replication Strategy.</td>
+        </tr>
+        <tr>
+          <th>strategyOptions</td>
+          <td>Map containing the configuration for the strategy class selected.</td>
+        </tr>
+      </table>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Returns</h5>
+      <ul class="nolist"><li>The new schema version ID.</li></ul>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Throws</h5>
+      <table class="jd-tagtable">  
+        <tr>
+            <th><a href="../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBException.html">CassandraDBException</a></td>
+            <td>Generic Exception wrapper class for Thrift Exceptions.
+</td>
+        </tr>
+      </table>
+  </div>
+
+    </div>
+</div>
+
+
+<A NAME="systemDropColumnFamily(java.lang.String)"></A>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        String
+      </span>
+      <span class="sympad">systemDropColumnFamily</span>
+      <span class="normal">(String columnFamily)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Drops a column family. Creates a snapshot and then submits a 'graveyard'
+ compaction during which the abandoned files will be deleted.
+ <p/>
+ </p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>columnFamily</td>
+          <td>The name of the column family to be drop</td>
+        </tr>
+      </table>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Returns</h5>
+      <ul class="nolist"><li>The new schema version ID.</li></ul>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Throws</h5>
+      <table class="jd-tagtable">  
+        <tr>
+            <th><a href="../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBException.html">CassandraDBException</a></td>
+            <td>Generic Exception wrapper class for Thrift Exceptions.
+</td>
+        </tr>
+      </table>
+  </div>
+
+    </div>
+</div>
+
+
+<A NAME="systemDropKeyspace(java.lang.String)"></A>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        Object
+      </span>
+      <span class="sympad">systemDropKeyspace</span>
+      <span class="normal">(String keyspace)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Drops a keyspace. Creates a snapshot and then submits a 'graveyard'
+ compaction during which the abandoned files will be deleted.
+ <p/>
+ </p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>keyspace</td>
+          <td>Name of the keyspace to be dropped</td>
+        </tr>
+      </table>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Returns</h5>
+      <ul class="nolist"><li>The new schema version ID.</li></ul>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Throws</h5>
+      <table class="jd-tagtable">  
+        <tr>
+            <th><a href="../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBException.html">CassandraDBException</a></td>
+            <td>Generic Exception wrapper class for Thrift Exceptions.
+</td>
+        </tr>
+      </table>
+  </div>
+
+    </div>
+</div>
+
+
+<A NAME="systemUpdateColumnFamily(org.apache.cassandra.thrift.CfDef)"></A>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        String
+      </span>
+      <span class="sympad">systemUpdateColumnFamily</span>
+      <span class="normal">(CfDef columnFamily)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Updates properties of a ColumnFamily.
+ <p/>
+ </p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>columnFamily</td>
+          <td>CfDef with new settings</td>
+        </tr>
+      </table>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Returns</h5>
+      <ul class="nolist"><li>The new schema version ID.</li></ul>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Throws</h5>
+      <table class="jd-tagtable">  
+        <tr>
+            <th><a href="../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBException.html">CassandraDBException</a></td>
+            <td>Generic Exception wrapper class for Thrift Exceptions.
+</td>
+        </tr>
+      </table>
+  </div>
+
+    </div>
+</div>
+
+
+<A NAME="systemUpdateKeyspace(org.apache.cassandra.thrift.KsDef)"></A>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        String
+      </span>
+      <span class="sympad">systemUpdateKeyspace</span>
+      <span class="normal">(KsDef keyspaceDef)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Updates properties of a keyspace.
+ <p/>
+ </p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>keyspaceDef</td>
+          <td>New keyspace to be applied for update</td>
+        </tr>
+      </table>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Returns</h5>
+      <ul class="nolist"><li>The new schema version ID.</li></ul>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Throws</h5>
+      <table class="jd-tagtable">  
+        <tr>
+            <th><a href="../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBException.html">CassandraDBException</a></td>
+            <td>Generic Exception wrapper class for Thrift Exceptions.
+</td>
+        </tr>
+      </table>
+  </div>
+
+    </div>
+</div>
+
+
+<A NAME="truncate(java.lang.String)"></A>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+         
+         
+         
+         
+        void
+      </span>
+      <span class="sympad">truncate</span>
+      <span class="normal">(String columnFamily)</span>
+    </h4>
+      <div class="api-level">
+        <div>
+
+</div>
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Removes all the rows from the given column family.
+ <p/>
+ </p></div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Parameters</h5>
+      <table class="jd-tagtable">
+        <tr>
+          <th>columnFamily</td>
+          <td>Column Family</td>
+        </tr>
+      </table>
+  </div>
+  <div class="jd-tagdata">
+      <h5 class="jd-tagtitle">Throws</h5>
+      <table class="jd-tagtable">  
+        <tr>
+            <th><a href="../../../../../java/com/mulesoft/mule/cassandradb/CassandraDBException.html">CassandraDBException</a></td>
+            <td>Generic Exception wrapper class for Thrift Exceptions.
+</td>
+        </tr>
+      </table>
+  </div>
+
+    </div>
+</div>
+
+
+
+
+
+<!-- ========= METHOD DETAIL ======== -->
+
+
+
+<!-- ========= END OF CLASS DATA ========= -->
+<A NAME="navbar_top"></A>
+
+<div id="footer">
+Generated by <a href="http://www.mulesoft.com/devkit">Mule DevKit</a>. Document generation technology based on <a href="http://code.google.com/p/doclava/">Google's Doclava</a>.
+</div> <!-- end footer -->
+
+</div> <!-- jd-content -->
+
+</div><!-- end doc-content -->
+
+</div> <!-- end body-content --> 
+
+<script type="text/javascript">
+init(); /* initialize mule-developer-docs.js */
+</script>
+
+</body>
+</html>
