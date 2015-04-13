@@ -113,12 +113,12 @@
 
     <scm>
         <connection>
-            scm:git:git://github.com:mulesoft/CassandraDB-connector.git
+            scm:git:git://github.com:mulesoft/cassandra-connector.git
         </connection>
         <developerConnection>
-            scm:git:git@github.com:mulesoft/CassandraDB-connector.git
+            scm:git:git@github.com:mulesoft/cassandra-connector.git
         </developerConnection>
-        <url>http://github.com/mulesoft/CassandraDB-connector</url>
+        <url>http://github.com/mulesoft/cassandra-connector</url>
     </scm>
 
 </project>
