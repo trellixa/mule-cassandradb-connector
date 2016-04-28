@@ -1,9 +1,8 @@
 = Cassandra Connector Release Notes
 :keywords: release notes, connectors, cassandra
 
-_Community_  
+_Community_ 
 
-*Guide*: link:/mule-user-guide/v/3.7/cassandra-connector[CassandraDB Connector]
 
 == Version 1.2.0 - May 30, 2014
 
