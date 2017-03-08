@@ -11,7 +11,6 @@
 package com.mulesoft.mule.cassandradb.automation.testrunners;
 
 import com.mulesoft.mule.cassandradb.automation.SmokeTests;
-import com.mulesoft.mule.cassandradb.automation.testcases.*;
 import org.junit.experimental.categories.Categories;
 import org.junit.experimental.categories.Categories.IncludeCategory;
 import org.junit.runner.RunWith;
@@ -20,13 +19,13 @@ import org.junit.runners.Suite.SuiteClasses;
 @RunWith(Categories.class)
 @IncludeCategory(SmokeTests.class)
 @SuiteClasses({
-        AddTestCases.class, BatchMutableTestCases.class,
-        DescribeClusterNameTestCases.class, DescribeKeyspaceTestCases.class,
-        ExecuteCqlQueryTestCases.class, GetCountTestCases.class, GetRowTestCases.class,
-        GetTestCases.class, InsertTestCases.class, InsertFromMapTestCases.class,
-        RemoveTestCases.class, SystemAddColumnFamilyFromObjectTestCases.class,
-        SystemAddKeyspaceWithParamsTestCases.class, SystemDropColumnFamilyTestCases.class,
-        SystemDropKeyspaceTestCases.class, TruncateTestCases.class
+//        AddTestCases.class, BatchMutableTestCases.class,
+//        DescribeClusterNameTestCases.class, DescribeKeyspaceTestCases.class,
+//        ExecuteCqlQueryTestCases.class, GetCountTestCases.class, GetRowTestCases.class,
+//        GetTestCases.class, InsertTestCases.class, InsertFromMapTestCases.class,
+//        RemoveTestCases.class, SystemAddColumnFamilyFromObjectTestCases.class,
+//        SystemAddKeyspaceWithParamsTestCases.class, SystemDropColumnFamilyTestCases.class,
+//        SystemDropKeyspaceTestCases.class, TruncateTestCases.class
 })
 public class SmokeTestSuite {
 }
