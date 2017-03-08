@@ -11,6 +11,7 @@
 package com.mulesoft.mule.cassandradb.automation.testrunners;
 
 import com.mulesoft.mule.cassandradb.automation.RegressionTests;
+import com.mulesoft.mule.cassandradb.automation.testcases.*;
 import org.junit.experimental.categories.Categories;
 import org.junit.experimental.categories.Categories.IncludeCategory;
 import org.junit.runner.RunWith;
@@ -19,26 +20,26 @@ import org.junit.runners.Suite.SuiteClasses;
 @RunWith(Categories.class)
 @IncludeCategory(RegressionTests.class)
 @SuiteClasses({
-//        AddTestCases.class, BatchMutableTestCases.class,
-//        DescribeClusterNameTestCases.class, DescribeKeyspacesTestCases.class,
-//        DescribeKeyspaceTestCases.class, DescribePartitionerTestCases.class,
-//        DescribeRingTestCases.class, DescribeSchemaVersionsTestCases.class,
-//        DescribeSnitchTestCases.class, DescribeVersionTestCases.class,
-//        ExecuteCqlQueryTestCases.class, GetCountTestCases.class,
-//        GetIndexedSlicesTestCases.class, GetRangeSlicesTestCases.class,
-//        GetRowTestCases.class, GetSliceTestCases.class,
-//        GetTestCases.class, InsertFromMapTestCases.class,
-//        InsertTestCases.class, MultiGetCountTestCases.class,
-//        MultiGetSliceTestCases.class, RemoveCounterTestCases.class,
-//        RemoveTestCases.class, SetQueryKeyspaceTestCases.class,
-//        SystemAddColumnFamilyFromObjectTestCases.class,
-//        SystemAddColumnFamilyFromObjectWithSimpleNamesTestCases.class,
-//        SystemAddColumnFamilyWithParamsTestCases.class,
-//        SystemAddKeyspaceFromObjectTestCases.class,
-//        SystemAddKeyspaceWithParamsTestCases.class,
-//        SystemDropColumnFamilyTestCases.class, SystemDropKeyspaceTestCases.class,
-//        SystemUpdateColumnFamilyTestCases.class, SystemUpdateKeyspaceTestCases.class,
-//        TruncateTestCases.class
+        AddTestCases.class, BatchMutableTestCases.class,
+        DescribeClusterNameTestCases.class, DescribeKeyspacesTestCases.class,
+        DescribeKeyspaceTestCases.class, DescribePartitionerTestCases.class,
+        DescribeRingTestCases.class, DescribeSchemaVersionsTestCases.class,
+        DescribeSnitchTestCases.class, DescribeVersionTestCases.class,
+        ExecuteCqlQueryTestCases.class, GetCountTestCases.class,
+        GetIndexedSlicesTestCases.class, GetRangeSlicesTestCases.class,
+        GetRowTestCases.class, GetSliceTestCases.class,
+        GetTestCases.class, InsertFromMapTestCases.class,
+        InsertTestCases.class, MultiGetCountTestCases.class,
+        MultiGetSliceTestCases.class, RemoveCounterTestCases.class,
+        RemoveTestCases.class, SetQueryKeyspaceTestCases.class,
+        SystemAddColumnFamilyFromObjectTestCases.class,
+        SystemAddColumnFamilyFromObjectWithSimpleNamesTestCases.class,
+        SystemAddColumnFamilyWithParamsTestCases.class,
+        SystemAddKeyspaceFromObjectTestCases.class,
+        SystemAddKeyspaceWithParamsTestCases.class,
+        SystemDropColumnFamilyTestCases.class, SystemDropKeyspaceTestCases.class,
+        SystemUpdateColumnFamilyTestCases.class, SystemUpdateKeyspaceTestCases.class,
+        TruncateTestCases.class
 })
 public class RegressionTestSuite {
 }
