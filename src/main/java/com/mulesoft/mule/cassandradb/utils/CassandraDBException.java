@@ -8,7 +8,7 @@
  * LICENSE.txt file.
  */
 
-package com.mulesoft.mule.cassandradb;
+package com.mulesoft.mule.cassandradb.utils;
 
 /**
  * Generic Exception wrapper class for Thrift Exceptions.

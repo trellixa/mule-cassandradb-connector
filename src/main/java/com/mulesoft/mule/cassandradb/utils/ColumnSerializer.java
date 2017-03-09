@@ -8,7 +8,7 @@
  * LICENSE.txt file.
  */
 
-package com.mulesoft.mule.cassandradb;
+package com.mulesoft.mule.cassandradb.utils;
 
 /**
  * Pair of values used to serialize columns

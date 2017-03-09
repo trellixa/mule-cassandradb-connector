@@ -10,20 +10,21 @@
 
 package com.mulesoft.mule.cassandradb;
 
-import com.datastax.driver.core.Cluster;
-import com.datastax.driver.core.ConsistencyLevel;
-import com.datastax.driver.core.PreparedStatement;
-import com.datastax.driver.core.Statement;
-import com.datastax.driver.core.schemabuilder.CreateKeyspace;
-import com.datastax.driver.core.schemabuilder.SchemaBuilder;
-import com.mulesoft.mule.cassandradb.api.CassandraClient;
+import com.datastax.driver.core.*;
+import com.datastax.driver.core.schemabuilder.*;
+import com.mulesoft.mule.cassandradb.utils.*;
+import com.mulesoft.mule.cassandradb.utils.builders.HelperStatements;
+import org.apache.commons.lang3.StringUtils;
 import org.mule.api.ConnectionException;
 import org.mule.api.annotations.*;
 import org.mule.api.annotations.display.Password;
 import org.mule.api.annotations.param.ConnectionKey;
 import org.mule.api.annotations.param.Default;
+import org.mule.api.annotations.param.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Map;
 
 /**
  * The Apache Cassandra database is the right choice when you need scalability and high availability without compromising performance.
@@ -121,7 +122,7 @@ public class CassandraDBConnector {
 //     * @param query       CQL Statement to be executed
 //     * @param compression Compression level, by default we use NONE
 //     * @return CqlResult containing the results of the execution
-//     * @throws com.mulesoft.mule.cassandradb.CassandraDBException Generic Exception wrapper class for Thrift Exceptions.
+//     * @throws com.mulesoft.mule.cassandradb.utils.CassandraDBException Generic Exception wrapper class for Thrift Exceptions.
 //     */
 //    @Processor
 //    public Object executeCqlQuery(String query, @Default("NONE") Compression compression)
@@ -149,15 +150,61 @@ public class CassandraDBConnector {
      * cassandradb:describe-keyspace}
      *
      * @return A KsDef instance
-     * @throws com.mulesoft.mule.cassandradb.CassandraDBException Generic Exception wrapper class for Thrift Exceptions.
+     * @throws CassandraDBException Generic Exception wrapper class for Thrift Exceptions.
      */
     @Processor
-    public Object createKeyspace(String keySpace) throws CassandraDBException {
+    public Object createKeyspace(String keyspaceName, Map<String, Object> replicationStrategy) throws CassandraDBException {
         try {
-            //build create keyspace statement
-            CreateKeyspace createKeyspace = new CreateKeyspace(keySpace);
+            return cassandraClient.getSession().execute(HelperStatements.createKeyspaceStatement(keyspaceName, replicationStrategy));
+        } catch (Exception e) {
+            throw new CassandraDBException(e.getMessage(), e);
+        }
+    }
+
+    @Processor
+    public Object dropKeyspace(String keyspaceName) throws CassandraDBException{
+        try {
+            //build drop keyspace statement
+            DropKeyspace dropKeyspaceStatement = SchemaBuilder.dropKeyspace(keyspaceName);
             //execute statement
-            return cassandraClient.getSession().execute(createKeyspace.with());
+            return cassandraClient.getSession().execute(dropKeyspaceStatement.ifExists().buildInternal());
+        } catch (Exception e) {
+            throw new CassandraDBException(e.getMessage(), e);
+        }
+    }
+
+    @Processor
+    public Object createTable(String tableName, @Optional String keyspaceName) throws CassandraDBException{
+        try {
+            //build drop keyspace statement
+            Create createTableStatement;
+            if (StringUtils.isNotBlank(keyspaceName)) {
+                createTableStatement = SchemaBuilder.createTable(keyspaceName, tableName);
+            } else {
+                //The CREATE TABLE command creates a new table under the current keyspace.
+                createTableStatement = SchemaBuilder.createTable(keyspace, tableName).addPartitionKey("partitionKey", DataType.counter());
+            }
+            //execute statement
+
+            return cassandraClient.getSession().execute(createTableStatement.ifNotExists());
+        } catch (Exception e) {
+            throw new CassandraDBException(e.getMessage(), e);
+        }
+    }
+
+    @Processor
+    public Object dropTable(String tableName, @Optional String keyspaceName) throws CassandraDBException{
+        try {
+            //build drop keyspace statement
+            Drop dropTableStatement ;
+            if (StringUtils.isNotBlank(keyspaceName)) {
+                dropTableStatement = SchemaBuilder.dropTable(keyspaceName, tableName);
+            } else {
+                dropTableStatement = SchemaBuilder.dropTable(tableName);
+            }
+            SchemaBuilder.dropTable(keyspace);
+            //execute statement
+            return cassandraClient.getSession().execute(dropTableStatement.ifExists());
         } catch (Exception e) {
             throw new CassandraDBException(e.getMessage(), e);
         }

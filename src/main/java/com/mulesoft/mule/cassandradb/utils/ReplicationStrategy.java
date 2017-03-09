@@ -8,7 +8,10 @@
  * LICENSE.txt file.
  */
 
-package com.mulesoft.mule.cassandradb;
+package com.mulesoft.mule.cassandradb.utils;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Cassandra supported replica placement strategies
@@ -70,5 +73,19 @@ public enum ReplicationStrategy {
         public String toString() {
             return "org.apache.cassandra.locator.OldNetworkTopologyStrategy";
         }
+    };
+
+    public static Map<String, Object> buildReplicationStrategy(Map<String, Object> replicationStrategy) {
+        if (replicationStrategy == null) {
+            buildDefaultReplicationStrategy();
+        }
+        return replicationStrategy;
+    }
+
+    public static Map<String, Object> buildDefaultReplicationStrategy() {
+        Map<String, Object> replicationStrategyMap = new HashMap<String, Object>();
+        replicationStrategyMap.put("class", SIMPLE);
+        replicationStrategyMap.put(Constants.REPLICATION_FACTOR, "3");
+        return replicationStrategyMap;
     }
 }

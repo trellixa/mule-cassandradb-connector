@@ -19,7 +19,7 @@
         <licensePath>LICENSE.md</licensePath>
         <devkit.studio.package.skip>false</devkit.studio.package.skip>
         <connector.test.version>2.0.6</connector.test.version>
-        <junit.version>4.11</junit.version>
+        <harmcrest.version>1.3</harmcrest.version>
     </properties>
 
     <dependencies>
@@ -48,12 +48,7 @@
             <version>${mule.version}</version>
             <scope>provided</scope>
         </dependency>
-        <!--<dependency>-->
-            <!--<groupId>com.google.guava</groupId>-->
-            <!--<artifactId>guava</artifactId>-->
-            <!--<version>13.0.1</version>-->
-            <!--<scope>test</scope>-->
-        <!--</dependency>-->
+
         <!-- https://mvnrepository.com/artifact/com.datastax.cassandra/cassandra-driver-core -->
         <dependency>
             <groupId>com.datastax.cassandra</groupId>
@@ -71,6 +66,13 @@
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
             <version>3.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest-library</artifactId>
+            <version>${harmcrest.version}</version>
+            <scope>test</scope>
         </dependency>
 
     </dependencies>

@@ -359,7 +359,7 @@
                 <required caption="Keyspace Name" group="General" javaType="java.lang.String" name="keyspaceName"
                           type="string"/>
                 <optional caption="Strategy Class" group="General"
-                          javaType="com.mulesoft.mule.cassandradb.ReplicationStrategy" name="strategyClass"
+                          javaType="com.mulesoft.mule.cassandradb.utils.ReplicationStrategy" name="strategyClass"
                           type="enum"/>
             </attributes>
             <childElements/>

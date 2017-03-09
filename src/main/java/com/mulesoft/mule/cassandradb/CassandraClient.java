@@ -1,7 +1,6 @@
-package com.mulesoft.mule.cassandradb.api;
+package com.mulesoft.mule.cassandradb;
 
 import com.datastax.driver.core.*;
-import org.apache.commons.httpclient.auth.CredentialsProvider;
 import org.apache.commons.lang3.StringUtils;
 import org.mule.api.ConnectionExceptionCode;
 import org.slf4j.Logger;
@@ -47,8 +46,6 @@ public class CassandraClient {
         } catch (Exception cassandraException) {
             logger.error("Error while connecting to Cassandra database!", cassandraException);
             throw new org.mule.api.ConnectionException(ConnectionExceptionCode.UNKNOWN, null, cassandraException.getMessage());
-        } finally {
-            close();
         }
     }
 

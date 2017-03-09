@@ -1,57 +1,59 @@
 /**
  * Mule Cassandra Connector
- *
+ * <p>
  * Copyright (c) MuleSoft, Inc.  All rights reserved.  http://www.mulesoft.com
- *
+ * <p>
  * The software in this package is published under the terms of the CPAL v1.0
  * license, a copy of which has been included with this distribution in the
  * LICENSE.txt file.
  */
 package com.mulesoft.mule.cassandradb;
 
-import com.mulesoft.mule.cassandradb.api.CassandraClient;
-import org.junit.Before;
+import com.mulesoft.mule.cassandradb.utils.CassandraDBException;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
-import org.mockito.MockitoAnnotations;
+import org.mockito.Mockito;
 import org.mule.api.ConnectionException;
+
+import static org.mockito.Mockito.when;
 
 public class CassandraDBConnectorMockTest {
 
-    private static String keyspace = "MyKeyspace";
-    private static String fakeDescription = "fakeDescription";
-    private static String schemaVersionID1 = "Schema1";
-    private static String superColumn1 = "SuperColumn1";
-    private static String column1 = "Column1";
-    private static String columnFamily = "ColumnFamily";
-    private static String rowKey = "001";
-    private static String columnPath1 = columnFamily + ":" + superColumn1 + ":" + column1;
+    private static CassandraDBConnector connector = new CassandraDBConnector();
+    private static CassandraClient client = new CassandraClient();
 
-//    private ColumnParent columnParent;
-    private CassandraDBConnector connector;
-//    private KsDef keyspaceDefinition;
-//    private SliceRange range;
-//    private SlicePredicate predicate;
-//    private ConsistencyLevel consistencyLevel;
-//    private ColumnPath cPath;
-//    private SuperColumn superColumn;
-//    private ColumnOrSuperColumn colOrSup;
-//    @Mock
-    private CassandraClient client = new CassandraClient();
-//
-    @Before
-    public void setUpTests() throws Exception {
-        MockitoAnnotations.initMocks(this);
-        connector = new CassandraDBConnector();
+    @BeforeClass
+    public static void setUpTests() throws ConnectionException {
+        connector.setHost("127.0.0.1");
+        connector.setPort(9042);
         connector.setClient(client);
+        connector.connect(null, null);
+    }
+
+    @AfterClass
+    public static void tearDown() {
+
+        client.close();
     }
 
     @Test
-    public void testConnect() {
-        connector.setHost("82.208.167.26");
-        connector.setPort(9042);
+    public void shouldCreateKeyspace() throws CassandraDBException {
+        when(connector.createKeyspace("dummy_keyspace", null)).thenReturn(Mockito.any());
+    }
+
+    @Test
+    public void shouldDropKeyspace() throws CassandraDBException {
+//        when(connector.dropKeyspace("dummy_keyspace"));
+        connector.dropKeyspace("dummy_keyspace");
+//        asse
+    }
+
+    @Test
+    public void shouldCreateTable() {
         try {
-            connector.connect(null, null);
-        } catch (ConnectionException e) {
+            connector.createTable("dummy table", null);
+        } catch (CassandraDBException e) {
             e.printStackTrace();
         }
     }
