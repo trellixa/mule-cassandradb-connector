@@ -9,54 +9,64 @@
  */
 package com.mulesoft.mule.cassandradb;
 
+import com.datastax.driver.core.ResultSet;
 import com.mulesoft.mule.cassandradb.utils.CassandraDBException;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.mockito.Mockito;
+import com.mulesoft.mule.cassandradb.utils.Constants;
+import org.junit.*;
+import org.junit.runners.MethodSorters;
 import org.mule.api.ConnectionException;
 
-import static org.mockito.Mockito.when;
-
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class CassandraDBConnectorMockTest {
 
     private static CassandraDBConnector connector = new CassandraDBConnector();
     private static CassandraClient client = new CassandraClient();
 
     @BeforeClass
-    public static void setUpTests() throws ConnectionException {
+    public static void init() throws ConnectionException, CassandraDBException {
         connector.setHost("127.0.0.1");
         connector.setPort(9042);
         connector.setClient(client);
         connector.connect(null, null);
+
+        //create a keyspace to be further used
+        connector.createKeyspace(Constants.KEYSPACE_NAME, null);
     }
 
     @AfterClass
-    public static void tearDown() {
-
+    public static void tearDown() throws CassandraDBException {
+        connector.dropKeyspace(Constants.KEYSPACE_NAME);
         client.close();
     }
 
     @Test
-    public void shouldCreateKeyspace() throws CassandraDBException {
-        when(connector.createKeyspace("dummy_keyspace", null)).thenReturn(Mockito.any());
+    public void shouldCreateTable() throws CassandraDBException {
+        //create a table
+        connector.createTable(Constants.TABLE_NAME, Constants.KEYSPACE_NAME, null);
+        Assert.assertTrue(verifyTableCreation(Constants.TABLE_NAME, Constants.KEYSPACE_NAME));
+    }
+
+
+    @Test
+    public void shouldDropTable() throws CassandraDBException {
+        connector.dropTable(Constants.TABLE_NAME, Constants.KEYSPACE_NAME);
+        Assert.assertFalse(verifyTableCreation(Constants.TABLE_NAME, Constants.KEYSPACE_NAME));
     }
 
     @Test
-    public void shouldDropKeyspace() throws CassandraDBException {
-//        when(connector.dropKeyspace("dummy_keyspace"));
-        connector.dropKeyspace("dummy_keyspace");
-//        asse
+    public void shouldDescribeKeyspaces() {
+        ResultSet resultSet = connector.executeCQLQuery("SELECT * FROM system_schema.keyspaces");
+        Assert.assertTrue(resultSet.all().size() > 0);
     }
 
-    @Test
-    public void shouldCreateTable() {
-        try {
-            connector.createTable("dummy table", null);
-        } catch (CassandraDBException e) {
-            e.printStackTrace();
-        }
+    /**
+     * helper method used to verify is a table was created in a specific keyspace
+     */
+    private boolean verifyTableCreation(String tableToVerify, String keyspaceName) {
+        return connector.getTableNamesFromKeyspace(keyspaceName).contains(tableToVerify);
     }
+
+
 //
 //    @Test
 //    public void testDescribeSchema() throws Exception {

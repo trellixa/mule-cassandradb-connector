@@ -10,8 +10,10 @@
 
 package com.mulesoft.mule.cassandradb;
 
-import com.datastax.driver.core.*;
+import com.datastax.driver.core.ResultSet;
+import com.datastax.driver.core.TableMetadata;
 import com.datastax.driver.core.schemabuilder.*;
+import com.datastax.driver.mapping.Result;
 import com.mulesoft.mule.cassandradb.utils.*;
 import com.mulesoft.mule.cassandradb.utils.builders.HelperStatements;
 import org.apache.commons.lang3.StringUtils;
@@ -24,6 +26,9 @@ import org.mule.api.annotations.param.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -76,7 +81,6 @@ public class CassandraDBConnector {
         cassandraClient.connect(host, port, username, password, keyspace);
     }
 
-
     /**
      * Disconnect
      */
@@ -111,103 +115,67 @@ public class CassandraDBConnector {
         return "unknown";
     }
 
+    @Processor
+    public ResultSet createKeyspace(String keyspaceName, Map<String, Object> replicationStrategy) throws CassandraDBException {
+        try {
+            return cassandraClient.getSession().execute(HelperStatements.createKeyspaceStatement(keyspaceName, replicationStrategy).getQueryString());
+        } catch (Exception e) {
+            throw new CassandraDBException(e.getMessage(), e);
+        }
+    }
 
-//    /**
-//     * Executes a CQL (Cassandra Query Language) statement and returns a
-//     * CqlResult containing the results. For more information about CQL please visit: http://cassandra.apache.org/doc/cql/CQL.html
-//     * <p/>
-//     * {@sample.xml ../../../doc/CassandraDB-connector.xml.sample
-//     * cassandradb:execute-cql-query}
-//     *
-//     * @param query       CQL Statement to be executed
-//     * @param compression Compression level, by default we use NONE
-//     * @return CqlResult containing the results of the execution
-//     * @throws com.mulesoft.mule.cassandradb.utils.CassandraDBException Generic Exception wrapper class for Thrift Exceptions.
-//     */
-//    @Processor
-//    public Object executeCqlQuery(String query, @Default("NONE") Compression compression)
-//            throws CassandraDBException {
-//        try {
-//            return client.execute_cql_query(CassandraDBUtils.toByteBuffer(query),
-//                    compression);
-//        } catch (InvalidRequestException e) {
-//            throw new CassandraDBException(e.getMessage(), e);
-//        } catch (UnavailableException e) {
-//            throw new CassandraDBException(e.getMessage(), e);
-//        } catch (TimedOutException e) {
-//            throw new CassandraDBException(e.getMessage(), e);
-//        } catch (SchemaDisagreementException e) {
-//            throw new CassandraDBException(e.getMessage(), e);
-//        } catch (TException e) {
-//            throw new CassandraDBException(e.getMessage(), e);
-//        }
-//    }
+    @Processor
+    public ResultSet dropKeyspace(String keyspaceName) throws CassandraDBException{
+        try {
+            return cassandraClient.getSession().execute(HelperStatements.dropKeyspaceStatement(keyspaceName).getQueryString());
+        } catch (Exception e) {
+            throw new CassandraDBException(e.getMessage(), e);
+        }
+    }
 
     /**
-     * Gets information about the specified keyspace.
-     * <p/>
-     * {@sample.xml ../../../doc/CassandraDB-connector.xml.sample
-     * cassandradb:describe-keyspace}
-     *
-     * @return A KsDef instance
-     * @throws CassandraDBException Generic Exception wrapper class for Thrift Exceptions.
+     * method creates a table(column family) in a specific keyspace
+     * @param customKeyspaceName - if the parameter is present, we overwrite the keyspace used in the connection itself (if present)
+     * @param partitionKey - mandatory field; if null, default partitionKey will be added
      */
     @Processor
-    public Object createKeyspace(String keyspaceName, Map<String, Object> replicationStrategy) throws CassandraDBException {
+    public ResultSet createTable(String tableName, @Optional String customKeyspaceName, Map<String, Object> partitionKey) throws CassandraDBException{
         try {
-            return cassandraClient.getSession().execute(HelperStatements.createKeyspaceStatement(keyspaceName, replicationStrategy));
+            return cassandraClient.getSession().execute(HelperStatements.createTable(tableName,
+                    StringUtils.isNotBlank(customKeyspaceName) ? customKeyspaceName : keyspace , partitionKey));
         } catch (Exception e) {
             throw new CassandraDBException(e.getMessage(), e);
         }
     }
 
     @Processor
-    public Object dropKeyspace(String keyspaceName) throws CassandraDBException{
+    public ResultSet dropTable(String tableName, @Optional String customKeyspaceName) throws CassandraDBException{
         try {
-            //build drop keyspace statement
-            DropKeyspace dropKeyspaceStatement = SchemaBuilder.dropKeyspace(keyspaceName);
-            //execute statement
-            return cassandraClient.getSession().execute(dropKeyspaceStatement.ifExists().buildInternal());
+            return cassandraClient.getSession().execute(HelperStatements.dropTable(tableName,
+                    StringUtils.isNotBlank(customKeyspaceName) ? customKeyspaceName : keyspace));
         } catch (Exception e) {
             throw new CassandraDBException(e.getMessage(), e);
         }
     }
 
     @Processor
-    public Object createTable(String tableName, @Optional String keyspaceName) throws CassandraDBException{
-        try {
-            //build drop keyspace statement
-            Create createTableStatement;
-            if (StringUtils.isNotBlank(keyspaceName)) {
-                createTableStatement = SchemaBuilder.createTable(keyspaceName, tableName);
-            } else {
-                //The CREATE TABLE command creates a new table under the current keyspace.
-                createTableStatement = SchemaBuilder.createTable(keyspace, tableName).addPartitionKey("partitionKey", DataType.counter());
-            }
-            //execute statement
-
-            return cassandraClient.getSession().execute(createTableStatement.ifNotExists());
-        } catch (Exception e) {
-            throw new CassandraDBException(e.getMessage(), e);
+    public ResultSet executeCQLQuery(String cqlQuery) {
+        if (StringUtils.isNotBlank(cqlQuery)) {
+            return cassandraClient.getSession().execute(cqlQuery);
         }
+        return null;
     }
 
-    @Processor
-    public Object dropTable(String tableName, @Optional String keyspaceName) throws CassandraDBException{
-        try {
-            //build drop keyspace statement
-            Drop dropTableStatement ;
-            if (StringUtils.isNotBlank(keyspaceName)) {
-                dropTableStatement = SchemaBuilder.dropTable(keyspaceName, tableName);
-            } else {
-                dropTableStatement = SchemaBuilder.dropTable(tableName);
-            }
-            SchemaBuilder.dropTable(keyspace);
-            //execute statement
-            return cassandraClient.getSession().execute(dropTableStatement.ifExists());
-        } catch (Exception e) {
-            throw new CassandraDBException(e.getMessage(), e);
+    public List<String> getTableNamesFromKeyspace(String keyspaceName) {
+
+        Collection<TableMetadata> tables = cassandraClient.getCluster()
+                .getMetadata().getKeyspace(keyspaceName)
+                .getTables();
+        ArrayList<String> tableNames = new ArrayList<String>();
+        for (TableMetadata table : tables) {
+            tableNames.add(table.getName());
         }
+        return tableNames;
     }
 
     /**

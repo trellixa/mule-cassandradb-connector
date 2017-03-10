@@ -10,7 +10,7 @@
 
 package com.mulesoft.mule.cassandradb.utils;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -77,14 +77,14 @@ public enum ReplicationStrategy {
 
     public static Map<String, Object> buildReplicationStrategy(Map<String, Object> replicationStrategy) {
         if (replicationStrategy == null) {
-            buildDefaultReplicationStrategy();
+            return buildDefaultReplicationStrategy();
         }
         return replicationStrategy;
     }
 
-    public static Map<String, Object> buildDefaultReplicationStrategy() {
-        Map<String, Object> replicationStrategyMap = new HashMap<String, Object>();
-        replicationStrategyMap.put("class", SIMPLE);
+    public static LinkedHashMap<String, Object> buildDefaultReplicationStrategy() {
+        LinkedHashMap<String, Object> replicationStrategyMap = new LinkedHashMap<String, Object>();
+        replicationStrategyMap.put("class", SIMPLE.toString());
         replicationStrategyMap.put(Constants.REPLICATION_FACTOR, "3");
         return replicationStrategyMap;
     }
