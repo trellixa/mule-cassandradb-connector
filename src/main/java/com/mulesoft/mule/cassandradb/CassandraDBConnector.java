@@ -11,23 +11,11 @@
 package com.mulesoft.mule.cassandradb;
 
 import com.datastax.driver.core.ResultSet;
-import com.datastax.driver.core.TableMetadata;
-import com.datastax.driver.core.schemabuilder.*;
-import com.datastax.driver.mapping.Result;
+import com.mulesoft.mule.cassandradb.configurations.BasicAuthConnectionStrategy;
 import com.mulesoft.mule.cassandradb.utils.*;
-import com.mulesoft.mule.cassandradb.utils.builders.HelperStatements;
-import org.apache.commons.lang3.StringUtils;
-import org.mule.api.ConnectionException;
 import org.mule.api.annotations.*;
-import org.mule.api.annotations.display.Password;
-import org.mule.api.annotations.param.ConnectionKey;
-import org.mule.api.annotations.param.Default;
 import org.mule.api.annotations.param.Optional;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -39,95 +27,23 @@ import java.util.Map;
  */
 @Connector(name = "cassandradb", schemaVersion = "3.2", friendlyName = "CassandraDB", minMuleVersion = "3.5")
 public class CassandraDBConnector {
-    private static final Logger logger = LoggerFactory.getLogger(CassandraDBConnector.class);
 
-    /**
-     * Host name or IP address
-     */
-    @Configurable
-    @Default("localhost")
-    private String host;
-
-    /**
-     * Port (default is 9160)
-     */
-    @Configurable
-    @Default("9160")
-    private int port = 9160;
-
-    /**
-     * Cassandra keyspace
-     */
-    @Configurable
-    private String keyspace;
-
-    /**
-     * Cassandra client
-     * session to be used to execute queries
-     */
-    private CassandraClient cassandraClient;
-
-    /**
-     * Method invoked when a connection is required
-     *
-     * @param username A username. NOTE: Please use a dummy username if you have disabled authentication
-     * @param password A password. NOTE: Leave empty if not required. If specified, the connector will try to login with this credentials
-     * @throws org.mule.api.ConnectionException
-     */
-    @Connect
-    public void connect(@ConnectionKey String username,
-                        @Password String password)
-            throws ConnectionException {
-        cassandraClient.connect(host, port, username, password, keyspace);
-    }
-
-    /**
-     * Disconnect
-     */
-    @Disconnect
-    public void disconnect() {
-        if (isConnected()) {
-            try {
-                cassandraClient.close();
-            } catch (Exception e) {
-                logger.error("Exception thrown while trying to disconnect:", e);
-            }
-        }
-    }
-
-    /**
-     * Are we connected
-     *
-     * @return the connection status of the connector.
-     */
-    @ValidateConnection
-    public boolean isConnected() {
-        return cassandraClient.getSession().isClosed();
-    }
-
-    /**
-     * Connection Identifier
-     *
-     * @return the connection identifier.
-     */
-    @ConnectionIdentifier
-    public String connectionId() {
-        return "unknown";
-    }
+    @Config
+    private BasicAuthConnectionStrategy basicAuthConnectionStrategy;
 
     @Processor
-    public ResultSet createKeyspace(String keyspaceName, Map<String, Object> replicationStrategy) throws CassandraDBException {
+    public boolean createKeyspace(String keyspaceName, @Optional Map<String, Object> replicationStrategy) throws CassandraDBException {
         try {
-            return cassandraClient.getSession().execute(HelperStatements.createKeyspaceStatement(keyspaceName, replicationStrategy).getQueryString());
+            return basicAuthConnectionStrategy.getCassandraClient().createKeyspace(keyspaceName, replicationStrategy);
         } catch (Exception e) {
             throw new CassandraDBException(e.getMessage(), e);
         }
     }
 
     @Processor
-    public ResultSet dropKeyspace(String keyspaceName) throws CassandraDBException{
+    public boolean dropKeyspace(String keyspaceName) throws CassandraDBException{
         try {
-            return cassandraClient.getSession().execute(HelperStatements.dropKeyspaceStatement(keyspaceName).getQueryString());
+            return basicAuthConnectionStrategy.getCassandraClient().dropKeyspace(keyspaceName);
         } catch (Exception e) {
             throw new CassandraDBException(e.getMessage(), e);
         }
@@ -139,94 +55,46 @@ public class CassandraDBConnector {
      * @param partitionKey - mandatory field; if null, default partitionKey will be added
      */
     @Processor
-    public ResultSet createTable(String tableName, @Optional String customKeyspaceName, Map<String, Object> partitionKey) throws CassandraDBException{
+    public boolean createTable(String tableName, @Optional String customKeyspaceName, @Optional Map<String, Object> partitionKey) throws CassandraDBException{
         try {
-            return cassandraClient.getSession().execute(HelperStatements.createTable(tableName,
-                    StringUtils.isNotBlank(customKeyspaceName) ? customKeyspaceName : keyspace , partitionKey));
+            return basicAuthConnectionStrategy.getCassandraClient().createTable(tableName, customKeyspaceName, partitionKey);
         } catch (Exception e) {
             throw new CassandraDBException(e.getMessage(), e);
         }
     }
 
     @Processor
-    public ResultSet dropTable(String tableName, @Optional String customKeyspaceName) throws CassandraDBException{
+    public boolean dropTable(String tableName, @Optional String customKeyspaceName) throws CassandraDBException{
         try {
-            return cassandraClient.getSession().execute(HelperStatements.dropTable(tableName,
-                    StringUtils.isNotBlank(customKeyspaceName) ? customKeyspaceName : keyspace));
+            return basicAuthConnectionStrategy.getCassandraClient().dropTable(tableName, customKeyspaceName);
         } catch (Exception e) {
             throw new CassandraDBException(e.getMessage(), e);
         }
     }
 
     @Processor
-    public ResultSet executeCQLQuery(String cqlQuery) {
-        if (StringUtils.isNotBlank(cqlQuery)) {
-            return cassandraClient.getSession().execute(cqlQuery);
+    public ResultSet executeCQLQuery(String cqlQuery) throws CassandraDBException {
+        try {
+            return basicAuthConnectionStrategy.getCassandraClient().executeCQLQuery(cqlQuery);
+        } catch (Exception e) {
+            throw new CassandraDBException(e.getMessage(), e);
         }
-        return null;
     }
 
-    public List<String> getTableNamesFromKeyspace(String keyspaceName) {
-
-        Collection<TableMetadata> tables = cassandraClient.getCluster()
-                .getMetadata().getKeyspace(keyspaceName)
-                .getTables();
-        ArrayList<String> tableNames = new ArrayList<String>();
-        for (TableMetadata table : tables) {
-            tableNames.add(table.getName());
+    @Processor
+    public List<String> getTableNamesFromKeyspace(String keyspaceName) throws CassandraDBException {
+        try {
+            return basicAuthConnectionStrategy.getCassandraClient().getTableNamesFromKeyspace(keyspaceName);
+        } catch (Exception e) {
+            throw new CassandraDBException(e.getMessage(), e);
         }
-        return tableNames;
     }
 
-    /**
-     * @return the host connection url.
-     */
-    public String getHost() {
-        return this.host;
+    public BasicAuthConnectionStrategy getBasicAuthConnectionStrategy() {
+        return basicAuthConnectionStrategy;
     }
 
-    public void setHost(String host) {
-        this.host = host;
-    }
-
-    /**
-     * Retrieves the Port.
-     *
-     * @return the connection port.
-     */
-    public int getPort() {
-        return this.port;
-    }
-
-    public void setPort(int port) {
-        this.port = port;
-    }
-
-    /**
-     * Retrieves the Keyspace.
-     *
-     * @return the keyspace.
-     */
-    public String getKeyspace() {
-        return this.keyspace;
-    }
-
-    /**
-     * Set the keyspace
-     *
-     * @param keyspace set the keyspace.
-     */
-    public void setKeyspace(String keyspace) {
-        this.keyspace = keyspace;
-    }
-
-    /**
-     * Retrieves the Cassandra DB consistency level.
-     *
-     * @return the consistency level.
-     */
-
-    public void setClient(CassandraClient client) {
-        this.cassandraClient = client;
+    public void setBasicAuthConnectionStrategy(BasicAuthConnectionStrategy basicAuthConnectionStrategy) {
+        this.basicAuthConnectionStrategy = basicAuthConnectionStrategy;
     }
 }

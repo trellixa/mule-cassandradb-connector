@@ -10,6 +10,7 @@
 package com.mulesoft.mule.cassandradb;
 
 import com.datastax.driver.core.ResultSet;
+import com.mulesoft.mule.cassandradb.configurations.BasicAuthConnectionStrategy;
 import com.mulesoft.mule.cassandradb.utils.CassandraDBException;
 import com.mulesoft.mule.cassandradb.utils.Constants;
 import org.junit.*;
@@ -20,14 +21,15 @@ import org.mule.api.ConnectionException;
 public class CassandraDBConnectorMockTest {
 
     private static CassandraDBConnector connector = new CassandraDBConnector();
-    private static CassandraClient client = new CassandraClient();
+    private static BasicAuthConnectionStrategy strategy = new BasicAuthConnectionStrategy();
 
     @BeforeClass
     public static void init() throws ConnectionException, CassandraDBException {
-        connector.setHost("127.0.0.1");
-        connector.setPort(9042);
-        connector.setClient(client);
-        connector.connect(null, null);
+        strategy.setHost("127.0.0.1");
+        strategy.setPort(9042);
+        strategy.connect(null, null);
+
+        connector.setBasicAuthConnectionStrategy(strategy);
 
         //create a keyspace to be further used
         connector.createKeyspace(Constants.KEYSPACE_NAME, null);
@@ -36,7 +38,7 @@ public class CassandraDBConnectorMockTest {
     @AfterClass
     public static void tearDown() throws CassandraDBException {
         connector.dropKeyspace(Constants.KEYSPACE_NAME);
-        client.close();
+        strategy.getCassandraClient().close();
     }
 
     @Test
@@ -54,7 +56,7 @@ public class CassandraDBConnectorMockTest {
     }
 
     @Test
-    public void shouldDescribeKeyspaces() {
+    public void shouldDescribeKeyspaces() throws CassandraDBException {
         ResultSet resultSet = connector.executeCQLQuery("SELECT * FROM system_schema.keyspaces");
         Assert.assertTrue(resultSet.all().size() > 0);
     }
@@ -63,7 +65,7 @@ public class CassandraDBConnectorMockTest {
      * helper method used to verify is a table was created in a specific keyspace
      */
     private boolean verifyTableCreation(String tableToVerify, String keyspaceName) {
-        return connector.getTableNamesFromKeyspace(keyspaceName).contains(tableToVerify);
+        return strategy.getCassandraClient().getTableNamesFromKeyspace(keyspaceName).contains(tableToVerify);
     }
 
 
