@@ -1,9 +1,14 @@
 package com.mulesoft.mule.cassandradb.api;
 
 import com.datastax.driver.core.*;
+import com.mulesoft.mule.cassandradb.metadata.CassQueryVisitor;
 import com.mulesoft.mule.cassandradb.utils.builders.HelperStatements;
 import org.apache.commons.lang3.StringUtils;
 import org.mule.api.ConnectionExceptionCode;
+import org.mule.api.annotations.Query;
+import org.mule.api.annotations.QueryTranslator;
+import org.mule.api.annotations.display.Placement;
+import org.mule.common.query.DsqlQuery;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,7 +33,8 @@ public final class CassandraClient {
     /**
      * Connect to Cassandra Cluster specified by provided node IP
      * address and port number.
-     *  @param node     Cluster node IP address.
+     *
+     * @param node     Cluster node IP address.
      * @param port     Port of cluster host.
      * @param username the username to buildCassandraClient with
      * @param keyspace optional - keyspace to retrieve cluster session for
@@ -83,6 +89,7 @@ public final class CassandraClient {
 
     public List<String> getTableNamesFromKeyspace(String keyspaceName) {
         if (StringUtils.isNotBlank((keyspaceName))) {
+            logger.info("Retrieving table names from the keyspace: {0} ...", keyspaceName);
             Collection<TableMetadata> tables = cluster
                     .getMetadata().getKeyspace(keyspaceName)
                     .getTables();
@@ -95,10 +102,28 @@ public final class CassandraClient {
         return null;
     }
 
+    /**
+     * Fetches table metadata using DataStax java driver, based on the keyspace of the session
+     *
+     * @return the table metadata as returned by the driver.
+     */
+    public TableMetadata fetchTableMetadata(final String tableName) {
+        if (StringUtils.isNotBlank(tableName)) {
+            logger.info("Retrieving table metadata for: {0} ...", tableName);
+            Metadata metadata = cluster.getMetadata();
+            KeyspaceMetadata ksMetadata = metadata.getKeyspace(cassandraSession.getLoggedKeyspace());
+            if (ksMetadata != null) {
+                return ksMetadata.getTable(tableName);
+            }
+        }
+        return null;
+    }
 
-    /** Close cluster. */
-    private void closeCluster()
-    {
+
+    /**
+     * Close cluster.
+     */
+    private void closeCluster() {
         if (cluster != null) {
             cluster.close();
         }

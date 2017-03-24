@@ -12,9 +12,13 @@ package com.mulesoft.mule.cassandradb;
 
 import com.datastax.driver.core.ResultSet;
 import com.mulesoft.mule.cassandradb.configurations.BasicAuthConnectionStrategy;
+import com.mulesoft.mule.cassandradb.metadata.CassQueryMetadataCategory;
+import com.mulesoft.mule.cassandradb.metadata.CassQueryVisitor;
 import com.mulesoft.mule.cassandradb.utils.*;
 import org.mule.api.annotations.*;
+import org.mule.api.annotations.display.Placement;
 import org.mule.api.annotations.param.Optional;
+import org.mule.common.query.DsqlQuery;
 
 import java.util.List;
 import java.util.Map;
@@ -73,12 +77,20 @@ public class CassandraDBConnector {
     }
 
     @Processor
-    public ResultSet executeCQLQuery(String cqlQuery) throws CassandraDBException {
+    @MetaDataScope(CassQueryMetadataCategory.class)
+    public ResultSet executeCQLQuery(@Query @Placement(group = "Query") final String cqlQuery) throws CassandraDBException {
         try {
             return basicAuthConnectionStrategy.getCassandraClient().executeCQLQuery(cqlQuery);
         } catch (Exception e) {
             throw new CassandraDBException(e.getMessage(), e);
         }
+    }
+
+    @QueryTranslator
+    public String toNativeQuery(DsqlQuery query) {
+        CassQueryVisitor visitor = new CassQueryVisitor();
+        query.accept(visitor);
+        return visitor.dsqlQuery();
     }
 
     @Processor
