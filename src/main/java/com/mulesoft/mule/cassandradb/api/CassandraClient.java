@@ -103,20 +103,24 @@ public final class CassandraClient {
     }
 
     /**
-     * Fetches table metadata using DataStax java driver, based on the keyspace of the session
+     * Fetches table metadata using DataStax java driver, based on the keyspace provided
      *
      * @return the table metadata as returned by the driver.
      */
-    public TableMetadata fetchTableMetadata(final String tableName) {
+    public TableMetadata fetchTableMetadata(final String keyspaceUsed, final String tableName) {
         if (StringUtils.isNotBlank(tableName)) {
             logger.info("Retrieving table metadata for: {0} ...", tableName);
             Metadata metadata = cluster.getMetadata();
-            KeyspaceMetadata ksMetadata = metadata.getKeyspace(cassandraSession.getLoggedKeyspace());
+            KeyspaceMetadata ksMetadata = metadata.getKeyspace(keyspaceUsed);
             if (ksMetadata != null) {
                 return ksMetadata.getTable(tableName);
             }
         }
         return null;
+    }
+
+    public String getLoggedKeyspace() {
+        return cassandraSession.getLoggedKeyspace();
     }
 
 

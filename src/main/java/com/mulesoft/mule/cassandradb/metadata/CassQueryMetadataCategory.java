@@ -1,27 +1,18 @@
 package com.mulesoft.mule.cassandradb.metadata;
 
-import com.datastax.driver.core.KeyspaceMetadata;
-import com.datastax.driver.core.Metadata;
 import com.datastax.driver.core.TableMetadata;
 import com.mulesoft.mule.cassandradb.CassandraDBConnector;
 import com.mulesoft.mule.cassandradb.api.CassandraClient;
-import com.mulesoft.mule.cassandradb.utils.CassandraDBException;
 import org.apache.commons.collections.CollectionUtils;
-import org.mule.api.ConnectionException;
 import org.mule.api.annotations.MetaDataKeyRetriever;
 import org.mule.api.annotations.MetaDataRetriever;
 import org.mule.api.annotations.components.MetaDataCategory;
 import org.mule.common.metadata.*;
 import org.mule.common.metadata.builder.DefaultMetaDataBuilder;
-import org.mule.common.metadata.builder.DynamicObjectBuilder;
-import org.mule.common.metadata.builder.PojoMetaDataBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
-import javax.wsdl.WSDLException;
-import java.net.MalformedURLException;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,14 +24,15 @@ public class CassQueryMetadataCategory {
     @Inject
     private CassandraDBConnector cassandraConnector;
 
-    final String keyspaceUsed = cassandraConnector.getBasicAuthConnectionStrategy().getKeyspace();
-
-    final CassandraClient cassandraClient = cassandraConnector.getBasicAuthConnectionStrategy().getCassandraClient();
-
+    /**
+     * @return a list of {@link MetaDataKey} or empty list otherwise
+     */
     @MetaDataKeyRetriever
     public List<MetaDataKey> getMetadataKeys() {
         logger.info("Retrieving metadata keys...");
         List<MetaDataKey> keys = new ArrayList<MetaDataKey>();
+        final String keyspaceUsed = cassandraConnector.getBasicAuthConnectionStrategy().getCassandraClient().getLoggedKeyspace();
+        final CassandraClient cassandraClient = cassandraConnector.getBasicAuthConnectionStrategy().getCassandraClient();
 
         //extract metadata from database
         List<String> keyNames = cassandraClient.getTableNamesFromKeyspace(keyspaceUsed);
@@ -56,15 +48,26 @@ public class CassQueryMetadataCategory {
         return keys;
     }
 
+    /**
+     * @param key the metadata key to build the info for
+     * @return {@link MetaData} for the given {@link MetaDataKey key}.
+     */
     @MetaDataRetriever
     public MetaData getInputMetaData(final MetaDataKey key) {
-        //extract metadata from database
-        TableMetadata tableMetadata = cassandraClient.fetchTableMetadata(key.getCategory());
+        logger.info("Retrieving input metadata for the key: {0}", key);
+        final String keyspaceUsed = cassandraConnector.getBasicAuthConnectionStrategy().getCassandraClient().getLoggedKeyspace();
+        final CassandraClient cassandraClient = cassandraConnector.getBasicAuthConnectionStrategy().getCassandraClient();
+
+        //extract tables metadata from database
+        TableMetadata tableMetadata = cassandraClient.fetchTableMetadata(keyspaceUsed, key.getId());
+
+        //build the metadata
         if (tableMetadata != null) {
             MetaDataModel model =  new DefaultMetaDataBuilder().createPojo(TableMetadata.class).build();
             return new DefaultMetaData(model);
         }
-        return null;
+
+        return new DefaultMetaData(null);
     }
 
     public CassandraDBConnector getCassandraConnector() {
