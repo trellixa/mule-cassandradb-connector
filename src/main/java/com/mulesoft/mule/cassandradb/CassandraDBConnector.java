@@ -77,6 +77,10 @@ public class CassandraDBConnector {
     }
 
     @Processor
+    /**
+     * annotation required for Functional tests to pass
+     * to be removed
+     */
     @MetaDataScope(CassQueryMetadataCategory.class)
     public ResultSet executeCQLQuery(@Query @Placement(group = "Query") final String cqlQuery) throws CassandraDBException {
         try {
@@ -86,13 +90,6 @@ public class CassandraDBConnector {
         }
     }
 
-    @QueryTranslator
-    public String toNativeQuery(DsqlQuery query) {
-        CassQueryVisitor visitor = new CassQueryVisitor();
-        query.accept(visitor);
-        return visitor.dsqlQuery();
-    }
-
     @Processor
     public List<String> getTableNamesFromKeyspace(String keyspaceName) throws CassandraDBException {
         try {
@@ -100,6 +97,14 @@ public class CassandraDBConnector {
         } catch (Exception e) {
             throw new CassandraDBException(e.getMessage(), e);
         }
+    }
+
+
+    @QueryTranslator
+    public String toNativeQuery(DsqlQuery query) {
+        CassQueryVisitor visitor = new CassQueryVisitor();
+        query.accept(visitor);
+        return visitor.dsqlQuery();
     }
 
     public BasicAuthConnectionStrategy getBasicAuthConnectionStrategy() {

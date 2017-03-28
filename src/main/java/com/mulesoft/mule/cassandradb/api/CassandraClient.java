@@ -31,17 +31,17 @@ public final class CassandraClient {
     final static Logger logger = LoggerFactory.getLogger(CassandraClient.class);
 
     /**
-     * Connect to Cassandra Cluster specified by provided node IP
+     * Connect to Cassandra Cluster specified by provided host IP
      * address and port number.
      *
-     * @param node     Cluster node IP address.
+     * @param host     Cluster host IP address.
      * @param port     Port of cluster host.
      * @param username the username to buildCassandraClient with
      * @param keyspace optional - keyspace to retrieve cluster session for
      */
-    public static CassandraClient buildCassandraClient(final String node, final int port, final String username, final String password, final String keyspace) throws org.mule.api.ConnectionException {
+    public static CassandraClient buildCassandraClient(final String host, final int port, final String username, final String password, final String keyspace) throws org.mule.api.ConnectionException {
         Cluster.Builder clusterBuilder = Cluster.builder()
-                .addContactPoint(node)
+                .addContactPoint(host)
                 .withPort(port);
 
         if (StringUtils.isNotEmpty(username) && StringUtils.isNotEmpty(password)) {
@@ -52,9 +52,9 @@ public final class CassandraClient {
         client.cluster = clusterBuilder.build();
 
         try {
-            logger.info(String.format("Connecting to Cassandra Database: %s , port: %s", node, port));
+            logger.info("Connecting to Cassandra Database: {} , port: {}", host, port);
             client.cassandraSession = StringUtils.isNotEmpty(keyspace) ? client.cluster.connect(keyspace) : client.cluster.connect();
-            logger.info(String.format("Connected to Cassandra Cluster Node: %s!", client.cassandraSession.getCluster().getClusterName()));
+            logger.info("Connected to Cassandra Cluster: {} !", client.cassandraSession.getCluster().getClusterName());
         } catch (Exception cassandraException) {
             logger.error("Error while connecting to Cassandra database!", cassandraException);
             throw new org.mule.api.ConnectionException(ConnectionExceptionCode.UNKNOWN, null, cassandraException.getMessage());
@@ -89,7 +89,7 @@ public final class CassandraClient {
 
     public List<String> getTableNamesFromKeyspace(String keyspaceName) {
         if (StringUtils.isNotBlank((keyspaceName))) {
-            logger.info("Retrieving table names from the keyspace: {0} ...", keyspaceName);
+            logger.info("Retrieving table names from the keyspace: {} ...", keyspaceName);
             Collection<TableMetadata> tables = cluster
                     .getMetadata().getKeyspace(keyspaceName)
                     .getTables();
@@ -109,7 +109,7 @@ public final class CassandraClient {
      */
     public TableMetadata fetchTableMetadata(final String keyspaceUsed, final String tableName) {
         if (StringUtils.isNotBlank(tableName)) {
-            logger.info("Retrieving table metadata for: {0} ...", tableName);
+            logger.info("Retrieving table metadata for: {} ...", tableName);
             Metadata metadata = cluster.getMetadata();
             KeyspaceMetadata ksMetadata = metadata.getKeyspace(keyspaceUsed);
             if (ksMetadata != null) {
@@ -143,23 +143,5 @@ public final class CassandraClient {
         closeSession();
         closeCluster();
     }
-
-
-    /**
-     * Provide my Session.
-     *
-     * @return My session.
-     */
-//    public Session getSession() {
-//        return this.cassandraSession;
-//    }
-
-//    /**
-//     * Provide cluster used.
-//     */
-//    public Cluster getCluster() {
-//        return this.cluster;
-//    }
-
 }
 
