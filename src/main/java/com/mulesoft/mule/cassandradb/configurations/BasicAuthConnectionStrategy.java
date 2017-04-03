@@ -14,7 +14,7 @@ import org.mule.api.annotations.param.Default;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@ConnectionManagement(friendlyName = "Username/Password Connection")
+@ConnectionManagement(configElementName = "basic-authentication-config", friendlyName = "Username/Password Connection")
 public class BasicAuthConnectionStrategy {
 
     private static final Logger logger = LoggerFactory.getLogger(BasicAuthConnectionStrategy.class);

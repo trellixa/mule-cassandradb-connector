@@ -4,7 +4,10 @@
 package com.mulesoft.mule.cassandradb.api;
 
 import com.datastax.driver.core.*;
+import com.datastax.driver.core.querybuilder.Insert;
+import com.datastax.driver.core.querybuilder.QueryBuilder;
 import com.mulesoft.mule.cassandradb.metadata.CassQueryVisitor;
+import com.mulesoft.mule.cassandradb.utils.CassandraDBException;
 import com.mulesoft.mule.cassandradb.utils.builders.HelperStatements;
 import org.apache.commons.lang3.StringUtils;
 import org.mule.api.ConnectionExceptionCode;
@@ -120,6 +123,27 @@ public final class CassandraClient {
             }
         }
         return null;
+    }
+    
+    public void insert(String keySpace, String table, Map<String, Object> entity) throws CassandraDBException {
+
+        Insert insertObject = QueryBuilder.insertInto(keySpace, table);
+
+        for (Map.Entry<String, Object> entry : entity.entrySet()) {
+            insertObject.value(entry.getKey(), entry.getValue());
+        }
+
+        try {
+
+            logger.debug("Insert Request: " + insertObject.toString());
+
+            cassandraSession.execute(insertObject);            
+
+        } catch (Exception e) {
+
+            logger.error("Insert Request Failed: " + e.getMessage());
+            throw new CassandraDBException(e.getMessage());
+        }
     }
 
     public String getLoggedKeyspace() {

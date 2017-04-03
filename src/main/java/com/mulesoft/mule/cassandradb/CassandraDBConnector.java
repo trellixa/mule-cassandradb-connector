@@ -10,6 +10,10 @@ import com.mulesoft.mule.cassandradb.metadata.CassQueryVisitor;
 import com.mulesoft.mule.cassandradb.utils.*;
 import org.mule.api.annotations.*;
 import org.mule.api.annotations.display.Placement;
+import org.mule.api.annotations.licensing.RequiresEnterpriseLicense;
+import org.mule.api.annotations.param.Default;
+import org.mule.api.annotations.param.MetaDataKeyParam;
+import org.mule.api.annotations.param.MetaDataKeyParamAffectsType;
 import org.mule.api.annotations.param.Optional;
 import org.mule.common.query.DsqlQuery;
 
@@ -23,7 +27,10 @@ import java.util.Map;
  * @author MuleSoft, Inc.
  */
 @Connector(name = "cassandradb", schemaVersion = "3.2", friendlyName = "CassandraDB", minMuleVersion = "3.5")
+@RequiresEnterpriseLicense(allowEval = true)
 public class CassandraDBConnector {
+    
+    private static final String PAYLOAD = "#[payload]";
 
     @Config
     private BasicAuthConnectionStrategy basicAuthConnectionStrategy;
@@ -69,11 +76,11 @@ public class CassandraDBConnector {
         }
     }
 
-    @Processor
     /**
      * method executes the raw input query provided
      * @MetaDataScope annotation required for Functional tests to pass;to be removed
      */
+    @Processor(friendlyName="Execute CQL Query")
     @MetaDataScope(CassQueryMetadataCategory.class)
     public ResultSet executeCQLQuery(@Query @Placement(group = "Query") final String cqlQuery) throws CassandraDBException {
         try {
@@ -81,6 +88,13 @@ public class CassandraDBConnector {
         } catch (Exception e) {
             throw new CassandraDBException(e.getMessage(), e);
         }
+    }
+    
+    @Processor
+    @MetaDataScope(CassQueryMetadataCategory.class)
+    public void insert(@MetaDataKeyParam(affects = MetaDataKeyParamAffectsType.INPUT) String table, @Default(PAYLOAD) Map<String, Object> entity) throws CassandraDBException {
+            String keySpace = basicAuthConnectionStrategy.getKeyspace();
+            basicAuthConnectionStrategy.getCassandraClient().insert(keySpace,table,entity);
     }
 
     @Processor
