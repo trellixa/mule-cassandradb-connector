@@ -15,7 +15,7 @@
     </parent>
 
     <properties>
-        <category>Community</category>
+        <category>Select</category>
         <licensePath>LICENSE.md</licensePath>
         <devkit.studio.package.skip>false</devkit.studio.package.skip>
         <connector.test.version>2.0.6</connector.test.version>
@@ -29,13 +29,6 @@
             <version>${mule.version}</version>
             <scope>provided</scope>
         </dependency>
-
-        <!--<dependency>-->
-            <!--<groupId>me.prettyprint</groupId>-->
-            <!--<artifactId>hector-core</artifactId>-->
-            <!--<version>1.0-3</version>-->
-        <!--</dependency>-->
-
         <dependency>
             <groupId>commons-collections</groupId>
             <artifactId>commons-collections</artifactId>
