@@ -31,6 +31,7 @@ import java.util.Map;
 public class CassandraDBConnector {
     
     private static final String PAYLOAD = "#[payload]";
+    private static final String PARAMETERS = "#[flowVars.parameters]";
 
     @Config
     private BasicAuthConnectionStrategy basicAuthConnectionStrategy;
@@ -95,6 +96,12 @@ public class CassandraDBConnector {
     public void insert(@MetaDataKeyParam(affects = MetaDataKeyParamAffectsType.INPUT) String table, @Default(PAYLOAD) Map<String, Object> entity) throws CassandraDBException {
             String keySpace = basicAuthConnectionStrategy.getKeyspace();
             basicAuthConnectionStrategy.getCassandraClient().insert(keySpace,table,entity);
+    }
+    
+    @Processor
+    @MetaDataScope(CassQueryMetadataCategory.class)
+    public List<Map<String, Object>>  select(@Default(PAYLOAD) @Query final String query, @Default(PARAMETERS) @Optional List<Object> parameters) throws CassandraDBException {
+        return basicAuthConnectionStrategy.getCassandraClient().select(query, parameters);
     }
 
     @Processor

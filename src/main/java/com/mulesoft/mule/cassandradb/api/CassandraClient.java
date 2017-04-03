@@ -6,24 +6,23 @@ package com.mulesoft.mule.cassandradb.api;
 import com.datastax.driver.core.*;
 import com.datastax.driver.core.querybuilder.Insert;
 import com.datastax.driver.core.querybuilder.QueryBuilder;
-import com.mulesoft.mule.cassandradb.metadata.CassQueryVisitor;
 import com.mulesoft.mule.cassandradb.utils.CassandraDBException;
 import com.mulesoft.mule.cassandradb.utils.builders.HelperStatements;
 import org.apache.commons.lang3.StringUtils;
 import org.mule.api.ConnectionExceptionCode;
-import org.mule.api.annotations.Query;
-import org.mule.api.annotations.QueryTranslator;
-import org.mule.api.annotations.display.Placement;
-import org.mule.common.query.DsqlQuery;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
 public final class CassandraClient {
+    
+    private static final String PARAM_HOLDER = "?";
 
     /**
      * Cassandra Cluster.
@@ -145,6 +144,45 @@ public final class CassandraClient {
             throw new CassandraDBException(e.getMessage());
         }
     }
+    
+    public List<Map<String, Object>> select(String query, List<Object> params) throws CassandraDBException {
+        List<Map<String, Object>> responseList = new LinkedList<>();
+        
+        String action = query.substring(0, 6);
+        if (!action.equalsIgnoreCase("SELECT")) {
+            throw new CassandraDBException("It must be a SELECT action.");
+        }
+        ResultSet result = null;
+        try {
+            if (params != null && !params.isEmpty()) {
+                validateParams(query, params.size());
+                result = executePreparedStatement(query, params);
+            } else {
+                result = executeSelectStatement(query);
+            }
+        } catch (Exception e) {
+            logger.error("Select Request Failed: " + e.getMessage());
+            throw new CassandraDBException(e.getMessage(), e);
+        }
+          
+        for (Row row : result.all()) {
+            
+            int columnsSize = row.getColumnDefinitions().size();
+            
+            Map<String, Object> mappedRow = new HashMap<String, Object>();
+            
+            for(int i=0;i<columnsSize;i++){
+                String columnName = row.getColumnDefinitions().getName(i);
+                String columnValue = row.getString(i);
+                mappedRow.put(columnName, columnValue);
+            }
+            
+            responseList.add(mappedRow);
+        }
+        
+        return responseList;
+    }
+    
 
     public String getLoggedKeyspace() {
         return cassandraSession.getLoggedKeyspace();
@@ -169,6 +207,35 @@ public final class CassandraClient {
     public void close() {
         closeSession();
         closeCluster();
+    }
+    
+    private ResultSet executeSelectStatement(String query) throws CassandraDBException {
+        try {
+
+            logger.debug("Select Request: " + query);
+
+            ResultSet result = cassandraSession.execute(query);
+
+            return result;
+
+        } catch (Exception e) {
+
+            logger.error("Select Request Failed: " + e.getMessage());
+            throw new CassandraDBException(e.getMessage());
+        }
+    }
+    
+    private ResultSet executePreparedStatement(String query, List<Object> params) {
+        PreparedStatement ps = cassandraSession.prepare(query);
+        Object[] paramArray = params.toArray(new Object[params.size()]);
+        return cassandraSession.execute(ps.bind(paramArray));
+    }
+    
+    private void validateParams(String query, int size) throws CassandraDBException {
+        int expectedParams = StringUtils.countMatches(query, PARAM_HOLDER);
+        if (expectedParams != size) {
+            throw new CassandraDBException("Expected query parameters is " + expectedParams + " but found " + size);
+        }
     }
 }
 
