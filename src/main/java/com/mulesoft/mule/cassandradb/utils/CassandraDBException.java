@@ -11,7 +11,7 @@
 package com.mulesoft.mule.cassandradb.utils;
 
 /**
- * Generic Exception wrapper class for Thrift Exceptions.
+ * Generic Exception wrapper class for Cassandra Exceptions.
  */
 public class CassandraDBException extends Exception {
 

@@ -11,6 +11,7 @@ import org.mule.api.ConnectionException;
 import org.mule.common.Result;
 import org.mule.common.metadata.MetaData;
 import org.mule.common.metadata.MetaDataKey;
+import org.mule.tools.devkit.ctf.exceptions.ConfigurationLoadingFailedException;
 import org.mule.tools.devkit.ctf.junit.AbstractTestCase;
 import org.mule.tools.devkit.ctf.junit.MetaDataTest;
 
@@ -28,7 +29,7 @@ public class QueryMetadataIT extends AbstractTestCase<CassandraDBConnector> {
     }
 
     @BeforeClass
-    public static void setup() throws ConnectionException, CassandraDBException, IOException {
+    public static void setup() throws ConnectionException, CassandraDBException, IOException, ConfigurationLoadingFailedException {
         //load required properties
         CassandraConfig cassConfig = PropertiesLoaderUtil.resolveCassandraConnectionProps();
         assert cassConfig != null;

@@ -78,8 +78,8 @@ public class CassandraDBConnector {
 
     @Processor
     /**
-     * annotation required for Functional tests to pass
-     * to be removed
+     * method executes the raw input query provided
+     * @MetaDataScope annotation required for Functional tests to pass;to be removed
      */
     @MetaDataScope(CassQueryMetadataCategory.class)
     public ResultSet executeCQLQuery(@Query @Placement(group = "Query") final String cqlQuery) throws CassandraDBException {
