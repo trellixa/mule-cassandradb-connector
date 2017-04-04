@@ -1,3 +1,6 @@
+/**
+ * (c) 2003-2017 MuleSoft, Inc. The software in this package is published under the terms of the Commercial Free Software license V.1 a copy of which has been included with this distribution in the LICENSE.md file.
+ */
 package com.mulesoft.mule.cassandradb.configurations;
 
 
@@ -11,7 +14,7 @@ import org.mule.api.annotations.param.Default;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@ConnectionManagement(friendlyName = "Username/Password Connection")
+@ConnectionManagement(configElementName = "config", friendlyName = "Username/Password Connection")
 public class BasicAuthConnectionStrategy {
 
     private static final Logger logger = LoggerFactory.getLogger(BasicAuthConnectionStrategy.class);

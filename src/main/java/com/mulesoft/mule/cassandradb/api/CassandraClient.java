@@ -1,7 +1,16 @@
+/**
+ * (c) 2003-2017 MuleSoft, Inc. The software in this package is published under the terms of the Commercial Free Software license V.1 a copy of which has been included with this distribution in the LICENSE.md file.
+ */
 package com.mulesoft.mule.cassandradb.api;
 
 import com.datastax.driver.core.*;
+import com.datastax.driver.core.querybuilder.Insert;
+import com.datastax.driver.core.querybuilder.QueryBuilder;
+import com.mulesoft.mule.cassandradb.utils.CassandraDBException;
+import com.mulesoft.mule.cassandradb.utils.Constants;
 import com.mulesoft.mule.cassandradb.utils.builders.HelperStatements;
+
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.mule.api.ConnectionExceptionCode;
 import org.slf4j.Logger;
@@ -9,6 +18,8 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -26,16 +37,17 @@ public final class CassandraClient {
     final static Logger logger = LoggerFactory.getLogger(CassandraClient.class);
 
     /**
-     * Connect to Cassandra Cluster specified by provided node IP
+     * Connect to Cassandra Cluster specified by provided host IP
      * address and port number.
-     *  @param node     Cluster node IP address.
+     *
+     * @param host     Cluster host IP address.
      * @param port     Port of cluster host.
      * @param username the username to buildCassandraClient with
      * @param keyspace optional - keyspace to retrieve cluster session for
      */
-    public static CassandraClient buildCassandraClient(final String node, final int port, final String username, final String password, final String keyspace) throws org.mule.api.ConnectionException {
+    public static CassandraClient buildCassandraClient(final String host, final int port, final String username, final String password, final String keyspace) throws org.mule.api.ConnectionException {
         Cluster.Builder clusterBuilder = Cluster.builder()
-                .addContactPoint(node)
+                .addContactPoint(host)
                 .withPort(port);
 
         if (StringUtils.isNotEmpty(username) && StringUtils.isNotEmpty(password)) {
@@ -46,9 +58,9 @@ public final class CassandraClient {
         client.cluster = clusterBuilder.build();
 
         try {
-            logger.info(String.format("Connecting to Cassandra Database: %s , port: %s", node, port));
+            logger.info("Connecting to Cassandra Database: {} , port: {}", host, port);
             client.cassandraSession = StringUtils.isNotEmpty(keyspace) ? client.cluster.connect(keyspace) : client.cluster.connect();
-            logger.info(String.format("Connected to Cassandra Cluster Node: %s!", client.cassandraSession.getCluster().getClusterName()));
+            logger.info("Connected to Cassandra Cluster: {} !", client.cassandraSession.getCluster().getClusterName());
         } catch (Exception cassandraException) {
             logger.error("Error while connecting to Cassandra database!", cassandraException);
             throw new org.mule.api.ConnectionException(ConnectionExceptionCode.UNKNOWN, null, cassandraException.getMessage());
@@ -83,6 +95,7 @@ public final class CassandraClient {
 
     public List<String> getTableNamesFromKeyspace(String keyspaceName) {
         if (StringUtils.isNotBlank((keyspaceName))) {
+            logger.info("Retrieving table names from the keyspace: {} ...", keyspaceName);
             Collection<TableMetadata> tables = cluster
                     .getMetadata().getKeyspace(keyspaceName)
                     .getTables();
@@ -95,10 +108,103 @@ public final class CassandraClient {
         return null;
     }
 
+    /**
+     * Fetches table metadata using DataStax java driver, based on the keyspace provided
+     *
+     * @return the table metadata as returned by the driver.
+     */
+    public TableMetadata fetchTableMetadata(final String keyspaceUsed, final String tableName) {
+        if (StringUtils.isNotBlank(tableName)) {
+            logger.info("Retrieving table metadata for: {} ...", tableName);
+            Metadata metadata = cluster.getMetadata();
+            KeyspaceMetadata ksMetadata = metadata.getKeyspace(keyspaceUsed);
+            if (ksMetadata != null) {
+                return ksMetadata.getTable(tableName);
+            }
+        }
+        return null;
+    }
+    
+    public void insert(String keySpace, String table, Map<String, Object> entity) throws CassandraDBException {
 
-    /** Close cluster. */
-    private void closeCluster()
-    {
+        Insert insertObject = QueryBuilder.insertInto(keySpace, table);
+
+        for (Map.Entry<String, Object> entry : entity.entrySet()) {
+            insertObject.value(entry.getKey(), entry.getValue());
+        }
+
+        try {
+
+            logger.debug("Insert Request: " + insertObject.toString());
+
+            cassandraSession.execute(insertObject);            
+
+        } catch (Exception e) {
+
+            logger.error("Insert Request Failed: " + e.getMessage());
+            throw new CassandraDBException(e.getMessage());
+        }
+    }
+
+    public List<Map<String, Object>> select(String query, List<Object> params) throws CassandraDBException {
+
+        validateSelectQuery(query, params);
+
+        ResultSet result = null;
+
+        try {
+            if (!CollectionUtils.isEmpty(params)) {
+                result = executePreparedStatement(query, params);
+            } else {
+                result = executeCQLQuery(query);
+            }
+        } catch (Exception e) {
+            logger.error("Select Request Failed: " + e.getMessage());
+            throw new CassandraDBException(e.getMessage(), e);
+        }
+
+        return getResponseFromResultSet(result);
+    }
+
+    private void validateSelectQuery(String query, List<Object> params) throws CassandraDBException {
+        
+        if (!query.toUpperCase().startsWith(Constants.SELECT)) {
+            throw new CassandraDBException("It must be a SELECT action.");
+        }
+
+        validateParams(query, params);
+
+    }
+
+    private List<Map<String, Object>> getResponseFromResultSet(ResultSet result) {
+        List<Map<String, Object>> responseList = new LinkedList<>();
+
+        for (Row row : result.all()) {
+
+            int columnsSize = row.getColumnDefinitions().size();
+
+            Map<String, Object> mappedRow = new HashMap<String, Object>();
+
+            for (int i = 0; i < columnsSize; i++) {
+                String columnName = row.getColumnDefinitions().getName(i);
+                String columnValue = row.getString(i);
+                mappedRow.put(columnName, columnValue);
+            }
+
+            responseList.add(mappedRow);
+        }
+
+        return responseList;
+    }
+
+    public String getLoggedKeyspace() {
+        return cassandraSession.getLoggedKeyspace();
+    }
+
+    /**
+     * Close cluster.
+     */
+    private void closeCluster() {
         if (cluster != null) {
             cluster.close();
         }
@@ -115,22 +221,19 @@ public final class CassandraClient {
         closeCluster();
     }
 
+    private ResultSet executePreparedStatement(String query, List<Object> params) {
+        PreparedStatement ps = cassandraSession.prepare(query);
+        Object[] paramArray = params.toArray(new Object[params.size()]);
+        return cassandraSession.execute(ps.bind(paramArray));
+    }
 
-    /**
-     * Provide my Session.
-     *
-     * @return My session.
-     */
-//    public Session getSession() {
-//        return this.cassandraSession;
-//    }
+    private void validateParams(String query, List<Object> params) throws CassandraDBException {
 
-//    /**
-//     * Provide cluster used.
-//     */
-//    public Cluster getCluster() {
-//        return this.cluster;
-//    }
+        int expectedParams = StringUtils.countMatches(query, Constants.PARAM_HOLDER);
+        int parameterSize = (params == null) ? 0 : params.size();
 
+        if (expectedParams != parameterSize) {
+            throw new CassandraDBException("Expected query parameters is " + expectedParams + " but found " + parameterSize);
+        }
+    }
 }
-

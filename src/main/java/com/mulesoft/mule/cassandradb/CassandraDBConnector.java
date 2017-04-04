@@ -1,20 +1,21 @@
 /**
- * Mule Cassandra Connector
- * <p>
- * Copyright (c) MuleSoft, Inc.  All rights reserved.  http://www.mulesoft.com
- * <p>
- * The software in this package is published under the terms of the CPAL v1.0
- * license, a copy of which has been included with this distribution in the
- * LICENSE.txt file.
+ * (c) 2003-2017 MuleSoft, Inc. The software in this package is published under the terms of the Commercial Free Software license V.1 a copy of which has been included with this distribution in the LICENSE.md file.
  */
-
 package com.mulesoft.mule.cassandradb;
 
 import com.datastax.driver.core.ResultSet;
 import com.mulesoft.mule.cassandradb.configurations.BasicAuthConnectionStrategy;
+import com.mulesoft.mule.cassandradb.metadata.CassQueryMetadataCategory;
+import com.mulesoft.mule.cassandradb.metadata.CassQueryVisitor;
 import com.mulesoft.mule.cassandradb.utils.*;
 import org.mule.api.annotations.*;
+import org.mule.api.annotations.display.Placement;
+import org.mule.api.annotations.licensing.RequiresEnterpriseLicense;
+import org.mule.api.annotations.param.Default;
+import org.mule.api.annotations.param.MetaDataKeyParam;
+import org.mule.api.annotations.param.MetaDataKeyParamAffectsType;
 import org.mule.api.annotations.param.Optional;
+import org.mule.common.query.DsqlQuery;
 
 import java.util.List;
 import java.util.Map;
@@ -26,7 +27,11 @@ import java.util.Map;
  * @author MuleSoft, Inc.
  */
 @Connector(name = "cassandradb", schemaVersion = "3.2", friendlyName = "CassandraDB", minMuleVersion = "3.5")
+@RequiresEnterpriseLicense(allowEval = true)
 public class CassandraDBConnector {
+    
+    private static final String PAYLOAD = "#[payload]";
+    private static final String PARAMETERS = "#[flowVars.parameters]";
 
     @Config
     private BasicAuthConnectionStrategy basicAuthConnectionStrategy;
@@ -72,13 +77,31 @@ public class CassandraDBConnector {
         }
     }
 
-    @Processor
-    public ResultSet executeCQLQuery(String cqlQuery) throws CassandraDBException {
+    /**
+     * method executes the raw input query provided
+     * @MetaDataScope annotation required for Functional tests to pass;to be removed
+     */
+    @Processor(friendlyName="Execute CQL Query")
+    @MetaDataScope(CassQueryMetadataCategory.class)
+    public ResultSet executeCQLQuery(@Query @Placement(group = "Query") final String cqlQuery) throws CassandraDBException {
         try {
             return basicAuthConnectionStrategy.getCassandraClient().executeCQLQuery(cqlQuery);
         } catch (Exception e) {
             throw new CassandraDBException(e.getMessage(), e);
         }
+    }
+    
+    @Processor
+    @MetaDataScope(CassQueryMetadataCategory.class)
+    public void insert(@MetaDataKeyParam(affects = MetaDataKeyParamAffectsType.INPUT) String table, @Default(PAYLOAD) Map<String, Object> entity) throws CassandraDBException {
+            String keySpace = basicAuthConnectionStrategy.getKeyspace();
+            basicAuthConnectionStrategy.getCassandraClient().insert(keySpace,table,entity);
+    }
+    
+    @Processor
+    @MetaDataScope(CassQueryMetadataCategory.class)
+    public List<Map<String, Object>>  select(@Default(PAYLOAD) @Query final String query, @Default(PARAMETERS) @Optional List<Object> parameters) throws CassandraDBException {
+        return basicAuthConnectionStrategy.getCassandraClient().select(query, parameters);
     }
 
     @Processor
@@ -88,6 +111,14 @@ public class CassandraDBConnector {
         } catch (Exception e) {
             throw new CassandraDBException(e.getMessage(), e);
         }
+    }
+
+
+    @QueryTranslator
+    public String toNativeQuery(DsqlQuery query) {
+        CassQueryVisitor visitor = new CassQueryVisitor();
+        query.accept(visitor);
+        return visitor.dsqlQuery();
     }
 
     public BasicAuthConnectionStrategy getBasicAuthConnectionStrategy() {
