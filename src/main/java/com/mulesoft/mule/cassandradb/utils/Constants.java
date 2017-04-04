@@ -17,5 +17,6 @@ public class Constants {
     
     //query specific constants
     public static final String PARAM_HOLDER = "?";
+    public static final String SELECT = "SELECT";
 
 }

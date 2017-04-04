@@ -9,6 +9,8 @@ import com.datastax.driver.core.querybuilder.QueryBuilder;
 import com.mulesoft.mule.cassandradb.utils.CassandraDBException;
 import com.mulesoft.mule.cassandradb.utils.Constants;
 import com.mulesoft.mule.cassandradb.utils.builders.HelperStatements;
+
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.mule.api.ConnectionExceptionCode;
 import org.slf4j.Logger;
@@ -151,7 +153,7 @@ public final class CassandraClient {
         ResultSet result = null;
 
         try {
-            if (params != null && !params.isEmpty()) {
+            if (!CollectionUtils.isEmpty(params)) {
                 result = executePreparedStatement(query, params);
             } else {
                 result = executeCQLQuery(query);
@@ -165,9 +167,8 @@ public final class CassandraClient {
     }
 
     private void validateSelectQuery(String query, List<Object> params) throws CassandraDBException {
-
-        String action = query.substring(0, 6);
-        if (!action.equalsIgnoreCase("SELECT")) {
+        
+        if (!query.toUpperCase().startsWith(Constants.SELECT)) {
             throw new CassandraDBException("It must be a SELECT action.");
         }
 
