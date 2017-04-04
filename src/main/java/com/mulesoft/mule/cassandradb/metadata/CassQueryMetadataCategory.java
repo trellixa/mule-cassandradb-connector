@@ -4,7 +4,6 @@
 package com.mulesoft.mule.cassandradb.metadata;
 
 import com.datastax.driver.core.ColumnMetadata;
-import com.datastax.driver.core.DataType;
 import com.datastax.driver.core.TableMetadata;
 import com.mulesoft.mule.cassandradb.CassandraDBConnector;
 import com.mulesoft.mule.cassandradb.api.CassandraClient;

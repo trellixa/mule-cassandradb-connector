@@ -7,6 +7,7 @@ import com.datastax.driver.core.*;
 import com.datastax.driver.core.querybuilder.Insert;
 import com.datastax.driver.core.querybuilder.QueryBuilder;
 import com.mulesoft.mule.cassandradb.utils.CassandraDBException;
+import com.mulesoft.mule.cassandradb.utils.Constants;
 import com.mulesoft.mule.cassandradb.utils.builders.HelperStatements;
 import org.apache.commons.lang3.StringUtils;
 import org.mule.api.ConnectionExceptionCode;
@@ -21,8 +22,6 @@ import java.util.List;
 import java.util.Map;
 
 public final class CassandraClient {
-
-    private static final String PARAM_HOLDER = "?";
 
     /**
      * Cassandra Cluster.
@@ -155,7 +154,7 @@ public final class CassandraClient {
             if (params != null && !params.isEmpty()) {
                 result = executePreparedStatement(query, params);
             } else {
-                result = executeSelectStatement(query);
+                result = executeCQLQuery(query);
             }
         } catch (Exception e) {
             logger.error("Select Request Failed: " + e.getMessage());
@@ -221,22 +220,6 @@ public final class CassandraClient {
         closeCluster();
     }
 
-    private ResultSet executeSelectStatement(String query) throws CassandraDBException {
-        try {
-
-            logger.debug("Select Request: " + query);
-
-            ResultSet result = cassandraSession.execute(query);
-
-            return result;
-
-        } catch (Exception e) {
-
-            logger.error("Select Request Failed: " + e.getMessage());
-            throw new CassandraDBException(e.getMessage());
-        }
-    }
-
     private ResultSet executePreparedStatement(String query, List<Object> params) {
         PreparedStatement ps = cassandraSession.prepare(query);
         Object[] paramArray = params.toArray(new Object[params.size()]);
@@ -245,7 +228,7 @@ public final class CassandraClient {
 
     private void validateParams(String query, List<Object> params) throws CassandraDBException {
 
-        int expectedParams = StringUtils.countMatches(query, PARAM_HOLDER);
+        int expectedParams = StringUtils.countMatches(query, Constants.PARAM_HOLDER);
         int parameterSize = (params == null) ? 0 : params.size();
 
         if (expectedParams != parameterSize) {

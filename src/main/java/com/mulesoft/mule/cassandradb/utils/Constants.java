@@ -14,5 +14,8 @@ public class Constants {
     //configuration
     public final static String CASS_HOST = "config.host";
     public final static String CASS_PORT = "config.port";
+    
+    //query specific constants
+    public static final String PARAM_HOLDER = "?";
 
 }
