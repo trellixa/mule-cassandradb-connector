@@ -25,8 +25,8 @@ public class AutomationTestParent {
     @BeforeClass
     public static void beforeClassBase() throws Exception {
         if (Strings.isNullOrEmpty(System.getProperty("automation-credentials.properties"))) {
-            System.setProperty("automation-credentials.properties", "basic-authentication.properties");
-            System.setProperty("activeconfiguration", "basic-authentication-config");
+            System.setProperty("automation-credentials.properties", "automation-credentials.properties");
+            System.setProperty("activeconfiguration", "config");
         }
 
         ConnectorTestContext.initialize(CassandraDBConnector.class, false);

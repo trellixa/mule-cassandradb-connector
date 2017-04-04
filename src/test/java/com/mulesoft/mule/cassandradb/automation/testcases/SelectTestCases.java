@@ -4,7 +4,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import org.hamcrest.Matchers;
 import org.junit.Assert;
 import org.junit.Test;
 
