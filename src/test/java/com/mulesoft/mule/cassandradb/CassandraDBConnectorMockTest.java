@@ -29,32 +29,32 @@ public class CassandraDBConnectorMockTest {
         connector.setBasicAuthConnectionStrategy(strategy);
 
         //create a keyspace to be further used
-        connector.createKeyspace(Constants.KEYSPACE_NAME, null);
+        connector.createKeyspace(Constants.SECOND_KEYSPACE_NAME, null);
     }
 
     @AfterClass
     public static void tearDown() throws CassandraDBException {
-        connector.dropKeyspace(Constants.KEYSPACE_NAME);
+        connector.dropKeyspace(Constants.SECOND_KEYSPACE_NAME);
         strategy.getCassandraClient().close();
     }
 
     @Test
     public void shouldCreateTable() throws CassandraDBException {
         //create a table
-        connector.createTable(Constants.TABLE_NAME, Constants.KEYSPACE_NAME, null);
-        Assert.assertTrue(verifyTableCreation(Constants.TABLE_NAME, Constants.KEYSPACE_NAME));
+        connector.createTable(Constants.TABLE_NAME, Constants.SECOND_KEYSPACE_NAME, null);
+        Assert.assertTrue(verifyTableCreation(Constants.TABLE_NAME, Constants.SECOND_KEYSPACE_NAME));
     }
 
 
     @Test
     public void shouldDropTable() throws CassandraDBException {
-        connector.dropTable(Constants.TABLE_NAME, Constants.KEYSPACE_NAME);
-        Assert.assertFalse(verifyTableCreation(Constants.TABLE_NAME, Constants.KEYSPACE_NAME));
+        connector.dropTable(Constants.TABLE_NAME, Constants.SECOND_KEYSPACE_NAME);
+        Assert.assertFalse(verifyTableCreation(Constants.TABLE_NAME, Constants.SECOND_KEYSPACE_NAME));
     }
 
     @Test
     public void shouldDescribeKeyspaces() throws CassandraDBException {
-        ResultSet resultSet = connector.executeCQLQuery("SELECT * FROM system_schema.keyspaces");
+        ResultSet resultSet = connector.executeCQLQuery("SELECT * FROM system.schema_keyspaces;");
         Assert.assertTrue(resultSet.all().size() > 0);
     }
 

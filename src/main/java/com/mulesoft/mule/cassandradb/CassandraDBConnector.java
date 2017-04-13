@@ -97,6 +97,12 @@ public class CassandraDBConnector {
             String keySpace = basicAuthConnectionStrategy.getKeyspace();
             basicAuthConnectionStrategy.getCassandraClient().insert(keySpace,table,entity);
     }
+
+    @Processor @MetaDataScope(CassQueryMetadataCategory.class) public void update(@MetaDataKeyParam(affects = MetaDataKeyParamAffectsType.INPUT) String table,
+            @Default(PAYLOAD) Map<String, Object> entity, @Default(PARAMETERS) Map<String, Object> whereClause) throws CassandraDBException {
+        String keySpace = basicAuthConnectionStrategy.getKeyspace();
+        basicAuthConnectionStrategy.getCassandraClient().update(keySpace, table, entity, whereClause);
+    }
     
     @Processor
     @MetaDataScope(CassQueryMetadataCategory.class)

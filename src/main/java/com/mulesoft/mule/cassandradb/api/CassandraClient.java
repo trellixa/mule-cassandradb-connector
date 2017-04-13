@@ -4,8 +4,7 @@
 package com.mulesoft.mule.cassandradb.api;
 
 import com.datastax.driver.core.*;
-import com.datastax.driver.core.querybuilder.Insert;
-import com.datastax.driver.core.querybuilder.QueryBuilder;
+import com.datastax.driver.core.querybuilder.*;
 import com.mulesoft.mule.cassandradb.utils.CassandraDBException;
 import com.mulesoft.mule.cassandradb.utils.Constants;
 import com.mulesoft.mule.cassandradb.utils.builders.HelperStatements;
@@ -81,6 +80,12 @@ public final class CassandraClient {
                 StringUtils.isNotBlank(customKeyspaceName) ? customKeyspaceName : cassandraSession.getLoggedKeyspace(), partitionKey)).wasApplied();
     }
 
+    public boolean alterTable(String tableName, String customKeyspaceName, String columnName) {
+        return cassandraSession.execute(
+                HelperStatements.alterTable(tableName, StringUtils.isNotBlank(customKeyspaceName) ? customKeyspaceName : cassandraSession.getLoggedKeyspace(), columnName))
+                .wasApplied();
+    }
+
     public boolean dropTable(String tableName, String customKeyspaceName) {
         return cassandraSession.execute(HelperStatements.dropTable(tableName,
                 StringUtils.isNotBlank(customKeyspaceName) ? customKeyspaceName : cassandraSession.getLoggedKeyspace())).wasApplied();
@@ -142,6 +147,41 @@ public final class CassandraClient {
         } catch (Exception e) {
 
             logger.error("Insert Request Failed: " + e.getMessage());
+            throw new CassandraDBException(e.getMessage());
+        }
+    }
+
+    /*
+    * Update the table @param table using the keySpace @param keySpace
+    * */
+    public void update(String keySpace, String table, Map<String, Object> entity, Map<String, Object> whereClause) throws CassandraDBException {
+
+        if (entity == null || whereClause == null) {
+            throw new CassandraDBException("Mismatched input. SET and WHERE clause must not be null.");
+        }
+        Update updateObject = QueryBuilder.update(keySpace, table);
+
+        for (Map.Entry<String, Object> entry : entity.entrySet()) {
+            updateObject.with().and(QueryBuilder.set(entry.getKey(), entry.getValue()));
+        }
+        // In where clause in cassandra, when using it with update command, can be used only eq and IN operators
+        for (Map.Entry<String, Object> entry : whereClause.entrySet()) {
+            if (entry.getValue() instanceof List) {
+                updateObject.where(QueryBuilder.in(entry.getKey(), (List) entry.getValue()));
+            } else {
+                updateObject.where(QueryBuilder.eq(entry.getKey(), entry.getValue()));
+            }
+        }
+
+        try {
+
+            logger.debug("Update Request: " + updateObject.toString());
+
+            cassandraSession.execute(updateObject);
+
+        } catch (Exception e) {
+
+            logger.error("Update Request Failed: " + e.getMessage());
             throw new CassandraDBException(e.getMessage());
         }
     }

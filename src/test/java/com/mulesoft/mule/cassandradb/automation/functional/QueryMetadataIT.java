@@ -24,25 +24,25 @@ import static org.junit.Assert.*;
 public class QueryMetadataIT extends BaseTestCases {
 
     private static CassandraClient cassClient;
+    private static CassandraConfig cassConfig;
 
     @BeforeClass
     public static void setup() throws ConnectionException, CassandraDBException, IOException, ConfigurationLoadingFailedException {
         //load required properties
-        CassandraConfig cassConfig = PropertiesLoaderUtil.resolveCassandraConnectionProps();
+        cassConfig = PropertiesLoaderUtil.resolveCassandraConnectionProps();
         assert cassConfig != null;
         //get instance of cass client based on the configs
         cassClient = CassandraClient.buildCassandraClient(cassConfig.getHost(), cassConfig.getPort(), null, null, null);
         assert cassClient != null;
 
         //setup db env
-        cassClient.createKeyspace(Constants.KEYSPACE_NAME, null);
-        cassClient.createTable(Constants.TABLE_NAME, Constants.KEYSPACE_NAME, null);
+        cassClient.createKeyspace(cassConfig.getKeyspace(), null);
+        cassClient.createTable(Constants.TABLE_NAME, cassConfig.getKeyspace(), null);
     }
 
     @AfterClass
     public static void tearDown() throws CassandraDBException, ConnectionException {
-        cassClient.dropKeyspace(Constants.KEYSPACE_NAME);
-        cassClient.dropTable(Constants.TABLE_NAME, Constants.KEYSPACE_NAME);
+        cassClient.dropTable(Constants.TABLE_NAME, cassConfig.getKeyspace());
     }
 
     @Test
