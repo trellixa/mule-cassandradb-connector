@@ -6,17 +6,13 @@ package com.mulesoft.mule.cassandradb.automation.functional;
 import com.mulesoft.mule.cassandradb.api.CassandraClient;
 import com.mulesoft.mule.cassandradb.util.PropertiesLoaderUtil;
 import com.mulesoft.mule.cassandradb.utils.CassandraConfig;
-import com.mulesoft.mule.cassandradb.utils.CassandraDBException;
 import com.mulesoft.mule.cassandradb.utils.Constants;
 import org.junit.*;
-import org.mule.api.ConnectionException;
 import org.mule.common.Result;
 import org.mule.common.metadata.MetaData;
 import org.mule.common.metadata.MetaDataKey;
-import org.mule.tools.devkit.ctf.exceptions.ConfigurationLoadingFailedException;
 import org.mule.tools.devkit.ctf.junit.MetaDataTest;
 
-import java.io.IOException;
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -27,7 +23,7 @@ public class QueryMetadataIT extends BaseTestCases {
     private static CassandraConfig cassConfig;
 
     @BeforeClass
-    public static void setup() throws ConnectionException, CassandraDBException, IOException, ConfigurationLoadingFailedException {
+    public static void setup() throws Exception {
         //load required properties
         cassConfig = PropertiesLoaderUtil.resolveCassandraConnectionProps();
         assert cassConfig != null;
@@ -41,7 +37,7 @@ public class QueryMetadataIT extends BaseTestCases {
     }
 
     @AfterClass
-    public static void tearDown() throws CassandraDBException, ConnectionException {
+    public static void tearDown() throws Exception {
         cassClient.dropTable(Constants.TABLE_NAME, cassConfig.getKeyspace());
     }
 

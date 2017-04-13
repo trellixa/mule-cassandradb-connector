@@ -11,22 +11,18 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.mulesoft.mule.cassandradb.utils.CassandraDBException;
-import org.mule.api.ConnectionException;
-import org.mule.tools.devkit.ctf.exceptions.ConfigurationLoadingFailedException;
-
-import java.io.IOException;
 
 public class InsertTestCases extends BaseTestCases {
 
     private static CassandraClient cassClient;
     private static CassandraConfig cassConfig;
 
-    @BeforeClass public static void setup() throws ConnectionException, CassandraDBException, IOException, ConfigurationLoadingFailedException {
+    @BeforeClass public static void setup() throws Exception {
         cassConfig = getClientConfig();
         cassClient = configureClient(cassConfig);
     }
 
-    @AfterClass public static void tearDown() throws CassandraDBException, ConnectionException {
+    @AfterClass public static void tearDown() throws Exception {
         cassClient.dropTable(Constants.TABLE_NAME, cassConfig.getKeyspace());
     }
 

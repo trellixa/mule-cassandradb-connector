@@ -3,7 +3,6 @@
  */
 package com.mulesoft.mule.cassandradb.automation.functional;
 
-import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -17,8 +16,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.mulesoft.mule.cassandradb.utils.CassandraDBException;
-import org.mule.api.ConnectionException;
-import org.mule.tools.devkit.ctf.exceptions.ConfigurationLoadingFailedException;
 
 import static org.hamcrest.Matchers.*;
 
@@ -28,14 +25,14 @@ public class SelectTestCases extends BaseTestCases {
     private static CassandraConfig cassConfig;
 
     @BeforeClass
-    public static void setup() throws ConnectionException, CassandraDBException, IOException, ConfigurationLoadingFailedException {
+    public static void setup() throws Exception {
         cassConfig = getClientConfig();
         cassClient = configureClient(cassConfig);
         cassClient.insert(cassConfig.getKeyspace(), Constants.TABLE_NAME, TestDataBuilder.getValidEntity());
     }
 
     @AfterClass
-    public static void tearDown() throws CassandraDBException, ConnectionException {
+    public static void tearDown() throws Exception {
         cassClient.dropTable(Constants.TABLE_NAME, cassConfig.getKeyspace());
     }
 

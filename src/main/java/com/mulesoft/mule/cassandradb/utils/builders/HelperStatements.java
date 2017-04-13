@@ -33,8 +33,8 @@ public class HelperStatements {
                 addPartitionKey(partitionKeyInfo.getLeft(), partitionKeyInfo.getRight());
     }
 
-    public static SchemaStatement alterTable(String tableName, String keyspaceName, String columnName) {
-        return SchemaBuilder.alterTable(keyspaceName, tableName).addColumn(columnName).type(DataType.text());
+    public static SchemaStatement addColumnToTable(String tableName, String keyspaceName, String columnName, DataType columnType) {
+        return SchemaBuilder.alterTable(keyspaceName, tableName).addColumn(columnName).type(columnType);
     }
 
     public static SchemaStatement dropTable(String tableName, String keyspaceName) {

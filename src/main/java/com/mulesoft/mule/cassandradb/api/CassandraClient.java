@@ -80,9 +80,9 @@ public final class CassandraClient {
                 StringUtils.isNotBlank(customKeyspaceName) ? customKeyspaceName : cassandraSession.getLoggedKeyspace(), partitionKey)).wasApplied();
     }
 
-    public boolean alterTable(String tableName, String customKeyspaceName, String columnName) {
+    public boolean addColumnToTable(String tableName, String customKeyspaceName, String columnName, DataType columnType) {
         return cassandraSession.execute(
-                HelperStatements.alterTable(tableName, StringUtils.isNotBlank(customKeyspaceName) ? customKeyspaceName : cassandraSession.getLoggedKeyspace(), columnName))
+                HelperStatements.addColumnToTable(tableName, StringUtils.isNotBlank(customKeyspaceName) ? customKeyspaceName : cassandraSession.getLoggedKeyspace(), columnName, columnType))
                 .wasApplied();
     }
 
