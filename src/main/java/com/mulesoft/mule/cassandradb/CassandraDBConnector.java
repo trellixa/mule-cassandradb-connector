@@ -5,7 +5,7 @@ package com.mulesoft.mule.cassandradb;
 
 import com.datastax.driver.core.ResultSet;
 import com.mulesoft.mule.cassandradb.configurations.BasicAuthConnectionStrategy;
-import com.mulesoft.mule.cassandradb.metadata.CassQueryMetadataCategory;
+import com.mulesoft.mule.cassandradb.metadata.CassandraMetadataCategory;
 import com.mulesoft.mule.cassandradb.metadata.CassQueryVisitor;
 import com.mulesoft.mule.cassandradb.utils.*;
 import org.mule.api.annotations.*;
@@ -82,7 +82,7 @@ public class CassandraDBConnector {
      * @MetaDataScope annotation required for Functional tests to pass;to be removed
      */
     @Processor(friendlyName="Execute CQL Query")
-    @MetaDataScope(CassQueryMetadataCategory.class)
+    @MetaDataScope(CassandraMetadataCategory.class)
     public ResultSet executeCQLQuery(@Query @Placement(group = "Query") final String cqlQuery) throws CassandraDBException {
         try {
             return basicAuthConnectionStrategy.getCassandraClient().executeCQLQuery(cqlQuery);
@@ -92,20 +92,20 @@ public class CassandraDBConnector {
     }
     
     @Processor
-    @MetaDataScope(CassQueryMetadataCategory.class)
+    @MetaDataScope(CassandraMetadataCategory.class)
     public void insert(@MetaDataKeyParam(affects = MetaDataKeyParamAffectsType.INPUT) String table, @Default(PAYLOAD) Map<String, Object> entity) throws CassandraDBException {
             String keySpace = basicAuthConnectionStrategy.getKeyspace();
             basicAuthConnectionStrategy.getCassandraClient().insert(keySpace,table,entity);
     }
 
-    @Processor @MetaDataScope(CassQueryMetadataCategory.class) public void update(@MetaDataKeyParam(affects = MetaDataKeyParamAffectsType.INPUT) String table,
+    @Processor @MetaDataScope(CassandraMetadataCategory.class) public void update(@MetaDataKeyParam(affects = MetaDataKeyParamAffectsType.INPUT) String table,
             @Default(PAYLOAD) Map<String, Object> entity, @Default(PARAMETERS) Map<String, Object> whereClause) throws CassandraDBException {
         String keySpace = basicAuthConnectionStrategy.getKeyspace();
         basicAuthConnectionStrategy.getCassandraClient().update(keySpace, table, entity, whereClause);
     }
     
     @Processor
-    @MetaDataScope(CassQueryMetadataCategory.class)
+    @MetaDataScope(CassandraMetadataCategory.class)
     public List<Map<String, Object>>  select(@Default(PAYLOAD) @Query final String query, @Default(PARAMETERS) @Optional List<Object> parameters) throws CassandraDBException {
         return basicAuthConnectionStrategy.getCassandraClient().select(query, parameters);
     }
