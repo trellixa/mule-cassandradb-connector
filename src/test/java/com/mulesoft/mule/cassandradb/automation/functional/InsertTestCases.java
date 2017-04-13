@@ -4,8 +4,8 @@
 package com.mulesoft.mule.cassandradb.automation.functional;
 
 import com.mulesoft.mule.cassandradb.api.CassandraClient;
+import com.mulesoft.mule.cassandradb.util.ConstantsTest;
 import com.mulesoft.mule.cassandradb.utils.CassandraConfig;
-import com.mulesoft.mule.cassandradb.utils.Constants;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -23,15 +23,15 @@ public class InsertTestCases extends BaseTestCases {
     }
 
     @AfterClass public static void tearDown() throws Exception {
-        cassClient.dropTable(Constants.TABLE_NAME, cassConfig.getKeyspace());
+        cassClient.dropTable(ConstantsTest.TABLE_NAME, cassConfig.getKeyspace());
     }
 
     @Test public void testInsertWithSuccess() throws CassandraDBException {
-        getConnector().insert(Constants.TABLE_NAME, TestDataBuilder.getValidEntity());
+        getConnector().insert(ConstantsTest.TABLE_NAME, TestDataBuilder.getValidEntity());
     }
 
     @Test(expected = CassandraDBException.class) public void testInsertWithInvalidInput() throws CassandraDBException {
-        getConnector().insert(Constants.TABLE_NAME, TestDataBuilder.getInvalidEntity());
+        getConnector().insert(ConstantsTest.TABLE_NAME, TestDataBuilder.getInvalidEntity());
     }
 
 }

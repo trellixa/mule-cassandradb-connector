@@ -82,7 +82,7 @@ public final class CassandraClient {
 
     public boolean addColumnToTable(String tableName, String customKeyspaceName, String columnName, DataType columnType) {
         return cassandraSession.execute(
-                HelperStatements.addColumnToTable(tableName, StringUtils.isNotBlank(customKeyspaceName) ? customKeyspaceName : cassandraSession.getLoggedKeyspace(), columnName, columnType))
+                HelperStatements.addColumnToTable(tableName, StringUtils.isNotBlank(customKeyspaceName) ? customKeyspaceName : getLoggedKeyspace(), columnName, columnType))
                 .wasApplied();
     }
 

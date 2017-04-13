@@ -8,8 +8,8 @@ import java.util.List;
 import java.util.Map;
 
 import com.mulesoft.mule.cassandradb.api.CassandraClient;
+import com.mulesoft.mule.cassandradb.util.ConstantsTest;
 import com.mulesoft.mule.cassandradb.utils.CassandraConfig;
-import com.mulesoft.mule.cassandradb.utils.Constants;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -28,12 +28,12 @@ public class SelectTestCases extends BaseTestCases {
     public static void setup() throws Exception {
         cassConfig = getClientConfig();
         cassClient = configureClient(cassConfig);
-        cassClient.insert(cassConfig.getKeyspace(), Constants.TABLE_NAME, TestDataBuilder.getValidEntity());
+        cassClient.insert(cassConfig.getKeyspace(), ConstantsTest.TABLE_NAME, TestDataBuilder.getValidEntity());
     }
 
     @AfterClass
     public static void tearDown() throws Exception {
-        cassClient.dropTable(Constants.TABLE_NAME, cassConfig.getKeyspace());
+        cassClient.dropTable(ConstantsTest.TABLE_NAME, cassConfig.getKeyspace());
     }
 
     @Test

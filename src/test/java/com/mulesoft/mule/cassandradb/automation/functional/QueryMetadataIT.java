@@ -4,9 +4,9 @@
 package com.mulesoft.mule.cassandradb.automation.functional;
 
 import com.mulesoft.mule.cassandradb.api.CassandraClient;
+import com.mulesoft.mule.cassandradb.util.ConstantsTest;
 import com.mulesoft.mule.cassandradb.util.PropertiesLoaderUtil;
 import com.mulesoft.mule.cassandradb.utils.CassandraConfig;
-import com.mulesoft.mule.cassandradb.utils.Constants;
 import org.junit.*;
 import org.mule.common.Result;
 import org.mule.common.metadata.MetaData;
@@ -33,12 +33,12 @@ public class QueryMetadataIT extends BaseTestCases {
 
         //setup db env
         cassClient.createKeyspace(cassConfig.getKeyspace(), null);
-        cassClient.createTable(Constants.TABLE_NAME, cassConfig.getKeyspace(), null);
+        cassClient.createTable(ConstantsTest.TABLE_NAME, cassConfig.getKeyspace(), null);
     }
 
     @AfterClass
     public static void tearDown() throws Exception {
-        cassClient.dropTable(Constants.TABLE_NAME, cassConfig.getKeyspace());
+        cassClient.dropTable(ConstantsTest.TABLE_NAME, cassConfig.getKeyspace());
     }
 
     @Test
@@ -47,7 +47,7 @@ public class QueryMetadataIT extends BaseTestCases {
         //given
         MetaDataKey metaDataKey = buildMetadataKey();
         assertNotNull(metaDataKey);
-        assertEquals(metaDataKey.getDisplayName(), Constants.TABLE_NAME);
+        assertEquals(metaDataKey.getDisplayName(), ConstantsTest.TABLE_NAME);
 
         //when
         Result<MetaData> tableMetadataResult = getDispatcher().fetchMetaData(metaDataKey);
@@ -66,7 +66,7 @@ public class QueryMetadataIT extends BaseTestCases {
         //then
         assertFalse(metaDataKeys.isEmpty());
         for (MetaDataKey key : metaDataKeys) {
-            if (key.getId().equals(Constants.TABLE_NAME)) {
+            if (key.getId().equals(ConstantsTest.TABLE_NAME)) {
                 return key;
             }
         }

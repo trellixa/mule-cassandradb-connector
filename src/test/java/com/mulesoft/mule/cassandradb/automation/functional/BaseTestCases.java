@@ -5,9 +5,9 @@ package com.mulesoft.mule.cassandradb.automation.functional;
 
 import com.datastax.driver.core.DataType;
 import com.mulesoft.mule.cassandradb.api.CassandraClient;
+import com.mulesoft.mule.cassandradb.util.ConstantsTest;
 import com.mulesoft.mule.cassandradb.util.PropertiesLoaderUtil;
 import com.mulesoft.mule.cassandradb.utils.CassandraConfig;
-import com.mulesoft.mule.cassandradb.utils.Constants;
 import org.mule.tools.devkit.ctf.exceptions.ConfigurationLoadingFailedException;
 import org.mule.tools.devkit.ctf.junit.AbstractTestCase;
 import com.mulesoft.mule.cassandradb.CassandraDBConnector;
@@ -26,8 +26,8 @@ public class BaseTestCases extends AbstractTestCase<CassandraDBConnector> {
         assert cassClient != null;
 
         //setup db env
-        cassClient.createTable(Constants.TABLE_NAME, cassConfig.getKeyspace(), null);
-        cassClient.addColumnToTable(Constants.TABLE_NAME, cassConfig.getKeyspace(), Constants.VALID_COLUMN, DataType.text());
+        cassClient.createTable(ConstantsTest.TABLE_NAME, cassConfig.getKeyspace(), null);
+        cassClient.addColumnToTable(ConstantsTest.TABLE_NAME, cassConfig.getKeyspace(), ConstantsTest.VALID_COLUMN, DataType.text());
 
         return cassClient;
     }

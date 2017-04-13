@@ -3,7 +3,7 @@
  */
 package com.mulesoft.mule.cassandradb.automation.functional;
 
-import com.mulesoft.mule.cassandradb.utils.Constants;
+import com.mulesoft.mule.cassandradb.util.ConstantsTest;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -26,20 +26,20 @@ public class TestDataBuilder {
 
     public static Map<String, Object> getValidEntity() {
         Map<String, Object> entity = new HashMap<String, Object>();
-        entity.put(Constants.DUMMY_PARTITION_KEY, "value1");
-        entity.put(Constants.VALID_COLUMN, "someValue" + System.currentTimeMillis());
+        entity.put(ConstantsTest.DUMMY_PARTITION_KEY, "value1");
+        entity.put(ConstantsTest.VALID_COLUMN, "someValue" + System.currentTimeMillis());
         return entity;
     }
 
     public static Map<String, Object> getValidEntityForUpdate() {
         Map<String, Object> entity = new HashMap<String, Object>();
-        entity.put(Constants.VALID_COLUMN, "someValue" + System.currentTimeMillis());
+        entity.put(ConstantsTest.VALID_COLUMN, "someValue" + System.currentTimeMillis());
         return entity;
     }
 
     public static Map<String, Object> getValidWhereClauseWithEq() {
         Map<String, Object> entity = new HashMap<String, Object>();
-        entity.put(Constants.DUMMY_PARTITION_KEY, "value1");
+        entity.put(ConstantsTest.DUMMY_PARTITION_KEY, "value1");
         return entity;
     }
 
@@ -48,7 +48,7 @@ public class TestDataBuilder {
         List list = new ArrayList();
         list.add("value1");
         list.add("value2");
-        entity.put(Constants.DUMMY_PARTITION_KEY, list);
+        entity.put(ConstantsTest.DUMMY_PARTITION_KEY, list);
         return entity;
     }
 
@@ -58,7 +58,7 @@ public class TestDataBuilder {
     * */
     public static Map<String, Object> getInvalidWhereClause() {
         Map<String, Object> entity = new HashMap<String, Object>();
-        entity.put(Constants.VALID_COLUMN, "someValue");
+        entity.put(ConstantsTest.VALID_COLUMN, "someValue");
         return entity;
     }
 

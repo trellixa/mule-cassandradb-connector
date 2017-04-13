@@ -6,11 +6,6 @@ package com.mulesoft.mule.cassandradb.utils;
 public class Constants {
 
     public final static String REPLICATION_FACTOR = "replication_factor";
-
-    //test specific constants
-    public final static String SECOND_KEYSPACE_NAME = "second_dummy_keyspace";
-    public final static String TABLE_NAME = "dummy_table";
-    public static final String VALID_COLUMN = "dummy_column";
     public static final String DUMMY_PARTITION_KEY = "dummy_partitionKey";
     public static final String PARTITION_KEY_COLUMN_NAME = "partitionKeyColumnName";
     public static final String DATA_TYPE = "dataType";
