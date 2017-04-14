@@ -9,6 +9,10 @@ public class ConstantsTest {
     public final static String SECOND_KEYSPACE_NAME = "second_dummy_keyspace";
     public final static String TABLE_NAME = "dummy_table";
     public static final String VALID_COLUMN = "dummy_column";
+    public static final String VALID_COLUMN_2 = "dummy_column2";
+    public static final String VALID_LIST_COLUMN = "dummy_list_column";
+    public static final String VALID_MAP_COLUMN = "dummy_map_column";
+    public static final String VALID_SET_COLUMN = "dummy_set_column";
     public static final String DUMMY_PARTITION_KEY = "dummy_partitionKey";
 
 }

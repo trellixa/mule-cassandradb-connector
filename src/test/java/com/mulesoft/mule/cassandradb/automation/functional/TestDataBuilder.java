@@ -68,4 +68,68 @@ public class TestDataBuilder {
         parameters.add("value2");
         return parameters;
     }
+
+    public static List<String> getValidColumnsListForDelete() {
+        List<String> parameters = new LinkedList<>();
+        parameters.add(ConstantsTest.VALID_COLUMN);
+        parameters.add(ConstantsTest.VALID_COLUMN_2);
+        return parameters;
+    }
+
+    public static List<String> getInvalidEntityForDelete() {
+        List<String> entity = new ArrayList<>();
+        entity.add("invalid_column");
+        return entity;
+    }
+
+    public static Map<String, Object> getValidEntityWithList() {
+        Map<String, Object> entity = new HashMap<String, Object>();
+        List<String> list = new ArrayList<>();
+        list.add("firstValue");
+        list.add("secondValue");
+        entity.put(ConstantsTest.DUMMY_PARTITION_KEY, "value1");
+        entity.put(ConstantsTest.VALID_LIST_COLUMN, list);
+        entity.put(ConstantsTest.VALID_COLUMN, "someValue");
+        return entity;
+    }
+
+    public static List<String> getValidListItem() {
+        List<String> entity = new ArrayList<>();
+        entity.add(ConstantsTest.VALID_LIST_COLUMN + "[0]");
+        return entity;
+    }
+
+    public static Map<String, Object> getValidEntityWithMap() {
+        Map<String, Object> entity = new HashMap<String, Object>();
+        Map<String, Object> item = new HashMap<String, Object>();
+        item.put("1", "firstValue");
+        item.put("2", "secondValue");
+        entity.put(ConstantsTest.DUMMY_PARTITION_KEY, "value1");
+        entity.put(ConstantsTest.VALID_MAP_COLUMN, item);
+        entity.put(ConstantsTest.VALID_COLUMN, "someValue");
+        return entity;
+    }
+
+    public static List<String> getValidMapItem() {
+        List<String> entity = new ArrayList<>();
+        entity.add(ConstantsTest.VALID_MAP_COLUMN + "['firstValue']");
+        return entity;
+    }
+
+    public static Map<String, Object> getValidEntityWithSet() {
+        Map<String, Object> entity = new HashMap<String, Object>();
+        Set<String> item = new HashSet<>();
+        item.add("firstValue");
+        item.add("secondValue");
+        entity.put(ConstantsTest.DUMMY_PARTITION_KEY, "value1");
+        entity.put(ConstantsTest.VALID_SET_COLUMN, item);
+        entity.put(ConstantsTest.VALID_COLUMN, "someValue");
+        return entity;
+    }
+
+    public static List<String> getValidSet() {
+        List<String> entity = new ArrayList<>();
+        entity.add(ConstantsTest.VALID_SET_COLUMN);
+        return entity;
+    }
 }

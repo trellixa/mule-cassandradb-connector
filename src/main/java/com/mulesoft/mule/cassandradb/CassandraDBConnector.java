@@ -103,6 +103,12 @@ public class CassandraDBConnector {
         String keySpace = basicAuthConnectionStrategy.getKeyspace();
         basicAuthConnectionStrategy.getCassandraClient().update(keySpace, table, entity, whereClause);
     }
+
+    @Processor @MetaDataScope(CassandraMetadataCategory.class) public void delete(@MetaDataKeyParam(affects = MetaDataKeyParamAffectsType.INPUT) String table,
+            @Default(PAYLOAD) List<String> entity, @Default(PARAMETERS) Map<String, Object> whereClause) throws CassandraDBException {
+        String keySpace = basicAuthConnectionStrategy.getKeyspace();
+        basicAuthConnectionStrategy.getCassandraClient().delete(keySpace, table, entity, whereClause);
+    }
     
     @Processor
     @MetaDataScope(CassandraMetadataCategory.class)

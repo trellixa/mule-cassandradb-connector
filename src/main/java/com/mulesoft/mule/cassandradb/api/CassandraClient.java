@@ -186,6 +186,50 @@ public final class CassandraClient {
         }
     }
 
+    /*
+* DELETE command can be used to:
+* - remove one or more columns from one or more rows in a table;
+* - remove the entire row (one or more);
+* - if column_name refers to a collection (a list or map), the parameter in parentheses indicates the term in the collection
+*    to be deleted
+* */
+    public void delete(String keySpace, String table, List<String> entity, Map<String, Object> whereClause) throws CassandraDBException {
+
+        if (whereClause == null) {
+            throw new CassandraDBException("Mismatched input. WHERE clause must not be null.");
+        }
+        Delete.Selection selectionObject = QueryBuilder.delete();
+        // if the entity list is empty, means that the entire row(s) is deleted
+        if (entity != null && !entity.isEmpty()) {
+            for (String entry : entity) {
+                selectionObject.column(entry);
+            }
+        }
+
+        Delete deleteObject = selectionObject.from(keySpace, table);
+
+        // In where clause in cassandra, on delete command, can be used only eq and IN operators
+        for (Map.Entry<String, Object> entry : whereClause.entrySet()) {
+            if (entry.getValue() instanceof List) {
+                deleteObject.where(QueryBuilder.in(entry.getKey(), (List) entry.getValue()));
+            } else {
+                deleteObject.where(QueryBuilder.eq(entry.getKey(), entry.getValue()));
+            }
+        }
+
+        try {
+
+            logger.debug("Delete Request: " + deleteObject.toString());
+
+            cassandraSession.execute(deleteObject);
+
+        } catch (Exception e) {
+
+            logger.error("Delete Request Failed: " + e.getMessage());
+            throw new CassandraDBException(e.getMessage());
+        }
+    }
+
     public List<Map<String, Object>> select(String query, List<Object> params) throws CassandraDBException {
 
         validateSelectQuery(query, params);
