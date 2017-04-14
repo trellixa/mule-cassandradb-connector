@@ -1,42 +1,37 @@
+/**
+ * (c) 2003-2017 MuleSoft, Inc. The software in this package is published under the terms of the Commercial Free Software license V.1 a copy of which has been included with this distribution in the LICENSE.md file.
+ */
 package com.mulesoft.mule.cassandradb.automation.functional;
 
-import java.util.HashMap;
-import java.util.Map;
-
+import com.mulesoft.mule.cassandradb.api.CassandraClient;
+import com.mulesoft.mule.cassandradb.util.ConstantsTest;
+import com.mulesoft.mule.cassandradb.utils.CassandraConfig;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.mulesoft.mule.cassandradb.utils.CassandraDBException;
 
-
 public class InsertTestCases extends BaseTestCases {
-    
-    private static final String DUMMY_TABLE = "dummy_table";
-    private static final String VALID_COLUMN = "dummy_partitionkey";
-    
-      
-    @Test
-    public void testInsertWithSuccess() throws CassandraDBException {
-        getConnector().insert(DUMMY_TABLE, getValidEntity());
+
+    private static CassandraClient cassClient;
+    private static CassandraConfig cassConfig;
+
+    @BeforeClass public static void setup() throws Exception {
+        cassConfig = getClientConfig();
+        cassClient = configureClient(cassConfig);
     }
-    
-    @Test(expected=CassandraDBException.class)
-    public void testInsertWithInvalidInput() throws CassandraDBException {
-        getConnector().insert(DUMMY_TABLE, getInvalidEntity());
+
+    @AfterClass public static void tearDown() throws Exception {
+        cassClient.dropTable(ConstantsTest.TABLE_NAME, cassConfig.getKeyspace());
     }
-    
-    //TODO
-    //@After delete inserted entry;
-    
-    public Map<String, Object> getInvalidEntity(){
-        Map<String, Object> entity = new HashMap<String,Object>();
-        entity.put("invalid_column", "someValue");
-        return entity;
-    }   
-    
-    public Map<String, Object> getValidEntity(){
-        Map<String, Object> entity = new HashMap<String,Object>();
-        entity.put(VALID_COLUMN, "someValue");
-        return entity;
+
+    @Test public void testInsertWithSuccess() throws CassandraDBException {
+        getConnector().insert(ConstantsTest.TABLE_NAME, TestDataBuilder.getValidEntity());
     }
-    
+
+    @Test(expected = CassandraDBException.class) public void testInsertWithInvalidInput() throws CassandraDBException {
+        getConnector().insert(ConstantsTest.TABLE_NAME, TestDataBuilder.getInvalidEntity());
+    }
+
 }

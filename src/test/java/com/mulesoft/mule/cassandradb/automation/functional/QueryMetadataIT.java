@@ -4,19 +4,15 @@
 package com.mulesoft.mule.cassandradb.automation.functional;
 
 import com.mulesoft.mule.cassandradb.api.CassandraClient;
+import com.mulesoft.mule.cassandradb.util.ConstantsTest;
 import com.mulesoft.mule.cassandradb.util.PropertiesLoaderUtil;
 import com.mulesoft.mule.cassandradb.utils.CassandraConfig;
-import com.mulesoft.mule.cassandradb.utils.CassandraDBException;
-import com.mulesoft.mule.cassandradb.utils.Constants;
 import org.junit.*;
-import org.mule.api.ConnectionException;
 import org.mule.common.Result;
 import org.mule.common.metadata.MetaData;
 import org.mule.common.metadata.MetaDataKey;
-import org.mule.tools.devkit.ctf.exceptions.ConfigurationLoadingFailedException;
 import org.mule.tools.devkit.ctf.junit.MetaDataTest;
 
-import java.io.IOException;
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -24,25 +20,25 @@ import static org.junit.Assert.*;
 public class QueryMetadataIT extends BaseTestCases {
 
     private static CassandraClient cassClient;
+    private static CassandraConfig cassConfig;
 
     @BeforeClass
-    public static void setup() throws ConnectionException, CassandraDBException, IOException, ConfigurationLoadingFailedException {
+    public static void setup() throws Exception {
         //load required properties
-        CassandraConfig cassConfig = PropertiesLoaderUtil.resolveCassandraConnectionProps();
+        cassConfig = PropertiesLoaderUtil.resolveCassandraConnectionProps();
         assert cassConfig != null;
         //get instance of cass client based on the configs
         cassClient = CassandraClient.buildCassandraClient(cassConfig.getHost(), cassConfig.getPort(), null, null, null);
         assert cassClient != null;
 
         //setup db env
-        cassClient.createKeyspace(Constants.KEYSPACE_NAME, null);
-        cassClient.createTable(Constants.TABLE_NAME, Constants.KEYSPACE_NAME, null);
+        cassClient.createKeyspace(cassConfig.getKeyspace(), null);
+        cassClient.createTable(ConstantsTest.TABLE_NAME, cassConfig.getKeyspace(), null);
     }
 
     @AfterClass
-    public static void tearDown() throws CassandraDBException, ConnectionException {
-        cassClient.dropKeyspace(Constants.KEYSPACE_NAME);
-        cassClient.dropTable(Constants.TABLE_NAME, Constants.KEYSPACE_NAME);
+    public static void tearDown() throws Exception {
+        cassClient.dropTable(ConstantsTest.TABLE_NAME, cassConfig.getKeyspace());
     }
 
     @Test
@@ -51,7 +47,7 @@ public class QueryMetadataIT extends BaseTestCases {
         //given
         MetaDataKey metaDataKey = buildMetadataKey();
         assertNotNull(metaDataKey);
-        assertEquals(metaDataKey.getDisplayName(), Constants.TABLE_NAME);
+        assertEquals(metaDataKey.getDisplayName(), ConstantsTest.TABLE_NAME);
 
         //when
         Result<MetaData> tableMetadataResult = getDispatcher().fetchMetaData(metaDataKey);
@@ -70,7 +66,7 @@ public class QueryMetadataIT extends BaseTestCases {
         //then
         assertFalse(metaDataKeys.isEmpty());
         for (MetaDataKey key : metaDataKeys) {
-            if (key.getId().equals(Constants.TABLE_NAME)) {
+            if (key.getId().equals(ConstantsTest.TABLE_NAME)) {
                 return key;
             }
         }

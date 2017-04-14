@@ -22,9 +22,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 @MetaDataCategory
-public class CassQueryMetadataCategory {
+public class CassandraMetadataCategory {
 
-    final static Logger logger = LoggerFactory.getLogger(CassQueryMetadataCategory.class);
+    final static Logger logger = LoggerFactory.getLogger(CassandraMetadataCategory.class);
 
     @Inject
     private CassandraDBConnector cassandraConnector;

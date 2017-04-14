@@ -9,9 +9,12 @@ public class CassandraConfig {
 
     private Integer port;
 
-    public CassandraConfig(String host, Integer port) {
+    private String keyspace;
+
+    public CassandraConfig(String host, Integer port, String keyspace) {
         this.host = host;
         this.port = port;
+        this.keyspace = keyspace;
     }
 
     public String getHost() {
@@ -28,5 +31,13 @@ public class CassandraConfig {
 
     public void setPort(Integer port) {
         this.port = port;
+    }
+
+    public String getKeyspace() {
+        return keyspace;
+    }
+
+    public void setKeyspace(String keyspace) {
+        this.keyspace = keyspace;
     }
 }

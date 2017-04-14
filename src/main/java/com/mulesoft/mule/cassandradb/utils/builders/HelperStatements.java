@@ -5,6 +5,7 @@ package com.mulesoft.mule.cassandradb.utils.builders;
 
 import com.datastax.driver.core.DataType;
 import com.datastax.driver.core.schemabuilder.*;
+import com.mulesoft.mule.cassandradb.utils.Constants;
 import com.mulesoft.mule.cassandradb.utils.ReplicationStrategy;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.MutablePair;
@@ -32,6 +33,10 @@ public class HelperStatements {
                 addPartitionKey(partitionKeyInfo.getLeft(), partitionKeyInfo.getRight());
     }
 
+    public static SchemaStatement addColumnToTable(String tableName, String keyspaceName, String columnName, DataType columnType) {
+        return SchemaBuilder.alterTable(keyspaceName, tableName).addColumn(columnName).type(columnType);
+    }
+
     public static SchemaStatement dropTable(String tableName, String keyspaceName) {
         return SchemaBuilder.dropTable(keyspaceName, tableName).ifExists();
     }
@@ -45,11 +50,11 @@ public class HelperStatements {
         MutablePair<String, DataType> partitionKeyInfo = new MutablePair<String, DataType>();
 
         if (partitionKey == null) {
-            partitionKeyInfo.setLeft("dummy_partitionKey");
+            partitionKeyInfo.setLeft(Constants.DUMMY_PARTITION_KEY);
             partitionKeyInfo.setRight(DataType.text());
         } else {
-            partitionKeyInfo.setLeft(String.valueOf(partitionKey.get("partitionKeyColumnName")));
-            partitionKeyInfo.setRight((DataType) partitionKey.get("dataType"));
+            partitionKeyInfo.setLeft(String.valueOf(partitionKey.get(Constants.PARTITION_KEY_COLUMN_NAME)));
+            partitionKeyInfo.setRight((DataType) partitionKey.get(Constants.DATA_TYPE));
         }
 
         return new ImmutablePair<String, DataType>(partitionKeyInfo.getLeft(), partitionKeyInfo.getRight());

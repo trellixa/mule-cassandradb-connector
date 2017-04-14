@@ -3,23 +3,16 @@
  */
 package com.mulesoft.mule.cassandradb.automation.functional;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-
 import com.mulesoft.mule.cassandradb.api.CassandraClient;
 import com.mulesoft.mule.cassandradb.util.ConstantsTest;
 import com.mulesoft.mule.cassandradb.utils.CassandraConfig;
+import com.mulesoft.mule.cassandradb.utils.CassandraDBException;
 import org.junit.AfterClass;
-import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.mulesoft.mule.cassandradb.utils.CassandraDBException;
 
-import static org.hamcrest.Matchers.*;
-
-public class SelectTestCases extends BaseTestCases {
+public class UpdateTestCases extends BaseTestCases {
 
     private static CassandraClient cassClient;
     private static CassandraConfig cassConfig;
@@ -36,22 +29,26 @@ public class SelectTestCases extends BaseTestCases {
         cassClient.dropTable(ConstantsTest.TABLE_NAME, cassConfig.getKeyspace());
     }
 
+
     @Test
-    public void testSelectNativeQueryWithParameters() throws CassandraDBException {
-        List<Map<String, Object>> result = getConnector().select(TestDataBuilder.VALID_PARAMETERIZED_QUERY, TestDataBuilder.getValidParmList());
-        Assert.assertThat(Integer.valueOf(result.size()),greaterThan(0));
+    public void testUpdateUsingEqWithSuccess() throws CassandraDBException {
+        getConnector().update(ConstantsTest.TABLE_NAME, TestDataBuilder.getValidEntityForUpdate(), TestDataBuilder.getValidWhereClauseWithEq());
     }
-    
+
+    @Test
+    public void testUpdateUsingInWithSuccess() throws CassandraDBException {
+        getConnector().update(ConstantsTest.TABLE_NAME, TestDataBuilder.getValidEntityForUpdate(), TestDataBuilder.getValidWhereClauseWithIN());
+    }
+
     @Test(expected=CassandraDBException.class)
-    public void testSelectNativeQueryWithInvalidParameters() throws CassandraDBException {
-        List<Map<String, Object>> result = getConnector().select(TestDataBuilder.VALID_PARAMETERIZED_QUERY, new LinkedList<>());
-        Assert.assertThat(Integer.valueOf(result.size()),greaterThan(0));
+    public void testUpdateWithInvalidInput() throws CassandraDBException {
+        getConnector().update(ConstantsTest.TABLE_NAME, TestDataBuilder.getInvalidEntity(), TestDataBuilder.getValidWhereClauseWithEq());
     }
-    
-    @Test
-    public void testSelectDSQLQuery() throws CassandraDBException {
-        List<Map<String, Object>> result = getConnector().select(TestDataBuilder.VALID_DSQL_QUERY, null);
-        Assert.assertThat(Integer.valueOf(result.size()),greaterThan(0));
+
+    @Test(expected=CassandraDBException.class)
+    public void testUpdateWithInvalidWhereClause() throws CassandraDBException {
+        getConnector().update(ConstantsTest.TABLE_NAME, TestDataBuilder.getInvalidEntity(), TestDataBuilder.getInvalidWhereClause());
     }
+
 
 }
