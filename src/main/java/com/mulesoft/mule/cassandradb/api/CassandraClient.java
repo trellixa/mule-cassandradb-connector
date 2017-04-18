@@ -271,7 +271,7 @@ public final class CassandraClient {
 
             for (int i = 0; i < columnsSize; i++) {
                 String columnName = row.getColumnDefinitions().getName(i);
-                String columnValue = row.getString(i);
+                Object columnValue = row.getObject(i);
                 mappedRow.put(columnName, columnValue);
             }
 
