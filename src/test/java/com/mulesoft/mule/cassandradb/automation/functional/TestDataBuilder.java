@@ -4,6 +4,7 @@
 package com.mulesoft.mule.cassandradb.automation.functional;
 
 import com.mulesoft.mule.cassandradb.metadata.ColumnInput;
+import com.mulesoft.mule.cassandradb.metadata.CreateTableInput;
 import com.mulesoft.mule.cassandradb.util.ConstantsTest;
 import org.jetbrains.annotations.NotNull;
 
@@ -13,6 +14,12 @@ public class TestDataBuilder {
 
     protected static final String VALID_PARAMETERIZED_QUERY = "SELECT dummy_column FROM dummy_table WHERE dummy_partitionKey IN (?, ?)";
     protected static final String VALID_DSQL_QUERY = "dsql:SELECT dummy_column FROM dummy_table";
+
+    protected static List<String> cassandraCategoryMetadataTestKeys = new LinkedList<String>();
+
+    static {
+        cassandraCategoryMetadataTestKeys.add(ConstantsTest.TABLE_NAME2);
+    }
 
     private TestDataBuilder() {
 
@@ -64,28 +71,28 @@ public class TestDataBuilder {
     }
 
     public static List<Object> getValidParmList() {
-        List<Object> parameters = new LinkedList<>();
+        List<Object> parameters = new LinkedList<Object>();
         parameters.add("value1");
         parameters.add("value2");
         return parameters;
     }
 
     public static List<String> getValidColumnsListForDelete() {
-        List<String> parameters = new LinkedList<>();
+        List<String> parameters = new LinkedList<String>();
         parameters.add(ConstantsTest.VALID_COLUMN);
         parameters.add(ConstantsTest.VALID_COLUMN_2);
         return parameters;
     }
 
     public static List<String> getInvalidEntityForDelete() {
-        List<String> entity = new ArrayList<>();
+        List<String> entity = new ArrayList<String>();
         entity.add("invalid_column");
         return entity;
     }
 
     public static Map<String, Object> getValidEntityWithList() {
         Map<String, Object> entity = new HashMap<String, Object>();
-        List<String> list = new ArrayList<>();
+        List<String> list = new ArrayList<String>();
         list.add("firstValue");
         list.add("secondValue");
         entity.put(ConstantsTest.DUMMY_PARTITION_KEY, "value1");
@@ -95,7 +102,7 @@ public class TestDataBuilder {
     }
 
     public static List<String> getValidListItem() {
-        List<String> entity = new ArrayList<>();
+        List<String> entity = new ArrayList<String>();
         entity.add(ConstantsTest.VALID_LIST_COLUMN + "[0]");
         return entity;
     }
@@ -112,14 +119,14 @@ public class TestDataBuilder {
     }
 
     public static List<String> getValidMapItem() {
-        List<String> entity = new ArrayList<>();
+        List<String> entity = new ArrayList<String>();
         entity.add(ConstantsTest.VALID_MAP_COLUMN + "['firstValue']");
         return entity;
     }
 
     public static Map<String, Object> getValidEntityWithSet() {
         Map<String, Object> entity = new HashMap<String, Object>();
-        Set<String> item = new HashSet<>();
+        Set<String> item = new HashSet<String>();
         item.add("firstValue");
         item.add("secondValue");
         entity.put(ConstantsTest.DUMMY_PARTITION_KEY, "value1");
@@ -129,7 +136,7 @@ public class TestDataBuilder {
     }
 
     public static List<String> getValidSet() {
-        List<String> entity = new ArrayList<>();
+        List<String> entity = new ArrayList<String>();
         entity.add(ConstantsTest.VALID_SET_COLUMN);
         return entity;
     }
@@ -142,7 +149,7 @@ public class TestDataBuilder {
     }
 
     public static List<ColumnInput> getPrimaryKey(){
-        List<ColumnInput> columns = new ArrayList<>();
+        List<ColumnInput> columns = new ArrayList<ColumnInput>();
 
         ColumnInput column = new ColumnInput();
         column.setIsPrimaryKey(true);
@@ -154,8 +161,8 @@ public class TestDataBuilder {
     }
 
     public static List<ColumnInput> getColumns(){
-        List<ColumnInput> columns = new ArrayList<>();
-        Map<String, Object> list = new HashMap<>();
+        List<ColumnInput> columns = new ArrayList<ColumnInput>();
+        Map<String, Object> list = new HashMap<String, Object>();
 
         ColumnInput column1 = new ColumnInput();
         column1.setIsPrimaryKey(true);
@@ -181,5 +188,15 @@ public class TestDataBuilder {
         columns.add(column4);
 
         return columns;
+    }
+
+    public static CreateTableInput getBasicCreateTableInput(List<ColumnInput> columns, String keyspaceName, String tableName){
+        CreateTableInput input = new CreateTableInput();
+
+        input.setColumns(columns);
+        input.setKeyspaceName(keyspaceName);
+        input.setTableName(tableName);
+
+        return input;
     }
 }

@@ -275,7 +275,7 @@ public final class CassandraClient {
     }
 
     private List<Map<String, Object>> getResponseFromResultSet(ResultSet result) {
-        List<Map<String, Object>> responseList = new LinkedList<>();
+        List<Map<String, Object>> responseList = new LinkedList<Map<String, Object>>();
 
         if (result != null) {
             for (Row row : result.all()) {

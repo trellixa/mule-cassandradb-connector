@@ -3,6 +3,7 @@
  */
 package com.mulesoft.mule.cassandradb.automation.testrunners;
 
+import com.mulesoft.mule.cassandradb.automation.functional.*;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.experimental.categories.Categories;
@@ -12,15 +13,16 @@ import org.mule.tools.devkit.ctf.mockup.ConnectorTestContext;
 import org.mule.tools.devkit.ctf.platform.PlatformManager;
 
 import com.mulesoft.mule.cassandradb.CassandraDBConnector;
-import com.mulesoft.mule.cassandradb.automation.functional.InsertTestCases;
-import com.mulesoft.mule.cassandradb.automation.functional.QueryMetadataIT;
-import com.mulesoft.mule.cassandradb.automation.functional.SelectTestCases;
 
 @RunWith(Categories.class)
 @SuiteClasses({
     InsertTestCases.class,
     SelectTestCases.class,
-    QueryMetadataIT.class
+    UpdateTestCases.class,
+    DeleteTestCases.class,
+    CassandraMetadataCategoryTestCase.class,
+    CassandraOnlyWithFiltersMetadataCategoryTestCase.class,
+    CassandraWithFiltersMetadataCategoryTestCase.class
 })
 public class FunctionalTestSuite {
 

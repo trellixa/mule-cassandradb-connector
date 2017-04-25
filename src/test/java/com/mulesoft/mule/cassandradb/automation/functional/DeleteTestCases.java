@@ -12,7 +12,7 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-public class DeleteTestCases extends BaseTestCases {
+public class DeleteTestCases extends CassandraDBConnectorAbstractTestCase {
 
     private static CassandraClient cassClient;
     private static CassandraConfig cassConfig;

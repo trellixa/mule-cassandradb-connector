@@ -12,7 +12,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 
-public class UpdateTestCases extends BaseTestCases {
+public class UpdateTestCases extends CassandraDBConnectorAbstractTestCase {
 
     private static CassandraClient cassClient;
     private static CassandraConfig cassConfig;

@@ -48,7 +48,7 @@ public class CassandraDBConnectorMockTest {
 
     @Test public void shouldCreateTableOnlyWithPrimaryKey() throws CassandraDBException {
         //create input
-        List<ColumnInput> columns = new ArrayList<>();
+        List<ColumnInput> columns = new ArrayList<ColumnInput>();
         CreateTableInput input = new CreateTableInput();
 
         ColumnInput column = new ColumnInput();
@@ -84,7 +84,7 @@ public class CassandraDBConnectorMockTest {
     @Test (expected = CassandraDBException.class)
     public void shouldFailCreateTableWithoutPrimaryKey() throws CassandraDBException {
         //create input
-        List<ColumnInput> columns = new ArrayList<>();
+        List<ColumnInput> columns = new ArrayList<ColumnInput>();
         CreateTableInput input = new CreateTableInput();
 
         ColumnInput column = new ColumnInput();
