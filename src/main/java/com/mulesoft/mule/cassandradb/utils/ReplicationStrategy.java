@@ -3,6 +3,8 @@
  */
 package com.mulesoft.mule.cassandradb.utils;
 
+import com.mulesoft.mule.cassandradb.metadata.CreateKeyspaceInput;
+
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -68,16 +70,26 @@ public enum ReplicationStrategy {
         }
     };
 
-    public static Map<String, Object> buildReplicationStrategy(Map<String, Object> replicationStrategy) {
-        if (replicationStrategy == null) {
+    public static Map<String, Object> buildReplicationStrategy(CreateKeyspaceInput input) {
+        LinkedHashMap<String, Object> replicationStrategy = new LinkedHashMap<String, Object>();
+        if (input.getReplicationStrategyClass() == null || input.getReplicationFactor() == null) {
             return buildDefaultReplicationStrategy();
+        } else {
+            replicationStrategy.put(Constants.ClASS, input.getReplicationStrategyClass());
+            replicationStrategy.put(Constants.REPLICATION_FACTOR, input.getReplicationFactor());
+            if (input.getFirstDataCenter() != null) {
+                replicationStrategy.put(input.getFirstDataCenter().getName(), input.getFirstDataCenter().getValue());
+            }
+            if (input.getNextDataCenter() != null) {
+                replicationStrategy.put(input.getNextDataCenter().getName(), input.getNextDataCenter().getValue());
+            }
         }
         return replicationStrategy;
     }
 
     public static LinkedHashMap<String, Object> buildDefaultReplicationStrategy() {
         LinkedHashMap<String, Object> replicationStrategyMap = new LinkedHashMap<String, Object>();
-        replicationStrategyMap.put("class", SIMPLE.toString());
+        replicationStrategyMap.put(Constants.ClASS, SIMPLE.toString());
         replicationStrategyMap.put(Constants.REPLICATION_FACTOR, "3");
         return replicationStrategyMap;
     }

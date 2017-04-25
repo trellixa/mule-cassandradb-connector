@@ -14,6 +14,7 @@ import org.mule.api.annotations.components.MetaDataCategory;
 import org.mule.common.metadata.*;
 import org.mule.common.metadata.builder.DefaultMetaDataBuilder;
 import org.mule.common.metadata.builder.DynamicObjectBuilder;
+import org.mule.common.metadata.datatype.DataType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -59,13 +60,8 @@ public class CassandraMetadataCategory {
      */
     @MetaDataRetriever
     public MetaData getInputMetaData(final MetaDataKey key) {
-        logger.info("Retrieving input metadata for the key: {}", key);
-        final String keyspaceUsed = cassandraConnector.getBasicAuthConnectionStrategy().getCassandraClient().getLoggedKeyspace();
-        final CassandraClient cassandraClient = cassandraConnector.getBasicAuthConnectionStrategy().getCassandraClient();
 
-        //extract tables metadata from database
-        TableMetadata tableMetadata = cassandraClient.fetchTableMetadata(keyspaceUsed, key.getId());
-
+        TableMetadata tableMetadata = getTableMetadata(key);
         //build the metadata
         if (tableMetadata != null && tableMetadata.getColumns() != null) {
             DynamicObjectBuilder<?> listEntityModel = new DefaultMetaDataBuilder().createList().ofDynamicObject(tableMetadata.getName());
@@ -80,16 +76,35 @@ public class CassandraMetadataCategory {
         return new DefaultMetaData(null);
     }
 
-    private void addMetadataField(DynamicObjectBuilder<?> listEntityModel, ColumnMetadata column) {
-        org.mule.common.metadata.datatype.DataType columnDataType = resolveDataType(column);
-        listEntityModel.addSimpleField(column.getName(), columnDataType);
+    protected TableMetadata getTableMetadata(final MetaDataKey key) {
+        logger.info("Retrieving input metadata for the key: {}", key);
+        final String keyspaceUsed = cassandraConnector.getBasicAuthConnectionStrategy().getCassandraClient().getLoggedKeyspace();
+        final CassandraClient cassandraClient = cassandraConnector.getBasicAuthConnectionStrategy().getCassandraClient();
+
+        //extract tables metadata from database
+        return cassandraClient.fetchTableMetadata(keyspaceUsed, key.getId());
     }
 
-    /**
-     * maps Datastax column types to Mule data types
-     */
-    private org.mule.common.metadata.datatype.DataType resolveDataType(ColumnMetadata column) {
-        switch(column.getType().getName()){
+    protected void addMetadataField(DynamicObjectBuilder<?> listEntityModel, ColumnMetadata column) {
+
+        org.mule.common.metadata.datatype.DataType columnDataType = resolveColumnType(column);
+
+        switch (columnDataType) {
+            case LIST:
+                DataType list = resolveDataType(column.getType().getTypeArguments().get(0));
+                listEntityModel.addList(column.getName()).ofSimpleField(list);
+                break;
+            case MAP:
+                listEntityModel.addDynamicObjectField(column.getName()).endDynamicObject();
+                break;
+            default:
+                listEntityModel.addSimpleField(column.getName(), columnDataType);
+        }
+    }
+
+
+    protected org.mule.common.metadata.datatype.DataType resolveDataType(com.datastax.driver.core.DataType dataType) {
+        switch(dataType.getName()){
             case UUID:
             case TIMEUUID:
             case TEXT:
@@ -117,8 +132,19 @@ public class CassandraMetadataCategory {
                 return org.mule.common.metadata.datatype.DataType.POJO;
             case TIMESTAMP:
                 return org.mule.common.metadata.datatype.DataType.DATE_TIME;
+            case LIST:
+                return org.mule.common.metadata.datatype.DataType.LIST;
+            case MAP:
+                return org.mule.common.metadata.datatype.DataType.MAP;
             default: return org.mule.common.metadata.datatype.DataType.UNKNOWN;
         }
+    }
+
+    /**
+     * maps Datastax column types to Mule data types
+     */
+    protected org.mule.common.metadata.datatype.DataType resolveColumnType(ColumnMetadata column) {
+     return  resolveDataType(column.getType());
     }
 
     public CassandraDBConnector getCassandraConnector() {

@@ -5,32 +5,56 @@ package com.mulesoft.mule.cassandradb.utils.builders;
 
 import com.datastax.driver.core.DataType;
 import com.datastax.driver.core.schemabuilder.*;
-import com.mulesoft.mule.cassandradb.utils.Constants;
+import com.mulesoft.mule.cassandradb.metadata.ColumnInput;
+import com.mulesoft.mule.cassandradb.metadata.CreateKeyspaceInput;
+import com.mulesoft.mule.cassandradb.metadata.CreateTableInput;
+import com.mulesoft.mule.cassandradb.utils.CassandraDBException;
 import com.mulesoft.mule.cassandradb.utils.ReplicationStrategy;
-import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.apache.commons.lang3.tuple.MutablePair;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public class HelperStatements {
 
-    public static SchemaStatement createKeyspaceStatement(String keyspaceName, Map<String, Object> replicationStrategy) {
+    public static SchemaStatement createKeyspaceStatement(CreateKeyspaceInput input) {
         //build create keyspace statement if not exists
-        CreateKeyspace createKeyspaceStatement = SchemaBuilder.createKeyspace(keyspaceName).ifNotExists();
+        CreateKeyspace createKeyspaceStatement = SchemaBuilder.createKeyspace(input.getKeyspaceName()).ifNotExists();
 
-        return createKeyspaceStatement.with().replication(ReplicationStrategy.buildReplicationStrategy(replicationStrategy));
+        return createKeyspaceStatement.with().replication(ReplicationStrategy.buildReplicationStrategy(input));
     }
 
     public static SchemaStatement dropKeyspaceStatement(String keyspaceName) {
         return SchemaBuilder.dropKeyspace(keyspaceName).ifExists();
     }
 
-    public static SchemaStatement createTable(String tableName, String keyspaceName, Map<String, Object> partitionKey) {
-        //build drop keyspace statement
-        ImmutablePair<String, DataType> partitionKeyInfo = resolvePartitionKey(partitionKey);
+    public static SchemaStatement createTable(String keyspace, CreateTableInput input) throws CassandraDBException {
 
-        return SchemaBuilder.createTable(keyspaceName, tableName).ifNotExists().
-                addPartitionKey(partitionKeyInfo.getLeft(), partitionKeyInfo.getRight());
+        if (input.getColumns() == null || input.getColumns().isEmpty()) {
+            throw new CassandraDBException("Mismatched input. Cannot create table without columns.");
+        }
+
+        Create table = SchemaBuilder.createTable(keyspace, input.getTableName()).ifNotExists();
+
+        List<ColumnInput> partitionKey = getPartitionKey(input.getColumns());
+        if (partitionKey.isEmpty()) {
+            throw new CassandraDBException("Mismatched input. Primary key is missing.");
+        } else {
+            for (ColumnInput column : getPartitionKey(input.getColumns())) {
+                table.addPartitionKey(column.getName(), resolveDataTypeFromString(String.valueOf(column.getType())));
+            }
+        }
+        List<ColumnInput> otherColumns = getColumnsThatAreNotPrimaryKey(input.getColumns());
+        if (!otherColumns.isEmpty()) {
+            for (ColumnInput column : otherColumns) {
+                if (column.getType() instanceof Map) {
+                    table.addColumn(column.getName(), resolveDataTypeFromMap((Map) column.getType()));
+                } else {
+                    table.addColumn(column.getName(), resolveDataTypeFromString(String.valueOf(column.getType())));
+                }
+            }
+        }
+        return table;
     }
 
     public static SchemaStatement addColumnToTable(String tableName, String keyspaceName, String columnName, DataType columnType) {
@@ -42,21 +66,90 @@ public class HelperStatements {
     }
 
     /**
-     * extract partition key column information or return default values
-     * @param partitionKey
-     * @return
+     * return the DataType based on a String. Default value is DataType.text();
      */
-    private static ImmutablePair<String, DataType> resolvePartitionKey(Map<String, Object> partitionKey) {
-        MutablePair<String, DataType> partitionKeyInfo = new MutablePair<String, DataType>();
+    private static DataType resolveDataTypeFromString(String dataType) {
+        DataType.Name name = DataType.Name.valueOf(dataType.toUpperCase());
+        switch (name){
+            case ASCII: return DataType.ascii();
+            case BIGINT: return DataType.bigint();
+            case BLOB: return DataType.blob();
+            case BOOLEAN: return DataType.cboolean();
+            case COUNTER: return DataType.counter();
+            case DECIMAL: return DataType.decimal();
+            case DOUBLE: return DataType.cdouble();
+            case FLOAT: return DataType.cfloat();
+            case INET: return DataType.inet();
+            case TINYINT: return DataType.tinyint();
+            case SMALLINT: return DataType.smallint();
+            case INT: return DataType.cint();
+            case TEXT: return DataType.text();
+            case TIMESTAMP: return DataType.timestamp();
+            case DATE: return DataType.date();
+            case TIME: return DataType.time();
+            case UUID: return DataType.uuid();
+            case VARCHAR: return DataType.varchar();
+            case VARINT: return DataType.varint();
+            case TIMEUUID: return DataType.timeuuid();
+            default: return DataType.text();
+        }
+    }
 
-        if (partitionKey == null) {
-            partitionKeyInfo.setLeft(Constants.DUMMY_PARTITION_KEY);
-            partitionKeyInfo.setRight(DataType.text());
-        } else {
-            partitionKeyInfo.setLeft(String.valueOf(partitionKey.get(Constants.PARTITION_KEY_COLUMN_NAME)));
-            partitionKeyInfo.setRight((DataType) partitionKey.get(Constants.DATA_TYPE));
+    /**
+     * return the DataType based on a map that contains the collection type as the key and the item type as value. Default value is list of DataType.text();
+     */
+    private static DataType resolveDataTypeFromMap(Map<String, Object> dataType) {
+
+        DataType.Name collection = null;
+        String name = null;
+        String key = null;
+        String value = null;
+
+        for (Map.Entry<String, Object> entry : dataType.entrySet()) {
+            collection = DataType.Name.valueOf(entry.getKey().toUpperCase());
+            if (entry.getValue() instanceof Map) {
+                key = ((Map) entry.getValue()).keySet().iterator().next().toString();
+                value = ((Map) entry.getValue()).values().iterator().next().toString();
+            } else {
+                name = String.valueOf(entry.getValue());
+            }
         }
 
-        return new ImmutablePair<String, DataType>(partitionKeyInfo.getLeft(), partitionKeyInfo.getRight());
+        switch (collection) {
+            case LIST:
+                return DataType.list(resolveDataTypeFromString(name));
+            case SET:
+                return DataType.set(resolveDataTypeFromString(name));
+            case MAP:
+                return DataType.map(resolveDataTypeFromString(key), resolveDataTypeFromString(value));
+            default:
+                return DataType.list(DataType.text());
+        }
+    }
+
+    /**
+     * retrieves the list of columns that will construct the partition key
+     */
+    private static List<ColumnInput> getPartitionKey(List<ColumnInput> columns) {
+        List partitionKey = new ArrayList();
+        for (ColumnInput column : columns) {
+            if (column.isPrimaryKey()) {
+                partitionKey.add(column);
+            }
+        }
+        return partitionKey;
+    }
+
+    /**
+     * retrieves the list of columns that are not primary key
+     */
+    private static List<ColumnInput> getColumnsThatAreNotPrimaryKey(List<ColumnInput> columns) {
+        List columnsList = new ArrayList();
+        for (ColumnInput column : columns) {
+            if (!column.isPrimaryKey()) {
+                columnsList.add(column);
+            }
+        }
+        return columnsList;
     }
 }

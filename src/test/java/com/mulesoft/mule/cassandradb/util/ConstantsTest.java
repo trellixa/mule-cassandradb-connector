@@ -14,5 +14,10 @@ public class ConstantsTest {
     public static final String VALID_MAP_COLUMN = "dummy_map_column";
     public static final String VALID_SET_COLUMN = "dummy_set_column";
     public static final String DUMMY_PARTITION_KEY = "dummy_partitionKey";
+    public static final String TEXT = "text";
+    public static final String INT = "int";
+    public static final String LIST = "list";
+    public static final String COLUMNS_TO_CHANGE = "columnsToChange";
+    public static final String WHERE_CLAUSE = "whereClause";
 
 }

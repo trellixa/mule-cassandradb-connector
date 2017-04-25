@@ -6,9 +6,9 @@ package com.mulesoft.mule.cassandradb.utils;
 public class Constants {
 
     public final static String REPLICATION_FACTOR = "replication_factor";
-    public static final String DUMMY_PARTITION_KEY = "dummy_partitionKey";
-    public static final String PARTITION_KEY_COLUMN_NAME = "partitionKeyColumnName";
-    public static final String DATA_TYPE = "dataType";
+    public final static String ClASS = "class";
+    public static final String COLUMNS_TO_CHANGE = "columnsToChange";
+    public static final String WHERE_CLAUSE = "whereClause";
 
     //configuration
     public final static String CASS_HOST = "config.host";

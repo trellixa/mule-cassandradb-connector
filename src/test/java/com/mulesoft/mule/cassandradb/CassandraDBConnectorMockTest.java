@@ -4,7 +4,12 @@
 package com.mulesoft.mule.cassandradb;
 
 import com.datastax.driver.core.ResultSet;
+import com.mulesoft.mule.cassandradb.automation.functional.TestDataBuilder;
 import com.mulesoft.mule.cassandradb.configurations.BasicAuthConnectionStrategy;
+import com.mulesoft.mule.cassandradb.metadata.ColumnInput;
+import com.mulesoft.mule.cassandradb.metadata.CreateCQLQueryInput;
+import com.mulesoft.mule.cassandradb.metadata.CreateKeyspaceInput;
+import com.mulesoft.mule.cassandradb.metadata.CreateTableInput;
 import com.mulesoft.mule.cassandradb.util.ConstantsTest;
 import com.mulesoft.mule.cassandradb.utils.CassandraDBException;
 import org.junit.*;
@@ -12,6 +17,7 @@ import org.junit.runners.MethodSorters;
 import org.mule.api.ConnectionException;
 import org.mule.util.CollectionUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
@@ -29,7 +35,9 @@ public class CassandraDBConnectorMockTest {
         connector.setBasicAuthConnectionStrategy(strategy);
 
         //create a keyspace to be further used
-        connector.createKeyspace(ConstantsTest.SECOND_KEYSPACE_NAME, null);
+        CreateKeyspaceInput input = new CreateKeyspaceInput();
+        input.setKeyspaceName(ConstantsTest.SECOND_KEYSPACE_NAME);
+        connector.createKeyspace(input);
     }
 
     @AfterClass
@@ -38,13 +46,56 @@ public class CassandraDBConnectorMockTest {
         strategy.getCassandraClient().close();
     }
 
-    @Test
-    public void shouldCreateTable() throws CassandraDBException {
+    @Test public void shouldCreateTableOnlyWithPrimaryKey() throws CassandraDBException {
+        //create input
+        List<ColumnInput> columns = new ArrayList<>();
+        CreateTableInput input = new CreateTableInput();
+
+        ColumnInput column = new ColumnInput();
+        column.setIsPrimaryKey(true);
+        column.setName(ConstantsTest.DUMMY_PARTITION_KEY);
+        column.setType(ConstantsTest.TEXT);
+        columns.add(column);
+
+        input.setColumns(columns);
+        input.setKeyspaceName(ConstantsTest.SECOND_KEYSPACE_NAME);
+        input.setTableName(ConstantsTest.TABLE_NAME);
         //create a table
-        connector.createTable(ConstantsTest.TABLE_NAME, ConstantsTest.SECOND_KEYSPACE_NAME, null);
+        connector.createTable(input);
         Assert.assertTrue(verifyTableCreation(ConstantsTest.TABLE_NAME, ConstantsTest.SECOND_KEYSPACE_NAME));
     }
 
+    @Test
+    public void shouldCreateTableWithMultipleColumns() throws CassandraDBException {
+
+        //create input
+        List<ColumnInput> columns = TestDataBuilder.getColumns();
+        CreateTableInput input = new CreateTableInput();
+
+        input.setColumns(columns);
+        input.setKeyspaceName(ConstantsTest.SECOND_KEYSPACE_NAME);
+        input.setTableName(ConstantsTest.TABLE_NAME);
+
+        //create a table
+        connector.createTable(input);
+        Assert.assertTrue(verifyTableCreation(ConstantsTest.TABLE_NAME, ConstantsTest.SECOND_KEYSPACE_NAME));
+    }
+
+    @Test (expected = CassandraDBException.class)
+    public void shouldFailCreateTableWithoutPrimaryKey() throws CassandraDBException {
+        //create input
+        List<ColumnInput> columns = new ArrayList<>();
+        CreateTableInput input = new CreateTableInput();
+
+        ColumnInput column = new ColumnInput();
+        column.setName(ConstantsTest.VALID_COLUMN);
+        column.setType(ConstantsTest.INT);
+        columns.add(column);
+        input.setColumns(columns);
+
+        connector.createTable(input);
+        Assert.assertTrue(verifyTableCreation(ConstantsTest.TABLE_NAME, ConstantsTest.SECOND_KEYSPACE_NAME));
+    }
 
     @Test
     public void shouldDropTable() throws CassandraDBException {
@@ -54,8 +105,10 @@ public class CassandraDBConnectorMockTest {
 
     @Test
     public void shouldDescribeKeyspaces() throws CassandraDBException {
-        ResultSet resultSet = connector.executeCQLQuery("SELECT * FROM system.schema_keyspaces;");
-        Assert.assertTrue(resultSet.all().size() > 0);
+        CreateCQLQueryInput input = new CreateCQLQueryInput();
+        input.setCqlQuery("SELECT * FROM system.schema_keyspaces;");
+        List result = connector.executeCQLQuery(input);
+        Assert.assertTrue(result.size() > 0);
     }
 
     /**

@@ -4,6 +4,9 @@
 package com.mulesoft.mule.cassandradb.automation.functional;
 
 import com.mulesoft.mule.cassandradb.api.CassandraClient;
+import com.mulesoft.mule.cassandradb.metadata.ColumnInput;
+import com.mulesoft.mule.cassandradb.metadata.CreateKeyspaceInput;
+import com.mulesoft.mule.cassandradb.metadata.CreateTableInput;
 import com.mulesoft.mule.cassandradb.util.ConstantsTest;
 import com.mulesoft.mule.cassandradb.util.PropertiesLoaderUtil;
 import com.mulesoft.mule.cassandradb.utils.CassandraConfig;
@@ -32,8 +35,17 @@ public class QueryMetadataIT extends BaseTestCases {
         assert cassClient != null;
 
         //setup db env
-        cassClient.createKeyspace(cassConfig.getKeyspace(), null);
-        cassClient.createTable(ConstantsTest.TABLE_NAME, cassConfig.getKeyspace(), null);
+        List<ColumnInput> columns = TestDataBuilder.getPrimaryKey();
+        CreateTableInput input = new CreateTableInput();
+        CreateKeyspaceInput keyspaceInput = new CreateKeyspaceInput();
+
+        input.setColumns(columns);
+        input.setKeyspaceName(cassConfig.getKeyspace());
+        input.setTableName(ConstantsTest.TABLE_NAME);
+
+        keyspaceInput.setKeyspaceName(cassConfig.getKeyspace());
+        cassClient.createTable(input);
+        cassClient.createKeyspace(keyspaceInput);
     }
 
     @AfterClass

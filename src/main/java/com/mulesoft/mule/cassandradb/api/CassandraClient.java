@@ -5,6 +5,8 @@ package com.mulesoft.mule.cassandradb.api;
 
 import com.datastax.driver.core.*;
 import com.datastax.driver.core.querybuilder.*;
+import com.mulesoft.mule.cassandradb.metadata.CreateKeyspaceInput;
+import com.mulesoft.mule.cassandradb.metadata.CreateTableInput;
 import com.mulesoft.mule.cassandradb.utils.CassandraDBException;
 import com.mulesoft.mule.cassandradb.utils.Constants;
 import com.mulesoft.mule.cassandradb.utils.builders.HelperStatements;
@@ -67,17 +69,17 @@ public final class CassandraClient {
         return client;
     }
 
-    public boolean createKeyspace(String keyspaceName, Map<String, Object> replicationStrategy) {
-        return cassandraSession.execute(HelperStatements.createKeyspaceStatement(keyspaceName, replicationStrategy).getQueryString()).wasApplied();
+    public boolean createKeyspace(CreateKeyspaceInput input) {
+        return cassandraSession.execute(HelperStatements.createKeyspaceStatement(input).getQueryString()).wasApplied();
     }
 
     public boolean dropKeyspace(String keyspaceName) {
         return cassandraSession.execute(HelperStatements.dropKeyspaceStatement(keyspaceName).getQueryString()).wasApplied();
     }
 
-    public boolean createTable(String tableName, String customKeyspaceName, Map<String, Object> partitionKey) {
-        return cassandraSession.execute(HelperStatements.createTable(tableName,
-                StringUtils.isNotBlank(customKeyspaceName) ? customKeyspaceName : cassandraSession.getLoggedKeyspace(), partitionKey)).wasApplied();
+    public boolean createTable(CreateTableInput input) throws CassandraDBException {
+        return cassandraSession.execute(
+                HelperStatements.createTable(StringUtils.isNotBlank(input.getKeyspaceName()) ? input.getKeyspaceName() : cassandraSession.getLoggedKeyspace(), input)).wasApplied();
     }
 
     public boolean addColumnToTable(String tableName, String customKeyspaceName, String columnName, DataType columnType) {
@@ -91,11 +93,23 @@ public final class CassandraClient {
                 StringUtils.isNotBlank(customKeyspaceName) ? customKeyspaceName : cassandraSession.getLoggedKeyspace())).wasApplied();
     }
 
-    public ResultSet executeCQLQuery(String cqlQuery) {
-        if (StringUtils.isNotBlank(cqlQuery)) {
-            return cassandraSession.execute(cqlQuery);
+    public List<Map<String, Object>> executeCQLQuery(String cqlQuery, List<Object> params) throws CassandraDBException {
+        ResultSet result = null;
+
+        try {
+            if (StringUtils.isNotBlank(cqlQuery)) {
+                if (!CollectionUtils.isEmpty(params)) {
+                    result = executePreparedStatement(cqlQuery, params);
+                } else {
+                    result = cassandraSession.execute(cqlQuery);
+                }
+            }
+        } catch (Exception e) {
+            logger.error("Execute cql query Request Failed: " + e.getMessage());
+            throw new CassandraDBException(e.getMessage(), e);
         }
-        return null;
+
+        return getResponseFromResultSet(result);
     }
 
     public List<String> getTableNamesFromKeyspace(String keyspaceName) {
@@ -240,7 +254,7 @@ public final class CassandraClient {
             if (!CollectionUtils.isEmpty(params)) {
                 result = executePreparedStatement(query, params);
             } else {
-                result = executeCQLQuery(query);
+                result = cassandraSession.execute(query);
             }
         } catch (Exception e) {
             logger.error("Select Request Failed: " + e.getMessage());
@@ -263,19 +277,21 @@ public final class CassandraClient {
     private List<Map<String, Object>> getResponseFromResultSet(ResultSet result) {
         List<Map<String, Object>> responseList = new LinkedList<>();
 
-        for (Row row : result.all()) {
+        if (result != null) {
+            for (Row row : result.all()) {
 
-            int columnsSize = row.getColumnDefinitions().size();
+                int columnsSize = row.getColumnDefinitions().size();
 
-            Map<String, Object> mappedRow = new HashMap<String, Object>();
+                Map<String, Object> mappedRow = new HashMap<String, Object>();
 
-            for (int i = 0; i < columnsSize; i++) {
-                String columnName = row.getColumnDefinitions().getName(i);
-                Object columnValue = row.getObject(i);
-                mappedRow.put(columnName, columnValue);
+                for (int i = 0; i < columnsSize; i++) {
+                    String columnName = row.getColumnDefinitions().getName(i);
+                    Object columnValue = row.getObject(i);
+                    mappedRow.put(columnName, columnValue);
+                }
+
+                responseList.add(mappedRow);
             }
-
-            responseList.add(mappedRow);
         }
 
         return responseList;

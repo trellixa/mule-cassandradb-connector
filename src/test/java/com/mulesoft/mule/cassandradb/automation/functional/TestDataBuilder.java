@@ -3,6 +3,7 @@
  */
 package com.mulesoft.mule.cassandradb.automation.functional;
 
+import com.mulesoft.mule.cassandradb.metadata.ColumnInput;
 import com.mulesoft.mule.cassandradb.util.ConstantsTest;
 import org.jetbrains.annotations.NotNull;
 
@@ -131,5 +132,54 @@ public class TestDataBuilder {
         List<String> entity = new ArrayList<>();
         entity.add(ConstantsTest.VALID_SET_COLUMN);
         return entity;
+    }
+
+    public static Map<String, Object> getPayloadColumnsAndFilters(Object entity, Map<String, Object> whereClause){
+        Map<String, Object> payload = new HashMap<String, Object>();
+        payload.put(ConstantsTest.COLUMNS_TO_CHANGE, entity);
+        payload.put(ConstantsTest.WHERE_CLAUSE, whereClause);
+        return payload;
+    }
+
+    public static List<ColumnInput> getPrimaryKey(){
+        List<ColumnInput> columns = new ArrayList<>();
+
+        ColumnInput column = new ColumnInput();
+        column.setIsPrimaryKey(true);
+        column.setName(ConstantsTest.DUMMY_PARTITION_KEY);
+        column.setType(ConstantsTest.TEXT);
+        columns.add(column);
+
+        return columns;
+    }
+
+    public static List<ColumnInput> getColumns(){
+        List<ColumnInput> columns = new ArrayList<>();
+        Map<String, Object> list = new HashMap<>();
+
+        ColumnInput column1 = new ColumnInput();
+        column1.setIsPrimaryKey(true);
+        column1.setName(ConstantsTest.DUMMY_PARTITION_KEY);
+        column1.setType(ConstantsTest.TEXT);
+
+        ColumnInput column2 = new ColumnInput();
+        column2.setName(ConstantsTest.VALID_COLUMN);
+        column2.setType(ConstantsTest.INT);
+
+        ColumnInput column3 = new ColumnInput();
+        column3.setName(ConstantsTest.VALID_COLUMN_2);
+        column3.setType(ConstantsTest.TEXT);
+
+        list.put(ConstantsTest.LIST, ConstantsTest.TEXT);
+        ColumnInput column4 = new ColumnInput();
+        column4.setName(ConstantsTest.VALID_LIST_COLUMN);
+        column4.setType(list);
+
+        columns.add(column1);
+        columns.add(column2);
+        columns.add(column3);
+        columns.add(column4);
+
+        return columns;
     }
 }

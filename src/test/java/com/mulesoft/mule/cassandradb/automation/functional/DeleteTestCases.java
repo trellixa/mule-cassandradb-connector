@@ -17,81 +17,99 @@ public class DeleteTestCases extends BaseTestCases {
     private static CassandraClient cassClient;
     private static CassandraConfig cassConfig;
 
-    @BeforeClass public static void setup() throws Exception {
+    @BeforeClass
+    public static void setup() throws Exception {
         cassConfig = getClientConfig();
         cassClient = configureClient(cassConfig);
         cassClient.addColumnToTable(ConstantsTest.TABLE_NAME, cassConfig.getKeyspace(), ConstantsTest.VALID_COLUMN_2, DataType.text());
 
     }
 
-    @AfterClass public static void tearDown() throws Exception {
+    @AfterClass
+    public static void tearDown() throws Exception {
         cassClient.dropTable(ConstantsTest.TABLE_NAME, cassConfig.getKeyspace());
     }
 
-    @Test public void testDeleteColumnUsingEqWithSuccess() throws CassandraDBException {
+    @Test
+    public void testDeleteColumnUsingEqWithSuccess() throws CassandraDBException {
         // set up the data
         cassClient.insert(cassConfig.getKeyspace(), ConstantsTest.TABLE_NAME, TestDataBuilder.getValidEntity());
 
-        getConnector().delete(ConstantsTest.TABLE_NAME, TestDataBuilder.getValidColumnsListForDelete(), TestDataBuilder.getValidWhereClauseWithEq());
+        getConnector().deleteColumns(ConstantsTest.TABLE_NAME, TestDataBuilder.getPayloadColumnsAndFilters(TestDataBuilder.getValidColumnsListForDelete(),
+                TestDataBuilder.getValidWhereClauseWithEq()));
     }
 
-    @Test public void testDeleteRowUsingEqWithSuccess() throws CassandraDBException {
+    @Test
+    public void testDeleteRowUsingEqWithSuccess() throws CassandraDBException {
         // set up the data
         cassClient.insert(cassConfig.getKeyspace(), ConstantsTest.TABLE_NAME, TestDataBuilder.getValidEntity());
 
-        getConnector().delete(ConstantsTest.TABLE_NAME, null, TestDataBuilder.getValidWhereClauseWithEq());
+        getConnector().deleteRows(ConstantsTest.TABLE_NAME, TestDataBuilder.getPayloadColumnsAndFilters(null, TestDataBuilder.getValidWhereClauseWithEq()));
     }
 
-    @Test public void testDeleteColumnUsingINWithSuccess() throws CassandraDBException {
+    @Test
+    public void testDeleteColumnUsingINWithSuccess() throws CassandraDBException {
         // set up the data
         cassClient.insert(cassConfig.getKeyspace(), ConstantsTest.TABLE_NAME, TestDataBuilder.getValidEntity());
 
-        getConnector().delete(ConstantsTest.TABLE_NAME, TestDataBuilder.getValidColumnsListForDelete(), TestDataBuilder.getValidWhereClauseWithIN());
+        getConnector().deleteColumns(ConstantsTest.TABLE_NAME,
+                TestDataBuilder.getPayloadColumnsAndFilters(TestDataBuilder.getValidColumnsListForDelete(), TestDataBuilder.getValidWhereClauseWithIN()));
     }
 
-    @Test public void testDeleteRowUsingINWithSuccess() throws CassandraDBException {
+    @Test
+    public void testDeleteRowUsingINWithSuccess() throws CassandraDBException {
         // set up the data
         cassClient.insert(cassConfig.getKeyspace(), ConstantsTest.TABLE_NAME, TestDataBuilder.getValidEntity());
 
-        getConnector().delete(ConstantsTest.TABLE_NAME, null, TestDataBuilder.getValidWhereClauseWithIN());
+        getConnector().deleteRows(ConstantsTest.TABLE_NAME, TestDataBuilder.getPayloadColumnsAndFilters(null, TestDataBuilder.getValidWhereClauseWithIN()));
     }
 
-    @Test public void testDeleteItemFromListWithSuccess() throws CassandraDBException {
+    @Test
+    public void testDeleteItemFromListWithSuccess() throws CassandraDBException {
         // set up the data
         cassClient.addColumnToTable(ConstantsTest.TABLE_NAME, cassConfig.getKeyspace(), ConstantsTest.VALID_LIST_COLUMN, DataType.list(DataType.text()));
         cassClient.insert(cassConfig.getKeyspace(), ConstantsTest.TABLE_NAME, TestDataBuilder.getValidEntityWithList());
 
-        getConnector().delete(ConstantsTest.TABLE_NAME, TestDataBuilder.getValidListItem(), TestDataBuilder.getValidWhereClauseWithEq());
+        getConnector().deleteColumns(ConstantsTest.TABLE_NAME,
+                TestDataBuilder.getPayloadColumnsAndFilters(TestDataBuilder.getValidListItem(), TestDataBuilder.getValidWhereClauseWithEq()));
     }
 
-    @Test public void testDeleteItemFromMapWithSuccess() throws CassandraDBException {
+    @Test
+    public void testDeleteItemFromMapWithSuccess() throws CassandraDBException {
         // set up the data
         cassClient.addColumnToTable(ConstantsTest.TABLE_NAME, cassConfig.getKeyspace(), ConstantsTest.VALID_MAP_COLUMN, DataType.map(DataType.text(), DataType.text()));
         cassClient.insert(cassConfig.getKeyspace(), ConstantsTest.TABLE_NAME, TestDataBuilder.getValidEntityWithMap());
 
-        getConnector().delete(ConstantsTest.TABLE_NAME, TestDataBuilder.getValidMapItem(), TestDataBuilder.getValidWhereClauseWithEq());
+        getConnector().deleteColumns(ConstantsTest.TABLE_NAME,
+                TestDataBuilder.getPayloadColumnsAndFilters(TestDataBuilder.getValidMapItem(), TestDataBuilder.getValidWhereClauseWithEq()));
     }
 
-    @Test public void testDeleteSetColumnWithSuccess() throws CassandraDBException {
+    @Test
+    public void testDeleteSetColumnWithSuccess() throws CassandraDBException {
         // set up the data
         cassClient.addColumnToTable(ConstantsTest.TABLE_NAME, cassConfig.getKeyspace(), ConstantsTest.VALID_SET_COLUMN, DataType.set(DataType.text()));
         cassClient.insert(cassConfig.getKeyspace(), ConstantsTest.TABLE_NAME, TestDataBuilder.getValidEntityWithSet());
 
-        getConnector().delete(ConstantsTest.TABLE_NAME, TestDataBuilder.getValidSet(), TestDataBuilder.getValidWhereClauseWithEq());
+        getConnector().deleteColumns(ConstantsTest.TABLE_NAME,
+                TestDataBuilder.getPayloadColumnsAndFilters(TestDataBuilder.getValidSet(), TestDataBuilder.getValidWhereClauseWithEq()));
     }
 
-    @Test(expected = CassandraDBException.class) public void testDeleteWithInvalidInput() throws CassandraDBException {
+    @Test(expected = CassandraDBException.class)
+    public void testDeleteWithInvalidInput() throws CassandraDBException {
         // set up the data
         cassClient.insert(cassConfig.getKeyspace(), ConstantsTest.TABLE_NAME, TestDataBuilder.getValidEntity());
 
-        getConnector().delete(ConstantsTest.TABLE_NAME, TestDataBuilder.getInvalidEntityForDelete(), TestDataBuilder.getValidWhereClauseWithEq());
+        getConnector().deleteColumns(ConstantsTest.TABLE_NAME,
+                TestDataBuilder.getPayloadColumnsAndFilters(TestDataBuilder.getInvalidEntityForDelete(), TestDataBuilder.getValidWhereClauseWithEq()));
     }
 
-    @Test(expected = CassandraDBException.class) public void testDeleteWithInvalidWhereClause() throws CassandraDBException {
+    @Test(expected = CassandraDBException.class)
+    public void testDeleteWithInvalidWhereClause() throws CassandraDBException {
         // set up the data
         cassClient.insert(cassConfig.getKeyspace(), ConstantsTest.TABLE_NAME, TestDataBuilder.getValidEntity());
 
-        getConnector().delete(ConstantsTest.TABLE_NAME, TestDataBuilder.getValidColumnsListForDelete(), TestDataBuilder.getInvalidWhereClause());
+        getConnector().deleteColumns(ConstantsTest.TABLE_NAME,
+                TestDataBuilder.getPayloadColumnsAndFilters(TestDataBuilder.getValidColumnsListForDelete(), TestDataBuilder.getInvalidWhereClause()));
     }
 
 }
