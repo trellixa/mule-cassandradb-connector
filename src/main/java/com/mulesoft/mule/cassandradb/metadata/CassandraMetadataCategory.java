@@ -22,6 +22,8 @@ import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.mule.common.metadata.datatype.DataType.*;
+
 @MetaDataCategory
 public class CassandraMetadataCategory {
 
@@ -111,32 +113,32 @@ public class CassandraMetadataCategory {
             case VARCHAR:
             case ASCII:
             case INET:
-                return org.mule.common.metadata.datatype.DataType.STRING;
+                return STRING;
             case FLOAT:
-                return org.mule.common.metadata.datatype.DataType.FLOAT;
+                return FLOAT;
             case DOUBLE:
-                return org.mule.common.metadata.datatype.DataType.DOUBLE;
+                return DOUBLE;
             case BOOLEAN:
-                return org.mule.common.metadata.datatype.DataType.BOOLEAN;
+                return BOOLEAN;
             case INT:
             case VARINT:
             case SMALLINT:
             case TINYINT:
             case BIGINT:
-                return org.mule.common.metadata.datatype.DataType.INTEGER;
+                return INTEGER;
             case DECIMAL:
-                return org.mule.common.metadata.datatype.DataType.DECIMAL;
+                return DECIMAL;
             case DATE:
-                return org.mule.common.metadata.datatype.DataType.DATE;
+                return DATE;
             case BLOB:
-                return org.mule.common.metadata.datatype.DataType.POJO;
+                return POJO;
             case TIMESTAMP:
-                return org.mule.common.metadata.datatype.DataType.DATE_TIME;
+                return DATE_TIME;
             case LIST:
-                return org.mule.common.metadata.datatype.DataType.LIST;
+                return LIST;
             case MAP:
-                return org.mule.common.metadata.datatype.DataType.MAP;
-            default: return org.mule.common.metadata.datatype.DataType.UNKNOWN;
+                return MAP;
+            default: return UNKNOWN;
         }
     }
 

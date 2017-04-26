@@ -75,7 +75,7 @@ public enum ReplicationStrategy {
         if (input.getReplicationStrategyClass() == null || input.getReplicationFactor() == null) {
             return buildDefaultReplicationStrategy();
         } else {
-            replicationStrategy.put(Constants.ClASS, input.getReplicationStrategyClass());
+            replicationStrategy.put(Constants.CLASS, input.getReplicationStrategyClass());
             replicationStrategy.put(Constants.REPLICATION_FACTOR, input.getReplicationFactor());
             if (input.getFirstDataCenter() != null) {
                 replicationStrategy.put(input.getFirstDataCenter().getName(), input.getFirstDataCenter().getValue());
@@ -89,7 +89,7 @@ public enum ReplicationStrategy {
 
     public static LinkedHashMap<String, Object> buildDefaultReplicationStrategy() {
         LinkedHashMap<String, Object> replicationStrategyMap = new LinkedHashMap<String, Object>();
-        replicationStrategyMap.put(Constants.ClASS, SIMPLE.toString());
+        replicationStrategyMap.put(Constants.CLASS, SIMPLE.toString());
         replicationStrategyMap.put(Constants.REPLICATION_FACTOR, "3");
         return replicationStrategyMap;
     }

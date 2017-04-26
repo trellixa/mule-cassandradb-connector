@@ -100,7 +100,7 @@ public class CassandraDBConnector {
 
     @Processor
     @MetaDataScope(CassandraWithFiltersMetadataCategory.class)
-    public void deleteColumns(@MetaDataKeyParam(affects = MetaDataKeyParamAffectsType.INPUT) String table,
+    public void deleteColumnsValue(@MetaDataKeyParam(affects = MetaDataKeyParamAffectsType.INPUT) String table,
             @Default(PAYLOAD) Map<String, Object> payload) throws CassandraDBException {
         String keySpace = basicAuthConnectionStrategy.getKeyspace();
         basicAuthConnectionStrategy.getCassandraClient().delete(keySpace, table, (List) payload.get(Constants.COLUMNS_TO_CHANGE), (Map) payload.get(Constants.WHERE_CLAUSE));

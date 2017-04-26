@@ -35,8 +35,8 @@ public class DeleteTestCases extends CassandraDBConnectorAbstractTestCase {
         // set up the data
         cassClient.insert(cassConfig.getKeyspace(), ConstantsTest.TABLE_NAME, TestDataBuilder.getValidEntity());
 
-        getConnector().deleteColumns(ConstantsTest.TABLE_NAME, TestDataBuilder.getPayloadColumnsAndFilters(TestDataBuilder.getValidColumnsListForDelete(),
-                TestDataBuilder.getValidWhereClauseWithEq()));
+        getConnector().deleteColumnsValue(ConstantsTest.TABLE_NAME,
+                TestDataBuilder.getPayloadColumnsAndFilters(TestDataBuilder.getValidColumnsListForDelete(), TestDataBuilder.getValidWhereClauseWithEq()));
     }
 
     @Test
@@ -52,7 +52,7 @@ public class DeleteTestCases extends CassandraDBConnectorAbstractTestCase {
         // set up the data
         cassClient.insert(cassConfig.getKeyspace(), ConstantsTest.TABLE_NAME, TestDataBuilder.getValidEntity());
 
-        getConnector().deleteColumns(ConstantsTest.TABLE_NAME,
+        getConnector().deleteColumnsValue(ConstantsTest.TABLE_NAME,
                 TestDataBuilder.getPayloadColumnsAndFilters(TestDataBuilder.getValidColumnsListForDelete(), TestDataBuilder.getValidWhereClauseWithIN()));
     }
 
@@ -70,7 +70,7 @@ public class DeleteTestCases extends CassandraDBConnectorAbstractTestCase {
         cassClient.addColumnToTable(ConstantsTest.TABLE_NAME, cassConfig.getKeyspace(), ConstantsTest.VALID_LIST_COLUMN, DataType.list(DataType.text()));
         cassClient.insert(cassConfig.getKeyspace(), ConstantsTest.TABLE_NAME, TestDataBuilder.getValidEntityWithList());
 
-        getConnector().deleteColumns(ConstantsTest.TABLE_NAME,
+        getConnector().deleteColumnsValue(ConstantsTest.TABLE_NAME,
                 TestDataBuilder.getPayloadColumnsAndFilters(TestDataBuilder.getValidListItem(), TestDataBuilder.getValidWhereClauseWithEq()));
     }
 
@@ -80,7 +80,7 @@ public class DeleteTestCases extends CassandraDBConnectorAbstractTestCase {
         cassClient.addColumnToTable(ConstantsTest.TABLE_NAME, cassConfig.getKeyspace(), ConstantsTest.VALID_MAP_COLUMN, DataType.map(DataType.text(), DataType.text()));
         cassClient.insert(cassConfig.getKeyspace(), ConstantsTest.TABLE_NAME, TestDataBuilder.getValidEntityWithMap());
 
-        getConnector().deleteColumns(ConstantsTest.TABLE_NAME,
+        getConnector().deleteColumnsValue(ConstantsTest.TABLE_NAME,
                 TestDataBuilder.getPayloadColumnsAndFilters(TestDataBuilder.getValidMapItem(), TestDataBuilder.getValidWhereClauseWithEq()));
     }
 
@@ -90,7 +90,7 @@ public class DeleteTestCases extends CassandraDBConnectorAbstractTestCase {
         cassClient.addColumnToTable(ConstantsTest.TABLE_NAME, cassConfig.getKeyspace(), ConstantsTest.VALID_SET_COLUMN, DataType.set(DataType.text()));
         cassClient.insert(cassConfig.getKeyspace(), ConstantsTest.TABLE_NAME, TestDataBuilder.getValidEntityWithSet());
 
-        getConnector().deleteColumns(ConstantsTest.TABLE_NAME,
+        getConnector().deleteColumnsValue(ConstantsTest.TABLE_NAME,
                 TestDataBuilder.getPayloadColumnsAndFilters(TestDataBuilder.getValidSet(), TestDataBuilder.getValidWhereClauseWithEq()));
     }
 
@@ -99,7 +99,7 @@ public class DeleteTestCases extends CassandraDBConnectorAbstractTestCase {
         // set up the data
         cassClient.insert(cassConfig.getKeyspace(), ConstantsTest.TABLE_NAME, TestDataBuilder.getValidEntity());
 
-        getConnector().deleteColumns(ConstantsTest.TABLE_NAME,
+        getConnector().deleteColumnsValue(ConstantsTest.TABLE_NAME,
                 TestDataBuilder.getPayloadColumnsAndFilters(TestDataBuilder.getInvalidEntityForDelete(), TestDataBuilder.getValidWhereClauseWithEq()));
     }
 
@@ -108,7 +108,7 @@ public class DeleteTestCases extends CassandraDBConnectorAbstractTestCase {
         // set up the data
         cassClient.insert(cassConfig.getKeyspace(), ConstantsTest.TABLE_NAME, TestDataBuilder.getValidEntity());
 
-        getConnector().deleteColumns(ConstantsTest.TABLE_NAME,
+        getConnector().deleteColumnsValue(ConstantsTest.TABLE_NAME,
                 TestDataBuilder.getPayloadColumnsAndFilters(TestDataBuilder.getValidColumnsListForDelete(), TestDataBuilder.getInvalidWhereClause()));
     }
 
