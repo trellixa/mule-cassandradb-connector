@@ -28,7 +28,7 @@ public class BasicAuthConnectionStrategy {
     private String host;
 
     /**
-     * Port (default is 9160)
+     * Port (default is 9042)
      */
     @Configurable
     @org.mule.api.annotations.param.Optional
