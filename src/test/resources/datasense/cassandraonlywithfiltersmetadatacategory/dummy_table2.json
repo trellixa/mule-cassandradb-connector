@@ -1,0 +1,4 @@
+{
+  "payload-type": "map",
+  "payload": {"whereClause": {"dummy_partitionkey": ["unknown"]}}
+}

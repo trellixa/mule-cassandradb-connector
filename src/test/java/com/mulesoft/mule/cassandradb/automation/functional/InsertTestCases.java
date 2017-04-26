@@ -12,25 +12,29 @@ import org.junit.Test;
 
 import com.mulesoft.mule.cassandradb.utils.CassandraDBException;
 
-public class InsertTestCases extends BaseTestCases {
+public class InsertTestCases extends CassandraDBConnectorAbstractTestCase {
 
     private static CassandraClient cassClient;
     private static CassandraConfig cassConfig;
 
-    @BeforeClass public static void setup() throws Exception {
+    @BeforeClass
+    public static void setup() throws Exception {
         cassConfig = getClientConfig();
         cassClient = configureClient(cassConfig);
     }
 
-    @AfterClass public static void tearDown() throws Exception {
+    @AfterClass
+    public static void tearDown() throws Exception {
         cassClient.dropTable(ConstantsTest.TABLE_NAME, cassConfig.getKeyspace());
     }
 
-    @Test public void testInsertWithSuccess() throws CassandraDBException {
+    @Test
+    public void testInsertWithSuccess() throws CassandraDBException {
         getConnector().insert(ConstantsTest.TABLE_NAME, TestDataBuilder.getValidEntity());
     }
 
-    @Test(expected = CassandraDBException.class) public void testInsertWithInvalidInput() throws CassandraDBException {
+    @Test
+            (expected = CassandraDBException.class) public void testInsertWithInvalidInput() throws CassandraDBException {
         getConnector().insert(ConstantsTest.TABLE_NAME, TestDataBuilder.getInvalidEntity());
     }
 

@@ -12,7 +12,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 
-public class UpdateTestCases extends BaseTestCases {
+public class UpdateTestCases extends CassandraDBConnectorAbstractTestCase {
 
     private static CassandraClient cassClient;
     private static CassandraConfig cassConfig;
@@ -32,22 +32,24 @@ public class UpdateTestCases extends BaseTestCases {
 
     @Test
     public void testUpdateUsingEqWithSuccess() throws CassandraDBException {
-        getConnector().update(ConstantsTest.TABLE_NAME, TestDataBuilder.getValidEntityForUpdate(), TestDataBuilder.getValidWhereClauseWithEq());
+        getConnector().update(ConstantsTest.TABLE_NAME, TestDataBuilder.getPayloadColumnsAndFilters(TestDataBuilder.getValidEntityForUpdate(),
+                TestDataBuilder.getValidWhereClauseWithEq()));
     }
 
     @Test
     public void testUpdateUsingInWithSuccess() throws CassandraDBException {
-        getConnector().update(ConstantsTest.TABLE_NAME, TestDataBuilder.getValidEntityForUpdate(), TestDataBuilder.getValidWhereClauseWithIN());
+        getConnector().update(ConstantsTest.TABLE_NAME, TestDataBuilder.getPayloadColumnsAndFilters(TestDataBuilder.getValidEntityForUpdate(),
+                TestDataBuilder.getValidWhereClauseWithIN()));
     }
 
     @Test(expected=CassandraDBException.class)
     public void testUpdateWithInvalidInput() throws CassandraDBException {
-        getConnector().update(ConstantsTest.TABLE_NAME, TestDataBuilder.getInvalidEntity(), TestDataBuilder.getValidWhereClauseWithEq());
+        getConnector().update(ConstantsTest.TABLE_NAME, TestDataBuilder.getPayloadColumnsAndFilters(TestDataBuilder.getInvalidEntity(), TestDataBuilder.getValidWhereClauseWithEq()));
     }
 
     @Test(expected=CassandraDBException.class)
     public void testUpdateWithInvalidWhereClause() throws CassandraDBException {
-        getConnector().update(ConstantsTest.TABLE_NAME, TestDataBuilder.getInvalidEntity(), TestDataBuilder.getInvalidWhereClause());
+        getConnector().update(ConstantsTest.TABLE_NAME, TestDataBuilder.getPayloadColumnsAndFilters(TestDataBuilder.getInvalidEntity(), TestDataBuilder.getInvalidWhereClause()));
     }
 
 

@@ -19,7 +19,7 @@ import com.mulesoft.mule.cassandradb.utils.CassandraDBException;
 
 import static org.hamcrest.Matchers.*;
 
-public class SelectTestCases extends BaseTestCases {
+public class SelectTestCases extends CassandraDBConnectorAbstractTestCase {
 
     private static CassandraClient cassClient;
     private static CassandraConfig cassConfig;
@@ -44,7 +44,7 @@ public class SelectTestCases extends BaseTestCases {
     
     @Test(expected=CassandraDBException.class)
     public void testSelectNativeQueryWithInvalidParameters() throws CassandraDBException {
-        List<Map<String, Object>> result = getConnector().select(TestDataBuilder.VALID_PARAMETERIZED_QUERY, new LinkedList<>());
+        List<Map<String, Object>> result = getConnector().select(TestDataBuilder.VALID_PARAMETERIZED_QUERY, new LinkedList<Object>());
         Assert.assertThat(Integer.valueOf(result.size()),greaterThan(0));
     }
     

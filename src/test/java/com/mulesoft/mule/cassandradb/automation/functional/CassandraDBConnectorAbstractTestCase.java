@@ -5,6 +5,9 @@ package com.mulesoft.mule.cassandradb.automation.functional;
 
 import com.datastax.driver.core.DataType;
 import com.mulesoft.mule.cassandradb.api.CassandraClient;
+import com.mulesoft.mule.cassandradb.metadata.ColumnInput;
+import com.mulesoft.mule.cassandradb.metadata.CreateKeyspaceInput;
+import com.mulesoft.mule.cassandradb.metadata.CreateTableInput;
 import com.mulesoft.mule.cassandradb.util.ConstantsTest;
 import com.mulesoft.mule.cassandradb.util.PropertiesLoaderUtil;
 import com.mulesoft.mule.cassandradb.utils.CassandraConfig;
@@ -12,10 +15,11 @@ import org.mule.tools.devkit.ctf.exceptions.ConfigurationLoadingFailedException;
 import org.mule.tools.devkit.ctf.junit.AbstractTestCase;
 import com.mulesoft.mule.cassandradb.CassandraDBConnector;
 
+import java.util.List;
 
-public class BaseTestCases extends AbstractTestCase<CassandraDBConnector> {
+public class CassandraDBConnectorAbstractTestCase extends AbstractTestCase<CassandraDBConnector> {
 
-    public BaseTestCases() {
+    public CassandraDBConnectorAbstractTestCase() {
         super(CassandraDBConnector.class);
     }
 
@@ -26,7 +30,11 @@ public class BaseTestCases extends AbstractTestCase<CassandraDBConnector> {
         assert cassClient != null;
 
         //setup db env
-        cassClient.createTable(ConstantsTest.TABLE_NAME, cassConfig.getKeyspace(), null);
+        CreateKeyspaceInput keyspaceInput = new CreateKeyspaceInput();
+        keyspaceInput.setKeyspaceName(cassConfig.getKeyspace());
+
+        cassClient.createKeyspace(keyspaceInput);
+        cassClient.createTable(TestDataBuilder.getBasicCreateTableInput(TestDataBuilder.getPrimaryKey(), cassConfig.getKeyspace(), ConstantsTest.TABLE_NAME));
         cassClient.addColumnToTable(ConstantsTest.TABLE_NAME, cassConfig.getKeyspace(), ConstantsTest.VALID_COLUMN, DataType.text());
 
         return cassClient;
