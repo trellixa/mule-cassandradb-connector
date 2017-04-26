@@ -18,7 +18,7 @@ public class ConstantsTest {
     public static final String TEXT = "text";
     public static final String INT = "int";
     public static final String LIST = "list";
-    public static final String COLUMNS_TO_CHANGE = "columnsToChange";
-    public static final String WHERE_CLAUSE = "whereClause";
+    public static final String COLUMNS = "columns";
+    public static final String WHERE = "where";
 
 }

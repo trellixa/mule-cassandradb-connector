@@ -29,12 +29,12 @@ import org.mule.common.metadata.builder.*;
         if (tableMetadata != null && tableMetadata.getColumns() != null) {
             DynamicObjectBuilder entityModel = new DefaultMetaDataBuilder().createDynamicObject(tableMetadata.getName());
 
-            DynamicObjectBuilder columnsToChange = entityModel.addDynamicObjectField(Constants.COLUMNS_TO_CHANGE);
+            DynamicObjectBuilder columnsToChange = entityModel.addDynamicObjectField(Constants.COLUMNS);
             for (ColumnMetadata column : tableMetadata.getColumns()) {
                 addMetadataField(columnsToChange, column);
             }
             columnsToChange.endDynamicObject();
-            DynamicObjectBuilder whereClause = entityModel.addDynamicObjectField(Constants.WHERE_CLAUSE);
+            DynamicObjectBuilder whereClause = entityModel.addDynamicObjectField(Constants.WHERE);
             for (ColumnMetadata column : tableMetadata.getPrimaryKey()) {
                 addMetadataListField(whereClause, column);
             }

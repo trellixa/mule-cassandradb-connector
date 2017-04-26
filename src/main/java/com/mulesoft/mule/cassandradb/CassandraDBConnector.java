@@ -95,7 +95,7 @@ public class CassandraDBConnector {
     public void update(@MetaDataKeyParam(affects = MetaDataKeyParamAffectsType.INPUT) String table,
             @Default(PAYLOAD) Map<String, Object> entity) throws CassandraDBException {
         String keySpace = basicAuthConnectionStrategy.getKeyspace();
-        basicAuthConnectionStrategy.getCassandraClient().update(keySpace, table, (Map) entity.get(Constants.COLUMNS_TO_CHANGE), (Map) entity.get(Constants.WHERE_CLAUSE));
+        basicAuthConnectionStrategy.getCassandraClient().update(keySpace, table, (Map) entity.get(Constants.COLUMNS), (Map) entity.get(Constants.WHERE));
     }
 
     @Processor
@@ -103,7 +103,7 @@ public class CassandraDBConnector {
     public void deleteColumnsValue(@MetaDataKeyParam(affects = MetaDataKeyParamAffectsType.INPUT) String table,
             @Default(PAYLOAD) Map<String, Object> payload) throws CassandraDBException {
         String keySpace = basicAuthConnectionStrategy.getKeyspace();
-        basicAuthConnectionStrategy.getCassandraClient().delete(keySpace, table, (List) payload.get(Constants.COLUMNS_TO_CHANGE), (Map) payload.get(Constants.WHERE_CLAUSE));
+        basicAuthConnectionStrategy.getCassandraClient().delete(keySpace, table, (List) payload.get(Constants.COLUMNS), (Map) payload.get(Constants.WHERE));
     }
 
     @Processor
@@ -111,7 +111,7 @@ public class CassandraDBConnector {
     public void deleteRows(@MetaDataKeyParam(affects = MetaDataKeyParamAffectsType.INPUT) String table,
             @Default(PAYLOAD) Map<String, Object> payload) throws CassandraDBException {
         String keySpace = basicAuthConnectionStrategy.getKeyspace();
-        basicAuthConnectionStrategy.getCassandraClient().delete(keySpace, table, null, (Map) payload.get(Constants.WHERE_CLAUSE));
+        basicAuthConnectionStrategy.getCassandraClient().delete(keySpace, table, null, (Map) payload.get(Constants.WHERE));
     }
     
     @Processor

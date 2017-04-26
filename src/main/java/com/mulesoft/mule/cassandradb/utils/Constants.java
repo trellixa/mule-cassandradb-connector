@@ -7,8 +7,8 @@ public class Constants {
 
     public final static String REPLICATION_FACTOR = "replication_factor";
     public final static String CLASS = "class";
-    public static final String COLUMNS_TO_CHANGE = "columnsToChange";
-    public static final String WHERE_CLAUSE = "whereClause";
+    public static final String COLUMNS = "columns";
+    public static final String WHERE = "where";
 
     //configuration
     public final static String CASS_HOST = "config.host";

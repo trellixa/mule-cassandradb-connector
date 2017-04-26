@@ -1,7 +1,7 @@
 {
   "payload-type": "map",
   "payload": {
-    "columnsToChange": {"dummy_partitionkey": "string"},
-    "whereClause": {"dummy_partitionkey": ["unknown"]}
+    "columns": {"dummy_partitionkey": "string"},
+    "where": {"dummy_partitionkey": ["unknown"]}
   }
 }

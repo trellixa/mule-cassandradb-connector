@@ -30,7 +30,7 @@ public class CassandraOnlyWithFiltersMetadataCategory extends CassandraMetadataC
         if (tableMetadata != null && tableMetadata.getColumns() != null) {
             DynamicObjectBuilder entityModel = new DefaultMetaDataBuilder().createDynamicObject(tableMetadata.getName());
 
-            DynamicObjectBuilder whereClause = entityModel.addDynamicObjectField(Constants.WHERE_CLAUSE);
+            DynamicObjectBuilder whereClause = entityModel.addDynamicObjectField(Constants.WHERE);
             for (ColumnMetadata column : tableMetadata.getPrimaryKey()) {
                 addMetadataListField(whereClause, column);
             }

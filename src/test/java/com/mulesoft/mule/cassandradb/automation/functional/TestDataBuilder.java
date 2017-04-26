@@ -143,8 +143,8 @@ public class TestDataBuilder {
 
     public static Map<String, Object> getPayloadColumnsAndFilters(Object entity, Map<String, Object> whereClause){
         Map<String, Object> payload = new HashMap<String, Object>();
-        payload.put(ConstantsTest.COLUMNS_TO_CHANGE, entity);
-        payload.put(ConstantsTest.WHERE_CLAUSE, whereClause);
+        payload.put(ConstantsTest.COLUMNS, entity);
+        payload.put(ConstantsTest.WHERE, whereClause);
         return payload;
     }
 
