@@ -138,6 +138,7 @@ public class CassandraMetadataCategory {
                 return LIST;
             case MAP:
                 return MAP;
+            case SET: return LIST;
             default: return UNKNOWN;
         }
     }
