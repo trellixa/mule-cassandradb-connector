@@ -4,11 +4,11 @@
 package com.mulesoft.mule.cassandradb.utils.builders;
 
 import com.datastax.driver.core.DataType;
+import com.datastax.driver.core.querybuilder.QueryBuilder;
 import com.datastax.driver.core.schemabuilder.*;
-import com.mulesoft.mule.cassandradb.metadata.ColumnInput;
-import com.mulesoft.mule.cassandradb.metadata.CreateKeyspaceInput;
-import com.mulesoft.mule.cassandradb.metadata.CreateTableInput;
+import com.mulesoft.mule.cassandradb.metadata.*;
 import com.mulesoft.mule.cassandradb.utils.CassandraDBException;
+import com.mulesoft.mule.cassandradb.utils.Constants;
 import com.mulesoft.mule.cassandradb.utils.ReplicationStrategy;
 
 import java.util.ArrayList;
@@ -57,8 +57,23 @@ public class HelperStatements {
         return table;
     }
 
-    public static SchemaStatement addColumnToTable(String tableName, String keyspaceName, String columnName, DataType columnType) {
+    public static SchemaStatement addNewColumn(String tableName, String keyspaceName, String columnName, DataType columnType) {
         return SchemaBuilder.alterTable(keyspaceName, tableName).addColumn(columnName).type(columnType);
+    }
+
+    public static SchemaStatement dropColumn(String tableName, String keyspaceName, String columnName) {
+        return SchemaBuilder.alterTable(keyspaceName, tableName).dropColumn(columnName);
+    }
+
+    public static SchemaStatement changeColumnType(String tableName, String keyspaceName, ChangeColumnTypeInput input) {
+        return SchemaBuilder.alterTable(keyspaceName, tableName).alterColumn(input.getColumn()).type(resolveDataTypeFromString(input.getType()));
+    }
+
+    public static SchemaStatement renameColumn(String tableName, String keyspaceName, Map<String, String> input) {
+        for (Map.Entry<String, String> entry : input.entrySet()) {
+            return SchemaBuilder.alterTable(keyspaceName, tableName).renameColumn(entry.getKey()).to(entry.getValue());
+        }
+        return null;
     }
 
     public static SchemaStatement dropTable(String tableName, String keyspaceName) {
@@ -68,7 +83,7 @@ public class HelperStatements {
     /**
      * return the DataType based on a String. Default value is DataType.text();
      */
-    private static DataType resolveDataTypeFromString(String dataType) {
+    public static DataType resolveDataTypeFromString(String dataType) {
         DataType.Name name = DataType.Name.valueOf(dataType.toUpperCase());
         switch (name){
             case ASCII: return DataType.ascii();
@@ -98,7 +113,7 @@ public class HelperStatements {
     /**
      * return the DataType based on a map that contains the collection type as the key and the item type as value. Default value is list of DataType.text();
      */
-    private static DataType resolveDataTypeFromMap(Map<String, Object> dataType) {
+    public static DataType resolveDataTypeFromMap(Map<String, Object> dataType) {
 
         DataType.Name collection = null;
         String name = null;

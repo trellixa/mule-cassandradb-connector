@@ -18,7 +18,11 @@ public class ConstantsTest {
     public static final String TEXT = "text";
     public static final String INT = "int";
     public static final String LIST = "list";
+    public static final String MAP = "map";
+    public static final String SET = "set";
     public static final String COLUMNS = "columns";
     public static final String WHERE = "where";
+    public static final String COLUMN = "column";
+    public static final String TYPE = "type";
 
 }

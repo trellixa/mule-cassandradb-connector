@@ -3,8 +3,7 @@
  */
 package com.mulesoft.mule.cassandradb.automation.functional;
 
-import com.mulesoft.mule.cassandradb.metadata.ColumnInput;
-import com.mulesoft.mule.cassandradb.metadata.CreateTableInput;
+import com.mulesoft.mule.cassandradb.metadata.*;
 import com.mulesoft.mule.cassandradb.util.ConstantsTest;
 import org.jetbrains.annotations.NotNull;
 
@@ -198,5 +197,31 @@ public class TestDataBuilder {
         input.setTableName(tableName);
 
         return input;
+    }
+
+    public static AddNewColumnInput getAddNewColumnInput(String columnName, Object type){
+        AddNewColumnInput result = new AddNewColumnInput();
+        result.setColumn(columnName);
+        result.setType(type);
+        return result;
+    }
+
+    public static ChangeColumnTypeInput getAddNewColumnInput(String columnName, String type){
+        ChangeColumnTypeInput result = new ChangeColumnTypeInput();
+        result.setColumn(columnName);
+        result.setType(type);
+        return result;
+    }
+
+    public static Map<String, Object> getCollectionType(String collectionType, Object type){
+        Map<String, Object> result = new HashMap<String, Object>();
+        result.put(collectionType, type);
+        return result;
+    }
+
+    public static Map<String, String> getRenameColumnInput(String oldName, String newName){
+        Map<String, String> result = new HashMap<String, String>();
+        result.put(oldName, newName);
+        return result;
     }
 }

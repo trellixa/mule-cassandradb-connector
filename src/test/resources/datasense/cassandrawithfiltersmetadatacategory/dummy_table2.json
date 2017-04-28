@@ -2,6 +2,6 @@
   "payload-type": "map",
   "payload": {
     "columns": {"dummy_partitionkey": "string"},
-    "where": {"dummy_partitionkey": ["unknown"]}
+    "where": {"dummy_partitionkey": ["string"]}
   }
 }

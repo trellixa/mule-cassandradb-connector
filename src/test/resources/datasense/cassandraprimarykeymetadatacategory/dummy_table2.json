@@ -1,0 +1,4 @@
+{
+  "payload-type": "map",
+  "payload": {"primaryKey": {"dummy_partitionkey": "string"}}
+}

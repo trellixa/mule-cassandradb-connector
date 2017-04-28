@@ -35,7 +35,7 @@ public class CassandraDBConnectorAbstractTestCase extends AbstractTestCase<Cassa
 
         cassClient.createKeyspace(keyspaceInput);
         cassClient.createTable(TestDataBuilder.getBasicCreateTableInput(TestDataBuilder.getPrimaryKey(), cassConfig.getKeyspace(), ConstantsTest.TABLE_NAME));
-        cassClient.addColumnToTable(ConstantsTest.TABLE_NAME, cassConfig.getKeyspace(), ConstantsTest.VALID_COLUMN, DataType.text());
+        cassClient.addNewColumn(ConstantsTest.TABLE_NAME, cassConfig.getKeyspace(), ConstantsTest.VALID_COLUMN, DataType.text());
 
         return cassClient;
     }

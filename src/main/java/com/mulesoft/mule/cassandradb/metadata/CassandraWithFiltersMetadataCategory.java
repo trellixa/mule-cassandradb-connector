@@ -35,8 +35,12 @@ import org.mule.common.metadata.builder.*;
             }
             columnsToChange.endDynamicObject();
             DynamicObjectBuilder whereClause = entityModel.addDynamicObjectField(Constants.WHERE);
-            for (ColumnMetadata column : tableMetadata.getPrimaryKey()) {
-                addMetadataListField(whereClause, column);
+            if (tableMetadata.getPrimaryKey().size() == 1) {
+                for (ColumnMetadata column : tableMetadata.getPrimaryKey()) {
+                    addMetadataListField(whereClause, column);
+                }
+            } else {
+                addMetadataField(whereClause, tableMetadata.getPrimaryKey().get(0));
             }
             whereClause.endDynamicObject();
             return new DefaultMetaData(entityModel.build());
@@ -46,6 +50,6 @@ import org.mule.common.metadata.builder.*;
     }
 
     private void addMetadataListField(DynamicObjectBuilder listEntityModel, ColumnMetadata column) {
-        listEntityModel.addList(column.getName()).endList();
+        listEntityModel.addList(column.getName()).ofSimpleField(resolveDataType(column.getType()));
     }
 }
