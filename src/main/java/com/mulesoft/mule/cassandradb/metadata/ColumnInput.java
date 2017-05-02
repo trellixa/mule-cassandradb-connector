@@ -3,12 +3,11 @@
  */
 package com.mulesoft.mule.cassandradb.metadata;
 
-
 public class ColumnInput {
 
     private String name;
-    private Object type;
-    private boolean isPrimaryKey;
+    private ColumnType type;
+    private boolean primaryKey;
 
     public String getName() {
         return name;
@@ -19,18 +18,18 @@ public class ColumnInput {
     }
 
     public boolean isPrimaryKey() {
-        return isPrimaryKey;
+        return primaryKey;
     }
 
-    public void setIsPrimaryKey(boolean isPrimaryKey) {
-        this.isPrimaryKey = isPrimaryKey;
+    public void setPrimaryKey(boolean primaryKey) {
+        this.primaryKey = primaryKey;
     }
 
-    public Object getType() {
+    public ColumnType getType() {
         return type;
     }
 
-    public void setType(Object type) {
+    public void setType(ColumnType type) {
         this.type = type;
     }
 }

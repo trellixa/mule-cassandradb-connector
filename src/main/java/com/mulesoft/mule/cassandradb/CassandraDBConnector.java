@@ -3,11 +3,9 @@
  */
 package com.mulesoft.mule.cassandradb;
 
-import com.datastax.driver.core.DataType;
 import com.mulesoft.mule.cassandradb.configurations.BasicAuthConnectionStrategy;
 import com.mulesoft.mule.cassandradb.metadata.*;
 import com.mulesoft.mule.cassandradb.utils.*;
-import com.mulesoft.mule.cassandradb.utils.builders.HelperStatements;
 import org.mule.api.annotations.*;
 import org.mule.api.annotations.display.Placement;
 import org.mule.api.annotations.licensing.RequiresEnterpriseLicense;
@@ -132,22 +130,15 @@ public class CassandraDBConnector {
     }
 
     @Processor(friendlyName="Change the type of a column")
-    public boolean changeColumnType(String table, @Default(PAYLOAD) ChangeColumnTypeInput input){
+    public boolean changeColumnType(String table, @Default(PAYLOAD) AlterColumnInput input){
         String keySpace = basicAuthConnectionStrategy.getKeyspace();
         return basicAuthConnectionStrategy.getCassandraClient().changeColumnType(table, keySpace, input);
     }
 
     @Processor(friendlyName="Add new column")
-    public boolean addNewColumn(String table, @Default(PAYLOAD) AddNewColumnInput input) {
+    public boolean addNewColumn(String table, @Default(PAYLOAD) AlterColumnInput input) {
         String keySpace = basicAuthConnectionStrategy.getKeyspace();
-        DataType columnType;
-        if (input.getType() instanceof Map) {
-            columnType = HelperStatements.resolveDataTypeFromMap((Map) input.getType());
-        } else {
-            columnType = HelperStatements.resolveDataTypeFromString((String) input.getType());
-        }
-
-        return basicAuthConnectionStrategy.getCassandraClient().addNewColumn(table, keySpace, input.getColumn(), columnType);
+        return basicAuthConnectionStrategy.getCassandraClient().addNewColumn(table, keySpace, input.getColumn(), ColumnType.resolveDataType(input.getType()));
     }
 
     @Processor(friendlyName="Remove column")

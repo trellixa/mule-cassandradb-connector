@@ -47,11 +47,7 @@ public class HelperStatements {
         List<ColumnInput> otherColumns = getColumnsThatAreNotPrimaryKey(input.getColumns());
         if (!otherColumns.isEmpty()) {
             for (ColumnInput column : otherColumns) {
-                if (column.getType() instanceof Map) {
-                    table.addColumn(column.getName(), resolveDataTypeFromMap((Map) column.getType()));
-                } else {
-                    table.addColumn(column.getName(), resolveDataTypeFromString(String.valueOf(column.getType())));
-                }
+                table.addColumn(column.getName(), ColumnType.resolveDataType(column.getType()));
             }
         }
         return table;
@@ -65,8 +61,8 @@ public class HelperStatements {
         return SchemaBuilder.alterTable(keyspaceName, tableName).dropColumn(columnName);
     }
 
-    public static SchemaStatement changeColumnType(String tableName, String keyspaceName, ChangeColumnTypeInput input) {
-        return SchemaBuilder.alterTable(keyspaceName, tableName).alterColumn(input.getColumn()).type(resolveDataTypeFromString(input.getType()));
+    public static SchemaStatement changeColumnType(String tableName, String keyspaceName, AlterColumnInput input) {
+        return SchemaBuilder.alterTable(keyspaceName, tableName).alterColumn(input.getColumn()).type(ColumnType.resolveDataType(input.getType()));
     }
 
     public static SchemaStatement renameColumn(String tableName, String keyspaceName, Map<String, String> input) {

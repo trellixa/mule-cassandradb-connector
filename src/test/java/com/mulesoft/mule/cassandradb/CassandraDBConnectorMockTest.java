@@ -3,13 +3,9 @@
  */
 package com.mulesoft.mule.cassandradb;
 
-import com.datastax.driver.core.ResultSet;
 import com.mulesoft.mule.cassandradb.automation.functional.TestDataBuilder;
 import com.mulesoft.mule.cassandradb.configurations.BasicAuthConnectionStrategy;
-import com.mulesoft.mule.cassandradb.metadata.ColumnInput;
-import com.mulesoft.mule.cassandradb.metadata.CreateCQLQueryInput;
-import com.mulesoft.mule.cassandradb.metadata.CreateKeyspaceInput;
-import com.mulesoft.mule.cassandradb.metadata.CreateTableInput;
+import com.mulesoft.mule.cassandradb.metadata.*;
 import com.mulesoft.mule.cassandradb.util.ConstantsTest;
 import com.mulesoft.mule.cassandradb.utils.CassandraDBException;
 import org.junit.*;
@@ -52,9 +48,9 @@ public class CassandraDBConnectorMockTest {
         CreateTableInput input = new CreateTableInput();
 
         ColumnInput column = new ColumnInput();
-        column.setIsPrimaryKey(true);
+        column.setPrimaryKey(true);
         column.setName(ConstantsTest.DUMMY_PARTITION_KEY);
-        column.setType(ConstantsTest.TEXT);
+        column.setType(ColumnType.TEXT);
         columns.add(column);
 
         input.setColumns(columns);
@@ -89,7 +85,7 @@ public class CassandraDBConnectorMockTest {
 
         ColumnInput column = new ColumnInput();
         column.setName(ConstantsTest.VALID_COLUMN);
-        column.setType(ConstantsTest.INT);
+        column.setType(ColumnType.INT);
         columns.add(column);
         input.setColumns(columns);
 

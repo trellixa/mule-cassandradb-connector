@@ -5,7 +5,7 @@ package com.mulesoft.mule.cassandradb.api;
 
 import com.datastax.driver.core.*;
 import com.datastax.driver.core.querybuilder.*;
-import com.mulesoft.mule.cassandradb.metadata.ChangeColumnTypeInput;
+import com.mulesoft.mule.cassandradb.metadata.AlterColumnInput;
 import com.mulesoft.mule.cassandradb.metadata.CreateKeyspaceInput;
 import com.mulesoft.mule.cassandradb.metadata.CreateTableInput;
 import com.mulesoft.mule.cassandradb.utils.CassandraDBException;
@@ -83,7 +83,7 @@ public final class CassandraClient {
                 HelperStatements.createTable(StringUtils.isNotBlank(input.getKeyspaceName()) ? input.getKeyspaceName() : cassandraSession.getLoggedKeyspace(), input)).wasApplied();
     }
 
-    public boolean changeColumnType(String tableName, String customKeyspaceName, ChangeColumnTypeInput input){
+    public boolean changeColumnType(String tableName, String customKeyspaceName, AlterColumnInput input){
         return cassandraSession.execute(
                 HelperStatements.changeColumnType(tableName, StringUtils.isNotBlank(customKeyspaceName) ? customKeyspaceName : getLoggedKeyspace(), input))
                 .wasApplied();

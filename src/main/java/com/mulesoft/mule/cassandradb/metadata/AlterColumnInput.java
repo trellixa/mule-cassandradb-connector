@@ -4,10 +4,10 @@
 package com.mulesoft.mule.cassandradb.metadata;
 
 
-public class AddNewColumnInput {
+public class AlterColumnInput {
 
    private String column;
-   private Object type;
+   private ColumnType type;
 
     public String getColumn() {
         return column;
@@ -17,11 +17,11 @@ public class AddNewColumnInput {
         this.column = column;
     }
 
-    public Object getType() {
+    public ColumnType getType() {
         return type;
     }
 
-    public void setType(Object type) {
+    public void setType(ColumnType type) {
         this.type = type;
     }
 }

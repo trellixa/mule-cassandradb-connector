@@ -14,13 +14,16 @@ import org.mule.common.metadata.MetaDataKey;
 import org.mule.common.metadata.builder.*;
 
 
-@MetaDataCategory public class CassandraWithFiltersMetadataCategory extends CassandraMetadataCategory {
+@MetaDataCategory
+public class CassandraWithFiltersMetadataCategory extends CassandraMetadataCategory {
 
     /**
      * @param key the metadata key to build the info for
      * @return {@link MetaData} for the given {@link MetaDataKey key}.
      */
-    @Override @MetaDataRetriever public MetaData getInputMetaData(final MetaDataKey key) {
+    @Override
+    @MetaDataRetriever
+    public MetaData getInputMetaData(final MetaDataKey key) {
 
         //extract tables metadata from database
         TableMetadata tableMetadata = getTableMetadata(key);

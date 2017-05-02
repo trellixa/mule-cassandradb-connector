@@ -5,6 +5,7 @@ package com.mulesoft.mule.cassandradb.automation.functional;
 
 import com.datastax.driver.core.DataType;
 import com.mulesoft.mule.cassandradb.api.CassandraClient;
+import com.mulesoft.mule.cassandradb.metadata.ColumnType;
 import com.mulesoft.mule.cassandradb.util.ConstantsTest;
 import com.mulesoft.mule.cassandradb.utils.CassandraConfig;
 import com.mulesoft.mule.cassandradb.utils.CassandraDBException;
@@ -16,7 +17,6 @@ public class AddNewColumnTestCases extends CassandraDBConnectorAbstractTestCase 
 
     private static CassandraClient cassClient;
     private static CassandraConfig cassConfig;
-    Object text = DataType.text().toString();
 
     @BeforeClass
     public static void setup() throws Exception {
@@ -33,33 +33,12 @@ public class AddNewColumnTestCases extends CassandraDBConnectorAbstractTestCase 
     @Test
     public void testAddNewColumnOfPrimitiveTypeWithSuccess() throws CassandraDBException {
         getConnector().addNewColumn(ConstantsTest.TABLE_NAME,
-                TestDataBuilder.getAddNewColumnInput(DataType.text().toString() + System.currentTimeMillis(), text));
-    }
-
-    @Test
-    public void testAddNewColumnOfListTypeWithSuccess() throws CassandraDBException {
-        getConnector().addNewColumn(ConstantsTest.TABLE_NAME,
-                TestDataBuilder.getAddNewColumnInput(DataType.list(DataType.text()).toString() + System.currentTimeMillis(),
-                        TestDataBuilder.getCollectionType(ConstantsTest.LIST, DataType.text().toString())));
-    }
-
-    @Test
-    public void testAddNewColumnOfMapTypeWithSuccess() throws CassandraDBException {
-        getConnector().addNewColumn(ConstantsTest.TABLE_NAME,
-                TestDataBuilder.getAddNewColumnInput(DataType.map(DataType.text(), DataType.text()).toString() + System.currentTimeMillis(),
-                        TestDataBuilder.getCollectionType(ConstantsTest.MAP, TestDataBuilder.getCollectionType(DataType.text().toString(), DataType.text().toString()))));
-    }
-
-    @Test
-    public void testAddNewColumnOfSetTypeWithSuccess() throws CassandraDBException {
-        getConnector().addNewColumn(ConstantsTest.TABLE_NAME,
-                TestDataBuilder.getAddNewColumnInput(DataType.set(DataType.text()).toString() + System.currentTimeMillis(),
-                        TestDataBuilder.getCollectionType(ConstantsTest.SET, DataType.text().toString())));
+                TestDataBuilder.getAlterColumnInput(DataType.text().toString() + System.currentTimeMillis(), ColumnType.TEXT));
     }
 
     @Test(expected = CassandraDBException.class)
     public void testAddNewColumnWithSameName() throws CassandraDBException {
-        getConnector().addNewColumn(ConstantsTest.TABLE_NAME, TestDataBuilder.getAddNewColumnInput(ConstantsTest.VALID_COLUMN, text));
+        getConnector().addNewColumn(ConstantsTest.TABLE_NAME, TestDataBuilder.getAlterColumnInput(ConstantsTest.VALID_COLUMN, ColumnType.TEXT));
     }
 
 }
