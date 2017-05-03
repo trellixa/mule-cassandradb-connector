@@ -258,23 +258,7 @@ Example:
 
 . **Drop column** processor accepts the table name as a parameter and the column name as payload.
 
-. **Rename column** operation accepts the table name as a parameter and a Map<String, String> as payload. The map will be containing the name of the column to be renamed as  akey and as a value the new name for the column.
-+
-Example:
-[source]
-%dw 1.0
-%output application/java
----
-{
-	"id": payload.id
-}
-+
-Example of HTTP request:
-[source]
-{
-	"my_old_column_name_1":"my_new_column_name_1",
-	"old_column_name_2":"new_column_name_2"
-}
+. **Rename column** operation accepts 3 parameters: the table name, the old column name and the new column name.
 
 == Troubleshooting
 === Logging level

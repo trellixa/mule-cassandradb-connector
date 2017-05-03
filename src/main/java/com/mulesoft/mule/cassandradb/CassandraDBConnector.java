@@ -251,7 +251,6 @@ public class CassandraDBConnector {
      * @return true if the operation succeeded or false if not
      */
     @Processor(friendlyName="Remove column")
-    @MetaDataScope(CassandraMetadataCategory.class)
     public boolean dropColumn(String table, @Default(PAYLOAD) String columnName) {
         String keySpace = basicAuthConnectionStrategy.getKeyspace();
         return basicAuthConnectionStrategy.getCassandraClient().dropColumn(table, keySpace, columnName);
@@ -260,14 +259,14 @@ public class CassandraDBConnector {
     /**
      * Renames a column
      * @param table the name of the table to be used for the operation
-     * @param input map containing the name of the column to be renamed as key and as value the new name for the column
+     * @param oldColumnName the name of the column to be changed
+     * @param newColumnName the new value for the name of the column
      * @return true if the operation succeeded or false if not
      */
     @Processor(friendlyName="Rename column")
-    @MetaDataScope(CassandraPrimaryKeyMetadataCategory.class)
-    public boolean renameColumn(@MetaDataKeyParam(affects = MetaDataKeyParamAffectsType.INPUT) String table, @Default(PAYLOAD) Map<String, String> input) {
+    public boolean renameColumn(String table, @Default(PAYLOAD) String oldColumnName, String newColumnName) {
         String keySpace = basicAuthConnectionStrategy.getKeyspace();
-        return basicAuthConnectionStrategy.getCassandraClient().renameColumn(table, keySpace, input);
+        return basicAuthConnectionStrategy.getCassandraClient().renameColumn(table, keySpace, oldColumnName, newColumnName);
     }
 
     @QueryTranslator public String toNativeQuery(DsqlQuery query) {
