@@ -194,6 +194,38 @@ In the image above the used can select which **columns** to update and specify t
 +
 As for the **Update** operation, the **where** record represents the clause that will specify the primary keys of the objects to be updated. The **columns** record represents a List<String> containing the column names to be cleared.
 After invoking this operation when fetching the entities that were updated, the values for the columns specified in the **Delete Columns Value** operations will be null.
++
+Cassandra allows collections to be stored in specific columns. This operation allows the user to delete specific values from those collections and without deleting the whole collection.
++
+The payload passed to the processor has the following structure:
+[source]
+%dw 1.0
+%output application/java
+---
+{
+	"columns":payload.columns,
+	"where":payload.where
+}
++
+An HTTP request for deleting an element from a **list** would look like this:
+[source]
+{
+    "where":
+      {
+        "id": [1]
+      },
+      "columns": ["top_places[0]"]
+}
++
+An HTTP request for deleting an element from a **map** would look like this:
+[source]
+{
+    "where":
+      {
+        "id": [1,2]
+      },
+      "columns": ["mapColumnName['keyName']"]
+}
 
 . **Delete Rows** operation accepts the table name as a parameter and as payload a Map<String, Object> with 1 record with the key **where**
 +
