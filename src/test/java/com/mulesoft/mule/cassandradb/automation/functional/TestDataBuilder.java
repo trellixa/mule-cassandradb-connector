@@ -3,8 +3,7 @@
  */
 package com.mulesoft.mule.cassandradb.automation.functional;
 
-import com.mulesoft.mule.cassandradb.metadata.ColumnInput;
-import com.mulesoft.mule.cassandradb.metadata.CreateTableInput;
+import com.mulesoft.mule.cassandradb.metadata.*;
 import com.mulesoft.mule.cassandradb.util.ConstantsTest;
 import org.jetbrains.annotations.NotNull;
 
@@ -152,9 +151,9 @@ public class TestDataBuilder {
         List<ColumnInput> columns = new ArrayList<ColumnInput>();
 
         ColumnInput column = new ColumnInput();
-        column.setIsPrimaryKey(true);
+        column.setPrimaryKey(true);
         column.setName(ConstantsTest.DUMMY_PARTITION_KEY);
-        column.setType(ConstantsTest.TEXT);
+        column.setType(ColumnType.TEXT);
         columns.add(column);
 
         return columns;
@@ -162,25 +161,23 @@ public class TestDataBuilder {
 
     public static List<ColumnInput> getColumns(){
         List<ColumnInput> columns = new ArrayList<ColumnInput>();
-        Map<String, Object> list = new HashMap<String, Object>();
 
         ColumnInput column1 = new ColumnInput();
-        column1.setIsPrimaryKey(true);
+        column1.setPrimaryKey(true);
         column1.setName(ConstantsTest.DUMMY_PARTITION_KEY);
-        column1.setType(ConstantsTest.TEXT);
+        column1.setType(ColumnType.TEXT);
 
         ColumnInput column2 = new ColumnInput();
         column2.setName(ConstantsTest.VALID_COLUMN);
-        column2.setType(ConstantsTest.INT);
+        column2.setType(ColumnType.INT);
 
         ColumnInput column3 = new ColumnInput();
         column3.setName(ConstantsTest.VALID_COLUMN_2);
-        column3.setType(ConstantsTest.TEXT);
+        column3.setType(ColumnType.TEXT);
 
-        list.put(ConstantsTest.LIST, ConstantsTest.TEXT);
         ColumnInput column4 = new ColumnInput();
         column4.setName(ConstantsTest.VALID_LIST_COLUMN);
-        column4.setType(list);
+        column4.setType(ColumnType.TEXT);
 
         columns.add(column1);
         columns.add(column2);
@@ -198,5 +195,18 @@ public class TestDataBuilder {
         input.setTableName(tableName);
 
         return input;
+    }
+
+    public static AlterColumnInput getAlterColumnInput(String columnName, ColumnType type){
+        AlterColumnInput result = new AlterColumnInput();
+        result.setColumn(columnName);
+        result.setType(type);
+        return result;
+    }
+
+    public static Map<String, String> getRenameColumnInput(String oldName, String newName){
+        Map<String, String> result = new HashMap<String, String>();
+        result.put(oldName, newName);
+        return result;
     }
 }

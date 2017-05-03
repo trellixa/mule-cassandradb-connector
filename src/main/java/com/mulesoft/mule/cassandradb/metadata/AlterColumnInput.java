@@ -3,26 +3,18 @@
  */
 package com.mulesoft.mule.cassandradb.metadata;
 
-public class ColumnInput {
 
-    private String name;
-    private ColumnType type;
-    private boolean primaryKey;
+public class AlterColumnInput {
 
-    public String getName() {
-        return name;
+   private String column;
+   private ColumnType type;
+
+    public String getColumn() {
+        return column;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public boolean isPrimaryKey() {
-        return primaryKey;
-    }
-
-    public void setPrimaryKey(boolean primaryKey) {
-        this.primaryKey = primaryKey;
+    public void setColumn(String column) {
+        this.column = column;
     }
 
     public ColumnType getType() {

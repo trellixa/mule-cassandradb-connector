@@ -9,6 +9,7 @@ public class Constants {
     public final static String CLASS = "class";
     public static final String COLUMNS = "columns";
     public static final String WHERE = "where";
+    public static final String PRIMARY_KEY = "primaryKey";
 
     //configuration
     public final static String CASS_HOST = "config.host";

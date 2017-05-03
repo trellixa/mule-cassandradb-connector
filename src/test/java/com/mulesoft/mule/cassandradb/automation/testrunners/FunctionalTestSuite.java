@@ -20,9 +20,14 @@ import com.mulesoft.mule.cassandradb.CassandraDBConnector;
     SelectTestCases.class,
     UpdateTestCases.class,
     DeleteTestCases.class,
+    ChangeColumnTypeTestCases.class,
+    AddNewColumnTestCases.class,
+    RemoveColumnTestCases.class,
+    RenameColumnTestCases.class,
     CassandraMetadataCategoryTestCase.class,
     CassandraOnlyWithFiltersMetadataCategoryTestCase.class,
-    CassandraWithFiltersMetadataCategoryTestCase.class
+    CassandraWithFiltersMetadataCategoryTestCase.class,
+    CassandraPrimaryKeyMetadataCategoryTestCase.class
 })
 public class FunctionalTestSuite {
 

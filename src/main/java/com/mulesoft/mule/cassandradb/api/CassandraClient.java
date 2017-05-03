@@ -5,6 +5,7 @@ package com.mulesoft.mule.cassandradb.api;
 
 import com.datastax.driver.core.*;
 import com.datastax.driver.core.querybuilder.*;
+import com.mulesoft.mule.cassandradb.metadata.AlterColumnInput;
 import com.mulesoft.mule.cassandradb.metadata.CreateKeyspaceInput;
 import com.mulesoft.mule.cassandradb.metadata.CreateTableInput;
 import com.mulesoft.mule.cassandradb.utils.CassandraDBException;
@@ -82,10 +83,27 @@ public final class CassandraClient {
                 HelperStatements.createTable(StringUtils.isNotBlank(input.getKeyspaceName()) ? input.getKeyspaceName() : cassandraSession.getLoggedKeyspace(), input)).wasApplied();
     }
 
-    public boolean addColumnToTable(String tableName, String customKeyspaceName, String columnName, DataType columnType) {
+    public boolean changeColumnType(String tableName, String customKeyspaceName, AlterColumnInput input){
         return cassandraSession.execute(
-                HelperStatements.addColumnToTable(tableName, StringUtils.isNotBlank(customKeyspaceName) ? customKeyspaceName : getLoggedKeyspace(), columnName, columnType))
+                HelperStatements.changeColumnType(tableName, StringUtils.isNotBlank(customKeyspaceName) ? customKeyspaceName : getLoggedKeyspace(), input))
                 .wasApplied();
+    }
+
+    public boolean addNewColumn(String tableName, String customKeyspaceName, String columnName, DataType columnType) {
+        return cassandraSession.execute(
+                HelperStatements.addNewColumn(tableName, StringUtils.isNotBlank(customKeyspaceName) ? customKeyspaceName : getLoggedKeyspace(), columnName, columnType))
+                .wasApplied();
+    }
+
+    public boolean dropColumn(String tableName, String customKeyspaceName, String columnName) {
+        return cassandraSession.execute(
+                HelperStatements.dropColumn(tableName, StringUtils.isNotBlank(customKeyspaceName) ? customKeyspaceName : getLoggedKeyspace(), columnName))
+                .wasApplied();
+    }
+
+    public boolean renameColumn(String tableName, String customKeyspaceName, Map<String, String> input) {
+        return cassandraSession.execute(
+                HelperStatements.renameColumn(tableName, StringUtils.isNotBlank(customKeyspaceName) ? customKeyspaceName : getLoggedKeyspace(), input)).wasApplied();
     }
 
     public boolean dropTable(String tableName, String customKeyspaceName) {

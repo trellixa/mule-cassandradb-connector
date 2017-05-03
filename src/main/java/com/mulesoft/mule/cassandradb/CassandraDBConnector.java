@@ -129,9 +129,33 @@ public class CassandraDBConnector {
         }
     }
 
+    @Processor(friendlyName="Change the type of a column")
+    public boolean changeColumnType(String table, @Default(PAYLOAD) AlterColumnInput input){
+        String keySpace = basicAuthConnectionStrategy.getKeyspace();
+        return basicAuthConnectionStrategy.getCassandraClient().changeColumnType(table, keySpace, input);
+    }
 
-    @QueryTranslator
-    public String toNativeQuery(DsqlQuery query) {
+    @Processor(friendlyName="Add new column")
+    public boolean addNewColumn(String table, @Default(PAYLOAD) AlterColumnInput input) {
+        String keySpace = basicAuthConnectionStrategy.getKeyspace();
+        return basicAuthConnectionStrategy.getCassandraClient().addNewColumn(table, keySpace, input.getColumn(), ColumnType.resolveDataType(input.getType()));
+    }
+
+    @Processor(friendlyName="Remove column")
+    @MetaDataScope(CassandraMetadataCategory.class)
+    public boolean dropColumn(String table, @Default(PAYLOAD) String columnName) {
+        String keySpace = basicAuthConnectionStrategy.getKeyspace();
+        return basicAuthConnectionStrategy.getCassandraClient().dropColumn(table, keySpace, columnName);
+    }
+
+    @Processor(friendlyName="Rename column")
+    @MetaDataScope(CassandraPrimaryKeyMetadataCategory.class)
+    public boolean renameColumn(@MetaDataKeyParam(affects = MetaDataKeyParamAffectsType.INPUT) String table, @Default(PAYLOAD) Map<String, String> input) {
+        String keySpace = basicAuthConnectionStrategy.getKeyspace();
+        return basicAuthConnectionStrategy.getCassandraClient().renameColumn(table, keySpace, input);
+    }
+
+    @QueryTranslator public String toNativeQuery(DsqlQuery query) {
         CassQueryVisitor visitor = new CassQueryVisitor();
         query.accept(visitor);
         return visitor.dsqlQuery();

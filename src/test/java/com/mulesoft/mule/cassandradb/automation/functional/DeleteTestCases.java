@@ -21,7 +21,7 @@ public class DeleteTestCases extends CassandraDBConnectorAbstractTestCase {
     public static void setup() throws Exception {
         cassConfig = getClientConfig();
         cassClient = configureClient(cassConfig);
-        cassClient.addColumnToTable(ConstantsTest.TABLE_NAME, cassConfig.getKeyspace(), ConstantsTest.VALID_COLUMN_2, DataType.text());
+        cassClient.addNewColumn(ConstantsTest.TABLE_NAME, cassConfig.getKeyspace(), ConstantsTest.VALID_COLUMN_2, DataType.text());
 
     }
 
@@ -67,7 +67,7 @@ public class DeleteTestCases extends CassandraDBConnectorAbstractTestCase {
     @Test
     public void testDeleteItemFromListWithSuccess() throws CassandraDBException {
         // set up the data
-        cassClient.addColumnToTable(ConstantsTest.TABLE_NAME, cassConfig.getKeyspace(), ConstantsTest.VALID_LIST_COLUMN, DataType.list(DataType.text()));
+        cassClient.addNewColumn(ConstantsTest.TABLE_NAME, cassConfig.getKeyspace(), ConstantsTest.VALID_LIST_COLUMN, DataType.list(DataType.text()));
         cassClient.insert(cassConfig.getKeyspace(), ConstantsTest.TABLE_NAME, TestDataBuilder.getValidEntityWithList());
 
         getConnector().deleteColumnsValue(ConstantsTest.TABLE_NAME,
@@ -77,7 +77,7 @@ public class DeleteTestCases extends CassandraDBConnectorAbstractTestCase {
     @Test
     public void testDeleteItemFromMapWithSuccess() throws CassandraDBException {
         // set up the data
-        cassClient.addColumnToTable(ConstantsTest.TABLE_NAME, cassConfig.getKeyspace(), ConstantsTest.VALID_MAP_COLUMN, DataType.map(DataType.text(), DataType.text()));
+        cassClient.addNewColumn(ConstantsTest.TABLE_NAME, cassConfig.getKeyspace(), ConstantsTest.VALID_MAP_COLUMN, DataType.map(DataType.text(), DataType.text()));
         cassClient.insert(cassConfig.getKeyspace(), ConstantsTest.TABLE_NAME, TestDataBuilder.getValidEntityWithMap());
 
         getConnector().deleteColumnsValue(ConstantsTest.TABLE_NAME,
@@ -87,7 +87,7 @@ public class DeleteTestCases extends CassandraDBConnectorAbstractTestCase {
     @Test
     public void testDeleteSetColumnWithSuccess() throws CassandraDBException {
         // set up the data
-        cassClient.addColumnToTable(ConstantsTest.TABLE_NAME, cassConfig.getKeyspace(), ConstantsTest.VALID_SET_COLUMN, DataType.set(DataType.text()));
+        cassClient.addNewColumn(ConstantsTest.TABLE_NAME, cassConfig.getKeyspace(), ConstantsTest.VALID_SET_COLUMN, DataType.set(DataType.text()));
         cassClient.insert(cassConfig.getKeyspace(), ConstantsTest.TABLE_NAME, TestDataBuilder.getValidEntityWithSet());
 
         getConnector().deleteColumnsValue(ConstantsTest.TABLE_NAME,

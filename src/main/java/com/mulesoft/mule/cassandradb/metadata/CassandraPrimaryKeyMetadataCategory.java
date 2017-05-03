@@ -15,7 +15,7 @@ import org.mule.common.metadata.builder.DefaultMetaDataBuilder;
 import org.mule.common.metadata.builder.DynamicObjectBuilder;
 
 @MetaDataCategory
-public class CassandraOnlyWithFiltersMetadataCategory extends CassandraMetadataCategory {
+public class CassandraPrimaryKeyMetadataCategory extends CassandraMetadataCategory {
 
     /**
      * @param key the metadata key to build the info for
@@ -32,23 +32,17 @@ public class CassandraOnlyWithFiltersMetadataCategory extends CassandraMetadataC
         if (tableMetadata != null && tableMetadata.getColumns() != null) {
             DynamicObjectBuilder entityModel = new DefaultMetaDataBuilder().createDynamicObject(tableMetadata.getName());
 
-            DynamicObjectBuilder whereClause = entityModel.addDynamicObjectField(Constants.WHERE);
-            if (tableMetadata.getPrimaryKey().size() == 1) {
-                for (ColumnMetadata column : tableMetadata.getPrimaryKey()) {
-                    addMetadataListField(whereClause, column);
-                }
-            } else {
-                addMetadataField(whereClause, tableMetadata.getPrimaryKey().get(0));
+            DynamicObjectBuilder primaryKey = entityModel.addDynamicObjectField(Constants.PRIMARY_KEY);
+
+            for (ColumnMetadata column : tableMetadata.getPrimaryKey()) {
+                addMetadataField(primaryKey, column);
             }
-            whereClause.endDynamicObject();
+
+            primaryKey.endDynamicObject();
             return new DefaultMetaData(entityModel.build());
         }
 
         return new DefaultMetaData(null);
     }
 
-    private void addMetadataListField(DynamicObjectBuilder listEntityModel, ColumnMetadata column) {
-
-        listEntityModel.addList(column.getName()).ofSimpleField(resolveDataType(column.getType()));
-    }
 }
