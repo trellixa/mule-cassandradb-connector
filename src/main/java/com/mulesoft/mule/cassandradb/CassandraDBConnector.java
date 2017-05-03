@@ -38,7 +38,7 @@ public class CassandraDBConnector {
     private BasicAuthConnectionStrategy basicAuthConnectionStrategy;
 
     /**
-     *
+     * Creates a new keyspace
      * @param input operation input containing the keyspace name and the replication details
      * @return true if the operation succeeded, false otherwise
      * @throws CassandraDBException
@@ -56,7 +56,7 @@ public class CassandraDBConnector {
     }
 
     /**
-     *
+     * Drops the entire keyspace
      * @param keyspaceName the name of the keyspace to be dropped
      * @return true if the operation succeeded, false otherwise
      * @throws CassandraDBException
@@ -74,7 +74,7 @@ public class CassandraDBConnector {
     }
 
     /**
-     * creates a table(column family) in a specific keyspace
+     * Creates a table(column family) in a specific keyspace; If no keyspace is specified the keyspace used for login will be used
      *
      * @param input operation input describing the table name, the keyspace name and the list of columns
      * @return true if the operation succeeded, false otherwise
@@ -93,7 +93,7 @@ public class CassandraDBConnector {
     }
 
     /**
-     *
+     * Drops an entire table form the specified keyspace or from the keyspace used for login if none is specified as an operation parameter
      * @param tableName the name of the table to be dropped
      * @param customKeyspaceName (optional) the keyspace which contains the table to be dropped
      * @return true if the operation succeeded, false otherwise
@@ -112,7 +112,7 @@ public class CassandraDBConnector {
     }
 
     /**
-     * method executes the raw input query provided
+     * Executes the raw input query provided
      * @MetaDataScope annotation required for Functional tests to pass;to be removed
      *
      * @param input CQLQueryInput describing the parametrized query to be executed along with the parameters
@@ -129,7 +129,7 @@ public class CassandraDBConnector {
     }
 
     /**
-     * executes the insert entity operation
+     * Executes the insert entity operation
      * @param table the table name in which the entity will be inserted
      * @param entity the entity to be inserted
      * @throws CassandraDBException
@@ -145,7 +145,7 @@ public class CassandraDBConnector {
     }
 
     /**
-     * executes the update entity operation
+     * Executes the update entity operation
      * @param table the table name in which the entity will be updated
      * @param entity the entity to be updated
      * @throws CassandraDBException
@@ -162,7 +162,7 @@ public class CassandraDBConnector {
     }
 
     /**
-     * deletes values from an object specified by the where clause
+     * Deletes values from an object specified by the where clause
      * @param table the name of the table
      * @param payload operation input: columns to be deleted and where clause for the delete operation
      * @throws CassandraDBException
@@ -176,7 +176,7 @@ public class CassandraDBConnector {
     }
 
     /**
-     * deletes an entire record
+     * Deletes an entire record
      * @param table the name of the table
      * @param payload operation input: where clause for the delete operation
      * @throws CassandraDBException
@@ -190,7 +190,7 @@ public class CassandraDBConnector {
     }
 
     /**
-     * executes a select query
+     * Executes a select query
      * @param query  the query to be executed
      * @param parameters the query parameters
      * @return list of entities returned by the select query
@@ -206,7 +206,7 @@ public class CassandraDBConnector {
     }
 
     /**
-     *
+     * Returns all the table names from the specified keyspace
      * @param keyspaceName the name of the keyspace to be used on the operation
      * @return a list of table names
      * @throws CassandraDBException
@@ -220,18 +220,36 @@ public class CassandraDBConnector {
         }
     }
 
+    /**
+     * Changes the type of a column - check compatibility here: <a href="http://docs.datastax.com/en/cql/3.1/cql/cql_reference/cql_data_types_c.html#concept_ds_wbk_zdt_xj__cql_data_type_compatibility">CQL type compatibility</a>
+     * @param table the name of the table to be used for the operation
+     * @param input POJO defining the name of the column to be changed and the new DataType
+     * @return true if the operation succeeded or false if not
+     */
     @Processor(friendlyName="Change the type of a column")
     public boolean changeColumnType(String table, @Default(PAYLOAD) AlterColumnInput input){
         String keySpace = basicAuthConnectionStrategy.getKeyspace();
         return basicAuthConnectionStrategy.getCassandraClient().changeColumnType(table, keySpace, input);
     }
 
+    /**
+     * Adds a new column
+     * @param table the name of the table to be used for the operation
+     * @param input POJO defining the name of the new column and its DataType
+     * @return true if the operation succeeded or false if not
+     */
     @Processor(friendlyName="Add new column")
     public boolean addNewColumn(String table, @Default(PAYLOAD) AlterColumnInput input) {
         String keySpace = basicAuthConnectionStrategy.getKeyspace();
         return basicAuthConnectionStrategy.getCassandraClient().addNewColumn(table, keySpace, input.getColumn(), ColumnType.resolveDataType(input.getType()));
     }
 
+    /**
+     * Removes a column
+     * @param table the name of the table to be used for the operation
+     * @param columnName the name of the column to be removed
+     * @return true if the operation succeeded or false if not
+     */
     @Processor(friendlyName="Remove column")
     @MetaDataScope(CassandraMetadataCategory.class)
     public boolean dropColumn(String table, @Default(PAYLOAD) String columnName) {
@@ -239,6 +257,12 @@ public class CassandraDBConnector {
         return basicAuthConnectionStrategy.getCassandraClient().dropColumn(table, keySpace, columnName);
     }
 
+    /**
+     * Renames a column
+     * @param table the name of the table to be used for the operation
+     * @param input map containing the name of the column to be renamed as key and as value the new name for the column
+     * @return true if the operation succeeded or false if not
+     */
     @Processor(friendlyName="Rename column")
     @MetaDataScope(CassandraPrimaryKeyMetadataCategory.class)
     public boolean renameColumn(@MetaDataKeyParam(affects = MetaDataKeyParamAffectsType.INPUT) String table, @Default(PAYLOAD) Map<String, String> input) {

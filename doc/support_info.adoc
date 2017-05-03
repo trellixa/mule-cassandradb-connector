@@ -76,7 +76,7 @@ Some of these processors accept some custom POJOs as input parameters(needed for
 === Tips and tricks
 
 . **Create Keyspace** operation accepts a custom pojo CreateKeyspaceInput as input so the user must pass the parameters accordingly. The easiest way to do this is to use a Transform Message in order to transform the payload to a Java object.
-
++
 Example:
 [source]
 %dw 1.0
@@ -93,7 +93,7 @@ Example:
 . **Drop Keyspace** operation accepts a String parameter representing the keyspace name.
 
 . **Create Table** operation accepts a custom pojo CreateTableInput as input so the user must pass the parameters accordingly.
-
++
 Example:
 [source]
 %dw 1.0
@@ -106,7 +106,7 @@ Example:
 } as :object {
 	class : "com.mulesoft.mule.cassandradb.metadata.CreateTableInput"
 }
-
++
 In the example above the keyspaceName parameter is optional. If not provided the table will be created into the keyspace that the user used to log in(if specified).
 
 . **Drop Table** accepts 2 string parameters representing the table name and the keyspace that contains that specific table.
@@ -114,7 +114,7 @@ In the example above the keyspaceName parameter is optional. If not provided the
 . **Get Table Names From Keyspace** operation has a String parameter specifying the keyspace name for the operation. The processor returns a List containing all the tables in the specified keyspace.
 
 . **Execute CQL Query** operation accepts a custom pojo(CQLQueryInput) as input. The input consists of a String representing the query(that can be parametrized or not) and a list of parameters that will be passed to the parametrized query if that is the case.
-
++
 Example:
 [source]
 %dw 1.0
@@ -125,9 +125,9 @@ Example:
 	"parameters": payload.parameters
 }
 as :object {
-	class : "com.mulesoft.mule.cassandradb.metadata.CreateCQLQueryInput"
+	class : "com.mulesoft.mule.cassandradb.metadata.CQLQueryInput"
 }
-
++
 Example of a HTTP request to the <execute-cql-query> processor:
 [source]
 {
@@ -139,10 +139,9 @@ Example of a HTTP request to the <execute-cql-query> processor:
 . **Select** operation accepts a String representing the query and an optional list of Object representing the parameters for the query. This operation also offers a query builder:
 +
 image:query_builder.png[Config]
-+
 
 . **Insert** operation accepts the table name as a parameter and as payload a Map<String, Object> representing the entity to be inserted into the table.
-
++
 Example:
 [source]
 tableName: users
@@ -152,13 +151,22 @@ payload:
 ---
 {
 	"id": payload.id,
-	"name": payload.name
+	"name": payload.name,
+	"other_property": payload.other_property
+}
++
+Example of HTTP request for the **Insert** operation:
+[source]
+{
+	"id":3,
+	"name":"entity_name",
+	"other_property":other_property_value
 }
 
 . **Update** operation accepts the table name as a parameter and as payload a Map<String, Object> with 2 records with the keys **where** and **columns**.
-
++
 .. **where** Map<String, Object> representing the clause that will specify the primary keys of the objects to be updated
-
++
 Example:
 [source]
 "where":
@@ -168,31 +176,31 @@ Example:
       }
 
 .. **columns** Map<String, Object> representing pairs containing the column name and the value to be set for that column
-
++
 Example:
 [source]
 "columns":
     {
     "name": "test value"
     }
-
++
 If a Transform Message component is used to set the payload for this operation this component will present to the user the details needed to set the payload.
-
++
 image:update_datasense.png[Config]
-
++
 In the image above the used can select which **columns** to update and specify the **where** clause. The columns section contains all the columns of the table selected for the operation whereas in the where section only the columns that are pare of the "primary key" are displayed as only these can be specified in the where clause.
 
 . **Delete Columns Value** operation accepts the table name as a parameter and as payload a Map<String, Object> with 2 records with the keys **where** and **columns**.
-
++
 As for the **Update** operation, the **where** record represents the clause that will specify the primary keys of the objects to be updated. The **columns** record represents a List<String> containing the column names to be cleared.
 After invoking this operation when fetching the entities that were updated, the values for the columns specified in the **Delete Columns Value** operations will be null.
 
 . **Delete Rows** operation accepts the table name as a parameter and as payload a Map<String, Object> with 1 record with the key **where**
-
++
 As the value for the key **where** we have a map (Map<String, Object>) containing the where clause.
-
++
 If the table we want to delete the row from has a partition key composed of multiple columns the map specified by the **where** will contain the column names as keys and the column values as values. This means only one row can be deleted at a time.
-
++
 Example:
 [source]
 {
@@ -202,18 +210,71 @@ Example:
         "name": "name_to_delete"
       }
 }
-
++
 If the table we want to delete the row from has a partition key composed of a single column the map specified by the **where** will contain a single entry with the column name as the key and a list of values as the value. This means multiple rows can be deleted at once.
-
++
 Example:
 [source]
 {
     "where":
       {
-        "id": [2]
+        "id": [2,3]
       }
 }
 
+. **Change column type** operation, is used to change the type of a column and accepts the table name as a parameter and an AlterColumnInput POJO as payload.
++
+The POJO that is given as payload to the processor has 2 fields, one specifying the column name and one specifying th new DataType for that column.
++
+Example:
+[source]
+%dw 1.0
+%output application/java
+---
+{
+	"column": payload.column,
+	"type": payload.type
+} as :object {
+	class : "com.mulesoft.mule.cassandradb.metadata.AlterColumnInput"
+}
++
+**Note**: A column type can be changed only to another valid and compatible type. To check types compatibility in Cassandra visit this http://docs.datastax.com/en/cql/3.1/cql/cql_reference/cql_data_types_c.html#concept_ds_wbk_zdt_xj__cql_data_type_compatibility[page]
+
+. **Add new column** operation, is used to add a new column and accepts the table name as a parameter and an AlterColumnInput POJO as payload.
++
+The POJO that is passed as payload to the processor has 2 fields, one specifying the name of the column to be created and one specifying the DataType for the new column
++
+Example:
+[source]
+%dw 1.0
+%output application/java
+---
+{
+	"column": payload.column,
+	"type": payload.type
+} as :object {
+	class : "com.mulesoft.mule.cassandradb.metadata.AlterColumnInput"
+}
+
+. **Drop column** processor accepts the table name as a parameter and the column name as payload.
+
+. **Rename column** operation accepts the table name as a parameter and a Map<String, String> as payload. The map will be containing the name of the column to be renamed as  akey and as a value the new name for the column.
++
+Example:
+[source]
+%dw 1.0
+%output application/java
+---
+{
+	"id": payload.id
+}
++
+Example of HTTP request:
+[source]
+{
+	"my_old_column_name_1":"my_new_column_name_1",
+	"old_column_name_2":"new_column_name_2"
+}
 
 == Troubleshooting
 === Logging level

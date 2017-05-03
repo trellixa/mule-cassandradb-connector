@@ -38,7 +38,7 @@ public class ColumnInput {
         return "ColumnInput{" +
                 "name='" + name + '\'' +
                 ", type=" + type +
-                ", isPrimaryKey=" + isPrimaryKey +
+                ", isPrimaryKey=" + primaryKey +
                 '}';
     }
 }
