@@ -5,6 +5,7 @@ package com.mulesoft.mule.cassandradb.automation.functional;
 
 import com.mulesoft.mule.cassandradb.CassandraDBConnector;
 import com.mulesoft.mule.cassandradb.api.CassandraClient;
+import com.mulesoft.mule.cassandradb.configurations.ConnectionParameters;
 import com.mulesoft.mule.cassandradb.metadata.CassandraOnlyWithFiltersMetadataCategory;
 import com.mulesoft.mule.cassandradb.metadata.CreateKeyspaceInput;
 import com.mulesoft.mule.cassandradb.util.ConstantsTest;
@@ -28,7 +29,7 @@ public class CassandraOnlyWithFiltersMetadataCategoryTestCase extends AbstractMe
         cassConfig = PropertiesLoaderUtil.resolveCassandraConnectionProps();
         assert cassConfig != null;
         //get instance of cass client based on the configs
-        cassClient = CassandraClient.buildCassandraClient(cassConfig.getHost(), cassConfig.getPort(), null, null, null);
+        cassClient = CassandraClient.buildCassandraClient(new ConnectionParameters(cassConfig.getHost(), cassConfig.getPort(), null, null, null, null));
         assert cassClient != null;
 
         //setup db env

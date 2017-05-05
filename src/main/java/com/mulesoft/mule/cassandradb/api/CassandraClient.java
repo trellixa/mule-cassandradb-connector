@@ -5,6 +5,7 @@ package com.mulesoft.mule.cassandradb.api;
 
 import com.datastax.driver.core.*;
 import com.datastax.driver.core.querybuilder.*;
+import com.mulesoft.mule.cassandradb.configurations.ConnectionParameters;
 import com.mulesoft.mule.cassandradb.metadata.AlterColumnInput;
 import com.mulesoft.mule.cassandradb.metadata.CreateKeyspaceInput;
 import com.mulesoft.mule.cassandradb.metadata.CreateTableInput;
@@ -42,26 +43,44 @@ public final class CassandraClient {
      * Connect to Cassandra Cluster specified by provided host IP
      * address and port number.
      *
-     * @param host     Cluster host IP address.
-     * @param port     Port of cluster host.
-     * @param username the username to buildCassandraClient with
-     * @param keyspace optional - keyspace to retrieve cluster session for
+     * @param connectionParameters     the connection parameters
      */
-    public static CassandraClient buildCassandraClient(final String host, final int port, final String username, final String password, final String keyspace) throws org.mule.api.ConnectionException {
-        Cluster.Builder clusterBuilder = Cluster.builder()
-                .addContactPoint(host)
-                .withPort(port);
+    public static CassandraClient buildCassandraClient(ConnectionParameters connectionParameters) throws org.mule.api.ConnectionException {
+        Cluster.Builder clusterBuilder = Cluster.builder().addContactPoint(connectionParameters.getHost()).withPort(connectionParameters.getPort());
 
-        if (StringUtils.isNotEmpty(username) && StringUtils.isNotEmpty(password)) {
-            clusterBuilder.withCredentials(username, password);
+        if (StringUtils.isNotEmpty(connectionParameters.getUsername()) && StringUtils.isNotEmpty(connectionParameters.getPassword())) {
+            clusterBuilder.withCredentials(connectionParameters.getUsername(), connectionParameters.getPassword());
+        }
+
+        if (connectionParameters.getAdvancedConnectionParameters() != null) {
+
+            if (StringUtils.isNotEmpty(connectionParameters.getAdvancedConnectionParameters().getClusterName())) {
+                clusterBuilder.withClusterName(connectionParameters.getAdvancedConnectionParameters().getClusterName());
+            }
+
+            if (connectionParameters.getAdvancedConnectionParameters().getMaxSchemaAgreementWaitSeconds() > 0) {
+                clusterBuilder.withMaxSchemaAgreementWaitSeconds(connectionParameters.getAdvancedConnectionParameters().getMaxSchemaAgreementWaitSeconds());
+            }
+
+            if (connectionParameters.getAdvancedConnectionParameters().getProtocolVersion() != null) {
+                clusterBuilder.withProtocolVersion(connectionParameters.getAdvancedConnectionParameters().getProtocolVersion());
+            }
+
+            if (connectionParameters.getAdvancedConnectionParameters().getCompression() != null) {
+                clusterBuilder.withCompression(connectionParameters.getAdvancedConnectionParameters().getCompression());
+            }
+
+            if (connectionParameters.getAdvancedConnectionParameters().isSsl()) {
+                clusterBuilder.withSSL();
+            }
         }
 
         CassandraClient client = new CassandraClient();
         client.cluster = clusterBuilder.build();
 
         try {
-            logger.info("Connecting to Cassandra Database: {} , port: {}", host, port);
-            client.cassandraSession = StringUtils.isNotEmpty(keyspace) ? client.cluster.connect(keyspace) : client.cluster.connect();
+            logger.info("Connecting to Cassandra Database: {} , port: {}", connectionParameters.getHost(), connectionParameters.getPort());
+            client.cassandraSession = StringUtils.isNotEmpty(connectionParameters.getKeyspace()) ? client.cluster.connect(connectionParameters.getKeyspace()) : client.cluster.connect();
             logger.info("Connected to Cassandra Cluster: {} !", client.cassandraSession.getCluster().getClusterName());
         } catch (Exception cassandraException) {
             logger.error("Error while connecting to Cassandra database!", cassandraException);
