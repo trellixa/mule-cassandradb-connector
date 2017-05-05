@@ -75,6 +75,21 @@ Some of these processors accept some custom POJOs as input parameters(needed for
 
 === Tips and tricks
 
+**Important Note**: The operations of the connector that require a Data Type support only primitive data types(All of the types specified http://docs.datastax.com/en/cql/3.1/cql/cql_reference/cql_data_types_c.html[here] except **list**, **map**, **set** and **tuple**).
+
+In order to create a table with columns having one of those types, or adding a new column of one of the complex types to an existing table, an user can use the **Execute CQL operation**.
+
+Given the fact that our mapping of the Data Type for primitives is using uppercase, the user must either specify the type in uppercase or use a transformer to map th type to uppercase:
+[source]
+{
+ "columns": payload.columns map {
+  name: $.name,
+  primaryKey: $.primaryKey,
+  type: upper $.type
+ }
+
+=== Processors
+
 . **Create Keyspace** operation accepts a custom pojo CreateKeyspaceInput as input so the user must pass the parameters accordingly. The easiest way to do this is to use a Transform Message in order to transform the payload to a Java object.
 +
 Example:
@@ -188,7 +203,7 @@ If a Transform Message component is used to set the payload for this operation t
 +
 image:update_datasense.png[Config]
 +
-In the image above the used can select which **columns** to update and specify the **where** clause. The columns section contains all the columns of the table selected for the operation whereas in the where section only the columns that are pare of the "primary key" are displayed as only these can be specified in the where clause.
+In the image above: The user can select which **columns** to update and specify the **where** clause. The columns section contains all the columns of the table selected for the operation whereas in the where section only the columns that are pare of the "primary key" are displayed as only these can be specified in the where clause.
 
 . **Delete Columns Value** operation accepts the table name as a parameter and as payload a Map<String, Object> with 2 records with the keys **where** and **columns**.
 +
