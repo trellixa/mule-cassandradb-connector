@@ -159,6 +159,25 @@ public class TestDataBuilder {
         return columns;
     }
 
+    public static List<ColumnInput> getCompositePrimaryKey(){
+        List<ColumnInput> columns = new ArrayList<ColumnInput>();
+
+        ColumnInput column = new ColumnInput();
+        column.setPrimaryKey(true);
+        column.setName(ConstantsTest.DUMMY_PARTITION_KEY);
+        column.setType(ColumnType.TEXT);
+
+        ColumnInput column2 = new ColumnInput();
+        column2.setPrimaryKey(true);
+        column2.setName(ConstantsTest.VALID_COLUMN);
+        column2.setType(ColumnType.INT);
+
+        columns.add(column);
+        columns.add(column2);
+
+        return columns;
+    }
+
     public static List<ColumnInput> getColumns(){
         List<ColumnInput> columns = new ArrayList<ColumnInput>();
 
