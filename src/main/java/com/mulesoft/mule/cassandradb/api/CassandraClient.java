@@ -42,10 +42,10 @@ public final class CassandraClient {
      * @param username the username to buildCassandraClient with
      * @param keyspace optional - keyspace to retrieve cluster session for
      */
-    public static CassandraClient buildCassandraClient(final String host, final int port, final String username, final String password, final String keyspace) throws org.mule.api.ConnectionException {
+    public static CassandraClient buildCassandraClient(final String host, final String port, final String username, final String password, final String keyspace) throws org.mule.api.ConnectionException {
         Cluster.Builder clusterBuilder = Cluster.builder()
                 .addContactPoint(host)
-                .withPort(port);
+                .withPort(Integer.parseInt(port));
 
         if (StringUtils.isNotEmpty(username) && StringUtils.isNotEmpty(password)) {
             clusterBuilder.withCredentials(username, password);

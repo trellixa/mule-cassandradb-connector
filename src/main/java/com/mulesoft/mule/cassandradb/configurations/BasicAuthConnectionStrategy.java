@@ -33,7 +33,7 @@ public class BasicAuthConnectionStrategy {
     @Configurable
     @org.mule.api.annotations.param.Optional
     @Default("9042")
-    private int port;
+    private String port;
 
     /**
      * Cassandra keyspace
@@ -111,11 +111,11 @@ public class BasicAuthConnectionStrategy {
         this.host = host;
     }
 
-    public int getPort() {
+    public String getPort() {
         return port;
     }
 
-    public void setPort(int port) {
+    public void setPort(String port) {
         this.port = port;
     }
 

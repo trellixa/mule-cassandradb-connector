@@ -475,6 +475,7 @@
 </script>
 
 <div class="container">
+    <h3>Cassandra Connector Demo</h3>
     <div class="panel-group" id="accordion">
 
         <div class="panel panel-default">
@@ -487,8 +488,8 @@
                 <div class="panel-body">
                     <form id="createTableForm" class="form-signin" role="form" onsubmit="return false;">
                         <div id = "table_info">
-                            <label>Table Name</label> <input type="text" name="tableName" value="" id="table-name" class="form-control"><br>
-                            <label>Keyspace</label> <input type="text" name="keyspaceName" value="" id="keyspace" class="form-control"><br>
+                            <label>Table Name</label> <input type="text" name="tableName" value="" id="table-name" class="form-control" placeholder="Required"><br>
+                            <label>Keyspace</label> <input type="text" name="keyspaceName" value="" id="keyspace" class="form-control" placeholder="Optional"><br>
                         </div>
                         <label>Columns</label>
                         <div id = "columns" class = "row" style="margin-bottom: 10px;">

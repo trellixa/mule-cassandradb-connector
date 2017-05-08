@@ -25,7 +25,7 @@ public class CassandraDBConnectorMockTest {
     @BeforeClass
     public static void init() throws ConnectionException, CassandraDBException {
         strategy.setHost("127.0.0.1");
-        strategy.setPort(9042);
+        strategy.setPort("9042");
         strategy.connect(null, null);
 
         connector.setBasicAuthConnectionStrategy(strategy);
