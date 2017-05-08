@@ -11,7 +11,7 @@ http://www.mulesoft.org/schema/mule/ee/dw http://www.mulesoft.org/schema/mule/ee
 http://www.mulesoft.org/schema/mule/cassandradb http://www.mulesoft.org/schema/mule/cassandradb/current/mule-cassandradb.xsd
 http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/mule/ee/tracking/current/mule-tracking-ee.xsd">
     <http:listener-config name="HTTP_Listener_Configuration" host="localhost" port="8081" doc:name="HTTP Listener Configuration"/>
-    <cassandradb:config name="CassandraDB" username="${username}" password="${password}"   doc:name="CassandraDB" keyspace="${keyspace}" host="${host}"/>
+    <cassandradb:config name="CassandraDB" username="${username}" password="${password}" doc:name="CassandraDB" keyspace="${keyspace}" host="${host}" port="${port}"/>
     <flow name="HTMLForm">
         <http:listener config-ref="HTTP_Listener_Configuration" path="/" doc:name="HTTP"/>
         <parse-template location="form.html" doc:name="Parse Template"/>
