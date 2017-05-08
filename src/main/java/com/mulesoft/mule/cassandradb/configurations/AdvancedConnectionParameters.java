@@ -14,7 +14,7 @@ public class AdvancedConnectionParameters {
     private ProtocolOptions.Compression compression;
     private boolean ssl;
 
-    protected AdvancedConnectionParameters(ProtocolVersion protocolVersion, String clusterName, int maxSchemaAgreementWaitSeconds, ProtocolOptions.Compression compression,
+    public AdvancedConnectionParameters(ProtocolVersion protocolVersion, String clusterName, int maxSchemaAgreementWaitSeconds, ProtocolOptions.Compression compression,
             boolean ssl) {
         this.protocolVersion = protocolVersion;
         this.clusterName = clusterName;

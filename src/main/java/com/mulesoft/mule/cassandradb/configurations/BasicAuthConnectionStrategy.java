@@ -87,7 +87,7 @@ public class BasicAuthConnectionStrategy {
     @Placement(group = "Advanced Settings")
     @Default("false")
     @FriendlyName("SSL")
-    private boolean ssl;
+    private boolean sslEnabled;
 
     /**
      * Cassandra client
@@ -107,7 +107,7 @@ public class BasicAuthConnectionStrategy {
     public void connect(@ConnectionKey final String username,
                         @Password final String password) throws ConnectionException {
         cassandraClient = CassandraClient.buildCassandraClient(new ConnectionParameters(host, port, username, password, keyspace,
-                new AdvancedConnectionParameters(protocolVersion, clusterName, maxSchemaAgreementWaitSeconds, compression, ssl)));
+                new AdvancedConnectionParameters(protocolVersion, clusterName, maxSchemaAgreementWaitSeconds, compression, sslEnabled)));
     }
 
     /**
@@ -205,12 +205,12 @@ public class BasicAuthConnectionStrategy {
         this.compression = compression;
     }
 
-    public boolean isSsl() {
-        return ssl;
+    public boolean isSslEnabled() {
+        return sslEnabled;
     }
 
-    public void setSsl(boolean ssl) {
-        this.ssl = ssl;
+    public void setSslEnabled(boolean sslEnabled) {
+        this.sslEnabled = sslEnabled;
     }
 
     public CassandraClient getCassandraClient() {
