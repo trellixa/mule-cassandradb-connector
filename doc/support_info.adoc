@@ -52,21 +52,44 @@ See: <<Documentation Links>>
 
 == Slack Channels
 
-connectors support channel
+Connectors support channel
 https://mulesoft.slack.com/archives/connectors
 
 = Technical details
 
 == Sandbox
 
-Our Apache Cassandra instance is running at host ec2-54-205-44-95.compute-1.amazonaws.com port 9042 and has a keyspace named MuleSoft.
+Apache Cassandra is a open source software and can be installed following the instructions http://cassandra.apache.org/download/[Cassandra Download]
+
+After finishing the installation find the **cassandra.yaml** config file and change the value of the authenticator from **AllowAllAuthenticator** to **PasswordAuthenticator**(if the authenticator is not changed one can log in without specifying the username and the password for the database).
+
+After starting the cassandra service, you can connect to the database that will be running at port 9042 by default.
+
+The default credentials are cassandra/cassandra but also other admin accounts can be created by executing different queries explained http://docs.datastax.com/en/cql/3.1/cql/cql_reference/create_user_r.html[here]
 
 == Authentication methods
 
+=== Available for the platform
+
+Authentication is pluggable in Cassandra and is configured using the authenticator setting in **cassandra.yaml**.
+
+Cassandra ships with two options included in the default distribution:
+
+. AllowAllAuthenticator
+
+. PasswordAuthenticator
+
+For more details regarding Cassandra authentication and authorization methods check this http://cassandra.apache.org/doc/latest/operating/security.html#authentication[link]
+
 === Currently available in the connector
 
-The connector supports Basic Authentication. An user needs an username and a password to be able to access the Cassandra DB.
-The optional connection parameters are host(default: localhost), port(default: 9042) and keyspace(default: empty).
+The connector supports Basic Authentication.
+
+If Cassandra is configured to use the AllowAllAuthenticator the user can leave the values for the username and password empty in the Connection Strategy.
+
+Otherwise, if Cassandra is configured with the PasswordAuthenticator, the username and password must be specified.
+
+The other connection parameters are host(default: localhost), port(default: 9042) and keyspace(default: empty).
 
 == Implementation details
 

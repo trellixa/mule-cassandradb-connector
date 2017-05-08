@@ -11,6 +11,7 @@ import org.mule.api.annotations.components.ConnectionManagement;
 import org.mule.api.annotations.display.Password;
 import org.mule.api.annotations.param.ConnectionKey;
 import org.mule.api.annotations.param.Default;
+import org.mule.api.annotations.param.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -58,8 +59,8 @@ public class BasicAuthConnectionStrategy {
      */
     @Connect
     @TestConnectivity
-    public void connect(@ConnectionKey final String username,
-                        @Password final String password)
+    public void connect(@ConnectionKey @Optional final String username,
+                        @Password @Optional final String password)
             throws ConnectionException {
         cassandraClient = CassandraClient.buildCassandraClient(host, port, username, password, keyspace);
     }

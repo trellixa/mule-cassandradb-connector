@@ -41,7 +41,7 @@ public class CassandraDBConnector {
      * Creates a new keyspace
      * @param input operation input containing the keyspace name and the replication details
      * @return true if the operation succeeded, false otherwise
-     * @throws CassandraDBException
+     * @throws CassandraDBException if any error occurs when executing the create keyspace operation
      */
     @Processor
     public boolean createKeyspace(@Default(PAYLOAD) CreateKeyspaceInput input) throws CassandraDBException {
@@ -59,7 +59,7 @@ public class CassandraDBConnector {
      * Drops the entire keyspace
      * @param keyspaceName the name of the keyspace to be dropped
      * @return true if the operation succeeded, false otherwise
-     * @throws CassandraDBException
+     * @throws CassandraDBException if any error occurs when executing the drop keyspace operation
      */
     @Processor
     public boolean dropKeyspace(String keyspaceName) throws CassandraDBException{
@@ -78,7 +78,7 @@ public class CassandraDBConnector {
      *
      * @param input operation input describing the table name, the keyspace name and the list of columns
      * @return true if the operation succeeded, false otherwise
-     * @throws CassandraDBException
+     * @throws CassandraDBException if any error occurs when executing the create table operation
      */
     @Processor
     public boolean createTable(@Default(PAYLOAD) CreateTableInput input) throws CassandraDBException {
@@ -97,7 +97,7 @@ public class CassandraDBConnector {
      * @param tableName the name of the table to be dropped
      * @param customKeyspaceName (optional) the keyspace which contains the table to be dropped
      * @return true if the operation succeeded, false otherwise
-     * @throws CassandraDBException
+     * @throws CassandraDBException if any error occurs when executing the drop table operation
      */
     @Processor
     public boolean dropTable(String tableName, @Optional String customKeyspaceName) throws CassandraDBException{
@@ -117,7 +117,7 @@ public class CassandraDBConnector {
      *
      * @param input CQLQueryInput describing the parametrized query to be executed along with the parameters
      * @return the result of the query execution
-     * @throws CassandraDBException
+     * @throws CassandraDBException if any error occurs when executing the custom query
      */
     @Processor(friendlyName="Execute CQL Query")
     @MetaDataScope(CassandraMetadataCategory.class)
@@ -132,7 +132,7 @@ public class CassandraDBConnector {
      * Executes the insert entity operation
      * @param table the table name in which the entity will be inserted
      * @param entity the entity to be inserted
-     * @throws CassandraDBException
+     * @throws CassandraDBException if any error occurs when executing the insert query
      */
     @Processor
     @MetaDataScope(CassandraMetadataCategory.class)
@@ -148,7 +148,7 @@ public class CassandraDBConnector {
      * Executes the update entity operation
      * @param table the table name in which the entity will be updated
      * @param entity the entity to be updated
-     * @throws CassandraDBException
+     * @throws CassandraDBException if any error occurs when executing the update query
      */
     @Processor
     @MetaDataScope(CassandraWithFiltersMetadataCategory.class)
@@ -165,7 +165,7 @@ public class CassandraDBConnector {
      * Deletes values from an object specified by the where clause
      * @param table the name of the table
      * @param payload operation input: columns to be deleted and where clause for the delete operation
-     * @throws CassandraDBException
+     * @throws CassandraDBException if any error occurs when executing the delete query
      */
     @Processor
     @MetaDataScope(CassandraWithFiltersMetadataCategory.class)
@@ -179,7 +179,7 @@ public class CassandraDBConnector {
      * Deletes an entire record
      * @param table the name of the table
      * @param payload operation input: where clause for the delete operation
-     * @throws CassandraDBException
+     * @throws CassandraDBException if any error occurs when executing the delete query
      */
     @Processor
     @MetaDataScope(CassandraOnlyWithFiltersMetadataCategory.class)
@@ -194,7 +194,7 @@ public class CassandraDBConnector {
      * @param query  the query to be executed
      * @param parameters the query parameters
      * @return list of entities returned by the select query
-     * @throws CassandraDBException
+     * @throws CassandraDBException if any error occurs when executing the select query
      */
     @Processor
     @MetaDataScope(CassandraMetadataCategory.class)
@@ -209,7 +209,7 @@ public class CassandraDBConnector {
      * Returns all the table names from the specified keyspace
      * @param keyspaceName the name of the keyspace to be used on the operation
      * @return a list of table names
-     * @throws CassandraDBException
+     * @throws CassandraDBException if any error occurs when executing the operation
      */
     @Processor
     public List<String> getTableNamesFromKeyspace(String keyspaceName) throws CassandraDBException {
