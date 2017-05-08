@@ -121,7 +121,7 @@ public class CassandraDBConnector {
     }
 
     @Processor
-    public List<String> getTableNamesFromKeyspace(String keyspaceName) throws CassandraDBException {
+    public List<String> getTableNamesFromKeyspace(@Optional String keyspaceName) throws CassandraDBException {
         try {
             return basicAuthConnectionStrategy.getCassandraClient().getTableNamesFromKeyspace(keyspaceName);
         } catch (Exception e) {
