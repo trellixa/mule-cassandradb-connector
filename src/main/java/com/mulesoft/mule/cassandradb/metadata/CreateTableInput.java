@@ -34,4 +34,13 @@ public class CreateTableInput {
     public void setColumns(List<ColumnInput> columns) {
         this.columns = columns;
     }
+
+    @Override
+    public String toString() {
+        return "CreateTableInput{" +
+                "tableName='" + tableName + '\'' +
+                ", keyspaceName='" + keyspaceName + '\'' +
+                ", columns=" + columns +
+                '}';
+    }
 }

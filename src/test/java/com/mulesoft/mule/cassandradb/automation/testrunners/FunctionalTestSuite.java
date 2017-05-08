@@ -28,8 +28,7 @@ import com.mulesoft.mule.cassandradb.CassandraDBConnector;
     CreateTableTestCases.class,
     CassandraMetadataCategoryTestCase.class,
     CassandraOnlyWithFiltersMetadataCategoryTestCase.class,
-    CassandraWithFiltersMetadataCategoryTestCase.class,
-    CassandraPrimaryKeyMetadataCategoryTestCase.class
+    CassandraWithFiltersMetadataCategoryTestCase.class
 })
 public class FunctionalTestSuite {
 

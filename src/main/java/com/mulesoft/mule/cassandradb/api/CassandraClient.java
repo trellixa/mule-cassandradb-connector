@@ -96,9 +96,9 @@ public final class CassandraClient {
                 .wasApplied();
     }
 
-    public boolean renameColumn(String tableName, String customKeyspaceName, Map<String, String> input) {
+    public boolean renameColumn(String tableName, String customKeyspaceName,String oldColumnName, String newColumnName) {
         return cassandraSession.execute(
-                HelperStatements.renameColumn(tableName, StringUtils.isNotBlank(customKeyspaceName) ? customKeyspaceName : getLoggedKeyspace(), input)).wasApplied();
+                HelperStatements.renameColumn(tableName, StringUtils.isNotBlank(customKeyspaceName) ? customKeyspaceName : getLoggedKeyspace(), oldColumnName, newColumnName)).wasApplied();
     }
 
     public boolean dropTable(String tableName, String customKeyspaceName) {

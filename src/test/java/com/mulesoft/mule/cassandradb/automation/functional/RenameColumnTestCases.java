@@ -31,7 +31,7 @@ public class RenameColumnTestCases extends CassandraDBConnectorAbstractTestCase 
 
     @Test
     public void testRenameColumnWithSuccess() throws CassandraDBException {
-        getConnector().renameColumn(ConstantsTest.TABLE_NAME, TestDataBuilder.getRenameColumnInput(ConstantsTest.VALID_COLUMN, "renamed"));
+        getConnector().renameColumn(ConstantsTest.TABLE_NAME, ConstantsTest.VALID_COLUMN, "renamed");
     }
 
 
