@@ -18,12 +18,7 @@ import org.mule.api.ConnectionExceptionCode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public final class CassandraClient {
 
@@ -130,9 +125,13 @@ public final class CassandraClient {
         return getResponseFromResultSet(result);
     }
 
-    public List<String> getTableNamesFromKeyspace(String keyspaceName) {
+    public List<String> getTableNamesFromKeyspace(String customKeyspaceName) {
+        String keyspaceName = StringUtils.isNotBlank(customKeyspaceName) ? customKeyspaceName : cassandraSession.getLoggedKeyspace();
         if (StringUtils.isNotBlank((keyspaceName))) {
             logger.info("Retrieving table names from the keyspace: {} ...", keyspaceName);
+            if (cluster.getMetadata().getKeyspace(keyspaceName) == null) {
+                return Collections.EMPTY_LIST;
+            }
             Collection<TableMetadata> tables = cluster
                     .getMetadata().getKeyspace(keyspaceName)
                     .getTables();
@@ -142,7 +141,7 @@ public final class CassandraClient {
             }
             return tableNames;
         }
-        return null;
+        return Collections.EMPTY_LIST;
     }
 
     /**

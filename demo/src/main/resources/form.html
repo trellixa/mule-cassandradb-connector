@@ -185,7 +185,7 @@
                 data: JSON.stringify(payload),
                 contentType: 'application/json',
                 success: function(data) {
-                    $('#get_tables_result').append(JSON.stringify(data) + '\n\n');
+                    $('#get_tables_result').append(JSON.stringify(data) + '\n' + '----------' + '\n');
                     $('#get_tables_input').val('');
                 },
                 error: function(request, status, error){
@@ -549,7 +549,7 @@
                 <div class="panel-body">
                     <form id="getTablesForm" class="form-signin" role="form" onsubmit="return false;">
                         <div id = "table_info">
-                            <label>Keyspace</label> <input id="get_tables_input" type="text" name="keyspaceName" value="" class="form-control" placeholder="Required"><br>
+                            <label>Keyspace</label> <input id="get_tables_input" type="text" name="keyspaceName" value="" class="form-control" placeholder="Optional"><br>
                         </div>
                         <br>
                         <input id="get_tables" class="btn btn-lg btn-primary btn-block" type="submit" value="Get Tables From Keyspace"><br>
