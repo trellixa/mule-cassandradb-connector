@@ -5,7 +5,7 @@ package com.mulesoft.mule.cassandradb.metadata;
 
 import java.util.List;
 
-public class CreateCQLQueryInput {
+public class CQLQueryInput {
 
     private String cqlQuery;
     private List<Object> parameters;
@@ -24,5 +24,13 @@ public class CreateCQLQueryInput {
 
     public void setParameters(List<Object> parameters) {
         this.parameters = parameters;
+    }
+
+    @Override
+    public String toString() {
+        return "CQLQueryInput{" +
+                "cqlQuery='" + cqlQuery + '\'' +
+                ", parameters=" + parameters +
+                '}';
     }
 }

@@ -15,6 +15,7 @@ import org.mule.api.annotations.display.Password;
 import org.mule.api.annotations.display.Placement;
 import org.mule.api.annotations.param.ConnectionKey;
 import org.mule.api.annotations.param.Default;
+import org.mule.api.annotations.param.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,12 +33,12 @@ public class BasicAuthConnectionStrategy {
     private String host;
 
     /**
-     * Port (default is 9160)
+     * Port (default is 9042)
      */
     @Configurable
     @org.mule.api.annotations.param.Optional
     @Default("9042")
-    private int port;
+    private String port;
 
     /**
      * Cassandra keyspace
@@ -104,8 +105,8 @@ public class BasicAuthConnectionStrategy {
      */
     @Connect
     @TestConnectivity
-    public void connect(@ConnectionKey final String username,
-                        @Password final String password) throws ConnectionException {
+    public void connect(@ConnectionKey @Optional final String username,
+                        @Password @Optional final String password) throws ConnectionException {
         cassandraClient = CassandraClient.buildCassandraClient(new ConnectionParameters(host, port, username, password, keyspace,
                 new AdvancedConnectionParameters(protocolVersion, clusterName, maxSchemaAgreementWaitSeconds, compression, sslEnabled)));
     }
@@ -157,11 +158,11 @@ public class BasicAuthConnectionStrategy {
         this.host = host;
     }
 
-    public int getPort() {
+    public String getPort() {
         return port;
     }
 
-    public void setPort(int port) {
+    public void setPort(String port) {
         this.port = port;
     }
 

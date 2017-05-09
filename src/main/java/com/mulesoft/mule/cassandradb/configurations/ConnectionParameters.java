@@ -8,14 +8,14 @@ public class ConnectionParameters {
     /*Cluster host IP address.*/
     private String host;
     /*Port of cluster host.*/
-    private int port;
+    private String port;
     private String username;
     private String password;
     /*keyspace to retrieve cluster session for*/
     private String keyspace;
     private AdvancedConnectionParameters advancedConnectionParameters;
 
-    public ConnectionParameters(String host, int port, String username, String password, String keyspace, AdvancedConnectionParameters advancedConnectionParameters) {
+    public ConnectionParameters(String host, String port, String username, String password, String keyspace, AdvancedConnectionParameters advancedConnectionParameters) {
         this.host = host;
         this.port = port;
         this.username = username;
@@ -32,11 +32,11 @@ public class ConnectionParameters {
         this.host = host;
     }
 
-    public int getPort() {
+    public String getPort() {
         return port;
     }
 
-    public void setPort(int port) {
+    public void setPort(String port) {
         this.port = port;
     }
 

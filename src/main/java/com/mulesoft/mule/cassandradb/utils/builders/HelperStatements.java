@@ -65,11 +65,8 @@ public class HelperStatements {
         return SchemaBuilder.alterTable(keyspaceName, tableName).alterColumn(input.getColumn()).type(ColumnType.resolveDataType(input.getType()));
     }
 
-    public static SchemaStatement renameColumn(String tableName, String keyspaceName, Map<String, String> input) {
-        for (Map.Entry<String, String> entry : input.entrySet()) {
-            return SchemaBuilder.alterTable(keyspaceName, tableName).renameColumn(entry.getKey()).to(entry.getValue());
-        }
-        return null;
+    public static SchemaStatement renameColumn(String tableName, String keyspaceName, String oldColumnName, String newColumnName) {
+        return SchemaBuilder.alterTable(keyspaceName, tableName).renameColumn(oldColumnName).to(newColumnName);
     }
 
     public static SchemaStatement dropTable(String tableName, String keyspaceName) {

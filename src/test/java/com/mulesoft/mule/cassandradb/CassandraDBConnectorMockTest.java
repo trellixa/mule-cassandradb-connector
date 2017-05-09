@@ -25,7 +25,7 @@ public class CassandraDBConnectorMockTest {
     @BeforeClass
     public static void init() throws ConnectionException, CassandraDBException {
         strategy.setHost("127.0.0.1");
-        strategy.setPort(9042);
+        strategy.setPort("9042");
         strategy.connect(null, null);
 
         connector.setBasicAuthConnectionStrategy(strategy);
@@ -42,7 +42,8 @@ public class CassandraDBConnectorMockTest {
         strategy.getCassandraClient().close();
     }
 
-    @Test public void shouldCreateTableOnlyWithPrimaryKey() throws CassandraDBException {
+    @Test
+    public void shouldCreateTableOnlyWithPrimaryKey() throws CassandraDBException {
         //create input
         List<ColumnInput> columns = new ArrayList<ColumnInput>();
         CreateTableInput input = new CreateTableInput();
@@ -101,7 +102,7 @@ public class CassandraDBConnectorMockTest {
 
     @Test
     public void shouldDescribeKeyspaces() throws CassandraDBException {
-        CreateCQLQueryInput input = new CreateCQLQueryInput();
+        CQLQueryInput input = new CQLQueryInput();
         input.setCqlQuery("SELECT * FROM system.schema_keyspaces;");
         List result = connector.executeCQLQuery(input);
         Assert.assertTrue(result.size() > 0);

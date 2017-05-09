@@ -19,12 +19,7 @@ import org.mule.api.ConnectionExceptionCode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public final class CassandraClient {
 
@@ -46,7 +41,7 @@ public final class CassandraClient {
      * @param connectionParameters     the connection parameters
      */
     public static CassandraClient buildCassandraClient(ConnectionParameters connectionParameters) throws org.mule.api.ConnectionException {
-        Cluster.Builder clusterBuilder = Cluster.builder().addContactPoint(connectionParameters.getHost()).withPort(connectionParameters.getPort());
+        Cluster.Builder clusterBuilder = Cluster.builder().addContactPoint(connectionParameters.getHost()).withPort(Integer.parseInt(connectionParameters.getPort()));
 
         if (StringUtils.isNotEmpty(connectionParameters.getUsername()) && StringUtils.isNotEmpty(connectionParameters.getPassword())) {
             clusterBuilder.withCredentials(connectionParameters.getUsername(), connectionParameters.getPassword());
@@ -124,9 +119,9 @@ public final class CassandraClient {
                 .wasApplied();
     }
 
-    public boolean renameColumn(String tableName, String customKeyspaceName, Map<String, String> input) {
+    public boolean renameColumn(String tableName, String customKeyspaceName,String oldColumnName, String newColumnName) {
         return cassandraSession.execute(
-                HelperStatements.renameColumn(tableName, StringUtils.isNotBlank(customKeyspaceName) ? customKeyspaceName : getLoggedKeyspace(), input)).wasApplied();
+                HelperStatements.renameColumn(tableName, StringUtils.isNotBlank(customKeyspaceName) ? customKeyspaceName : getLoggedKeyspace(), oldColumnName, newColumnName)).wasApplied();
     }
 
     public boolean dropTable(String tableName, String customKeyspaceName) {
@@ -153,9 +148,13 @@ public final class CassandraClient {
         return getResponseFromResultSet(result);
     }
 
-    public List<String> getTableNamesFromKeyspace(String keyspaceName) {
+    public List<String> getTableNamesFromKeyspace(String customKeyspaceName) {
+        String keyspaceName = StringUtils.isNotBlank(customKeyspaceName) ? customKeyspaceName : cassandraSession.getLoggedKeyspace();
         if (StringUtils.isNotBlank((keyspaceName))) {
             logger.info("Retrieving table names from the keyspace: {} ...", keyspaceName);
+            if (cluster.getMetadata().getKeyspace(keyspaceName) == null) {
+                return Collections.EMPTY_LIST;
+            }
             Collection<TableMetadata> tables = cluster
                     .getMetadata().getKeyspace(keyspaceName)
                     .getTables();
@@ -165,7 +164,7 @@ public final class CassandraClient {
             }
             return tableNames;
         }
-        return null;
+        return Collections.EMPTY_LIST;
     }
 
     /**
