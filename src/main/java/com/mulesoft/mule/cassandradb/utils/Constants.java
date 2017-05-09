@@ -10,6 +10,7 @@ public class Constants {
     public static final String COLUMNS = "columns";
     public static final String WHERE = "where";
     public static final String PRIMARY_KEY = "primaryKey";
+    public static final String CLUSTER_NAME = "newClusterName";
 
     //configuration
     public final static String CASS_HOST = "config.host";
