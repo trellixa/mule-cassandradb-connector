@@ -1,0 +1,384 @@
+= Mule Cassandra Connector - Support Information
+:imagesdir: _images
+:toc:
+
+= Apache Cassandra Information
+
+== Documentation Links
+
+. link:https://cassandra.apache.org/doc/latest/[Apache Cassandra Documentation]
+. link:https://docs.datastax.com/en/developer/java-driver/3.1/manual/[Datastax Java Driver for Apache Cassandra]
+. link:https://cassandra.apache.org/doc/latest/getting_started/installing.html[Installing Cassandra]
+. link:https://cassandra.apache.org/doc/old/CQL-3.0.html[CQL Documentation]
+
+== Documentation used by the conn dev to build it.
+
+See: <<Documentation Links>>
+
+= Contacts names
+
+== Developers
+
+=== Development Team Leader
+* mailto:dan.pece@mulesoft.com[Dan Pece]
+* slack-user: @dan.pece
+
+=== Development Team
+* Main developer:
+** mailto:dragos.boghitoiu@mulesoft.com[Dragos Boghitoiu]
+** slack-user: @dragos.boghitoiu
+* Developer:
+** mailto:bogdan.ilies@mulesoft.com[Bogdan Ilies]
+** slack-user: @bogdan.ilies
+* Developer:
+** mailto:alexandru.atomei@mulesoft.com[Alex Atomei]
+** slack-user: @alexandru.atomei
+* Developer:
+** mailto:emil.grigore@mulesoft.com[Emil Grigore]
+** slack-user: @emil.grigore
+* Developer:
+** mailto:cosmin.campian@mulesoft.com[Cosmin Campian]
+** slack-user: @cosmin.campian
+
+
+== Engineering Manager
+
+* mailto:marcos.nunezcortes@mulesoft.com[Marcos Nuñez Cortes]
+* slack-user: @marcos.nunezcortes
+
+== SME on the platform
+
+//Subject matter expert contact
+
+== Slack Channels
+
+Connectors support channel
+https://mulesoft.slack.com/archives/connectors
+
+= Technical details
+
+== Sandbox
+
+Apache Cassandra is a open source software and can be installed following the instructions http://cassandra.apache.org/download/[Cassandra Download]
+
+After finishing the installation find the **cassandra.yaml** config file and change the value of the authenticator from **AllowAllAuthenticator** to **PasswordAuthenticator**(if the authenticator is not changed one can log in without specifying the username and the password for the database).
+
+After starting the cassandra service, you can connect to the database that will be running at port 9042 by default.
+
+The default credentials are cassandra/cassandra but also other admin accounts can be created by executing different queries explained http://docs.datastax.com/en/cql/3.1/cql/cql_reference/create_user_r.html[here]
+
+== Authentication methods
+
+=== Available for the platform
+
+Authentication is pluggable in Cassandra and is configured using the authenticator setting in **cassandra.yaml**.
+
+Cassandra ships with two options included in the default distribution:
+
+. AllowAllAuthenticator
+
+. PasswordAuthenticator
+
+For more details regarding Cassandra authentication and authorization methods check this http://cassandra.apache.org/doc/latest/operating/security.html#authentication[link]
+
+=== Currently available in the connector
+
+The connector supports Basic Authentication.
+
+If Cassandra is configured to use the AllowAllAuthenticator the user can leave the values for the username and password empty in the Connection Strategy.
+
+Otherwise, if Cassandra is configured with the PasswordAuthenticator, the username and password must be specified.
+
+The other connection parameters are host(default: localhost), port(default: 9042) and keyspace(default: empty).
+
+== Implementation details
+
+The connector was implemented using the Datastax Java Driver for Apache Cassandra and exposes multiple operations that are described in the javadoc[LINK].
+Some of these processors accept some custom POJOs as input parameters(needed for the datasense functionality).
+
+=== Tips and tricks
+
+**Important Note**: The operations of the connector that require a Data Type support only primitive data types(All of the types specified http://docs.datastax.com/en/cql/3.1/cql/cql_reference/cql_data_types_c.html[here] except **list**, **map**, **set** and **tuple**).
+
+In order to create a table with columns having one of those types, or adding a new column of one of the complex types to an existing table, an user can use the **Execute CQL operation**.
+
+Given the fact that our mapping of the Data Type for primitives is using uppercase, the user must either specify the type in uppercase or use a transformer to map th type to uppercase:
+[source]
+{
+ "columns": payload.columns map {
+  name: $.name,
+  primaryKey: $.primaryKey,
+  type: upper $.type
+ }
+
+=== Processors
+
+. **Create Keyspace** operation accepts a custom pojo CreateKeyspaceInput as input so the user must pass the parameters accordingly. The easiest way to do this is to use a Transform Message in order to transform the payload to a Java object.
++
+Example:
+[source]
+%dw 1.0
+%output application/java
+---
+{
+	"keyspaceName": payload.keyspaceName,
+	"replicationFactor": payload.replicationFactor,
+	"replicationStrategyClass": payload.replicationStrategyClass
+} as :object {
+	class : "com.mulesoft.mule.cassandradb.metadata.CreateKeyspaceInput"
+}
+
+. **Drop Keyspace** operation accepts a String parameter representing the keyspace name.
+
+. **Create Table** operation accepts a custom pojo CreateTableInput as input so the user must pass the parameters accordingly.
++
+Example:
+[source]
+%dw 1.0
+%output application/java
+---
+{
+	"columns": payload.columns,
+	"tableName": payload.tableName,
+	"keyspaceName": payload.keyspaceName
+} as :object {
+	class : "com.mulesoft.mule.cassandradb.metadata.CreateTableInput"
+}
++
+In the example above the keyspaceName parameter is optional. If not provided the table will be created into the keyspace that the user used to log in(if specified).
+
+. **Drop Table** accepts 2 string parameters representing the table name and the keyspace that contains that specific table.
+
+. **Get Table Names From Keyspace** operation has a String parameter specifying the keyspace name for the operation. The processor returns a List containing all the tables in the specified keyspace.
+
+. **Execute CQL Query** operation accepts a custom pojo(CQLQueryInput) as input. The input consists of a String representing the query(that can be parametrized or not) and a list of parameters that will be passed to the parametrized query if that is the case.
++
+Example:
+[source]
+%dw 1.0
+%output application/java
+---
+{
+	"cqlQuery": payload.cqlQuery,
+	"parameters": payload.parameters
+}
+as :object {
+	class : "com.mulesoft.mule.cassandradb.metadata.CQLQueryInput"
+}
++
+Example of a HTTP request to the <execute-cql-query> processor:
+[source]
+{
+"cqlQuery":"SELECT * FROM users WHERE id IN (?,?)",
+"parameters":
+	[2,3]
+}
+
+. **Select** operation accepts a String representing the query and an optional list of Object representing the parameters for the query. This operation also offers a query builder:
++
+image:query_builder.png[Config]
+
+. **Insert** operation accepts the table name as a parameter and as payload a Map<String, Object> representing the entity to be inserted into the table.
++
+Example:
+[source]
+tableName: users
+payload:
+%dw 1.0
+%output application/java
+---
+{
+	"id": payload.id,
+	"name": payload.name,
+	"other_property": payload.other_property
+}
++
+Example of HTTP request for the **Insert** operation:
+[source]
+{
+	"id":3,
+	"name":"entity_name",
+	"other_property":other_property_value
+}
+
+. **Update** operation accepts the table name as a parameter and as payload a Map<String, Object> with 2 records with the keys **where** and **columns**.
++
+.. **where** Map<String, Object> representing the clause that will specify the primary keys of the objects to be updated
++
+Example:
+[source]
+"where":
+      {
+        "id": 1,
+        "name": "bestseller1"
+      }
+
+.. **columns** Map<String, Object> representing pairs containing the column name and the value to be set for that column
++
+Example:
+[source]
+"columns":
+    {
+    "name": "test value"
+    }
++
+If a Transform Message component is used to set the payload for this operation this component will present to the user the details needed to set the payload.
++
+image:update_datasense.png[Config]
++
+In the image above: The user can select which **columns** to update and specify the **where** clause. The columns section contains all the columns of the table selected for the operation whereas in the where section only the columns that are pare of the "primary key" are displayed as only these can be specified in the where clause.
+
+. **Delete Columns Value** operation accepts the table name as a parameter and as payload a Map<String, Object> with 2 records with the keys **where** and **columns**.
++
+As for the **Update** operation, the **where** record represents the clause that will specify the primary keys of the objects to be updated. The **columns** record represents a List<String> containing the column names to be cleared.
+After invoking this operation when fetching the entities that were updated, the values for the columns specified in the **Delete Columns Value** operations will be null.
++
+Cassandra allows collections to be stored in specific columns. This operation allows the user to delete specific values from those collections and without deleting the whole collection.
++
+The payload passed to the processor has the following structure:
+[source]
+%dw 1.0
+%output application/java
+---
+{
+	"columns":payload.columns,
+	"where":payload.where
+}
++
+An HTTP request for deleting an element from a **list** would look like this:
+[source]
+{
+    "where":
+      {
+        "id": [1]
+      },
+      "columns": ["top_places[0]"]
+}
++
+An HTTP request for deleting an element from a **map** would look like this:
+[source]
+{
+    "where":
+      {
+        "id": [1,2]
+      },
+      "columns": ["mapColumnName['keyName']"]
+}
+
+. **Delete Rows** operation accepts the table name as a parameter and as payload a Map<String, Object> with 1 record with the key **where**
++
+As the value for the key **where** we have a map (Map<String, Object>) containing the where clause.
++
+If the table we want to delete the row from has a partition key composed of multiple columns the map specified by the **where** will contain the column names as keys and the column values as values. This means only one row can be deleted at a time.
++
+Example:
+[source]
+{
+    "where":
+      {
+        "id": 2,
+        "name": "name_to_delete"
+      }
+}
++
+If the table we want to delete the row from has a partition key composed of a single column the map specified by the **where** will contain a single entry with the column name as the key and a list of values as the value. This means multiple rows can be deleted at once.
++
+Example:
+[source]
+{
+    "where":
+      {
+        "id": [2,3]
+      }
+}
+
+. **Change column type** operation, is used to change the type of a column and accepts the table name as a parameter and an AlterColumnInput POJO as payload.
++
+The POJO that is given as payload to the processor has 2 fields, one specifying the column name and one specifying th new DataType for that column.
++
+Example:
+[source]
+%dw 1.0
+%output application/java
+---
+{
+	"column": payload.column,
+	"type": payload.type
+} as :object {
+	class : "com.mulesoft.mule.cassandradb.metadata.AlterColumnInput"
+}
++
+**Note**: A column type can be changed only to another valid and compatible type. To check types compatibility in Cassandra visit this http://docs.datastax.com/en/cql/3.1/cql/cql_reference/cql_data_types_c.html#concept_ds_wbk_zdt_xj__cql_data_type_compatibility[page]
+
+. **Add new column** operation, is used to add a new column and accepts the table name as a parameter and an AlterColumnInput POJO as payload.
++
+The POJO that is passed as payload to the processor has 2 fields, one specifying the name of the column to be created and one specifying the DataType for the new column
++
+Example:
+[source]
+%dw 1.0
+%output application/java
+---
+{
+	"column": payload.column,
+	"type": payload.type
+} as :object {
+	class : "com.mulesoft.mule.cassandradb.metadata.AlterColumnInput"
+}
+
+. **Drop column** processor accepts the table name as a parameter and the column name as payload.
+
+. **Rename column** operation accepts 3 parameters: the table name, the old column name and the new column name.
+
+== Troubleshooting
+=== Logging level
+
+*package to log*
+
+. [small]#com.mulesoft.mule.cassandradb#
+
+=== Communication debug
+
+By setting logging level to "DEBUG" for [small]#com.mulesoft.mule.cassandradb# every operation executed will be logged.
+
+== Entry points
+
+On the connector class CassandraDBConnector.java you will find the processor you’d like to debug (@Processor). The name of the processor is defined by friendlyName decorator parameter, or if the parameter is absent, by the name of the method,
+for example, in [small]#com.mulesoft.mule.cassandradb.CassandraDBConnector.java#
+
+"Insert" processor is implemented by the "insert" method which is decorated by @Processor.
+
+== Logging from platform side
+
+Go to the location of the Apache Cassandra installation folder and in the LOGS directory there will be a system.log file
+
+= Escalation processes
+
+=== JIRA Projects / Components
+
+* Jira Project Key: https://www.mulesoft.org/jira/projects/CASS/:[CASS]
+
+= General links
+
+== Release notes
+
+* [Cassandra Connector Release Notes]
+
+== Documentation for the connector
+
+* [Cassandra User Manual]
+* [Cassandra ApiDocs]
+
+== Github project
+
+* https://github.com/mulesoft/cassandra-connector
+
+== Example github project
+
+* https://github.com/mulesoft/cassandra-connector/tree/develop/demo:[GitHub demo folder]
+
+
+== Aditional information
+//information you may require to better understand the connector
+== Known Issues
+// known limitations of the connector. This could extend the information of our release notes.
