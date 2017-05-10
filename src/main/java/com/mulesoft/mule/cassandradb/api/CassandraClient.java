@@ -38,7 +38,7 @@ public final class CassandraClient {
      * Connect to Cassandra Cluster specified by provided host IP
      * address and port number.
      *
-     * @param connectionParameters     the connection parameters
+     * @param connectionParameters the connection parameters
      */
     public static CassandraClient buildCassandraClient(ConnectionParameters connectionParameters) throws org.mule.api.ConnectionException {
         Cluster.Builder clusterBuilder = Cluster.builder().addContactPoint(connectionParameters.getHost()).withPort(Integer.parseInt(connectionParameters.getPort()));
@@ -74,9 +74,12 @@ public final class CassandraClient {
         client.cluster = clusterBuilder.build();
 
         try {
-            logger.info("Connecting to Cassandra Database: {} , port: {} with clusterName: {} , protocol version {} and compression type {} ", connectionParameters.getHost(),
-                    connectionParameters.getPort(), connectionParameters.getAdvancedConnectionParameters().getClusterName(),
-                    connectionParameters.getAdvancedConnectionParameters().getProtocolVersion(), connectionParameters.getAdvancedConnectionParameters().getCompression());
+            logger.info("Connecting to Cassandra Database: {} , port: {} with clusterName: {} , protocol version {} and compression type {} ",
+                    connectionParameters.getHost(),
+                    connectionParameters.getPort(),
+                    connectionParameters.getAdvancedConnectionParameters() != null ? connectionParameters.getAdvancedConnectionParameters().getClusterName() : null,
+                    connectionParameters.getAdvancedConnectionParameters() != null ? connectionParameters.getAdvancedConnectionParameters().getProtocolVersion() : null,
+                    connectionParameters.getAdvancedConnectionParameters() != null ? connectionParameters.getAdvancedConnectionParameters().getCompression() : null);
             client.cassandraSession = StringUtils.isNotEmpty(connectionParameters.getKeyspace()) ? client.cluster.connect(connectionParameters.getKeyspace())
                     : client.cluster.connect();
             logger.info("Connected to Cassandra Cluster: {} !", client.cassandraSession.getCluster().getClusterName());
@@ -100,7 +103,7 @@ public final class CassandraClient {
                 HelperStatements.createTable(StringUtils.isNotBlank(input.getKeyspaceName()) ? input.getKeyspaceName() : cassandraSession.getLoggedKeyspace(), input)).wasApplied();
     }
 
-    public boolean changeColumnType(String tableName, String customKeyspaceName, AlterColumnInput input){
+    public boolean changeColumnType(String tableName, String customKeyspaceName, AlterColumnInput input) {
         return cassandraSession.execute(
                 HelperStatements.changeColumnType(tableName, StringUtils.isNotBlank(customKeyspaceName) ? customKeyspaceName : getLoggedKeyspace(), input))
                 .wasApplied();
@@ -118,7 +121,7 @@ public final class CassandraClient {
                 .wasApplied();
     }
 
-    public boolean renameColumn(String tableName, String customKeyspaceName,String oldColumnName, String newColumnName) {
+    public boolean renameColumn(String tableName, String customKeyspaceName, String oldColumnName, String newColumnName) {
         return cassandraSession.execute(
                 HelperStatements.renameColumn(tableName, StringUtils.isNotBlank(customKeyspaceName) ? customKeyspaceName : getLoggedKeyspace(), oldColumnName, newColumnName)).wasApplied();
     }
@@ -182,7 +185,7 @@ public final class CassandraClient {
         }
         return null;
     }
-    
+
     public void insert(String keySpace, String table, Map<String, Object> entity) throws CassandraDBException {
 
         Insert insertObject = QueryBuilder.insertInto(keySpace, table);
@@ -195,7 +198,7 @@ public final class CassandraClient {
 
             logger.debug("Insert Request: " + insertObject.toString());
 
-            cassandraSession.execute(insertObject);            
+            cassandraSession.execute(insertObject);
 
         } catch (Exception e) {
 
@@ -304,7 +307,7 @@ public final class CassandraClient {
     }
 
     private void validateSelectQuery(String query, List<Object> params) throws CassandraDBException {
-        
+
         if (!query.toUpperCase().startsWith(Constants.SELECT)) {
             throw new CassandraDBException("It must be a SELECT action.");
         }

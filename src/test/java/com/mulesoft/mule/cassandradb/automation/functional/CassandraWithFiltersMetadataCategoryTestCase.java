@@ -44,6 +44,6 @@ public class CassandraWithFiltersMetadataCategoryTestCase extends AbstractMetaDa
 
     @AfterClass
     public static void tearDown() throws Exception {
-        cassClient.dropTable(ConstantsTest.TABLE_NAME_2, cassConfig.getKeyspace());
+        cassClient.dropTable(ConstantsTest.TABLE_NAME_1, cassConfig.getKeyspace());
     }
 }

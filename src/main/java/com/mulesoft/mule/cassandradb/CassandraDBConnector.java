@@ -124,7 +124,11 @@ public class CassandraDBConnector {
         if (logger.isDebugEnabled()) {
             logger.debug("Executing query " + input);
         }
-        return basicAuthConnectionStrategy.getCassandraClient().executeCQLQuery(input.getCqlQuery(), input.getParameters());
+        try {
+            return basicAuthConnectionStrategy.getCassandraClient().executeCQLQuery(input.getCqlQuery(), input.getParameters());
+        } catch (Exception e) {
+            throw new CassandraDBException(e.getMessage(), e);
+        }
     }
 
     /**
@@ -248,8 +252,15 @@ public class CassandraDBConnector {
      * @return true if the operation succeeded or false if not
      */
     @Processor(friendlyName="Add new column")
-    public boolean addNewColumn(String table, @Optional String keyspaceName, @Default(PAYLOAD) AlterColumnInput input) {
-        return basicAuthConnectionStrategy.getCassandraClient().addNewColumn(table, keyspaceName, input.getColumn(), ColumnType.resolveDataType(input.getType()));
+    public boolean addNewColumn(String table, @Optional String keyspaceName, @Default(PAYLOAD) AlterColumnInput input) throws CassandraDBException {
+        if (logger.isDebugEnabled()) {
+            logger.debug("Adding new column " + input.toString());
+        }
+        try {
+            return basicAuthConnectionStrategy.getCassandraClient().addNewColumn(table, keyspaceName, input.getColumn(), ColumnType.resolveDataType(input.getType()));
+        } catch (Exception e) {
+            throw new CassandraDBException(e.getMessage(), e);
+        }
     }
 
     /**

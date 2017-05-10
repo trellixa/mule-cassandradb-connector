@@ -33,17 +33,15 @@ public class CassandraMetadataCategoryTestCase extends AbstractMetaDataTestCase<
         assert cassClient != null;
 
         //setup db env
-
         CreateKeyspaceInput keyspaceInput = new CreateKeyspaceInput();
         keyspaceInput.setKeyspaceName(cassConfig.getKeyspace());
 
         cassClient.createKeyspace(keyspaceInput);
         cassClient.createTable(TestDataBuilder.getBasicCreateTableInput(TestDataBuilder.getPrimaryKey(), cassConfig.getKeyspace(), ConstantsTest.TABLE_NAME_2));
-
     }
 
     @AfterClass
     public static void tearDown() throws Exception {
-        cassClient.dropTable(ConstantsTest.TABLE_NAME_2, cassConfig.getKeyspace());
+        cassClient.dropTable(ConstantsTest.TABLE_NAME_1, cassConfig.getKeyspace());
     }
 }
