@@ -56,10 +56,10 @@ public class CassandraDBConnectorMockTest {
 
         input.setColumns(columns);
         input.setKeyspaceName(ConstantsTest.SECOND_KEYSPACE_NAME);
-        input.setTableName(ConstantsTest.TABLE_NAME);
+        input.setTableName(ConstantsTest.TABLE_NAME_1);
         //create a table
         connector.createTable(input);
-        Assert.assertTrue(verifyTableCreation(ConstantsTest.TABLE_NAME, ConstantsTest.SECOND_KEYSPACE_NAME));
+        Assert.assertTrue(verifyTableCreation(ConstantsTest.TABLE_NAME_1, ConstantsTest.SECOND_KEYSPACE_NAME));
     }
 
     @Test
@@ -71,11 +71,11 @@ public class CassandraDBConnectorMockTest {
 
         input.setColumns(columns);
         input.setKeyspaceName(ConstantsTest.SECOND_KEYSPACE_NAME);
-        input.setTableName(ConstantsTest.TABLE_NAME);
+        input.setTableName(ConstantsTest.TABLE_NAME_1);
 
         //create a table
         connector.createTable(input);
-        Assert.assertTrue(verifyTableCreation(ConstantsTest.TABLE_NAME, ConstantsTest.SECOND_KEYSPACE_NAME));
+        Assert.assertTrue(verifyTableCreation(ConstantsTest.TABLE_NAME_1, ConstantsTest.SECOND_KEYSPACE_NAME));
     }
 
     @Test (expected = CassandraDBException.class)
@@ -85,19 +85,19 @@ public class CassandraDBConnectorMockTest {
         CreateTableInput input = new CreateTableInput();
 
         ColumnInput column = new ColumnInput();
-        column.setName(ConstantsTest.VALID_COLUMN);
+        column.setName(ConstantsTest.VALID_COLUMN_1);
         column.setType(ColumnType.INT);
         columns.add(column);
         input.setColumns(columns);
 
         connector.createTable(input);
-        Assert.assertTrue(verifyTableCreation(ConstantsTest.TABLE_NAME, ConstantsTest.SECOND_KEYSPACE_NAME));
+        Assert.assertTrue(verifyTableCreation(ConstantsTest.TABLE_NAME_1, ConstantsTest.SECOND_KEYSPACE_NAME));
     }
 
     @Test
     public void shouldDropTable() throws CassandraDBException {
-        connector.dropTable(ConstantsTest.TABLE_NAME, ConstantsTest.SECOND_KEYSPACE_NAME);
-        Assert.assertFalse(verifyTableCreation(ConstantsTest.TABLE_NAME, ConstantsTest.SECOND_KEYSPACE_NAME));
+        connector.dropTable(ConstantsTest.TABLE_NAME_1, ConstantsTest.SECOND_KEYSPACE_NAME);
+        Assert.assertFalse(verifyTableCreation(ConstantsTest.TABLE_NAME_1, ConstantsTest.SECOND_KEYSPACE_NAME));
     }
 
     @Test

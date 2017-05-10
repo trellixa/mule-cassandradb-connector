@@ -4,6 +4,7 @@
 package com.mulesoft.mule.cassandradb.automation.testrunners;
 
 import com.mulesoft.mule.cassandradb.automation.functional.*;
+import com.mulesoft.mule.cassandradb.automation.functional.processors.*;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.experimental.categories.Categories;
@@ -16,14 +17,14 @@ import com.mulesoft.mule.cassandradb.CassandraDBConnector;
 
 @RunWith(Categories.class)
 @SuiteClasses({
-    InsertTestCases.class,
-    SelectTestCases.class,
-    UpdateTestCases.class,
-    DeleteTestCases.class,
-    ChangeColumnTypeTestCases.class,
-    AddNewColumnTestCases.class,
-    RemoveColumnTestCases.class,
-    RenameColumnTestCases.class,
+//    InsertTestCases.class,
+//    SelectTestCases.class,
+//    UpdateTestCases.class,
+//    DeleteTestCases.class,
+//    ChangeColumnTypeTestCases.class,
+//    AddNewColumnTestCases.class,
+//    RemoveColumnTestCases.class,
+//    RenameColumnTestCases.class,
     CreateKeyspaceTestCases.class,
     CreateTableTestCases.class,
     CassandraDBConnectionTestCases.class,

@@ -38,12 +38,12 @@ public class CassandraOnlyWithFiltersMetadataCategoryTestCase extends AbstractMe
         keyspaceInput.setKeyspaceName(cassConfig.getKeyspace());
 
         cassClient.createKeyspace(keyspaceInput);
-        cassClient.createTable(TestDataBuilder.getBasicCreateTableInput(TestDataBuilder.getPrimaryKey(), cassConfig.getKeyspace(), ConstantsTest.TABLE_NAME2));
+        cassClient.createTable(TestDataBuilder.getBasicCreateTableInput(TestDataBuilder.getPrimaryKey(), cassConfig.getKeyspace(), ConstantsTest.TABLE_NAME_2));
 
     }
 
     @AfterClass
     public static void tearDown() throws Exception {
-        cassClient.dropTable(ConstantsTest.TABLE_NAME, cassConfig.getKeyspace());
+        cassClient.dropTable(ConstantsTest.TABLE_NAME_1, cassConfig.getKeyspace());
     }
 }

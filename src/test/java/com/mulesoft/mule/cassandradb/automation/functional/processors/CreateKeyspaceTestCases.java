@@ -1,44 +1,34 @@
 /**
  * (c) 2003-2017 MuleSoft, Inc. The software in this package is published under the terms of the Commercial Free Software license V.1 a copy of which has been included with this distribution in the LICENSE.md file.
  */
-package com.mulesoft.mule.cassandradb.automation.functional;
+package com.mulesoft.mule.cassandradb.automation.functional.processors;
 
-import com.mulesoft.mule.cassandradb.api.CassandraClient;
-import com.mulesoft.mule.cassandradb.configurations.ConnectionParameters;
+import com.mulesoft.mule.cassandradb.automation.functional.CassandraDBConnectorAbstractTestCase;
 import com.mulesoft.mule.cassandradb.metadata.CreateKeyspaceInput;
 import com.mulesoft.mule.cassandradb.metadata.DataCenter;
-import com.mulesoft.mule.cassandradb.utils.CassandraConfig;
 import com.mulesoft.mule.cassandradb.utils.CassandraDBException;
+import com.mulesoft.mule.cassandradb.utils.ReplicationStrategy;
 import org.junit.AfterClass;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class CreateKeyspaceTestCases extends CassandraDBConnectorAbstractTestCase {
 
-    private static CassandraClient cassClient;
-    private static CassandraConfig cassConfig;
-    private final static String keyspaceName1 = "keyspaceName1";
-    private final static String keyspaceName2 = "keyspaceName2";
-    private final static String keyspaceName3 = "keyspaceName3";
-
-    @BeforeClass
-    public static void setup() throws Exception {
-        cassConfig = getClientConfig();
-        //get instance of cass client based on the configs
-        cassClient = CassandraClient.buildCassandraClient(new ConnectionParameters(cassConfig.getHost(), cassConfig.getPort(), null, null, null, null));
-        assert cassClient != null;
-    }
+    private final static String KEYSPACE_NAME_1 = "keyspaceName1";
+    private final static String KEYSPACE_NAME_2 = "keyspaceName2";
+    private final static String KEYSPACE_NAME_3 = "keyspaceName3";
+    private final static String DATA_CENTER_NAME = "datacenter1";
 
     @AfterClass
-    public static void tearDown() throws Exception {
-        cassClient.dropKeyspace(keyspaceName1);
-        cassClient.dropKeyspace(keyspaceName2);
+    public static void tearDown() {
+        cassClient.dropKeyspace(KEYSPACE_NAME_1);
+        cassClient.dropKeyspace(KEYSPACE_NAME_2);
+        cassClient.dropKeyspace(KEYSPACE_NAME_3);
     }
 
     @Test
     public void testCreateKeyspaceWithDefaultReplicationStrategyWithSuccess() throws CassandraDBException {
         CreateKeyspaceInput keyspaceInput = new CreateKeyspaceInput();
-        keyspaceInput.setKeyspaceName(keyspaceName1);
+        keyspaceInput.setKeyspaceName(KEYSPACE_NAME_1);
 
         getConnector().createKeyspace(keyspaceInput);
     }
@@ -46,9 +36,9 @@ public class CreateKeyspaceTestCases extends CassandraDBConnectorAbstractTestCas
     @Test
     public void testCreateKeyspaceWithDifferentReplicationStrategyWithSuccess() throws CassandraDBException {
         CreateKeyspaceInput keyspaceInput = new CreateKeyspaceInput();
-        keyspaceInput.setKeyspaceName(keyspaceName2);
-        keyspaceInput.setFirstDataCenter(new DataCenter("datacenter1",1));
-        keyspaceInput.setReplicationStrategyClass("NetworkTopologyStrategy");
+        keyspaceInput.setKeyspaceName(KEYSPACE_NAME_2);
+        keyspaceInput.setFirstDataCenter(new DataCenter(DATA_CENTER_NAME, 1));
+        keyspaceInput.setReplicationStrategyClass(ReplicationStrategy.NETWORK_TOPOLOGY.name());
 
         getConnector().createKeyspace(keyspaceInput);
     }
@@ -56,7 +46,7 @@ public class CreateKeyspaceTestCases extends CassandraDBConnectorAbstractTestCas
     @Test(expected = CassandraDBException.class)
     public void testCreateKeyspaceWithInvalidReplicationStrategy() throws CassandraDBException {
         CreateKeyspaceInput keyspaceInput = new CreateKeyspaceInput();
-        keyspaceInput.setKeyspaceName(keyspaceName3);
+        keyspaceInput.setKeyspaceName(KEYSPACE_NAME_3);
         keyspaceInput.setReplicationFactor(3);
         keyspaceInput.setReplicationStrategyClass("SomeReplicationStrategy");
 

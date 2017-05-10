@@ -7,17 +7,14 @@ public class ConstantsTest {
 
     //test specific constants
     public final static String SECOND_KEYSPACE_NAME = "second_dummy_keyspace";
-    public final static String TABLE_NAME = "dummy_table";
-    public final static String TABLE_NAME2 = "dummy_table2";
-    public static final String VALID_COLUMN = "dummy_column";
-    public static final String VALID_COLUMN_2 = "dummy_column2";
+    public final static String TABLE_NAME_1 = "dummy_table_name_1";
+    public final static String TABLE_NAME_2 = "dummy_table_name_2";
+    public static final String VALID_COLUMN_1 = "dummy_column_1";
+    public static final String VALID_COLUMN_2 = "dummy_column_2";
     public static final String VALID_LIST_COLUMN = "dummy_list_column";
     public static final String VALID_MAP_COLUMN = "dummy_map_column";
     public static final String VALID_SET_COLUMN = "dummy_set_column";
     public static final String DUMMY_PARTITION_KEY = "dummy_partitionKey";
-    public static final String LIST = "list";
-    public static final String MAP = "map";
-    public static final String SET = "set";
     public static final String COLUMNS = "columns";
     public static final String WHERE = "where";
     public static final String COLUMN = "column";

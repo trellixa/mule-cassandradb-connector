@@ -11,13 +11,13 @@ import java.util.*;
 
 public class TestDataBuilder {
 
-    protected static final String VALID_PARAMETERIZED_QUERY = "SELECT dummy_column FROM dummy_table WHERE dummy_partitionKey IN (?, ?)";
-    protected static final String VALID_DSQL_QUERY = "dsql:SELECT dummy_column FROM dummy_table";
+    public static final String VALID_PARAMETERIZED_QUERY = "SELECT dummy_column FROM dummy_table WHERE dummy_partitionKey IN (?, ?)";
+    public static final String VALID_DSQL_QUERY = "dsql:SELECT dummy_column FROM dummy_table";
 
     protected static List<String> cassandraCategoryMetadataTestKeys = new LinkedList<String>();
 
     static {
-        cassandraCategoryMetadataTestKeys.add(ConstantsTest.TABLE_NAME2);
+        cassandraCategoryMetadataTestKeys.add(ConstantsTest.TABLE_NAME_2);
     }
 
     private TestDataBuilder() {
@@ -34,13 +34,13 @@ public class TestDataBuilder {
     public static Map<String, Object> getValidEntity() {
         Map<String, Object> entity = new HashMap<String, Object>();
         entity.put(ConstantsTest.DUMMY_PARTITION_KEY, "value1");
-        entity.put(ConstantsTest.VALID_COLUMN, "someValue" + System.currentTimeMillis());
+        entity.put(ConstantsTest.VALID_COLUMN_2, "someValue" + System.currentTimeMillis());
         return entity;
     }
 
     public static Map<String, Object> getValidEntityForUpdate() {
         Map<String, Object> entity = new HashMap<String, Object>();
-        entity.put(ConstantsTest.VALID_COLUMN, "someValue" + System.currentTimeMillis());
+        entity.put(ConstantsTest.VALID_COLUMN_1, "someValue" + System.currentTimeMillis());
         return entity;
     }
 
@@ -65,7 +65,7 @@ public class TestDataBuilder {
     * */
     public static Map<String, Object> getInvalidWhereClause() {
         Map<String, Object> entity = new HashMap<String, Object>();
-        entity.put(ConstantsTest.VALID_COLUMN, "someValue");
+        entity.put(ConstantsTest.VALID_COLUMN_1, "someValue");
         return entity;
     }
 
@@ -78,7 +78,7 @@ public class TestDataBuilder {
 
     public static List<String> getValidColumnsListForDelete() {
         List<String> parameters = new LinkedList<String>();
-        parameters.add(ConstantsTest.VALID_COLUMN);
+        parameters.add(ConstantsTest.VALID_COLUMN_1);
         parameters.add(ConstantsTest.VALID_COLUMN_2);
         return parameters;
     }
@@ -96,7 +96,7 @@ public class TestDataBuilder {
         list.add("secondValue");
         entity.put(ConstantsTest.DUMMY_PARTITION_KEY, "value1");
         entity.put(ConstantsTest.VALID_LIST_COLUMN, list);
-        entity.put(ConstantsTest.VALID_COLUMN, "someValue");
+        entity.put(ConstantsTest.VALID_COLUMN_1, 1);
         return entity;
     }
 
@@ -113,7 +113,7 @@ public class TestDataBuilder {
         item.put("2", "secondValue");
         entity.put(ConstantsTest.DUMMY_PARTITION_KEY, "value1");
         entity.put(ConstantsTest.VALID_MAP_COLUMN, item);
-        entity.put(ConstantsTest.VALID_COLUMN, "someValue");
+        entity.put(ConstantsTest.VALID_COLUMN_1, 1);
         return entity;
     }
 
@@ -130,7 +130,7 @@ public class TestDataBuilder {
         item.add("secondValue");
         entity.put(ConstantsTest.DUMMY_PARTITION_KEY, "value1");
         entity.put(ConstantsTest.VALID_SET_COLUMN, item);
-        entity.put(ConstantsTest.VALID_COLUMN, "someValue");
+        entity.put(ConstantsTest.VALID_COLUMN_1, 1);
         return entity;
     }
 
@@ -169,7 +169,7 @@ public class TestDataBuilder {
 
         ColumnInput column2 = new ColumnInput();
         column2.setPrimaryKey(true);
-        column2.setName(ConstantsTest.VALID_COLUMN);
+        column2.setName(ConstantsTest.VALID_COLUMN_1);
         column2.setType(ColumnType.INT);
 
         columns.add(column);
@@ -187,21 +187,16 @@ public class TestDataBuilder {
         column1.setType(ColumnType.TEXT);
 
         ColumnInput column2 = new ColumnInput();
-        column2.setName(ConstantsTest.VALID_COLUMN);
+        column2.setName(ConstantsTest.VALID_COLUMN_1);
         column2.setType(ColumnType.INT);
 
         ColumnInput column3 = new ColumnInput();
         column3.setName(ConstantsTest.VALID_COLUMN_2);
         column3.setType(ColumnType.TEXT);
 
-        ColumnInput column4 = new ColumnInput();
-        column4.setName(ConstantsTest.VALID_LIST_COLUMN);
-        column4.setType(ColumnType.TEXT);
-
         columns.add(column1);
         columns.add(column2);
         columns.add(column3);
-        columns.add(column4);
 
         return columns;
     }
