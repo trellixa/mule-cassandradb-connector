@@ -39,11 +39,11 @@ public class CassandraWithFiltersMetadataCategory extends CassandraMetadataCateg
             columnsToChange.endDynamicObject();
             DynamicObjectBuilder whereClause = entityModel.addDynamicObjectField(Constants.WHERE);
             if (tableMetadata.getPrimaryKey().size() == 1) {
-                for (ColumnMetadata column : tableMetadata.getPrimaryKey()) {
-                    addMetadataListField(whereClause, column);
-                }
+                addMetadataListField(whereClause, tableMetadata.getPrimaryKey().get(0));
             } else {
-                addMetadataField(whereClause, tableMetadata.getPrimaryKey().get(0));
+                for (ColumnMetadata column : tableMetadata.getPrimaryKey()) {
+                    addMetadataField(whereClause, column);
+                }
             }
             whereClause.endDynamicObject();
             return new DefaultMetaData(entityModel.build());
