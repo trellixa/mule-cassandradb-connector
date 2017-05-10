@@ -4,11 +4,15 @@
 package com.mulesoft.mule.cassandradb.configurations;
 
 
+import com.datastax.driver.core.ProtocolOptions;
+import com.datastax.driver.core.ProtocolVersion;
 import com.mulesoft.mule.cassandradb.api.CassandraClient;
 import org.mule.api.ConnectionException;
 import org.mule.api.annotations.*;
 import org.mule.api.annotations.components.ConnectionManagement;
+import org.mule.api.annotations.display.FriendlyName;
 import org.mule.api.annotations.display.Password;
+import org.mule.api.annotations.display.Placement;
 import org.mule.api.annotations.param.ConnectionKey;
 import org.mule.api.annotations.param.Default;
 import org.mule.api.annotations.param.Optional;
@@ -45,6 +49,48 @@ public class BasicAuthConnectionStrategy {
     private String keyspace;
 
     /**
+     * Cassandra cluster name
+     */
+    @Configurable
+    @org.mule.api.annotations.param.Optional
+    @Placement(group = "Advanced Settings")
+    private String clusterName;
+
+    /**
+     * Versions of the native protocol supported by the driver.
+     */
+    @Configurable
+    @org.mule.api.annotations.param.Optional
+    @Placement(group = "Advanced Settings")
+    private ProtocolVersion protocolVersion;
+
+    /**
+     * The maximum time to wait for schema agreement before returning from a DDL query.
+     */
+    @Configurable
+    @org.mule.api.annotations.param.Optional
+    @Placement(group = "Advanced Settings")
+    private int maxSchemaAgreementWaitSeconds;
+
+    /**
+     * The compression to use for the transport.
+     */
+    @Configurable
+    @org.mule.api.annotations.param.Optional
+    @Placement(group = "Advanced Settings")
+    private ProtocolOptions.Compression compression;
+
+    /**
+     * Enables the use of SSL for the created cluster.
+     */
+    @Configurable
+    @org.mule.api.annotations.param.Optional
+    @Placement(group = "Advanced Settings")
+    @Default("false")
+    @FriendlyName("SSL")
+    private boolean sslEnabled;
+
+    /**
      * Cassandra client
      * session to be used to execute queries
      */
@@ -60,9 +106,9 @@ public class BasicAuthConnectionStrategy {
     @Connect
     @TestConnectivity
     public void connect(@ConnectionKey @Optional final String username,
-                        @Password @Optional final String password)
-            throws ConnectionException {
-        cassandraClient = CassandraClient.buildCassandraClient(host, port, username, password, keyspace);
+                        @Password @Optional final String password) throws ConnectionException {
+        cassandraClient = CassandraClient.buildCassandraClient(new ConnectionParameters(host, port, username, password, keyspace,
+                new AdvancedConnectionParameters(protocolVersion, clusterName, maxSchemaAgreementWaitSeconds, compression, sslEnabled)));
     }
 
     /**
@@ -126,6 +172,46 @@ public class BasicAuthConnectionStrategy {
 
     public void setKeyspace(String keyspace) {
         this.keyspace = keyspace;
+    }
+
+    public String getClusterName() {
+        return clusterName;
+    }
+
+    public void setClusterName(String clusterName) {
+        this.clusterName = clusterName;
+    }
+
+    public ProtocolVersion getProtocolVersion() {
+        return protocolVersion;
+    }
+
+    public void setProtocolVersion(ProtocolVersion protocolVersion) {
+        this.protocolVersion = protocolVersion;
+    }
+
+    public int getMaxSchemaAgreementWaitSeconds() {
+        return maxSchemaAgreementWaitSeconds;
+    }
+
+    public void setMaxSchemaAgreementWaitSeconds(int maxSchemaAgreementWaitSeconds) {
+        this.maxSchemaAgreementWaitSeconds = maxSchemaAgreementWaitSeconds;
+    }
+
+    public ProtocolOptions.Compression getCompression() {
+        return compression;
+    }
+
+    public void setCompression(ProtocolOptions.Compression compression) {
+        this.compression = compression;
+    }
+
+    public boolean isSslEnabled() {
+        return sslEnabled;
+    }
+
+    public void setSslEnabled(boolean sslEnabled) {
+        this.sslEnabled = sslEnabled;
     }
 
     public CassandraClient getCassandraClient() {

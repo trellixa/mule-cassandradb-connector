@@ -5,6 +5,7 @@ package com.mulesoft.mule.cassandradb.automation.functional;
 
 import com.datastax.driver.core.DataType;
 import com.mulesoft.mule.cassandradb.api.CassandraClient;
+import com.mulesoft.mule.cassandradb.configurations.ConnectionParameters;
 import com.mulesoft.mule.cassandradb.metadata.ColumnInput;
 import com.mulesoft.mule.cassandradb.metadata.CreateKeyspaceInput;
 import com.mulesoft.mule.cassandradb.metadata.CreateTableInput;
@@ -26,7 +27,7 @@ public class CassandraDBConnectorAbstractTestCase extends AbstractTestCase<Cassa
     public static CassandraClient configureClient(CassandraConfig cassConfig) throws Exception {
 
         //get instance of cass client based on the configs
-        CassandraClient cassClient = CassandraClient.buildCassandraClient(cassConfig.getHost(), cassConfig.getPort(), null, null, null);
+        CassandraClient cassClient = CassandraClient.buildCassandraClient(new ConnectionParameters(cassConfig.getHost(), cassConfig.getPort(), null, null, null, null));
         assert cassClient != null;
 
         //setup db env

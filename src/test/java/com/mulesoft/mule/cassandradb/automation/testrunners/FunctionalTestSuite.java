@@ -26,6 +26,7 @@ import com.mulesoft.mule.cassandradb.CassandraDBConnector;
     RenameColumnTestCases.class,
     CreateKeyspaceTestCases.class,
     CreateTableTestCases.class,
+    CassandraDBConnectionTestCases.class,
     CassandraMetadataCategoryTestCase.class,
     CassandraOnlyWithFiltersMetadataCategoryTestCase.class,
     CassandraWithFiltersMetadataCategoryTestCase.class
