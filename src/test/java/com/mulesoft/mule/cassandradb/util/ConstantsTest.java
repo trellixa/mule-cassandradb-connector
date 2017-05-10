@@ -21,5 +21,7 @@ public class ConstantsTest {
     public static final String COLUMNS = "columns";
     public static final String WHERE = "where";
     public static final String COLUMN = "column";
+    public static final String CLUSTER_NAME = "newClusterName";
+    public static final int MAX_WAIT = 10;
 
 }
