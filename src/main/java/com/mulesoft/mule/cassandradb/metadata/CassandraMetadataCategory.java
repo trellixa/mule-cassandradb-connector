@@ -89,7 +89,7 @@ public class CassandraMetadataCategory {
 
     protected void addMetadataField(DynamicObjectBuilder<?> listEntityModel, ColumnMetadata column) {
 
-        org.mule.common.metadata.datatype.DataType columnDataType = resolveColumnType(column);
+        org.mule.common.metadata.datatype.DataType columnDataType = resolveDataType(column.getType());
 
         switch (columnDataType) {
             case LIST:
@@ -98,6 +98,9 @@ public class CassandraMetadataCategory {
                 break;
             case MAP:
                 listEntityModel.addDynamicObjectField(column.getName()).endDynamicObject();
+                break;
+            case UNKNOWN:
+                listEntityModel.addPojoField(column.getName(), Object.class);
                 break;
             default:
                 listEntityModel.addSimpleField(column.getName(), columnDataType);
@@ -130,9 +133,8 @@ public class CassandraMetadataCategory {
                 return DECIMAL;
             case DATE:
                 return DATE;
-            case BLOB:
-                return POJO;
             case TIMESTAMP:
+            case TIME:
                 return DATE_TIME;
             case LIST:
                 return LIST;
@@ -141,13 +143,6 @@ public class CassandraMetadataCategory {
             case SET: return LIST;
             default: return UNKNOWN;
         }
-    }
-
-    /**
-     * maps Datastax column types to Mule data types
-     */
-    protected org.mule.common.metadata.datatype.DataType resolveColumnType(ColumnMetadata column) {
-     return  resolveDataType(column.getType());
     }
 
     public CassandraDBConnector getCassandraConnector() {
