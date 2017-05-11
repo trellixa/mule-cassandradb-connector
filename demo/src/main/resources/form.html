@@ -86,7 +86,8 @@
     })(jQuery);
 
     var create_demo_payload = '{' +
-            '"tableName":"DEMO",' +
+            '"tableName":"demo_table",' +
+            '"keyspaceName":"demo_keyspace",' +
             '"columns":[{' +
             '"name":"id", ' +
             '"type":"INT",' +
@@ -105,21 +106,121 @@
             ']' +
             '}';
 
-    $.ajax({
-        type: 'POST',
-        url: '/createTable',
-        data: create_demo_payload,
-        contentType: 'application/json',
-        success: function(data) {
+    var options =
+            [
+                {
+                    "text"  : "ASCII",
+                    "value" : "ASCII"
+                },
+                {
+                    "text"     : "BIGINT",
+                    "value"    : "BIGINT"
+                },
+                {
+                    "text"  : "BLOB",
+                    "value" : "BLOB"
+                },
+                {
+                    "text"  : "BOOLEAN",
+                    "value" : "BOOLEAN"
+                },
+                {
+                    "text"  : "COUNTER",
+                    "value" : "COUNTER"
+                },
+                {
+                    "text"  : "DECIMAL",
+                    "value" : "DECIMAL"
+                },
+                {
+                    "text"  : "DOUBLE",
+                    "value" : "DOUBLE"
+                },
+                {
+                    "text"  : "FLOAT",
+                    "value" : "FLOAT"
+                },
+                {
+                    "text"  : "INET",
+                    "value" : "INET"
+                },
+                {
+                    "text"  : "INT",
+                    "value" : "INT"
+                },
+                {
+                    "text"  : "TEXT",
+                    "value" : "TEXT"
+                },
+                {
+                    "text"  : "TIMESTAMP",
+                    "value" : "TIMESTAMP"
+                },
+                {
+                    "text"  : "UUID",
+                    "value" : "UUID"
+                },
+                {
+                    "text"  : "VARCHAR",
+                    "value" : "VARCHAR"
+                },
+                {
+                    "text"  : "VARINT",
+                    "value" : "VARINT"
+                },
+                {
+                    "text"  : "TIMEUUID",
+                    "value" : "TIMEUUID"
+                },
+                {
+                    "text"  : "SMALLINT",
+                    "value" : "SMALLINT"
+                },
+                {
+                    "text"  : "TINYINT",
+                    "value" : "TINYINT"
+                },
+                {
+                    "text"  : "DATE",
+                    "value" : "DATE"
+                },
+                {
+                    "text"  : "TIME",
+                    "value" : "TIME"
+                }
+            ];
 
-        },
-        error: function(request, status, error) {
-
-        }
-    });
-
+    var create_keyspace_payload = '{' +
+            '"keyspaceName":"demo_keyspace"' +
+            '}';
 
     $(document).ready( function() {
+        //create a default keyspace called DEMO
+        $.ajax({
+            type: 'POST',
+            url: '/createKeyspace',
+            data: create_keyspace_payload,
+            contentType: 'application/json',
+            success: function(data) {
+                //create a default table called DEMO
+                $.ajax({
+                    type: 'POST',
+                    url: '/createTable',
+                    data: create_demo_payload,
+                    contentType: 'application/json',
+                    success: function(data) {
+
+                    },
+                    error: function(request, status, error) {
+
+                    }
+                });
+            },
+            error: function(request, status, error) {
+
+            }
+        });
+
         $('#create_table').click(function() {
             var table_info = $('#create_table_table_info :input').serializeToJSON();
             var columns = new Array();
@@ -135,7 +236,7 @@
                 data: JSON.stringify(table_info),
                 contentType: 'application/json',
                 success: function(data) {
-                    $('#table_info :input').val('');
+                    $('#create_table_table_info :input').val('');
                     $(".new-column").each(function(i) {
                         $(this).children().first().find(":input").val('');
                     });
@@ -198,6 +299,7 @@
 
         $('#add_new_column').click(function() {
             var payload = new Object();
+            payload.keyspaceName = $('#add_column_keyspace_name').val();
             payload.tableName = $('#add_column_table_name').val();
             payload.column = $('#add_column_column_name').val();
             payload.type = $('#add_column_column_type').val();
@@ -208,6 +310,7 @@
                 data: JSON.stringify(payload),
                 contentType: 'application/json',
                 success: function(data) {
+                    $('#add_column_keyspace_name').val('');
                     $('#add_column_table_name').val('');
                     $('#add_column_column_name').val('');
                     $('#add_column_column_type').val('');
@@ -223,6 +326,7 @@
 
         $('#remove_column').click(function() {
             var payload = new Object();
+            payload.keyspaceName = $('#remove_column_keyspace_name').val();
             payload.columnName = $('#remove_column_column_name').val();
             payload.tableName = $('#remove_column_table_name').val();
 
@@ -232,6 +336,7 @@
                 data: JSON.stringify(payload),
                 contentType: 'application/json',
                 success: function(data) {
+                    $('#remove_column_keyspace_name').val('');
                     $('#remove_column_column_name').val('');
                     $('#remove_column_table_name').val('');
                     alert(JSON.stringify(data));
@@ -246,6 +351,7 @@
 
         $('#rename_column').click(function() {
             var payload = new Object();
+            payload.keyspaceName = $('#rename_column_keyspace_name').val();
             payload.tableName = $('#rename_column_table_name').val();
             payload.oldName = $('#old_column_name').val();
             payload.newName = $('#new_column_name').val();
@@ -256,6 +362,7 @@
                 data: JSON.stringify(payload),
                 contentType: 'application/json',
                 success: function(data) {
+                    $('#rename_column_keyspace_name').val('');
                     $('#rename_column_table_name').val('');
                     $('#old_column_name').val('');
                     $('#new_column_name').val('');
@@ -271,6 +378,7 @@
 
         $('#change_column_type').click(function() {
             var payload = new Object();
+            payload.keyspaceName = $('#change_column_type_keyspace_name').val();
             payload.tableName = $('#change_column_type_table_name').val();
             payload.column = $('#change_column_type_column_name').val();
             payload.type = $('#change_column_type_new_column_type').val();
@@ -281,6 +389,7 @@
                 data: JSON.stringify(payload),
                 contentType: 'application/json',
                 success: function(data) {
+                    $('#change_column_type_keyspace_name').val('');
                     $('#change_column_type_table_name').val('');
                     $('#change_column_type_column_name').val('');
                     $('#change_column_type_new_column_type').val('');
@@ -435,8 +544,12 @@
             var payload = new Object();
             payload.cqlQuery = $('#query').val();
             var parameters = new Array();
-            var myArray = $('#parameters').val().split(",");
-            for(var i=0; i<myArray.length; i++) { parameters.push( parseInt(myArray[i], 10) ); }
+            var parametersValues = new Array();
+            if( $('#parameters').val().trim().length !== 0 ) {
+                parametersValues = $('#parameters').val().trim().split(",");
+            }
+
+            for(var i=0; i<parametersValues.length; i++) { parameters.push( parseInt(parametersValues[i], 10) ); }
             payload.parameters = parameters;
 
             $.ajax({
@@ -446,6 +559,48 @@
                 contentType: 'application/json',
                 success: function(data) {
                     $('#cql_result').append(JSON.stringify(data) + '\n'+ '------------------' + '\n');
+                },
+                error: function(request, status, error){
+                    alert(request.responseText);
+                }
+            });
+
+            return false;
+        });
+
+        $('#create_keyspace').click(function() {
+            var payload = new Object();
+            payload.keyspaceName = $('#create_keyspace_name').val();
+
+            $.ajax({
+                type: 'POST',
+                url: '/createKeyspace',
+                data: JSON.stringify(payload),
+                contentType: 'application/json',
+                success: function(data) {
+                    $('#create_keyspace_name').val('');
+                    alert(JSON.stringify(data));
+                },
+                error: function(request, status, error){
+                    alert(request.responseText);
+                }
+            });
+
+            return false;
+        });
+
+        $('#drop_keyspace').click(function() {
+            var payload = new Object();
+            payload.keyspaceName = $('#drop_keyspace_name').val();
+
+            $.ajax({
+                type: 'POST',
+                url: '/dropKeyspace',
+                data: JSON.stringify(payload),
+                contentType: 'application/json',
+                success: function(data) {
+                    $('#drop_keyspace_name').val('');
+                    alert(JSON.stringify(data));
                 },
                 error: function(request, status, error){
                     alert(request.responseText);
@@ -500,7 +655,50 @@
 
 <div class="container">
     <h3>Cassandra Connector Demo</h3>
+
+    <div class="alert alert-info">
+        <strong>Info!</strong> When running the demo a default keyspace(demo_keyspace) and a default table(demo_table(id-INT,name-TEXT,event-TEXT)) in this keyspace are created in order to be further used by some operations.
+    </div>
+
     <div class="panel-group" id="accordion">
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h2 class="panel-title form-signin-heading">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#createKeyspaceDiv">Create Keyspace</a>
+                </h2>
+            </div>
+            <div id="createKeyspaceDiv" class="panel-collapse collapse in">
+                <div class="panel-body">
+                    <form id="createKeyspaceForm" class="form-signin" role="form" onsubmit="return false;">
+                        <div id = "create_keyspace_info">
+                            <label>Keyspace</label> <input type="text" id="create_keyspace_name" name="keyspaceName" value="" class="form-control" placeholder="Required"><br>
+                        </div>
+                        <br>
+                        <input id="create_keyspace" class="btn btn-lg btn-primary btn-block" type="submit" value="Create Keyspace"><br>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h2 class="panel-title form-signin-heading">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#dropKeyspaceDiv">Drop Keyspace</a>
+                </h2>
+            </div>
+            <div id="dropKeyspaceDiv" class="panel-collapse collapse in">
+                <div class="panel-body">
+                    <form id="dropKeyspaceForm" class="form-signin" role="form" onsubmit="return false;">
+                        <div id = "drop_keyspace_info">
+                            <label>Keyspace</label> <input type="text" id="drop_keyspace_name" name="keyspaceName" value="" class="form-control" placeholder="Required"><br>
+                        </div>
+                        <br>
+                        <input id="drop_keyspace" class="btn btn-lg btn-primary btn-block" type="submit" value="Drop Keyspace"><br>
+                    </form>
+                </div>
+            </div>
+        </div>
 
         <div class="panel panel-default">
             <div class="panel-heading">
@@ -620,6 +818,7 @@
                 <div class="panel-body">
                     <form id="addColumnForm" class="form-signin" role="form" onsubmit="return false;">
                         <div id = "add_column_table_info">
+                            <label>Keyspace Name</label> <input id="add_column_keyspace_name" type="text" value="" class="form-control" placeholder="Optional"><br>
                             <label>Table Name</label> <input id="add_column_table_name" type="text" value="" class="form-control" placeholder="Required"><br>
                             <label>Column Name</label> <input id="add_column_column_name" type="text" value="" class="form-control" placeholder="Required"><br>
                             <label>Column Type</label>
@@ -664,6 +863,7 @@
                 <div class="panel-body">
                     <form id="removeColumnForm" class="form-signin" role="form" onsubmit="return false;">
                         <div id = "remove_column_table_info">
+                            <label>Keyspace Name</label> <input id="remove_column_keyspace_name" type="text" value="" class="form-control" placeholder="Optional"><br>
                             <label>Table Name</label> <input id="remove_column_table_name" type="text" value="" class="form-control" placeholder="Required"><br>
                             <label>Column Name</label> <input id="remove_column_column_name" type="text" value="" class="form-control" placeholder="Required"><br>
                         </div>
@@ -684,6 +884,7 @@
                 <div class="panel-body">
                     <form id="renameColumnForm" class="form-signin" role="form" onsubmit="return false;">
                         <div id = "rename_table_info">
+                            <label>Keyspace Name</label> <input id="rename_column_keyspace_name" type="text" value="" class="form-control" placeholder="Optional"><br>
                             <label>Table Name</label> <input id="rename_column_table_name" type="text" value="" class="form-control" placeholder="Required"><br>
                             <label>Old Column Name</label> <input id="old_column_name" type="text" value="" class="form-control" placeholder="Required"><br>
                             <label>New Column Name</label> <input id="new_column_name" type="text" value="" class="form-control" placeholder="Required"><br>
@@ -705,6 +906,7 @@
                 <div class="panel-body">
                     <form id="changeColumnTypeForm" class="form-signin" role="form" onsubmit="return false;">
                         <div id = "change_column_type_table_info">
+                            <label>Keyspace Name</label> <input id="change_column_type_keyspace_name" type="text" value="" class="form-control" placeholder="Optional"><br>
                             <label>Table Name</label> <input id="change_column_type_table_name" type="text" value="" class="form-control" placeholder="Required"><br>
                             <label>Column Name</label> <input id="change_column_type_column_name" type="text" value="" class="form-control" placeholder="Required"><br>
                             <label>New Column Type</label>
@@ -743,7 +945,7 @@
         <div class="panel panel-default">
             <div class="panel-heading">
                 <h2 class="panel-title form-signin-heading">
-                    <a data-toggle="collapse" data-parent="#accordion" href="#insertFormDiv">Insert into DEMO table</a>
+                    <a data-toggle="collapse" data-parent="#accordion" href="#insertFormDiv">Insert into demo_table table</a>
                 </h2>
             </div>
             <div id="insertFormDiv" class="panel-collapse collapse in">
@@ -764,7 +966,7 @@
         <div class="panel panel-default">
             <div class="panel-heading">
                 <h2 class="panel-title form-signin-heading">
-                    <a data-toggle="collapse" data-parent="#accordion" href="#selectFormDiv">Select all from DEMO table</a>
+                    <a data-toggle="collapse" data-parent="#accordion" href="#selectFormDiv">Select all from demo_table table</a>
                 </h2>
             </div>
             <div id="selectFormDiv" class="panel-collapse collapse in">
@@ -772,7 +974,7 @@
                     <form id="selectForm" class="form-signin" role="form" onsubmit="return false;">
                         <div id = "select_table_info">
                             <label>Query that is being executed</label> <br>
-                            <input id="select_query" type="text" value="" class="form-control" readonly=true placeholder="SELECT id, name, event FROM DEMO"><br>
+                            <input id="select_query" type="text" value="" class="form-control" readonly=true placeholder="SELECT id, name, event FROM demo_table"><br>
                         </div>
                         <br>
                         <input id="select" class="btn btn-lg btn-primary btn-block" type="submit" value="Select"><br>
@@ -787,7 +989,7 @@
         <div class="panel panel-default">
             <div class="panel-heading">
                 <h2 class="panel-title form-signin-heading">
-                    <a data-toggle="collapse" data-parent="#accordion" href="#updateFormDiv">Update into DEMO table</a>
+                    <a data-toggle="collapse" data-parent="#accordion" href="#updateFormDiv">Update into demo_table table</a>
                 </h2>
             </div>
             <div id="updateFormDiv" class="panel-collapse collapse in">
@@ -810,7 +1012,7 @@
         <div class="panel panel-default">
             <div class="panel-heading">
                 <h2 class="panel-title form-signin-heading">
-                    <a data-toggle="collapse" data-parent="#accordion" href="#deleteRowsFormDiv">Delete rows from DEMO table</a>
+                    <a data-toggle="collapse" data-parent="#accordion" href="#deleteRowsFormDiv">Delete rows from demo_table table</a>
                 </h2>
             </div>
             <div id="deleteRowsFormDiv" class="panel-collapse collapse in">
@@ -830,7 +1032,7 @@
         <div class="panel panel-default">
             <div class="panel-heading">
                 <h2 class="panel-title form-signin-heading">
-                    <a data-toggle="collapse" data-parent="#accordion" href="#deleteColumnsFormDiv">Delete columns from DEMO table</a>
+                    <a data-toggle="collapse" data-parent="#accordion" href="#deleteColumnsFormDiv">Delete columns from demo_table table</a>
                 </h2>
             </div>
             <div id="deleteColumnsFormDiv" class="panel-collapse collapse in">
@@ -853,14 +1055,14 @@
         <div class="panel panel-default">
             <div class="panel-heading">
                 <h2 class="panel-title form-signin-heading">
-                    <a data-toggle="collapse" data-parent="#accordion" href="#executeCqlQueryFormDiv">Execute CQL query(Select from demo)</a>
+                    <a data-toggle="collapse" data-parent="#accordion" href="#executeCqlQueryFormDiv">Execute CQL query(Select from demo_table)</a>
                 </h2>
             </div>
             <div id="executeCqlQueryFormDiv" class="panel-collapse collapse in">
                 <div class="panel-body">
                     <form id="executeCqlQueryForm" class="form-signin" role="form" onsubmit="return false;">
                         <div id = "execute_cql_query_table_info">
-                            <label>Query</label> <input id="query" type="text" class="form-control" value="SELECT * FROM DEMO WHERE id IN (?,?)"><br>
+                            <label>Query</label> <input id="query" type="text" class="form-control" value="SELECT * FROM demo_keyspace.demo_table WHERE id IN (?,?)"><br>
                             <label>Parameters</label> <input id="parameters" type="text" class="form-control" value="1,2"><br>
                         </div>
                         <br>

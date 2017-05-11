@@ -104,38 +104,6 @@ public class HelperStatements {
     }
 
     /**
-     * return the DataType based on a map that contains the collection type as the key and the item type as value. Default value is list of DataType.text();
-     */
-    public static DataType resolveDataTypeFromMap(Map<String, Object> dataType) {
-
-        DataType.Name collection = null;
-        String name = null;
-        String key = null;
-        String value = null;
-
-        for (Map.Entry<String, Object> entry : dataType.entrySet()) {
-            collection = DataType.Name.valueOf(entry.getKey().toUpperCase());
-            if (entry.getValue() instanceof Map) {
-                key = ((Map) entry.getValue()).keySet().iterator().next().toString();
-                value = ((Map) entry.getValue()).values().iterator().next().toString();
-            } else {
-                name = String.valueOf(entry.getValue());
-            }
-        }
-
-        switch (collection) {
-            case LIST:
-                return DataType.list(resolveDataTypeFromString(name));
-            case SET:
-                return DataType.set(resolveDataTypeFromString(name));
-            case MAP:
-                return DataType.map(resolveDataTypeFromString(key), resolveDataTypeFromString(value));
-            default:
-                return DataType.list(DataType.text());
-        }
-    }
-
-    /**
      * retrieves the list of columns that will construct the partition key
      */
     private static List<ColumnInput> getPartitionKey(List<ColumnInput> columns) {

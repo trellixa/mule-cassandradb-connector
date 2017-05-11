@@ -21,17 +21,19 @@ About the Sample
 ----------------
 
 Using a browser, navigate to http://localhost:8081/.
-When navigating to this page, a table called DEMO(id - int PK, name - text, event - text) is created in the keyspace specified in the Connection parameters. This table will be used for some of the operations.
+When running the demo a default keyspace(demo_keyspace) and a default table(demo_table(id-INT,name-TEXT,event-TEXT)) in this keyspace are created in order to be further used by some operations.
 
 The operations presented in the demo:
 
+* Create keyspace - Creates a new keyspace. This keyspace can be used for other operations.
+* Drop keyspace - Deletes a keyspace along with its data.
 * Create table - Creates a new table in the specified keyspace. If no keyspace is specified for the operation the table will be created in the keyspace present in the connection parameters.
 * Drop table - Drops a table from the specified keyspace. If no keyspace is specified for the operation the table will be created in the keyspace present in the connection parameters.
 * Get tables from keyspace - Returns all table names form the specified keyspace. If no keyspace is specified for the operation the table will be created in the keyspace present in the connection parameters.
-* Alter Table operations(Add new column, Remove column, Rename column, Change column type) - These operations perform structure changes on tables from the keyspace specified in the connection parameters.
+* Alter Table operations(Add new column, Remove column, Rename column, Change column type) - These operations perform structure changes on tables from the specified keyspace of in the keyspace specified in the connection parameters.
 * Insert - Inserts objects into the DEMO table.
 * Select - Selects all objects from the DEMO table
 * Update - Updates the Name or the Event for the objects with the specified Id in the DEMO table
 * Delete rows - Deletes objects from the DEMO table by the specified ids
 * Delete columns - Deletes certain values(Name, Event) for the specified ids in the DEMO table
-* Execute CQL query - Executes the given query(SELECT * FROM DEMO WHERE id IN (?,?)) with the given parameters
+* Execute CQL query - Executes the given query(SELECT * FROM DEMO WHERE id IN (?,?)) with the given parameters. Also, other queries can be executed using this operation.
