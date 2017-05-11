@@ -1,31 +1,34 @@
-/**
- * (c) 2003-2017 MuleSoft, Inc. The software in this package is published under the terms of the Commercial Free Software license V.1 a copy of which has been included with this distribution in the LICENSE.md file.
- */
-package com.mulesoft.mule.cassandradb.automation.functional;
+package com.mulesoft.mule.cassandradb.automation.functional.metadata;
 
+import com.mulesoft.mule.cassandradb.CassandraDBConnector;
 import com.mulesoft.mule.cassandradb.api.CassandraClient;
+import com.mulesoft.mule.cassandradb.automation.functional.TestDataBuilder;
 import com.mulesoft.mule.cassandradb.configurations.ConnectionParameters;
 import com.mulesoft.mule.cassandradb.metadata.CreateKeyspaceInput;
+import com.mulesoft.mule.cassandradb.util.ConstantsTest;
 import com.mulesoft.mule.cassandradb.util.PropertiesLoaderUtil;
 import com.mulesoft.mule.cassandradb.utils.CassandraConfig;
+import com.mulesoft.mule.cassandradb.utils.CassandraDBException;
+import org.jetbrains.annotations.NotNull;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.mule.api.ConnectionException;
 import org.mule.tools.devkit.ctf.exceptions.ConfigurationLoadingFailedException;
-import org.mule.tools.devkit.ctf.junit.AbstractTestCase;
-import com.mulesoft.mule.cassandradb.CassandraDBConnector;
+import org.mule.tools.devkit.ctf.junit.AbstractMetaDataTestCase;
 
-public abstract class CassandraDBConnectorAbstractTestCase extends AbstractTestCase<CassandraDBConnector> {
+import java.util.List;
 
-    public CassandraDBConnectorAbstractTestCase() {
-        super(CassandraDBConnector.class);
+public abstract class AbstractCassMetaDataTestCase extends AbstractMetaDataTestCase<CassandraDBConnector> {
+
+    public AbstractCassMetaDataTestCase(@NotNull List<String> metadataIds, @NotNull Class<?> categoryClass, Class<CassandraDBConnector> connectorClass) {
+        super(metadataIds, categoryClass, connectorClass);
     }
 
-    protected static CassandraClient cassClient;
-    protected static CassandraConfig cassConfig;
+    private static CassandraClient cassClient;
+    private static CassandraConfig cassConfig;
 
     @BeforeClass
-    public static void initialSetup() throws ConfigurationLoadingFailedException, ConnectionException {
+    public static void initialSetup() throws ConfigurationLoadingFailedException, ConnectionException, CassandraDBException {
         cassConfig = getClientConfig();
         //get instance of cass client based on the configs
         cassClient = CassandraClient.buildCassandraClient(new ConnectionParameters(cassConfig.getHost(), cassConfig.getPort(), null, null, null, null));
@@ -34,10 +37,12 @@ public abstract class CassandraDBConnectorAbstractTestCase extends AbstractTestC
         CreateKeyspaceInput keyspaceInput = new CreateKeyspaceInput();
         keyspaceInput.setKeyspaceName(cassConfig.getKeyspace());
         cassClient.createKeyspace(keyspaceInput);
+        cassClient.createTable(TestDataBuilder.getBasicCreateTableInput(TestDataBuilder.getPrimaryKey(), cassConfig.getKeyspace(), ConstantsTest.TABLE_NAME_2));
     }
 
     @AfterClass
     public static void tearDown() {
+        cassClient.dropTable(ConstantsTest.TABLE_NAME_2, cassConfig.getKeyspace());
         cassClient.dropKeyspace(cassConfig.getKeyspace());
     }
 

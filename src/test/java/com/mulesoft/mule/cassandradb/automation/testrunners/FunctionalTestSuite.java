@@ -4,6 +4,9 @@
 package com.mulesoft.mule.cassandradb.automation.testrunners;
 
 import com.mulesoft.mule.cassandradb.automation.functional.*;
+import com.mulesoft.mule.cassandradb.automation.functional.metadata.CassandraMetadataCategoryTestCase;
+import com.mulesoft.mule.cassandradb.automation.functional.metadata.CassandraOnlyWithFiltersMetadataCategoryTestCase;
+import com.mulesoft.mule.cassandradb.automation.functional.metadata.CassandraWithFiltersMetadataCategoryTestCase;
 import com.mulesoft.mule.cassandradb.automation.functional.processors.*;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -17,32 +20,34 @@ import com.mulesoft.mule.cassandradb.CassandraDBConnector;
 
 @RunWith(Categories.class)
 @SuiteClasses({
-//    InsertTestCases.class,
-//    SelectTestCases.class,
-//    UpdateTestCases.class,
-//    DeleteTestCases.class,
-//    ChangeColumnTypeTestCases.class,
-//    AddNewColumnTestCases.class,
-//    RemoveColumnTestCases.class,
-//    RenameColumnTestCases.class,
-    CreateKeyspaceTestCases.class,
-    CreateTableTestCases.class,
-    CassandraDBConnectionTestCases.class,
-    CassandraMetadataCategoryTestCase.class,
-    CassandraOnlyWithFiltersMetadataCategoryTestCase.class,
-    CassandraWithFiltersMetadataCategoryTestCase.class
+        InsertTestCases.class,
+        SelectTestCases.class,
+        UpdateTestCases.class,
+        DeleteTestCases.class,
+        ChangeColumnTypeTestCases.class,
+        AddNewColumnTestCases.class,
+        RemoveColumnTestCases.class,
+        RenameColumnTestCases.class,
+        CreateKeyspaceTestCases.class,
+        CreateTableTestCases.class,
+        CassandraDBConnectionTestCases.class,
+        CassandraMetadataCategoryTestCase.class,
+        CassandraOnlyWithFiltersMetadataCategoryTestCase.class,
+        CassandraWithFiltersMetadataCategoryTestCase.class,
+        ExecuteCqlQueryTestCases.class
 })
 public class FunctionalTestSuite {
 
-      @BeforeClass
-      public static void initializeSuite(){
-          ConnectorTestContext.initialize(CassandraDBConnector.class);
-      }
-      @AfterClass
-      public static void shutdownSuite() throws Exception{
-          ConnectorTestContext<CassandraDBConnector> context = ConnectorTestContext.getInstance();
-          PlatformManager platform =  context.getPlatformManager();
-          platform.shutdown();
-      }
+    @BeforeClass
+    public static void initializeSuite() {
+        ConnectorTestContext.initialize(CassandraDBConnector.class);
+    }
+
+    @AfterClass
+    public static void shutdownSuite() throws Exception {
+        ConnectorTestContext<CassandraDBConnector> context = ConnectorTestContext.getInstance();
+        PlatformManager platform = context.getPlatformManager();
+        platform.shutdown();
+    }
 
 }

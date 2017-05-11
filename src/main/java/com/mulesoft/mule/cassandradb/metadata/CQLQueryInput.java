@@ -10,6 +10,14 @@ public class CQLQueryInput {
     private String cqlQuery;
     private List<Object> parameters;
 
+    public CQLQueryInput(String cqlQuery, List<Object> parameters) {
+        this.cqlQuery = cqlQuery;
+        this.parameters = parameters;
+    }
+
+    public CQLQueryInput() {
+    }
+
     public String getCqlQuery() {
         return cqlQuery;
     }
