@@ -11,10 +11,7 @@ import java.util.*;
 
 public class TestDataBuilder {
 
-    public static final String VALID_PARAMETERIZED_QUERY = "SELECT dummy_column FROM dummy_table WHERE dummy_partitionKey IN (?, ?)";
-    public static final String VALID_DSQL_QUERY = "dsql:SELECT dummy_column FROM dummy_table";
-
-    protected static List<String> cassandraCategoryMetadataTestKeys = new LinkedList<String>();
+    public static List<String> cassandraCategoryMetadataTestKeys = new LinkedList<String>();
 
     static {
         cassandraCategoryMetadataTestKeys.add(ConstantsTest.TABLE_NAME_2);
@@ -40,7 +37,7 @@ public class TestDataBuilder {
 
     public static Map<String, Object> getValidEntityForUpdate() {
         Map<String, Object> entity = new HashMap<String, Object>();
-        entity.put(ConstantsTest.VALID_COLUMN_1, "someValue" + System.currentTimeMillis());
+        entity.put(ConstantsTest.VALID_COLUMN_2, "someValue" + System.currentTimeMillis());
         return entity;
     }
 

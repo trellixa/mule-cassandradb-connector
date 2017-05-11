@@ -123,7 +123,7 @@ public class CassandraDBConnector {
     @MetaDataScope(CassandraMetadataCategory.class)
     public List<Map<String, Object>> executeCQLQuery(@Placement(group = "Query") @Default(PAYLOAD) CQLQueryInput input) throws CassandraDBException {
         if (logger.isDebugEnabled()) {
-            logger.debug("Executing query " + input);
+            logger.debug("Executing query " + input.toString());
         }
         try {
             return basicAuthConnectionStrategy.getCassandraClient().executeCQLQuery(input.getCqlQuery(), input.getParameters());
