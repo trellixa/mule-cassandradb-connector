@@ -17,7 +17,7 @@ public class TestDataBuilder {
     protected static List<String> cassandraCategoryMetadataTestKeys = new LinkedList<String>();
 
     static {
-        cassandraCategoryMetadataTestKeys.add(ConstantsTest.TABLE_NAME2);
+        cassandraCategoryMetadataTestKeys.add(ConstantsTest.TABLE_NAME_2);
     }
 
     private TestDataBuilder() {

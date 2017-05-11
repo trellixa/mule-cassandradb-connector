@@ -120,7 +120,6 @@ public class CassandraDBConnector {
      * @throws CassandraDBException if any error occurs when executing the custom query
      */
     @Processor(friendlyName="Execute CQL Query")
-    @MetaDataScope(CassandraMetadataCategory.class)
     public List<Map<String, Object>> executeCQLQuery(@Placement(group = "Query") @Default(PAYLOAD) CQLQueryInput input) throws CassandraDBException {
         if (logger.isDebugEnabled()) {
             logger.debug("Executing query " + input);
