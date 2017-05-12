@@ -73,7 +73,7 @@ There are multiple tools that allow users to interact with Cassandra Databases.
 
 The first of all is the CQLSH terminal which comes bundled within the Cassandra installation.
 
-A much better tool would be DataStax Studio which is an interactive developer tool and can be download https://www.datastax.com/products/datastax-studio-and-development-tools[here]
+A much better tool would be DataStax Studio which is an interactive developer tool and can be downloaded https://www.datastax.com/products/datastax-studio-and-development-tools[here]
 
 Another tool that offers a graphic UI to interact with Cassandra would be DBeaver which can be downloaded http://dbeaver.jkiss.org/[here]
 
