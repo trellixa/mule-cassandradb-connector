@@ -329,6 +329,8 @@ Example:
 }
 +
 **Note**: A column type can be changed only to another valid and compatible type. To check types compatibility in Cassandra visit this http://docs.datastax.com/en/cql/3.1/cql/cql_reference/cql_data_types_c.html#concept_ds_wbk_zdt_xj__cql_data_type_compatibility[page]
++
+**Note**: Starting with version 3.0.11 of Cassandra, Alter Type(Change column type) is not allowed anymore. Link to the cassandra issue https://issues.apache.org/jira/browse/CASSANDRA-12443[here]
 
 . **Add new column** operation, is used to add a new column and accepts the table name as a required parameter, the keyspace name as an optional parameter and an AlterColumnInput POJO as payload.
 +

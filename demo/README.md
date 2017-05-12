@@ -30,7 +30,7 @@ The operations presented in the demo:
 * Create table - Creates a new table in the specified keyspace. If no keyspace is specified for the operation the table will be created in the keyspace present in the connection parameters.
 * Drop table - Drops a table from the specified keyspace. If no keyspace is specified for the operation the table will be created in the keyspace present in the connection parameters.
 * Get tables from keyspace - Returns all table names form the specified keyspace. If no keyspace is specified for the operation the table will be created in the keyspace present in the connection parameters.
-* Alter Table operations(Add new column, Remove column, Rename column, Change column type) - These operations perform structure changes on tables from the specified keyspace of in the keyspace specified in the connection parameters.
+* Alter Table operations(Add new column, Remove column, Rename column, Change column type) - These operations perform structure changes on tables from the specified keyspace or in the keyspace specified in the connection parameters.
 * Insert - Inserts objects into the DEMO table.
 * Select - Selects all objects from the DEMO table
 * Update - Updates the Name or the Event for the objects with the specified Id in the DEMO table
