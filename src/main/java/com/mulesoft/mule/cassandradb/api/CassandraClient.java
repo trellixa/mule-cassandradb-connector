@@ -74,9 +74,9 @@ public final class CassandraClient {
         client.cluster = clusterBuilder.build();
 
         try {
-            /*logger.info("Connecting to Cassandra Database: {} , port: {} with clusterName: {} , protocol version {} and compression type {} ", connectionParameters.getHost(),
+            logger.info("Connecting to Cassandra Database: {} , port: {} with clusterName: {} , protocol version {} and compression type {} ", connectionParameters.getHost(),
                     connectionParameters.getPort(), connectionParameters.getAdvancedConnectionParameters().getClusterName(),
-                    connectionParameters.getAdvancedConnectionParameters().getProtocolVersion(), connectionParameters.getAdvancedConnectionParameters().getCompression());*/
+                    connectionParameters.getAdvancedConnectionParameters().getProtocolVersion(), connectionParameters.getAdvancedConnectionParameters().getCompression());
             client.cassandraSession = StringUtils.isNotEmpty(connectionParameters.getKeyspace()) ? client.cluster.connect(connectionParameters.getKeyspace())
                     : client.cluster.connect();
             logger.info("Connected to Cassandra Cluster: {} !", client.cassandraSession.getCluster().getClusterName());

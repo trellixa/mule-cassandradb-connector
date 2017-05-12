@@ -99,7 +99,7 @@ If Cassandra is configured to use the AllowAllAuthenticator the user can leave t
 
 Otherwise, if Cassandra is configured with the PasswordAuthenticator, the username and password must be specified.
 
-The other connection parameters are **host**(default: localhost), **port**(default: 9042) and **keyspace**(default: empty). When specifying the keyspace this will be the default keyspace used for operations if is is not otherwise specified.
+The other connection parameters are **host**(default: localhost), **port**(default: 9042) and **keyspace**(default: empty). This is the default keyspace if not provided at operation level.
 
 There is also an Advanced Configuration section where one can specify:
 
