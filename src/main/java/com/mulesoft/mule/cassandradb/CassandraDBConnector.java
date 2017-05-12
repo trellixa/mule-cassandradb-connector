@@ -6,6 +6,7 @@ package com.mulesoft.mule.cassandradb;
 import com.mulesoft.mule.cassandradb.configurations.BasicAuthConnectionStrategy;
 import com.mulesoft.mule.cassandradb.metadata.*;
 import com.mulesoft.mule.cassandradb.utils.*;
+import org.apache.commons.lang3.StringUtils;
 import org.mule.api.annotations.*;
 import org.mule.api.annotations.display.Placement;
 import org.mule.api.annotations.licensing.RequiresEnterpriseLicense;
@@ -62,7 +63,7 @@ public class CassandraDBConnector {
      * @throws CassandraDBException if any error occurs when executing the drop keyspace operation
      */
     @Processor
-    public boolean dropKeyspace(String keyspaceName) throws CassandraDBException{
+    public boolean dropKeyspace(String keyspaceName) throws CassandraDBException {
         if (logger.isDebugEnabled()) {
             logger.debug("Dropping keyspace " + keyspaceName);
         }
@@ -113,7 +114,6 @@ public class CassandraDBConnector {
 
     /**
      * Executes the raw input query provided
-     * @MetaDataScope annotation required for Functional tests to pass;to be removed
      *
      * @param input CQLQueryInput describing the parametrized query to be executed along with the parameters
      * @return the result of the query execution
@@ -130,61 +130,70 @@ public class CassandraDBConnector {
     /**
      * Executes the insert entity operation
      * @param table the table name in which the entity will be inserted
+     * @param keyspaceName (optional) the keyspace which contains the table to be used
      * @param entity the entity to be inserted
      * @throws CassandraDBException if any error occurs when executing the insert query
      */
     @Processor
     @MetaDataScope(CassandraMetadataCategory.class)
-    public void insert(@MetaDataKeyParam(affects = MetaDataKeyParamAffectsType.INPUT) String table, @Default(PAYLOAD) Map<String, Object> entity) throws CassandraDBException {
+    public void insert(@MetaDataKeyParam(affects = MetaDataKeyParamAffectsType.INPUT) String table,
+                       @Optional String keyspaceName,
+                       @Default(PAYLOAD) Map<String, Object> entity) throws CassandraDBException {
         if (logger.isDebugEnabled()) {
             logger.debug("Inserting entity " + entity + " into the " + table + " table ");
         }
-        String keySpace = basicAuthConnectionStrategy.getKeyspace();
+        String keySpace = StringUtils.isNotBlank(keyspaceName) ? keyspaceName : basicAuthConnectionStrategy.getKeyspace();
         basicAuthConnectionStrategy.getCassandraClient().insert(keySpace,table,entity);
     }
 
     /**
      * Executes the update entity operation
      * @param table the table name in which the entity will be updated
+     * @param keyspaceName (optional) the keyspace which contains the table to be dropped
      * @param entity the entity to be updated
      * @throws CassandraDBException if any error occurs when executing the update query
      */
     @Processor
     @MetaDataScope(CassandraWithFiltersMetadataCategory.class)
     public void update(@MetaDataKeyParam(affects = MetaDataKeyParamAffectsType.INPUT) String table,
-            @Default(PAYLOAD) Map<String, Object> entity) throws CassandraDBException {
+                       @Optional String keyspaceName,
+                       @Default(PAYLOAD) Map<String, Object> entity) throws CassandraDBException {
         if (logger.isDebugEnabled()) {
             logger.debug("Updating  entity" + entity + " into the " + table + " table ");
         }
-        String keySpace = basicAuthConnectionStrategy.getKeyspace();
+        String keySpace = StringUtils.isNotBlank(keyspaceName) ? keyspaceName : basicAuthConnectionStrategy.getKeyspace();
         basicAuthConnectionStrategy.getCassandraClient().update(keySpace, table, (Map) entity.get(Constants.COLUMNS), (Map) entity.get(Constants.WHERE));
     }
 
     /**
      * Deletes values from an object specified by the where clause
      * @param table the name of the table
+     * @param keyspaceName (optional) the keyspace which contains the table to be used
      * @param payload operation input: columns to be deleted and where clause for the delete operation
      * @throws CassandraDBException if any error occurs when executing the delete query
      */
     @Processor
     @MetaDataScope(CassandraWithFiltersMetadataCategory.class)
     public void deleteColumnsValue(@MetaDataKeyParam(affects = MetaDataKeyParamAffectsType.INPUT) String table,
-            @Default(PAYLOAD) Map<String, Object> payload) throws CassandraDBException {
-        String keySpace = basicAuthConnectionStrategy.getKeyspace();
+                                   @Optional String keyspaceName,
+                                   @Default(PAYLOAD) Map<String, Object> payload) throws CassandraDBException {
+        String keySpace = StringUtils.isNotBlank(keyspaceName) ? keyspaceName : basicAuthConnectionStrategy.getKeyspace();
         basicAuthConnectionStrategy.getCassandraClient().delete(keySpace, table, (List) payload.get(Constants.COLUMNS), (Map) payload.get(Constants.WHERE));
     }
 
     /**
      * Deletes an entire record
      * @param table the name of the table
+     * @param keyspaceName (optional) the keyspace which contains the table to be used
      * @param payload operation input: where clause for the delete operation
      * @throws CassandraDBException if any error occurs when executing the delete query
      */
     @Processor
     @MetaDataScope(CassandraOnlyWithFiltersMetadataCategory.class)
     public void deleteRows(@MetaDataKeyParam(affects = MetaDataKeyParamAffectsType.INPUT) String table,
-            @Default(PAYLOAD) Map<String, Object> payload) throws CassandraDBException {
-        String keySpace = basicAuthConnectionStrategy.getKeyspace();
+                           @Optional String keyspaceName,
+                           @Default(PAYLOAD) Map<String, Object> payload) throws CassandraDBException {
+        String keySpace = StringUtils.isNotBlank(keyspaceName) ? keyspaceName : basicAuthConnectionStrategy.getKeyspace();
         basicAuthConnectionStrategy.getCassandraClient().delete(keySpace, table, null, (Map) payload.get(Constants.WHERE));
     }
 
@@ -222,50 +231,50 @@ public class CassandraDBConnector {
     /**
      * Changes the type of a column - check compatibility here: <a href="http://docs.datastax.com/en/cql/3.1/cql/cql_reference/cql_data_types_c.html#concept_ds_wbk_zdt_xj__cql_data_type_compatibility">CQL type compatibility</a>
      * @param table the name of the table to be used for the operation
+     * @param keyspaceName (optional) the keyspace which contains the table to be used
      * @param input POJO defining the name of the column to be changed and the new DataType
      * @return true if the operation succeeded or false if not
      */
     @Processor(friendlyName="Change the type of a column")
-    public boolean changeColumnType(String table, @Default(PAYLOAD) AlterColumnInput input){
-        String keySpace = basicAuthConnectionStrategy.getKeyspace();
-        return basicAuthConnectionStrategy.getCassandraClient().changeColumnType(table, keySpace, input);
+    public boolean changeColumnType(String table, @Optional String keyspaceName, @Default(PAYLOAD) AlterColumnInput input){
+        return basicAuthConnectionStrategy.getCassandraClient().changeColumnType(table, keyspaceName, input);
     }
 
     /**
      * Adds a new column
      * @param table the name of the table to be used for the operation
+     * @param keyspaceName (optional) the keyspace which contains the table to be used
      * @param input POJO defining the name of the new column and its DataType
      * @return true if the operation succeeded or false if not
      */
     @Processor(friendlyName="Add new column")
-    public boolean addNewColumn(String table, @Default(PAYLOAD) AlterColumnInput input) {
-        String keySpace = basicAuthConnectionStrategy.getKeyspace();
-        return basicAuthConnectionStrategy.getCassandraClient().addNewColumn(table, keySpace, input.getColumn(), ColumnType.resolveDataType(input.getType()));
+    public boolean addNewColumn(String table, @Optional String keyspaceName, @Default(PAYLOAD) AlterColumnInput input) {
+        return basicAuthConnectionStrategy.getCassandraClient().addNewColumn(table, keyspaceName, input.getColumn(), ColumnType.resolveDataType(input.getType()));
     }
 
     /**
      * Removes a column
      * @param table the name of the table to be used for the operation
+     * @param keyspaceName (optional) the keyspace which contains the table to be used
      * @param columnName the name of the column to be removed
      * @return true if the operation succeeded or false if not
      */
     @Processor(friendlyName="Remove column")
-    public boolean dropColumn(String table, @Default(PAYLOAD) String columnName) {
-        String keySpace = basicAuthConnectionStrategy.getKeyspace();
-        return basicAuthConnectionStrategy.getCassandraClient().dropColumn(table, keySpace, columnName);
+    public boolean dropColumn(String table, @Optional String keyspaceName, @Default(PAYLOAD) String columnName) {
+        return basicAuthConnectionStrategy.getCassandraClient().dropColumn(table, keyspaceName, columnName);
     }
 
     /**
      * Renames a column
      * @param table the name of the table to be used for the operation
+     * @param keyspaceName (optional) the keyspace which contains the table to be used
      * @param oldColumnName the name of the column to be changed
      * @param newColumnName the new value for the name of the column
      * @return true if the operation succeeded or false if not
      */
     @Processor(friendlyName="Rename column")
-    public boolean renameColumn(String table, @Default(PAYLOAD) String oldColumnName, String newColumnName) {
-        String keySpace = basicAuthConnectionStrategy.getKeyspace();
-        return basicAuthConnectionStrategy.getCassandraClient().renameColumn(table, keySpace, oldColumnName, newColumnName);
+    public boolean renameColumn(String table, @Optional String keyspaceName, @Default(PAYLOAD) String oldColumnName, String newColumnName) {
+        return basicAuthConnectionStrategy.getCassandraClient().renameColumn(table, keyspaceName, oldColumnName, newColumnName);
     }
 
     @QueryTranslator public String toNativeQuery(DsqlQuery query) {

@@ -67,6 +67,16 @@ After starting the cassandra service, you can connect to the database that will 
 
 The default credentials are cassandra/cassandra but also other admin accounts can be created by executing different queries explained http://docs.datastax.com/en/cql/3.1/cql/cql_reference/create_user_r.html[here]
 
+=== Tools
+
+There are multiple tools that allow users to interact with Cassandra Databases.
+
+The first of all is the CQLSH terminal which comes bundled within the Cassandra installation.
+
+A much better tool would be DataStax Studio which is an interactive developer tool and can be downloaded https://www.datastax.com/products/datastax-studio-and-development-tools[here]
+
+Another tool that offers a graphic UI to interact with Cassandra would be DBeaver which can be downloaded http://dbeaver.jkiss.org/[here]
+
 == Authentication methods
 
 === Available for the platform
@@ -89,7 +99,15 @@ If Cassandra is configured to use the AllowAllAuthenticator the user can leave t
 
 Otherwise, if Cassandra is configured with the PasswordAuthenticator, the username and password must be specified.
 
-The other connection parameters are host(default: localhost), port(default: 9042) and keyspace(default: empty).
+The other connection parameters are **host**(default: localhost), **port**(default: 9042) and **keyspace**(default: empty). This is the default keyspace if not provided at operation level.
+
+There is also an Advanced Configuration section where one can specify:
+
+. Cluster Name - Cassandra cluster name.
+. Protocol Version - Version of the native protocol supported by the driver.(V1("1.2.0"), V2("2.0.0"), V3("2.1.0"), V4("2.2.0"))
+. Max Schema Agreement Wait Seconds - The maximum time to wait for schema agreement before returning from a DDL query.
+. Compression - The compression to use for the transport.(Values: NONE, SNAPPY, LZ4)
+. SSL - Enables the use of SSL for the cluster.
 
 == Implementation details
 
@@ -112,6 +130,8 @@ Given the fact that our mapping of the Data Type for primitives is using upperca
  }
 
 === Processors
+
+**Note**: When the processors that accept the keyspace name as an optional parameter are missing this param, will use the keyspace specified in the connection config for the operation. If in the config there is no keyspace specified and also the user does not specify a keyspace as an operation param, the operation will fail.
 
 . **Create Keyspace** operation accepts a custom pojo CreateKeyspaceInput as input so the user must pass the parameters accordingly. The easiest way to do this is to use a Transform Message in order to transform the payload to a Java object.
 +
@@ -178,7 +198,7 @@ Example of a HTTP request to the <execute-cql-query> processor:
 +
 image:query_builder.png[Config]
 
-. **Insert** operation accepts the table name as a parameter and as payload a Map<String, Object> representing the entity to be inserted into the table.
+. **Insert** operation accepts the table name as a required parameter, the keyspace name as an optional parameter and as payload a Map<String, Object> representing the entity to be inserted into the table.
 +
 Example:
 [source]
@@ -201,7 +221,7 @@ Example of HTTP request for the **Insert** operation:
 	"other_property":other_property_value
 }
 
-. **Update** operation accepts the table name as a parameter and as payload a Map<String, Object> with 2 records with the keys **where** and **columns**.
+. **Update** operation accepts the table name as a required parameter, the keyspace name as an optional parameter and as payload a Map<String, Object> with 2 records with the keys **where** and **columns**.
 +
 .. **where** Map<String, Object> representing the clause that will specify the primary keys of the objects to be updated
 +
@@ -228,7 +248,7 @@ image:update_datasense.png[Config]
 +
 In the image above: The user can select which **columns** to update and specify the **where** clause. The columns section contains all the columns of the table selected for the operation whereas in the where section only the columns that are pare of the "primary key" are displayed as only these can be specified in the where clause.
 
-. **Delete Columns Value** operation accepts the table name as a parameter and as payload a Map<String, Object> with 2 records with the keys **where** and **columns**.
+. **Delete Columns Value** operation accepts the table name as a required parameter, the keyspace name as an optional parameter and as payload a Map<String, Object> with 2 records with the keys **where** and **columns**.
 +
 As for the **Update** operation, the **where** record represents the clause that will specify the primary keys of the objects to be updated. The **columns** record represents a List<String> containing the column names to be cleared.
 After invoking this operation when fetching the entities that were updated, the values for the columns specified in the **Delete Columns Value** operations will be null.
@@ -265,7 +285,7 @@ An HTTP request for deleting an element from a **map** would look like this:
       "columns": ["mapColumnName['keyName']"]
 }
 
-. **Delete Rows** operation accepts the table name as a parameter and as payload a Map<String, Object> with 1 record with the key **where**
+. **Delete Rows** operation accepts the table name as a required parameter, the keyspace name as an optional parameter and as payload a Map<String, Object> with 1 record with the key **where**
 +
 As the value for the key **where** we have a map (Map<String, Object>) containing the where clause.
 +
@@ -292,7 +312,7 @@ Example:
       }
 }
 
-. **Change column type** operation, is used to change the type of a column and accepts the table name as a parameter and an AlterColumnInput POJO as payload.
+. **Change column type** operation, is used to change the type of a column and accepts the table name as a required parameter, the keyspace name as an optional parameter and an AlterColumnInput POJO as payload.
 +
 The POJO that is given as payload to the processor has 2 fields, one specifying the column name and one specifying th new DataType for that column.
 +
@@ -309,8 +329,10 @@ Example:
 }
 +
 **Note**: A column type can be changed only to another valid and compatible type. To check types compatibility in Cassandra visit this http://docs.datastax.com/en/cql/3.1/cql/cql_reference/cql_data_types_c.html#concept_ds_wbk_zdt_xj__cql_data_type_compatibility[page]
++
+**Note**: Starting with version 3.0.11 of Cassandra, Alter Type(Change column type) is not allowed anymore. Link to the cassandra issue https://issues.apache.org/jira/browse/CASSANDRA-12443[here]
 
-. **Add new column** operation, is used to add a new column and accepts the table name as a parameter and an AlterColumnInput POJO as payload.
+. **Add new column** operation, is used to add a new column and accepts the table name as a required parameter, the keyspace name as an optional parameter and an AlterColumnInput POJO as payload.
 +
 The POJO that is passed as payload to the processor has 2 fields, one specifying the name of the column to be created and one specifying the DataType for the new column
 +
@@ -326,9 +348,9 @@ Example:
 	class : "com.mulesoft.mule.cassandradb.metadata.AlterColumnInput"
 }
 
-. **Drop column** processor accepts the table name as a parameter and the column name as payload.
+. **Drop column** processor accepts the table name as a required parameter, the keyspace name as an optional parameter and the column name as payload.
 
-. **Rename column** operation accepts 3 parameters: the table name, the old column name and the new column name.
+. **Rename column** operation accepts 4 parameters: the table name, the keyspace name(optional), the old column name and the new column name.
 
 == Troubleshooting
 === Logging level

@@ -32,13 +32,13 @@ public class AddNewColumnTestCases extends CassandraDBConnectorAbstractTestCase 
 
     @Test
     public void testAddNewColumnOfPrimitiveTypeWithSuccess() throws CassandraDBException {
-        getConnector().addNewColumn(ConstantsTest.TABLE_NAME,
+        getConnector().addNewColumn(ConstantsTest.TABLE_NAME, null,
                 TestDataBuilder.getAlterColumnInput(DataType.text().toString() + System.currentTimeMillis(), ColumnType.TEXT));
     }
 
     @Test(expected = CassandraDBException.class)
     public void testAddNewColumnWithSameName() throws CassandraDBException {
-        getConnector().addNewColumn(ConstantsTest.TABLE_NAME, TestDataBuilder.getAlterColumnInput(ConstantsTest.VALID_COLUMN, ColumnType.TEXT));
+        getConnector().addNewColumn(ConstantsTest.TABLE_NAME, null, TestDataBuilder.getAlterColumnInput(ConstantsTest.VALID_COLUMN, ColumnType.TEXT));
     }
 
 }

@@ -1,17 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<mule xmlns:tracking="http://www.mulesoft.org/schema/mule/ee/tracking" xmlns:cassandradb="http://www.mulesoft.org/schema/mule/cassandradb" xmlns:amazon-ec2="http://www.mulesoft.org/schema/mule/amazon-ec2" xmlns:dw="http://www.mulesoft.org/schema/mule/ee/dw" xmlns:metadata="http://www.mulesoft.org/schema/mule/metadata" xmlns:say-hello="http://www.mulesoft.org/schema/mule/say-hello" xmlns:json="http://www.mulesoft.org/schema/mule/json" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:cloudhub="http://www.mulesoft.org/schema/mule/cloudhub" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+<mule xmlns:tracking="http://www.mulesoft.org/schema/mule/ee/tracking" xmlns:dw="http://www.mulesoft.org/schema/mule/ee/dw"
+      xmlns:json="http://www.mulesoft.org/schema/mule/json"
+      xmlns:cassandradb="http://www.mulesoft.org/schema/mule/cassandradb"
+      xmlns:http="http://www.mulesoft.org/schema/mule/http"
+      xmlns="http://www.mulesoft.org/schema/mule/core"
+      xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
       xmlns:spring="http://www.springframework.org/schema/beans"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
 http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
-http://www.mulesoft.org/schema/mule/json http://www.mulesoft.org/schema/mule/json/current/mule-json.xsd
+http://www.mulesoft.org/schema/mule/cassandradb http://www.mulesoft.org/schema/mule/cassandradb/current/mule-cassandradb.xsd
 http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
 http://www.mulesoft.org/schema/mule/ee/dw http://www.mulesoft.org/schema/mule/ee/dw/current/dw.xsd
-http://www.mulesoft.org/schema/mule/cassandradb http://www.mulesoft.org/schema/mule/cassandradb/current/mule-cassandradb.xsd
+http://www.mulesoft.org/schema/mule/json http://www.mulesoft.org/schema/mule/json/current/mule-json.xsd
 http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/mule/ee/tracking/current/mule-tracking-ee.xsd">
+
     <http:listener-config name="HTTP_Listener_Configuration" host="localhost" port="8081" doc:name="HTTP Listener Configuration"/>
-    <cassandradb:config name="CassandraDB" username="${username}" password="${password}" doc:name="CassandraDB" keyspace="${keyspace}" host="${host}" port="${port}"/>
+    <cassandradb:config name="CassandraDB" username="${username}" password="${password}"   doc:name="CassandraDB" keyspace="${keyspace}" host="${host}" port="${port}"/>
     <flow name="HTMLForm">
         <http:listener config-ref="HTTP_Listener_Configuration" path="/" doc:name="HTTP"/>
         <parse-template location="form.html" doc:name="Parse Template"/>
@@ -34,8 +40,20 @@ http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/m
         <cassandradb:create-keyspace config-ref="CassandraDB" doc:name="CassandraDB">
             <cassandradb:input ref="#[payload]"/>
         </cassandradb:create-keyspace>
+
         <json:object-to-json-transformer doc:name="Object to JSON"/>
 
+    </flow>
+    <flow name="DropKeyspace">
+        <http:listener config-ref="HTTP_Listener_Configuration" path="/dropKeyspace" doc:name="HTTP"/>
+        <dw:transform-message doc:name="Transform Message">
+            <dw:set-payload><![CDATA[%dw 1.0
+%output application/java
+---
+payload]]></dw:set-payload>
+        </dw:transform-message>
+        <cassandradb:drop-keyspace config-ref="CassandraDB" keyspaceName="#[payload.keyspaceName]" doc:name="CassandraDB"/>
+        <json:object-to-json-transformer doc:name="Object to JSON"/>
     </flow>
     <flow name="CreateTable">
         <http:listener config-ref="HTTP_Listener_Configuration" path="/createTable" doc:name="HTTP"/>
@@ -54,6 +72,7 @@ http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/m
         <cassandradb:create-table config-ref="CassandraDB" doc:name="CassandraDB">
             <cassandradb:input ref="#[payload]"/>
         </cassandradb:create-table>
+
         <json:object-to-json-transformer doc:name="Object to JSON"/>
 
     </flow>
@@ -93,7 +112,8 @@ payload
 	"event": payload.event
 }]]></dw:set-payload>
         </dw:transform-message>
-        <cassandradb:insert config-ref="CassandraDB" table="#[flowVars['tableName']]" doc:name="CassandraDB"/>
+        <cassandradb:insert config-ref="CassandraDB" table="demo_table" doc:name="CassandraDB" customKeyspaceName="demo_keyspace"/>
+
         <json:object-to-json-transformer doc:name="Object to JSON"/>
 
     </flow>
@@ -116,9 +136,10 @@ payload
 	"whereClause":payload.whereClause
 }]]></dw:set-variable>
         </dw:transform-message>
-        <cassandradb:update config-ref="CassandraDB" table="DEMO" doc:name="CassandraDB">
+        <cassandradb:update config-ref="CassandraDB" table="demo_table" doc:name="CassandraDB" customKeyspaceName="demo_keyspace">
             <cassandradb:entity ref="#[payload]"/>
         </cassandradb:update>
+
 
         <json:object-to-json-transformer doc:name="Object to JSON"/>
 
@@ -145,6 +166,7 @@ payload.parameters]]></dw:set-variable>
         <cassandradb:execute-c-q-l-query config-ref="CassandraDB" doc:name="CassandraDB">
             <cassandradb:input ref="#[payload]"/>
         </cassandradb:execute-c-q-l-query>
+
         <json:object-to-json-transformer doc:name="Object to JSON"/>
 
     </flow>
@@ -161,9 +183,10 @@ payload.parameters]]></dw:set-variable>
 	}
 }]]></dw:set-payload>
         </dw:transform-message>
-        <cassandradb:delete-rows config-ref="CassandraDB" table="DEMO" doc:name="CassandraDB">
+        <cassandradb:delete-rows config-ref="CassandraDB" customKeyspaceName="demo_keyspace" table="demo_table" doc:name="CassandraDB">
             <cassandradb:payload ref="#[payload]"/>
         </cassandradb:delete-rows>
+
 
         <json:object-to-json-transformer doc:name="Object to JSON"/>
 
@@ -181,31 +204,15 @@ payload.parameters]]></dw:set-variable>
 	}
 }]]></dw:set-payload>
         </dw:transform-message>
-        <cassandradb:delete-columns-value config-ref="CassandraDB" table="DEMO" doc:name="CassandraDB"/>
+        <cassandradb:delete-columns-value config-ref="CassandraDB" table="demo_table" doc:name="CassandraDB" customKeyspaceName="demo_keyspace"/>
         <json:object-to-json-transformer doc:name="Object to JSON"/>
 
 
     </flow>
-    <flow name="Delete_List_Column_Element">
-        <http:listener config-ref="HTTP_Listener_Configuration" path="/deleteListColumnElement" doc:name="HTTP"/>
-        <dw:transform-message doc:name="Transform Message">
-            <dw:set-payload><![CDATA[%dw 1.0
-%output application/java
----
-{
-	"columns":payload.columns,
-	"where":payload.where
-}]]></dw:set-payload>
-        </dw:transform-message>
-        <cassandradb:delete-columns-value config-ref="CassandraDB" table="users" doc:name="CassandraDB">
-            <cassandradb:payload ref="#[payload]"/>
-        </cassandradb:delete-columns-value>
-        <json:object-to-json-transformer doc:name="Object to JSON"/>
 
-    </flow>
     <flow name="Select">
         <http:listener config-ref="HTTP_Listener_Configuration" path="/select" doc:name="HTTP"/>
-        <cassandradb:select config-ref="CassandraDB" query="dsql:SELECT id, name, event FROM DEMO" doc:name="CassandraDB"/>
+        <cassandradb:select config-ref="CassandraDB" query="dsql:SELECT id, name, event FROM demo_keyspace.demo_table" doc:name="CassandraDB"/>
         <json:object-to-json-transformer doc:name="Object to JSON"/>
     </flow>
 
@@ -217,6 +224,7 @@ payload.parameters]]></dw:set-variable>
 ---
 payload]]></dw:set-payload>
         </dw:transform-message>
+        <set-variable variableName="keyspaceName" value="#[payload.keyspaceName]" doc:name="Variable"/>
         <set-variable variableName="tableName" value="#[payload.tableName]" doc:name="Variable"/>
         <dw:transform-message doc:name="Transform Message">
             <dw:set-payload><![CDATA[%dw 1.0
@@ -229,7 +237,7 @@ payload]]></dw:set-payload>
 	class : "com.mulesoft.mule.cassandradb.metadata.AlterColumnInput"
 }]]></dw:set-payload>
         </dw:transform-message>
-        <cassandradb:change-column-type config-ref="CassandraDB" table="#[flowVars['tableName']]" doc:name="CassandraDB"/>
+        <cassandradb:change-column-type config-ref="CassandraDB" table="#[flowVars['tableName']]" doc:name="CassandraDB" customKeyspaceName="#[flowVars['keyspaceName']]"/>
 
 
         <json:object-to-json-transformer doc:name="Object to JSON"/>
@@ -242,6 +250,7 @@ payload]]></dw:set-payload>
 ---
 payload]]></dw:set-payload>
         </dw:transform-message>
+        <set-variable variableName="keyspaceName" value="#[payload.keyspaceName]" doc:name="Variable"/>
         <set-variable variableName="tableName" value="#[payload.tableName]" doc:name="Variable"/>
         <dw:transform-message doc:name="Transform Message">
             <dw:set-payload><![CDATA[%dw 1.0
@@ -254,7 +263,8 @@ payload]]></dw:set-payload>
 	class : "com.mulesoft.mule.cassandradb.metadata.AlterColumnInput"
 }]]></dw:set-payload>
         </dw:transform-message>
-        <cassandradb:add-new-column config-ref="CassandraDB" table="#[flowVars['tableName']]" doc:name="CassandraDB"/>
+        <cassandradb:add-new-column config-ref="CassandraDB" table="#[flowVars['tableName']]" doc:name="CassandraDB" customKeyspaceName="#[flowVars['keyspaceName']]"/>
+
 
 
 
@@ -268,7 +278,7 @@ payload]]></dw:set-payload>
 ---
 payload]]></dw:set-payload>
         </dw:transform-message>
-        <cassandradb:drop-column config-ref="CassandraDB" table="#[payload.tableName]" doc:name="CassandraDB" columnName="#[payload.columnName]"/>
+        <cassandradb:drop-column config-ref="CassandraDB" table="#[payload.tableName]" doc:name="CassandraDB" columnName="#[payload.columnName]" customKeyspaceName="#[payload.keyspaceName]"/>
 
         <json:object-to-json-transformer doc:name="Object to JSON"/>
     </flow>
@@ -281,7 +291,7 @@ payload]]></dw:set-payload>
 payload]]></dw:set-payload>
         </dw:transform-message>
 
-        <cassandradb:rename-column config-ref="CassandraDB" table="#[payload.tableName]" doc:name="CassandraDB" newColumnName="#[payload.newName]" oldColumnName="#[payload.oldName]"/>
+        <cassandradb:rename-column config-ref="CassandraDB" table="#[payload.tableName]" doc:name="CassandraDB" newColumnName="#[payload.newName]" oldColumnName="#[payload.oldName]" customKeyspaceName="#[payload.keyspaceName]"/>
 
 
         <json:object-to-json-transformer doc:name="Object to JSON"/>

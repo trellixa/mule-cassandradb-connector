@@ -57,7 +57,7 @@ public class BasicAuthConnectionStrategy {
     private String clusterName;
 
     /**
-     * Versions of the native protocol supported by the driver.
+     * Version of the native protocol supported by the driver.
      */
     @Configurable
     @org.mule.api.annotations.param.Optional
@@ -81,7 +81,7 @@ public class BasicAuthConnectionStrategy {
     private ProtocolOptions.Compression compression;
 
     /**
-     * Enables the use of SSL for the created cluster.
+     * Enables the use of SSL for the cluster.
      */
     @Configurable
     @org.mule.api.annotations.param.Optional
