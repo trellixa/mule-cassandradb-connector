@@ -3,7 +3,7 @@
  */
 package org.mule.modules.cassandradb.automation.util;
 
-public class ConstantsTest {
+public class TestsConstants {
 
     //test specific constants
     public final static String SECOND_KEYSPACE_NAME = "second_dummy_keyspace";

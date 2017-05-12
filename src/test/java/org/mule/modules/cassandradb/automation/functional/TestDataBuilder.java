@@ -3,7 +3,7 @@
  */
 package org.mule.modules.cassandradb.automation.functional;
 
-import org.mule.modules.cassandradb.automation.util.ConstantsTest;
+import org.mule.modules.cassandradb.automation.util.TestsConstants;
 import org.mule.modules.cassandradb.metadata.AlterColumnInput;
 import org.mule.modules.cassandradb.metadata.ColumnType;
 import org.jetbrains.annotations.NotNull;
@@ -17,7 +17,7 @@ public class TestDataBuilder {
     public static List<String> cassandraCategoryMetadataTestKeys = new LinkedList<String>();
 
     static {
-        cassandraCategoryMetadataTestKeys.add(ConstantsTest.TABLE_NAME_2);
+        cassandraCategoryMetadataTestKeys.add(TestsConstants.TABLE_NAME_2);
     }
 
     private TestDataBuilder() {
@@ -33,20 +33,20 @@ public class TestDataBuilder {
 
     public static Map<String, Object> getValidEntity() {
         Map<String, Object> entity = new HashMap<String, Object>();
-        entity.put(ConstantsTest.DUMMY_PARTITION_KEY, "value1");
-        entity.put(ConstantsTest.VALID_COLUMN_2, "someValue" + System.currentTimeMillis());
+        entity.put(TestsConstants.DUMMY_PARTITION_KEY, "value1");
+        entity.put(TestsConstants.VALID_COLUMN_2, "someValue" + System.currentTimeMillis());
         return entity;
     }
 
     public static Map<String, Object> getValidEntityForUpdate() {
         Map<String, Object> entity = new HashMap<String, Object>();
-        entity.put(ConstantsTest.VALID_COLUMN_2, "someValue" + System.currentTimeMillis());
+        entity.put(TestsConstants.VALID_COLUMN_2, "someValue" + System.currentTimeMillis());
         return entity;
     }
 
     public static Map<String, Object> getValidWhereClauseWithEq() {
         Map<String, Object> entity = new HashMap<String, Object>();
-        entity.put(ConstantsTest.DUMMY_PARTITION_KEY, "value1");
+        entity.put(TestsConstants.DUMMY_PARTITION_KEY, "value1");
         return entity;
     }
 
@@ -55,7 +55,7 @@ public class TestDataBuilder {
         List list = new ArrayList();
         list.add("value1");
         list.add("value2");
-        entity.put(ConstantsTest.DUMMY_PARTITION_KEY, list);
+        entity.put(TestsConstants.DUMMY_PARTITION_KEY, list);
         return entity;
     }
 
@@ -65,7 +65,7 @@ public class TestDataBuilder {
     * */
     public static Map<String, Object> getInvalidWhereClause() {
         Map<String, Object> entity = new HashMap<String, Object>();
-        entity.put(ConstantsTest.VALID_COLUMN_1, "someValue");
+        entity.put(TestsConstants.VALID_COLUMN_1, "someValue");
         return entity;
     }
 
@@ -78,8 +78,8 @@ public class TestDataBuilder {
 
     public static List<String> getValidColumnsListForDelete() {
         List<String> parameters = new LinkedList<String>();
-        parameters.add(ConstantsTest.VALID_COLUMN_1);
-        parameters.add(ConstantsTest.VALID_COLUMN_2);
+        parameters.add(TestsConstants.VALID_COLUMN_1);
+        parameters.add(TestsConstants.VALID_COLUMN_2);
         return parameters;
     }
 
@@ -94,15 +94,15 @@ public class TestDataBuilder {
         List<String> list = new ArrayList<String>();
         list.add("firstValue");
         list.add("secondValue");
-        entity.put(ConstantsTest.DUMMY_PARTITION_KEY, "value1");
-        entity.put(ConstantsTest.VALID_LIST_COLUMN, list);
-        entity.put(ConstantsTest.VALID_COLUMN_1, 1);
+        entity.put(TestsConstants.DUMMY_PARTITION_KEY, "value1");
+        entity.put(TestsConstants.VALID_LIST_COLUMN, list);
+        entity.put(TestsConstants.VALID_COLUMN_1, 1);
         return entity;
     }
 
     public static List<String> getValidListItem() {
         List<String> entity = new ArrayList<String>();
-        entity.add(ConstantsTest.VALID_LIST_COLUMN + "[0]");
+        entity.add(TestsConstants.VALID_LIST_COLUMN + "[0]");
         return entity;
     }
 
@@ -111,15 +111,15 @@ public class TestDataBuilder {
         Map<String, Object> item = new HashMap<String, Object>();
         item.put("1", "firstValue");
         item.put("2", "secondValue");
-        entity.put(ConstantsTest.DUMMY_PARTITION_KEY, "value1");
-        entity.put(ConstantsTest.VALID_MAP_COLUMN, item);
-        entity.put(ConstantsTest.VALID_COLUMN_1, 1);
+        entity.put(TestsConstants.DUMMY_PARTITION_KEY, "value1");
+        entity.put(TestsConstants.VALID_MAP_COLUMN, item);
+        entity.put(TestsConstants.VALID_COLUMN_1, 1);
         return entity;
     }
 
     public static List<String> getValidMapItem() {
         List<String> entity = new ArrayList<String>();
-        entity.add(ConstantsTest.VALID_MAP_COLUMN + "['firstValue']");
+        entity.add(TestsConstants.VALID_MAP_COLUMN + "['firstValue']");
         return entity;
     }
 
@@ -128,22 +128,22 @@ public class TestDataBuilder {
         Set<String> item = new HashSet<String>();
         item.add("firstValue");
         item.add("secondValue");
-        entity.put(ConstantsTest.DUMMY_PARTITION_KEY, "value1");
-        entity.put(ConstantsTest.VALID_SET_COLUMN, item);
-        entity.put(ConstantsTest.VALID_COLUMN_1, 1);
+        entity.put(TestsConstants.DUMMY_PARTITION_KEY, "value1");
+        entity.put(TestsConstants.VALID_SET_COLUMN, item);
+        entity.put(TestsConstants.VALID_COLUMN_1, 1);
         return entity;
     }
 
     public static List<String> getValidSet() {
         List<String> entity = new ArrayList<String>();
-        entity.add(ConstantsTest.VALID_SET_COLUMN);
+        entity.add(TestsConstants.VALID_SET_COLUMN);
         return entity;
     }
 
     public static Map<String, Object> getPayloadColumnsAndFilters(Object entity, Map<String, Object> whereClause){
         Map<String, Object> payload = new HashMap<String, Object>();
-        payload.put(ConstantsTest.COLUMNS, entity);
-        payload.put(ConstantsTest.WHERE, whereClause);
+        payload.put(TestsConstants.COLUMNS, entity);
+        payload.put(TestsConstants.WHERE, whereClause);
         return payload;
     }
 
@@ -152,7 +152,7 @@ public class TestDataBuilder {
 
         ColumnInput column = new ColumnInput();
         column.setPrimaryKey(true);
-        column.setName(ConstantsTest.DUMMY_PARTITION_KEY);
+        column.setName(TestsConstants.DUMMY_PARTITION_KEY);
         column.setType(ColumnType.TEXT);
         columns.add(column);
 
@@ -164,12 +164,12 @@ public class TestDataBuilder {
 
         ColumnInput column = new ColumnInput();
         column.setPrimaryKey(true);
-        column.setName(ConstantsTest.DUMMY_PARTITION_KEY);
+        column.setName(TestsConstants.DUMMY_PARTITION_KEY);
         column.setType(ColumnType.TEXT);
 
         ColumnInput column2 = new ColumnInput();
         column2.setPrimaryKey(true);
-        column2.setName(ConstantsTest.VALID_COLUMN_1);
+        column2.setName(TestsConstants.VALID_COLUMN_1);
         column2.setType(ColumnType.INT);
 
         columns.add(column);
@@ -183,15 +183,15 @@ public class TestDataBuilder {
 
         ColumnInput column1 = new ColumnInput();
         column1.setPrimaryKey(true);
-        column1.setName(ConstantsTest.DUMMY_PARTITION_KEY);
+        column1.setName(TestsConstants.DUMMY_PARTITION_KEY);
         column1.setType(ColumnType.TEXT);
 
         ColumnInput column2 = new ColumnInput();
-        column2.setName(ConstantsTest.VALID_COLUMN_1);
+        column2.setName(TestsConstants.VALID_COLUMN_1);
         column2.setType(ColumnType.INT);
 
         ColumnInput column3 = new ColumnInput();
-        column3.setName(ConstantsTest.VALID_COLUMN_2);
+        column3.setName(TestsConstants.VALID_COLUMN_2);
         column3.setType(ColumnType.TEXT);
 
         columns.add(column1);

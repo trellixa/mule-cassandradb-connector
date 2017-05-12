@@ -6,7 +6,7 @@ package org.mule.modules.cassandradb.automation.functional.processors;
 import com.datastax.driver.core.DataType;
 import org.mule.modules.cassandradb.automation.functional.TestDataBuilder;
 import org.mule.modules.cassandradb.metadata.ColumnType;
-import org.mule.modules.cassandradb.automation.util.ConstantsTest;
+import org.mule.modules.cassandradb.automation.util.TestsConstants;
 import org.mule.modules.cassandradb.utils.CassandraDBException;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -16,22 +16,22 @@ public class AddNewColumnTestCases extends CassandraDBConnectorAbstractTestCases
 
     @BeforeClass
     public static void setup() throws CassandraDBException {
-        cassClient.createTable(TestDataBuilder.getBasicCreateTableInput(TestDataBuilder.getColumns(), cassConfig.getKeyspace(), ConstantsTest.TABLE_NAME_1));
+        cassClient.createTable(TestDataBuilder.getBasicCreateTableInput(TestDataBuilder.getColumns(), cassConfig.getKeyspace(), TestsConstants.TABLE_NAME_1));
     }
 
     @AfterClass
     public static void tearDown() {
-        cassClient.dropTable(ConstantsTest.TABLE_NAME_1, cassConfig.getKeyspace());
+        cassClient.dropTable(TestsConstants.TABLE_NAME_1, cassConfig.getKeyspace());
     }
 
     @Test
     public void testAddNewColumnOfPrimitiveTypeWithSuccess() throws CassandraDBException {
-        getConnector().addNewColumn(ConstantsTest.TABLE_NAME_1, null,
+        getConnector().addNewColumn(TestsConstants.TABLE_NAME_1, null,
                 TestDataBuilder.getAlterColumnInput(DataType.text().toString() + System.currentTimeMillis(), ColumnType.TEXT));
     }
 
     @Test(expected = CassandraDBException.class)
     public void testAddNewColumnWithSameName() throws CassandraDBException {
-        getConnector().addNewColumn(ConstantsTest.TABLE_NAME_1, null, TestDataBuilder.getAlterColumnInput(ConstantsTest.VALID_COLUMN_1, ColumnType.TEXT));
+        getConnector().addNewColumn(TestsConstants.TABLE_NAME_1, null, TestDataBuilder.getAlterColumnInput(TestsConstants.VALID_COLUMN_1, ColumnType.TEXT));
     }
 }

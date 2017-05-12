@@ -9,7 +9,7 @@ import java.util.Map;
 
 import com.datastax.driver.core.DataType;
 import org.mule.modules.cassandradb.automation.functional.TestDataBuilder;
-import org.mule.modules.cassandradb.automation.util.ConstantsTest;
+import org.mule.modules.cassandradb.automation.util.TestsConstants;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -22,23 +22,23 @@ import static org.hamcrest.Matchers.*;
 public class SelectTestCases extends CassandraDBConnectorAbstractTestCases {
 
     public static final String VALID_PARAMETERIZED_QUERY =
-            "SELECT " + ConstantsTest.VALID_COLUMN_2 +
-            " FROM " + ConstantsTest.TABLE_NAME_1 +
-            " WHERE " + ConstantsTest.DUMMY_PARTITION_KEY + " IN (?, ?)";
+            "SELECT " + TestsConstants.VALID_COLUMN_2 +
+            " FROM " + TestsConstants.TABLE_NAME_1 +
+            " WHERE " + TestsConstants.DUMMY_PARTITION_KEY + " IN (?, ?)";
     public static final String VALID_DSQL_QUERY = "dsql:" +
-            "SELECT " + ConstantsTest.VALID_COLUMN_2 +
-            " FROM " + ConstantsTest.TABLE_NAME_1;
+            "SELECT " + TestsConstants.VALID_COLUMN_2 +
+            " FROM " + TestsConstants.TABLE_NAME_1;
 
     @BeforeClass
     public static void setup() throws Exception {
-        cassClient.createTable(TestDataBuilder.getBasicCreateTableInput(TestDataBuilder.getPrimaryKey(), cassConfig.getKeyspace(), ConstantsTest.TABLE_NAME_1));
-        cassClient.addNewColumn(ConstantsTest.TABLE_NAME_1, cassConfig.getKeyspace(), ConstantsTest.VALID_COLUMN_2, DataType.text());
-        cassClient.insert(cassConfig.getKeyspace(), ConstantsTest.TABLE_NAME_1, TestDataBuilder.getValidEntity());
+        cassClient.createTable(TestDataBuilder.getBasicCreateTableInput(TestDataBuilder.getPrimaryKey(), cassConfig.getKeyspace(), TestsConstants.TABLE_NAME_1));
+        cassClient.addNewColumn(TestsConstants.TABLE_NAME_1, cassConfig.getKeyspace(), TestsConstants.VALID_COLUMN_2, DataType.text());
+        cassClient.insert(cassConfig.getKeyspace(), TestsConstants.TABLE_NAME_1, TestDataBuilder.getValidEntity());
     }
 
     @AfterClass
     public static void tearDown() {
-        cassClient.dropTable(ConstantsTest.TABLE_NAME_1, cassConfig.getKeyspace());
+        cassClient.dropTable(TestsConstants.TABLE_NAME_1, cassConfig.getKeyspace());
     }
 
     @Test

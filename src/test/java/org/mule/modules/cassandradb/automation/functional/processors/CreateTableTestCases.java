@@ -4,7 +4,7 @@
 package org.mule.modules.cassandradb.automation.functional.processors;
 
 import org.mule.modules.cassandradb.automation.functional.TestDataBuilder;
-import org.mule.modules.cassandradb.automation.util.ConstantsTest;
+import org.mule.modules.cassandradb.automation.util.TestsConstants;
 import org.mule.modules.cassandradb.utils.CassandraDBException;
 import org.junit.AfterClass;
 import org.junit.Test;
@@ -13,17 +13,17 @@ public class CreateTableTestCases extends CassandraDBConnectorAbstractTestCases 
 
     @AfterClass
     public static void tearDown() {
-        cassClient.dropTable(ConstantsTest.TABLE_NAME_1, cassConfig.getKeyspace());
-        cassClient.dropTable(ConstantsTest.TABLE_NAME_2, cassConfig.getKeyspace());
+        cassClient.dropTable(TestsConstants.TABLE_NAME_1, cassConfig.getKeyspace());
+        cassClient.dropTable(TestsConstants.TABLE_NAME_2, cassConfig.getKeyspace());
     }
 
     @Test
     public void testCreateTableWithSuccess() throws CassandraDBException {
-        getConnector().createTable(TestDataBuilder.getBasicCreateTableInput(TestDataBuilder.getColumns(), cassConfig.getKeyspace(), ConstantsTest.TABLE_NAME_1));
+        getConnector().createTable(TestDataBuilder.getBasicCreateTableInput(TestDataBuilder.getColumns(), cassConfig.getKeyspace(), TestsConstants.TABLE_NAME_1));
     }
 
     @Test
     public void testCreateTableWithCompositePKWithSuccess() throws CassandraDBException {
-        getConnector().createTable(TestDataBuilder.getBasicCreateTableInput(TestDataBuilder.getCompositePrimaryKey(), cassConfig.getKeyspace(), ConstantsTest.TABLE_NAME_2));
+        getConnector().createTable(TestDataBuilder.getBasicCreateTableInput(TestDataBuilder.getCompositePrimaryKey(), cassConfig.getKeyspace(), TestsConstants.TABLE_NAME_2));
     }
 }
