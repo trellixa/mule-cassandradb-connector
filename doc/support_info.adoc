@@ -125,7 +125,7 @@ Example:
 	"replicationFactor": payload.replicationFactor,
 	"replicationStrategyClass": payload.replicationStrategyClass
 } as :object {
-	class : "com.mulesoft.mule.cassandradb.metadata.CreateKeyspaceInput"
+	class : "org.mule.modules.cassandradb.metadata.CreateKeyspaceInput"
 }
 
 . **Drop Keyspace** operation accepts a String parameter representing the keyspace name.
@@ -142,7 +142,7 @@ Example:
 	"tableName": payload.tableName,
 	"keyspaceName": payload.keyspaceName
 } as :object {
-	class : "com.mulesoft.mule.cassandradb.metadata.CreateTableInput"
+	class : "org.mule.modules.cassandradb.metadata.CreateTableInput"
 }
 +
 In the example above the keyspaceName parameter is optional. If not provided the table will be created into the keyspace that the user used to log in(if specified).
@@ -163,7 +163,7 @@ Example:
 	"parameters": payload.parameters
 }
 as :object {
-	class : "com.mulesoft.mule.cassandradb.metadata.CQLQueryInput"
+	class : "org.mule.modules.cassandradb.metadata.CQLQueryInput"
 }
 +
 Example of a HTTP request to the <execute-cql-query> processor:
@@ -305,7 +305,7 @@ Example:
 	"column": payload.column,
 	"type": payload.type
 } as :object {
-	class : "com.mulesoft.mule.cassandradb.metadata.AlterColumnInput"
+	class : "org.mule.modules.cassandradb.metadata.AlterColumnInput"
 }
 +
 **Note**: A column type can be changed only to another valid and compatible type. To check types compatibility in Cassandra visit this http://docs.datastax.com/en/cql/3.1/cql/cql_reference/cql_data_types_c.html#concept_ds_wbk_zdt_xj__cql_data_type_compatibility[page]
@@ -323,7 +323,7 @@ Example:
 	"column": payload.column,
 	"type": payload.type
 } as :object {
-	class : "com.mulesoft.mule.cassandradb.metadata.AlterColumnInput"
+	class : "org.mule.modules.cassandradb.metadata.AlterColumnInput"
 }
 
 . **Drop column** processor accepts the table name as a parameter and the column name as payload.
@@ -335,16 +335,16 @@ Example:
 
 *package to log*
 
-. [small]#com.mulesoft.mule.cassandradb#
+. [small]#org.mule.modules.cassandradb#
 
 === Communication debug
 
-By setting logging level to "DEBUG" for [small]#com.mulesoft.mule.cassandradb# every operation executed will be logged.
+By setting logging level to "DEBUG" for [small]#org.mule.modules.cassandradb# every operation executed will be logged.
 
 == Entry points
 
 On the connector class CassandraDBConnector.java you will find the processor you’d like to debug (@Processor). The name of the processor is defined by friendlyName decorator parameter, or if the parameter is absent, by the name of the method,
-for example, in [small]#com.mulesoft.mule.cassandradb.CassandraDBConnector.java#
+for example, in [small]#org.mule.modules.cassandradb.CassandraDBConnector.java#
 
 "Insert" processor is implemented by the "insert" method which is decorated by @Processor.
 
