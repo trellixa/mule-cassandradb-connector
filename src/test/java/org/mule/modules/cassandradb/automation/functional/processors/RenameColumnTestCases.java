@@ -6,7 +6,7 @@ package org.mule.modules.cassandradb.automation.functional.processors;
 import com.datastax.driver.core.DataType;
 import com.datastax.driver.core.exceptions.InvalidQueryException;
 import org.mule.modules.cassandradb.automation.functional.TestDataBuilder;
-import org.mule.modules.cassandradb.automation.util.ConstantsTest;
+import org.mule.modules.cassandradb.automation.util.TestsConstants;
 import org.mule.modules.cassandradb.utils.CassandraDBException;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -15,22 +15,22 @@ import org.junit.Test;
 public class RenameColumnTestCases extends CassandraDBConnectorAbstractTestCases {
     @BeforeClass
     public static void setup() throws Exception {
-        cassClient.createTable(TestDataBuilder.getBasicCreateTableInput(TestDataBuilder.getCompositePrimaryKey(), cassConfig.getKeyspace(), ConstantsTest.TABLE_NAME_1));
+        cassClient.createTable(TestDataBuilder.getBasicCreateTableInput(TestDataBuilder.getCompositePrimaryKey(), cassConfig.getKeyspace(), TestsConstants.TABLE_NAME_1));
     }
 
     @AfterClass
     public static void tearDown() {
-        cassClient.dropTable(ConstantsTest.TABLE_NAME_1, cassConfig.getKeyspace());
+        cassClient.dropTable(TestsConstants.TABLE_NAME_1, cassConfig.getKeyspace());
     }
 
     @Test
     public void shouldRenamePKColumnWithSuccess() throws CassandraDBException {
-        getConnector().renameColumn(ConstantsTest.TABLE_NAME_1, ConstantsTest.VALID_COLUMN_1, "renamed");
+        getConnector().renameColumn(TestsConstants.TABLE_NAME_1, TestsConstants.VALID_COLUMN_1, "renamed");
     }
 
     @Test(expected = InvalidQueryException.class)
     public void shouldNotRenameNonPKColumn() throws CassandraDBException {
-        cassClient.addNewColumn(ConstantsTest.TABLE_NAME_1, cassConfig.getKeyspace(), ConstantsTest.VALID_LIST_COLUMN, DataType.list(DataType.text()));
-        getConnector().renameColumn(ConstantsTest.TABLE_NAME_1, ConstantsTest.VALID_LIST_COLUMN, "renamed");
+        cassClient.addNewColumn(TestsConstants.TABLE_NAME_1, cassConfig.getKeyspace(), TestsConstants.VALID_LIST_COLUMN, DataType.list(DataType.text()));
+        getConnector().renameColumn(TestsConstants.TABLE_NAME_1, TestsConstants.VALID_LIST_COLUMN, "renamed");
     }
 }

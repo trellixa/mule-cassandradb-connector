@@ -5,7 +5,7 @@ package org.mule.modules.cassandradb.automation.functional.processors;
 
 import com.datastax.driver.core.exceptions.InvalidQueryException;
 import org.mule.modules.cassandradb.automation.functional.TestDataBuilder;
-import org.mule.modules.cassandradb.automation.util.ConstantsTest;
+import org.mule.modules.cassandradb.automation.util.TestsConstants;
 import org.mule.modules.cassandradb.utils.CassandraDBException;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -15,25 +15,25 @@ public class RemoveColumnTestCases extends CassandraDBConnectorAbstractTestCases
 
     @BeforeClass
     public static void setup() throws Exception {
-        cassClient.createTable(TestDataBuilder.getBasicCreateTableInput(TestDataBuilder.getColumns(), cassConfig.getKeyspace(), ConstantsTest.TABLE_NAME_1));
-        cassClient.insert(cassConfig.getKeyspace(), ConstantsTest.TABLE_NAME_1, TestDataBuilder.getValidEntity());
+        cassClient.createTable(TestDataBuilder.getBasicCreateTableInput(TestDataBuilder.getColumns(), cassConfig.getKeyspace(), TestsConstants.TABLE_NAME_1));
+        cassClient.insert(cassConfig.getKeyspace(), TestsConstants.TABLE_NAME_1, TestDataBuilder.getValidEntity());
     }
 
     @AfterClass
     public static void tearDown() {
-        cassClient.dropTable(ConstantsTest.TABLE_NAME_1, cassConfig.getKeyspace());
+        cassClient.dropTable(TestsConstants.TABLE_NAME_1, cassConfig.getKeyspace());
     }
 
     @Test
     public void testRemoveColumnWithSuccess() throws CassandraDBException {
-        getConnector().dropColumn(ConstantsTest.TABLE_NAME_1, ConstantsTest.VALID_COLUMN_1);
-        getConnector().dropColumn(ConstantsTest.TABLE_NAME_1, ConstantsTest.VALID_COLUMN_2);
+        getConnector().dropColumn(TestsConstants.TABLE_NAME_1, TestsConstants.VALID_COLUMN_1);
+        getConnector().dropColumn(TestsConstants.TABLE_NAME_1, TestsConstants.VALID_COLUMN_2);
     }
 
 
     @Test(expected = InvalidQueryException.class)
     public void testRemoveColumnWithInvalidName() throws CassandraDBException {
-        getConnector().dropColumn(ConstantsTest.TABLE_NAME_1, ConstantsTest.COLUMN);
+        getConnector().dropColumn(TestsConstants.TABLE_NAME_1, TestsConstants.COLUMN);
     }
 
 }

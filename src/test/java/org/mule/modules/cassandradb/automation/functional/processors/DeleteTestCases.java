@@ -5,7 +5,7 @@ package org.mule.modules.cassandradb.automation.functional.processors;
 
 import com.datastax.driver.core.DataType;
 import org.mule.modules.cassandradb.automation.functional.TestDataBuilder;
-import org.mule.modules.cassandradb.automation.util.ConstantsTest;
+import org.mule.modules.cassandradb.automation.util.TestsConstants;
 import org.mule.modules.cassandradb.utils.CassandraDBException;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -15,93 +15,93 @@ public class DeleteTestCases extends CassandraDBConnectorAbstractTestCases {
 
     @BeforeClass
     public static void setup() throws Exception {
-        cassClient.createTable(TestDataBuilder.getBasicCreateTableInput(TestDataBuilder.getColumns(), cassConfig.getKeyspace(), ConstantsTest.TABLE_NAME_1));
+        cassClient.createTable(TestDataBuilder.getBasicCreateTableInput(TestDataBuilder.getColumns(), cassConfig.getKeyspace(), TestsConstants.TABLE_NAME_1));
     }
 
     @AfterClass
     public static void tearDown() {
-        cassClient.dropTable(ConstantsTest.TABLE_NAME_1, cassConfig.getKeyspace());
+        cassClient.dropTable(TestsConstants.TABLE_NAME_1, cassConfig.getKeyspace());
     }
 
     @Test
     public void testDeleteColumnUsingEqWithSuccess() throws CassandraDBException {
         // set up the data
-        cassClient.insert(cassConfig.getKeyspace(), ConstantsTest.TABLE_NAME_1, TestDataBuilder.getValidEntity());
+        cassClient.insert(cassConfig.getKeyspace(), TestsConstants.TABLE_NAME_1, TestDataBuilder.getValidEntity());
 
-        getConnector().deleteColumnsValue(ConstantsTest.TABLE_NAME_1,
+        getConnector().deleteColumnsValue(TestsConstants.TABLE_NAME_1,
                 TestDataBuilder.getPayloadColumnsAndFilters(TestDataBuilder.getValidColumnsListForDelete(), TestDataBuilder.getValidWhereClauseWithEq()));
     }
 
     @Test
     public void testDeleteRowUsingEqWithSuccess() throws CassandraDBException {
         // set up the data
-        cassClient.insert(cassConfig.getKeyspace(), ConstantsTest.TABLE_NAME_1, TestDataBuilder.getValidEntity());
+        cassClient.insert(cassConfig.getKeyspace(), TestsConstants.TABLE_NAME_1, TestDataBuilder.getValidEntity());
 
-        getConnector().deleteRows(ConstantsTest.TABLE_NAME_1, TestDataBuilder.getPayloadColumnsAndFilters(null, TestDataBuilder.getValidWhereClauseWithEq()));
+        getConnector().deleteRows(TestsConstants.TABLE_NAME_1, TestDataBuilder.getPayloadColumnsAndFilters(null, TestDataBuilder.getValidWhereClauseWithEq()));
     }
 
     @Test
     public void testDeleteColumnUsingINWithSuccess() throws CassandraDBException {
         // set up the data
-        cassClient.insert(cassConfig.getKeyspace(), ConstantsTest.TABLE_NAME_1, TestDataBuilder.getValidEntity());
+        cassClient.insert(cassConfig.getKeyspace(), TestsConstants.TABLE_NAME_1, TestDataBuilder.getValidEntity());
 
-        getConnector().deleteColumnsValue(ConstantsTest.TABLE_NAME_1,
+        getConnector().deleteColumnsValue(TestsConstants.TABLE_NAME_1,
                 TestDataBuilder.getPayloadColumnsAndFilters(TestDataBuilder.getValidColumnsListForDelete(), TestDataBuilder.getValidWhereClauseWithIN()));
     }
 
     @Test
     public void testDeleteRowUsingINWithSuccess() throws CassandraDBException {
         // set up the data
-        cassClient.insert(cassConfig.getKeyspace(), ConstantsTest.TABLE_NAME_1, TestDataBuilder.getValidEntity());
+        cassClient.insert(cassConfig.getKeyspace(), TestsConstants.TABLE_NAME_1, TestDataBuilder.getValidEntity());
 
-        getConnector().deleteRows(ConstantsTest.TABLE_NAME_1, TestDataBuilder.getPayloadColumnsAndFilters(null, TestDataBuilder.getValidWhereClauseWithIN()));
+        getConnector().deleteRows(TestsConstants.TABLE_NAME_1, TestDataBuilder.getPayloadColumnsAndFilters(null, TestDataBuilder.getValidWhereClauseWithIN()));
     }
 
     @Test
     public void testDeleteItemFromListWithSuccess() throws CassandraDBException {
-        cassClient.addNewColumn(ConstantsTest.TABLE_NAME_1, cassConfig.getKeyspace(), ConstantsTest.VALID_LIST_COLUMN, DataType.list(DataType.text()));
+        cassClient.addNewColumn(TestsConstants.TABLE_NAME_1, cassConfig.getKeyspace(), TestsConstants.VALID_LIST_COLUMN, DataType.list(DataType.text()));
         // set up the data
-        cassClient.insert(cassConfig.getKeyspace(), ConstantsTest.TABLE_NAME_1, TestDataBuilder.getValidEntityWithList());
+        cassClient.insert(cassConfig.getKeyspace(), TestsConstants.TABLE_NAME_1, TestDataBuilder.getValidEntityWithList());
 
-        getConnector().deleteColumnsValue(ConstantsTest.TABLE_NAME_1,
+        getConnector().deleteColumnsValue(TestsConstants.TABLE_NAME_1,
                 TestDataBuilder.getPayloadColumnsAndFilters(TestDataBuilder.getValidListItem(), TestDataBuilder.getValidWhereClauseWithEq()));
     }
 
     @Test
     public void testDeleteItemFromMapWithSuccess() throws CassandraDBException {
         // set up the data
-        cassClient.addNewColumn(ConstantsTest.TABLE_NAME_1, cassConfig.getKeyspace(), ConstantsTest.VALID_MAP_COLUMN, DataType.map(DataType.text(), DataType.text()));
-        cassClient.insert(cassConfig.getKeyspace(), ConstantsTest.TABLE_NAME_1, TestDataBuilder.getValidEntityWithMap());
+        cassClient.addNewColumn(TestsConstants.TABLE_NAME_1, cassConfig.getKeyspace(), TestsConstants.VALID_MAP_COLUMN, DataType.map(DataType.text(), DataType.text()));
+        cassClient.insert(cassConfig.getKeyspace(), TestsConstants.TABLE_NAME_1, TestDataBuilder.getValidEntityWithMap());
 
-        getConnector().deleteColumnsValue(ConstantsTest.TABLE_NAME_1,
+        getConnector().deleteColumnsValue(TestsConstants.TABLE_NAME_1,
                 TestDataBuilder.getPayloadColumnsAndFilters(TestDataBuilder.getValidMapItem(), TestDataBuilder.getValidWhereClauseWithEq()));
     }
 
     @Test
     public void testDeleteSetColumnWithSuccess() throws CassandraDBException {
         // set up the data
-        cassClient.addNewColumn(ConstantsTest.TABLE_NAME_1, cassConfig.getKeyspace(), ConstantsTest.VALID_SET_COLUMN, DataType.set(DataType.text()));
-        cassClient.insert(cassConfig.getKeyspace(), ConstantsTest.TABLE_NAME_1, TestDataBuilder.getValidEntityWithSet());
+        cassClient.addNewColumn(TestsConstants.TABLE_NAME_1, cassConfig.getKeyspace(), TestsConstants.VALID_SET_COLUMN, DataType.set(DataType.text()));
+        cassClient.insert(cassConfig.getKeyspace(), TestsConstants.TABLE_NAME_1, TestDataBuilder.getValidEntityWithSet());
 
-        getConnector().deleteColumnsValue(ConstantsTest.TABLE_NAME_1,
+        getConnector().deleteColumnsValue(TestsConstants.TABLE_NAME_1,
                 TestDataBuilder.getPayloadColumnsAndFilters(TestDataBuilder.getValidSet(), TestDataBuilder.getValidWhereClauseWithEq()));
     }
 
     @Test(expected = CassandraDBException.class)
     public void testDeleteWithInvalidInput() throws CassandraDBException {
         // set up the data
-        cassClient.insert(cassConfig.getKeyspace(), ConstantsTest.TABLE_NAME_1, TestDataBuilder.getValidEntity());
+        cassClient.insert(cassConfig.getKeyspace(), TestsConstants.TABLE_NAME_1, TestDataBuilder.getValidEntity());
 
-        getConnector().deleteColumnsValue(ConstantsTest.TABLE_NAME_1,
+        getConnector().deleteColumnsValue(TestsConstants.TABLE_NAME_1,
                 TestDataBuilder.getPayloadColumnsAndFilters(TestDataBuilder.getInvalidEntityForDelete(), TestDataBuilder.getValidWhereClauseWithEq()));
     }
 
     @Test(expected = CassandraDBException.class)
     public void testDeleteWithInvalidWhereClause() throws CassandraDBException {
         // set up the data
-        cassClient.insert(cassConfig.getKeyspace(), ConstantsTest.TABLE_NAME_1, TestDataBuilder.getValidEntity());
+        cassClient.insert(cassConfig.getKeyspace(), TestsConstants.TABLE_NAME_1, TestDataBuilder.getValidEntity());
 
-        getConnector().deleteColumnsValue(ConstantsTest.TABLE_NAME_1,
+        getConnector().deleteColumnsValue(TestsConstants.TABLE_NAME_1,
                 TestDataBuilder.getPayloadColumnsAndFilters(TestDataBuilder.getValidColumnsListForDelete(), TestDataBuilder.getInvalidWhereClause()));
     }
 }

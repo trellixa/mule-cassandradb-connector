@@ -5,7 +5,7 @@ package org.mule.modules.cassandradb.automation.functional.processors;
 
 import com.datastax.driver.core.DataType;
 import org.mule.modules.cassandradb.automation.functional.TestDataBuilder;
-import org.mule.modules.cassandradb.automation.util.ConstantsTest;
+import org.mule.modules.cassandradb.automation.util.TestsConstants;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -16,46 +16,46 @@ public class InsertTestCases extends CassandraDBConnectorAbstractTestCases {
 
     @BeforeClass
     public static void setup() throws Exception {
-        cassClient.createTable(TestDataBuilder.getBasicCreateTableInput(TestDataBuilder.getColumns(), cassConfig.getKeyspace(), ConstantsTest.TABLE_NAME_1));
+        cassClient.createTable(TestDataBuilder.getBasicCreateTableInput(TestDataBuilder.getColumns(), cassConfig.getKeyspace(), TestsConstants.TABLE_NAME_1));
     }
 
     @AfterClass
     public static void tearDown()  {
-        cassClient.dropTable(ConstantsTest.TABLE_NAME_1, cassConfig.getKeyspace());
+        cassClient.dropTable(TestsConstants.TABLE_NAME_1, cassConfig.getKeyspace());
     }
 
     @Test
     public void testInsertWithSuccess() throws CassandraDBException {
-        getConnector().insert(ConstantsTest.TABLE_NAME_1, TestDataBuilder.getValidEntity());
+        getConnector().insert(TestsConstants.TABLE_NAME_1, TestDataBuilder.getValidEntity());
     }
 
     @Test
     public void testInsertInListColumnWithSuccess() throws CassandraDBException {
         // set up the data
-        cassClient.addNewColumn(ConstantsTest.TABLE_NAME_1, cassConfig.getKeyspace(), ConstantsTest.VALID_LIST_COLUMN, DataType.list(DataType.text()));
+        cassClient.addNewColumn(TestsConstants.TABLE_NAME_1, cassConfig.getKeyspace(), TestsConstants.VALID_LIST_COLUMN, DataType.list(DataType.text()));
 
-        getConnector().insert(ConstantsTest.TABLE_NAME_1, TestDataBuilder.getValidEntityWithList());
+        getConnector().insert(TestsConstants.TABLE_NAME_1, TestDataBuilder.getValidEntityWithList());
     }
 
     @Test
     public void testInsertInMapColumnWithSuccess() throws CassandraDBException {
         // set up the data
-        cassClient.addNewColumn(ConstantsTest.TABLE_NAME_1, cassConfig.getKeyspace(), ConstantsTest.VALID_MAP_COLUMN, DataType.map(DataType.text(), DataType.text()));
+        cassClient.addNewColumn(TestsConstants.TABLE_NAME_1, cassConfig.getKeyspace(), TestsConstants.VALID_MAP_COLUMN, DataType.map(DataType.text(), DataType.text()));
 
-        getConnector().insert(ConstantsTest.TABLE_NAME_1, TestDataBuilder.getValidEntityWithMap());
+        getConnector().insert(TestsConstants.TABLE_NAME_1, TestDataBuilder.getValidEntityWithMap());
     }
 
     @Test
     public void testInsertISetColumnWithSuccess() throws CassandraDBException {
         // set up the data
-        cassClient.addNewColumn(ConstantsTest.TABLE_NAME_1, cassConfig.getKeyspace(), ConstantsTest.VALID_SET_COLUMN, DataType.set(DataType.text()));
+        cassClient.addNewColumn(TestsConstants.TABLE_NAME_1, cassConfig.getKeyspace(), TestsConstants.VALID_SET_COLUMN, DataType.set(DataType.text()));
 
-        getConnector().insert(ConstantsTest.TABLE_NAME_1, TestDataBuilder.getValidEntityWithSet());
+        getConnector().insert(TestsConstants.TABLE_NAME_1, TestDataBuilder.getValidEntityWithSet());
     }
 
     @Test(expected = CassandraDBException.class)
     public void testInsertWithInvalidInput() throws CassandraDBException {
-        getConnector().insert(ConstantsTest.TABLE_NAME_1, TestDataBuilder.getInvalidEntity());
+        getConnector().insert(TestsConstants.TABLE_NAME_1, TestDataBuilder.getInvalidEntity());
     }
 
 }

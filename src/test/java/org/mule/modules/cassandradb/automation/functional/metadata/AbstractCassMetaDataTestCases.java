@@ -5,7 +5,7 @@ import org.mule.modules.cassandradb.api.CassandraClient;
 import org.mule.modules.cassandradb.automation.functional.TestDataBuilder;
 import org.mule.modules.cassandradb.configurations.ConnectionParameters;
 import org.mule.modules.cassandradb.metadata.CreateKeyspaceInput;
-import org.mule.modules.cassandradb.automation.util.ConstantsTest;
+import org.mule.modules.cassandradb.automation.util.TestsConstants;
 import org.mule.modules.cassandradb.automation.util.PropertiesLoaderUtil;
 import org.mule.modules.cassandradb.utils.CassandraConfig;
 import org.mule.modules.cassandradb.utils.CassandraDBException;
@@ -37,14 +37,14 @@ public abstract class AbstractCassMetaDataTestCases extends AbstractMetaDataTest
         CreateKeyspaceInput keyspaceInput = new CreateKeyspaceInput();
         keyspaceInput.setKeyspaceName(cassConfig.getKeyspace());
         cassClient.createKeyspace(keyspaceInput);
-        cassClient.createTable(TestDataBuilder.getBasicCreateTableInput(TestDataBuilder.getPrimaryKey(), cassConfig.getKeyspace(), ConstantsTest.TABLE_NAME_2));
+        cassClient.createTable(TestDataBuilder.getBasicCreateTableInput(TestDataBuilder.getPrimaryKey(), cassConfig.getKeyspace(), TestsConstants.TABLE_NAME_2));
         //required delay to make sure the setup is ok
         Thread.sleep(5000);
     }
 
     @AfterClass
     public static void tearDown() {
-        cassClient.dropTable(ConstantsTest.TABLE_NAME_2, cassConfig.getKeyspace());
+        cassClient.dropTable(TestsConstants.TABLE_NAME_2, cassConfig.getKeyspace());
         cassClient.dropKeyspace(cassConfig.getKeyspace());
     }
 

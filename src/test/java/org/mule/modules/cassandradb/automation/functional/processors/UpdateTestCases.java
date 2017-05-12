@@ -4,7 +4,7 @@
 package org.mule.modules.cassandradb.automation.functional.processors;
 
 import org.mule.modules.cassandradb.automation.functional.TestDataBuilder;
-import org.mule.modules.cassandradb.automation.util.ConstantsTest;
+import org.mule.modules.cassandradb.automation.util.TestsConstants;
 import org.mule.modules.cassandradb.utils.CassandraDBException;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -15,34 +15,34 @@ public class UpdateTestCases extends CassandraDBConnectorAbstractTestCases {
 
     @BeforeClass
     public static void setup() throws Exception {
-        cassClient.createTable(TestDataBuilder.getBasicCreateTableInput(TestDataBuilder.getColumns(), cassConfig.getKeyspace(), ConstantsTest.TABLE_NAME_1));
-        cassClient.insert(cassConfig.getKeyspace(), ConstantsTest.TABLE_NAME_1, TestDataBuilder.getValidEntity());
+        cassClient.createTable(TestDataBuilder.getBasicCreateTableInput(TestDataBuilder.getColumns(), cassConfig.getKeyspace(), TestsConstants.TABLE_NAME_1));
+        cassClient.insert(cassConfig.getKeyspace(), TestsConstants.TABLE_NAME_1, TestDataBuilder.getValidEntity());
     }
 
     @AfterClass
     public static void tearDown() {
-        cassClient.dropTable(ConstantsTest.TABLE_NAME_1, cassConfig.getKeyspace());
+        cassClient.dropTable(TestsConstants.TABLE_NAME_1, cassConfig.getKeyspace());
     }
 
     @Test
     public void testUpdateUsingEqWithSuccess() throws CassandraDBException {
-        getConnector().update(ConstantsTest.TABLE_NAME_1, TestDataBuilder.getPayloadColumnsAndFilters(TestDataBuilder.getValidEntityForUpdate(),
+        getConnector().update(TestsConstants.TABLE_NAME_1, TestDataBuilder.getPayloadColumnsAndFilters(TestDataBuilder.getValidEntityForUpdate(),
                 TestDataBuilder.getValidWhereClauseWithEq()));
     }
 
     @Test
     public void testUpdateUsingInWithSuccess() throws CassandraDBException {
-        getConnector().update(ConstantsTest.TABLE_NAME_1, TestDataBuilder.getPayloadColumnsAndFilters(TestDataBuilder.getValidEntityForUpdate(),
+        getConnector().update(TestsConstants.TABLE_NAME_1, TestDataBuilder.getPayloadColumnsAndFilters(TestDataBuilder.getValidEntityForUpdate(),
                 TestDataBuilder.getValidWhereClauseWithIN()));
     }
 
     @Test(expected=CassandraDBException.class)
     public void testUpdateWithInvalidInput() throws CassandraDBException {
-        getConnector().update(ConstantsTest.TABLE_NAME_1, TestDataBuilder.getPayloadColumnsAndFilters(TestDataBuilder.getInvalidEntity(), TestDataBuilder.getValidWhereClauseWithEq()));
+        getConnector().update(TestsConstants.TABLE_NAME_1, TestDataBuilder.getPayloadColumnsAndFilters(TestDataBuilder.getInvalidEntity(), TestDataBuilder.getValidWhereClauseWithEq()));
     }
 
     @Test(expected=CassandraDBException.class)
     public void testUpdateWithInvalidWhereClause() throws CassandraDBException {
-        getConnector().update(ConstantsTest.TABLE_NAME_1, TestDataBuilder.getPayloadColumnsAndFilters(TestDataBuilder.getInvalidEntity(), TestDataBuilder.getInvalidWhereClause()));
+        getConnector().update(TestsConstants.TABLE_NAME_1, TestDataBuilder.getPayloadColumnsAndFilters(TestDataBuilder.getInvalidEntity(), TestDataBuilder.getInvalidWhereClause()));
     }
 }
