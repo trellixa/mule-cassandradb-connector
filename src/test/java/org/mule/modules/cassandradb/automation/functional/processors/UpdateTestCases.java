@@ -26,23 +26,23 @@ public class UpdateTestCases extends CassandraDBConnectorAbstractTestCases {
 
     @Test
     public void testUpdateUsingEqWithSuccess() throws CassandraDBException {
-        getConnector().update(TestsConstants.TABLE_NAME_1, TestDataBuilder.getPayloadColumnsAndFilters(TestDataBuilder.getValidEntityForUpdate(),
+        getConnector().update(TestsConstants.TABLE_NAME_1, null, TestDataBuilder.getPayloadColumnsAndFilters(TestDataBuilder.getValidEntityForUpdate(),
                 TestDataBuilder.getValidWhereClauseWithEq()));
     }
 
     @Test
     public void testUpdateUsingInWithSuccess() throws CassandraDBException {
-        getConnector().update(TestsConstants.TABLE_NAME_1, TestDataBuilder.getPayloadColumnsAndFilters(TestDataBuilder.getValidEntityForUpdate(),
+        getConnector().update(TestsConstants.TABLE_NAME_1, null, TestDataBuilder.getPayloadColumnsAndFilters(TestDataBuilder.getValidEntityForUpdate(),
                 TestDataBuilder.getValidWhereClauseWithIN()));
     }
 
     @Test(expected=CassandraDBException.class)
     public void testUpdateWithInvalidInput() throws CassandraDBException {
-        getConnector().update(TestsConstants.TABLE_NAME_1, TestDataBuilder.getPayloadColumnsAndFilters(TestDataBuilder.getInvalidEntity(), TestDataBuilder.getValidWhereClauseWithEq()));
+        getConnector().update(TestsConstants.TABLE_NAME_1, null, TestDataBuilder.getPayloadColumnsAndFilters(TestDataBuilder.getInvalidEntity(), TestDataBuilder.getValidWhereClauseWithEq()));
     }
 
     @Test(expected=CassandraDBException.class)
     public void testUpdateWithInvalidWhereClause() throws CassandraDBException {
-        getConnector().update(TestsConstants.TABLE_NAME_1, TestDataBuilder.getPayloadColumnsAndFilters(TestDataBuilder.getInvalidEntity(), TestDataBuilder.getInvalidWhereClause()));
+        getConnector().update(TestsConstants.TABLE_NAME_1, null, TestDataBuilder.getPayloadColumnsAndFilters(TestDataBuilder.getInvalidEntity(), TestDataBuilder.getInvalidWhereClause()));
     }
 }

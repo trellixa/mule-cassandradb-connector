@@ -6,7 +6,6 @@ package org.mule.modules.cassandradb.automation.util;
 public class TestsConstants {
 
     //test specific constants
-    public final static String SECOND_KEYSPACE_NAME = "second_dummy_keyspace";
     public final static String TABLE_NAME_1 = "dummy_table_name_1";
     public final static String TABLE_NAME_2 = "dummy_table_name_2";
     public static final String VALID_COLUMN_1 = "dummy_column_1";

@@ -26,7 +26,7 @@ public class InsertTestCases extends CassandraDBConnectorAbstractTestCases {
 
     @Test
     public void testInsertWithSuccess() throws CassandraDBException {
-        getConnector().insert(TestsConstants.TABLE_NAME_1, TestDataBuilder.getValidEntity());
+        getConnector().insert(TestsConstants.TABLE_NAME_1, null, TestDataBuilder.getValidEntity());
     }
 
     @Test
@@ -34,7 +34,7 @@ public class InsertTestCases extends CassandraDBConnectorAbstractTestCases {
         // set up the data
         cassClient.addNewColumn(TestsConstants.TABLE_NAME_1, cassConfig.getKeyspace(), TestsConstants.VALID_LIST_COLUMN, DataType.list(DataType.text()));
 
-        getConnector().insert(TestsConstants.TABLE_NAME_1, TestDataBuilder.getValidEntityWithList());
+        getConnector().insert(TestsConstants.TABLE_NAME_1, null, TestDataBuilder.getValidEntityWithList());
     }
 
     @Test
@@ -42,7 +42,7 @@ public class InsertTestCases extends CassandraDBConnectorAbstractTestCases {
         // set up the data
         cassClient.addNewColumn(TestsConstants.TABLE_NAME_1, cassConfig.getKeyspace(), TestsConstants.VALID_MAP_COLUMN, DataType.map(DataType.text(), DataType.text()));
 
-        getConnector().insert(TestsConstants.TABLE_NAME_1, TestDataBuilder.getValidEntityWithMap());
+        getConnector().insert(TestsConstants.TABLE_NAME_1, null, TestDataBuilder.getValidEntityWithMap());
     }
 
     @Test
@@ -50,12 +50,12 @@ public class InsertTestCases extends CassandraDBConnectorAbstractTestCases {
         // set up the data
         cassClient.addNewColumn(TestsConstants.TABLE_NAME_1, cassConfig.getKeyspace(), TestsConstants.VALID_SET_COLUMN, DataType.set(DataType.text()));
 
-        getConnector().insert(TestsConstants.TABLE_NAME_1, TestDataBuilder.getValidEntityWithSet());
+        getConnector().insert(TestsConstants.TABLE_NAME_1, null, TestDataBuilder.getValidEntityWithSet());
     }
 
     @Test(expected = CassandraDBException.class)
     public void testInsertWithInvalidInput() throws CassandraDBException {
-        getConnector().insert(TestsConstants.TABLE_NAME_1, TestDataBuilder.getInvalidEntity());
+        getConnector().insert(TestsConstants.TABLE_NAME_1, null, TestDataBuilder.getInvalidEntity());
     }
 
 }

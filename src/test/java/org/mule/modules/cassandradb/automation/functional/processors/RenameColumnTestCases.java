@@ -25,12 +25,12 @@ public class RenameColumnTestCases extends CassandraDBConnectorAbstractTestCases
 
     @Test
     public void shouldRenamePKColumnWithSuccess() throws CassandraDBException {
-        getConnector().renameColumn(TestsConstants.TABLE_NAME_1, TestsConstants.VALID_COLUMN_1, "renamed");
+        getConnector().renameColumn(TestsConstants.TABLE_NAME_1, null, TestsConstants.VALID_COLUMN_1, "renamed");
     }
 
     @Test(expected = InvalidQueryException.class)
     public void shouldNotRenameNonPKColumn() throws CassandraDBException {
         cassClient.addNewColumn(TestsConstants.TABLE_NAME_1, cassConfig.getKeyspace(), TestsConstants.VALID_LIST_COLUMN, DataType.list(DataType.text()));
-        getConnector().renameColumn(TestsConstants.TABLE_NAME_1, TestsConstants.VALID_LIST_COLUMN, "renamed");
+        getConnector().renameColumn(TestsConstants.TABLE_NAME_1, null, TestsConstants.VALID_LIST_COLUMN, "renamed");
     }
 }

@@ -26,14 +26,13 @@ public class RemoveColumnTestCases extends CassandraDBConnectorAbstractTestCases
 
     @Test
     public void testRemoveColumnWithSuccess() throws CassandraDBException {
-        getConnector().dropColumn(TestsConstants.TABLE_NAME_1, TestsConstants.VALID_COLUMN_1);
-        getConnector().dropColumn(TestsConstants.TABLE_NAME_1, TestsConstants.VALID_COLUMN_2);
+        getConnector().dropColumn(TestsConstants.TABLE_NAME_1, null, TestsConstants.VALID_COLUMN_1);
+        getConnector().dropColumn(TestsConstants.TABLE_NAME_1, null, TestsConstants.VALID_COLUMN_2);
     }
 
 
     @Test(expected = InvalidQueryException.class)
     public void testRemoveColumnWithInvalidName() throws CassandraDBException {
-        getConnector().dropColumn(TestsConstants.TABLE_NAME_1, TestsConstants.COLUMN);
+        getConnector().dropColumn(TestsConstants.TABLE_NAME_1, null, TestsConstants.COLUMN);
     }
-
 }
