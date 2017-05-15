@@ -12,6 +12,7 @@ import org.mule.api.annotations.param.Default;
 import org.mule.api.annotations.param.MetaDataKeyParam;
 import org.mule.api.annotations.param.MetaDataKeyParamAffectsType;
 import org.mule.api.annotations.param.Optional;
+import org.mule.api.annotations.param.RefOnly;
 import org.mule.common.query.DsqlQuery;
 import org.mule.modules.cassandradb.metadata.*;
 import org.mule.modules.cassandradb.utils.CassandraDBException;
@@ -46,7 +47,7 @@ public class CassandraDBConnector {
      * @throws CassandraDBException if any error occurs when executing the create keyspace operation
      */
     @Processor
-    public boolean createKeyspace(@Default(PAYLOAD) CreateKeyspaceInput input) throws CassandraDBException {
+    public boolean createKeyspace(@RefOnly @Default(PAYLOAD) CreateKeyspaceInput input) throws CassandraDBException {
         if (logger.isDebugEnabled()) {
             logger.debug("Creating keyspace " + input.toString());
         }
@@ -83,7 +84,7 @@ public class CassandraDBConnector {
      * @throws CassandraDBException if any error occurs when executing the create table operation
      */
     @Processor
-    public boolean createTable(@Default(PAYLOAD) CreateTableInput input) throws CassandraDBException {
+    public boolean createTable(@RefOnly @Default(PAYLOAD) CreateTableInput input) throws CassandraDBException {
         if (logger.isDebugEnabled()) {
             logger.debug("Creating table " + input.toString());
         }
@@ -97,17 +98,17 @@ public class CassandraDBConnector {
     /**
      * Drops an entire table form the specified keyspace or from the keyspace used for login if none is specified as an operation parameter
      * @param tableName the name of the table to be dropped
-     * @param customKeyspaceName (optional) the keyspace which contains the table to be dropped
+     * @param keyspaceName (optional) the keyspace which contains the table to be dropped
      * @return true if the operation succeeded, false otherwise
      * @throws CassandraDBException if any error occurs when executing the drop table operation
      */
     @Processor
-    public boolean dropTable(String tableName, @Optional String customKeyspaceName) throws CassandraDBException{
+    public boolean dropTable(String tableName, @Optional String keyspaceName) throws CassandraDBException{
         if (logger.isDebugEnabled()) {
             logger.debug("Dropping table " + tableName);
         }
         try {
-            return basicAuthConnectionStrategy.getCassandraClient().dropTable(tableName, customKeyspaceName);
+            return basicAuthConnectionStrategy.getCassandraClient().dropTable(tableName, keyspaceName);
         } catch (Exception e) {
             throw new CassandraDBException(e.getMessage(), e);
         }
@@ -121,7 +122,7 @@ public class CassandraDBConnector {
      * @throws CassandraDBException if any error occurs when executing the custom query
      */
     @Processor(friendlyName="Execute CQL Query")
-    public List<Map<String, Object>> executeCQLQuery(@Placement(group = "Query") @Default(PAYLOAD) CQLQueryInput input) throws CassandraDBException {
+    public List<Map<String, Object>> executeCQLQuery(@Placement(group = "Query") @RefOnly @Default(PAYLOAD) CQLQueryInput input) throws CassandraDBException {
         if (logger.isDebugEnabled()) {
             logger.debug("Executing query " + input.toString());
         }
@@ -143,7 +144,7 @@ public class CassandraDBConnector {
     @MetaDataScope(CassandraMetadataCategory.class)
     public void insert(@MetaDataKeyParam(affects = MetaDataKeyParamAffectsType.INPUT) String table,
                        @Optional String keyspaceName,
-                       @Default(PAYLOAD) Map<String, Object> entity) throws CassandraDBException {
+                       @RefOnly @Default(PAYLOAD) Map<String, Object> entity) throws CassandraDBException {
         if (logger.isDebugEnabled()) {
             logger.debug("Inserting entity " + entity + " into the " + table + " table ");
         }
@@ -162,7 +163,7 @@ public class CassandraDBConnector {
     @MetaDataScope(CassandraWithFiltersMetadataCategory.class)
     public void update(@MetaDataKeyParam(affects = MetaDataKeyParamAffectsType.INPUT) String table,
                        @Optional String keyspaceName,
-                       @Default(PAYLOAD) Map<String, Object> entity) throws CassandraDBException {
+                       @RefOnly @Default(PAYLOAD) Map<String, Object> entity) throws CassandraDBException {
         if (logger.isDebugEnabled()) {
             logger.debug("Updating  entity" + entity + " into the " + table + " table ");
         }
@@ -181,7 +182,7 @@ public class CassandraDBConnector {
     @MetaDataScope(CassandraWithFiltersMetadataCategory.class)
     public void deleteColumnsValue(@MetaDataKeyParam(affects = MetaDataKeyParamAffectsType.INPUT) String table,
                                    @Optional String keyspaceName,
-                                   @Default(PAYLOAD) Map<String, Object> payload) throws CassandraDBException {
+                                   @RefOnly @Default(PAYLOAD) Map<String, Object> payload) throws CassandraDBException {
         String keySpace = StringUtils.isNotBlank(keyspaceName) ? keyspaceName : basicAuthConnectionStrategy.getKeyspace();
         basicAuthConnectionStrategy.getCassandraClient().delete(keySpace, table, (List) payload.get(Constants.COLUMNS), (Map) payload.get(Constants.WHERE));
     }
@@ -197,7 +198,7 @@ public class CassandraDBConnector {
     @MetaDataScope(CassandraOnlyWithFiltersMetadataCategory.class)
     public void deleteRows(@MetaDataKeyParam(affects = MetaDataKeyParamAffectsType.INPUT) String table,
                            @Optional String keyspaceName,
-                           @Default(PAYLOAD) Map<String, Object> payload) throws CassandraDBException {
+                           @RefOnly @Default(PAYLOAD) Map<String, Object> payload) throws CassandraDBException {
         String keySpace = StringUtils.isNotBlank(keyspaceName) ? keyspaceName : basicAuthConnectionStrategy.getKeyspace();
         basicAuthConnectionStrategy.getCassandraClient().delete(keySpace, table, null, (Map) payload.get(Constants.WHERE));
     }
@@ -241,7 +242,7 @@ public class CassandraDBConnector {
      * @return true if the operation succeeded or false if not
      */
     @Processor(friendlyName="Change the type of a column")
-    public boolean changeColumnType(String table, @Optional String keyspaceName, @Default(PAYLOAD) AlterColumnInput input){
+    public boolean changeColumnType(String table, @Optional String keyspaceName, @RefOnly @Default(PAYLOAD) AlterColumnInput input){
         return basicAuthConnectionStrategy.getCassandraClient().changeColumnType(table, keyspaceName, input);
     }
 
@@ -253,7 +254,7 @@ public class CassandraDBConnector {
      * @return true if the operation succeeded or false if not
      */
     @Processor(friendlyName="Add new column")
-    public boolean addNewColumn(String table, @Optional String keyspaceName, @Default(PAYLOAD) AlterColumnInput input) throws CassandraDBException {
+    public boolean addNewColumn(String table, @Optional String keyspaceName, @RefOnly @Default(PAYLOAD) AlterColumnInput input) throws CassandraDBException {
         if (logger.isDebugEnabled()) {
             logger.debug("Adding new column " + input.toString());
         }
@@ -272,7 +273,7 @@ public class CassandraDBConnector {
      * @return true if the operation succeeded or false if not
      */
     @Processor(friendlyName="Remove column")
-    public boolean dropColumn(String table, @Optional String keyspaceName, @Default(PAYLOAD) String columnName) {
+    public boolean dropColumn(String table, @Optional String keyspaceName, @RefOnly @Default(PAYLOAD) String columnName) {
         return basicAuthConnectionStrategy.getCassandraClient().dropColumn(table, keyspaceName, columnName);
     }
 
