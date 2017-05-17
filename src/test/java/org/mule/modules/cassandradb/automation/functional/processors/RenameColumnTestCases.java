@@ -12,7 +12,7 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-public class RenameColumnTestCases extends CassandraDBConnectorAbstractTestCases {
+public class RenameColumnTestCases extends CassandraAbstractTestCases {
     @BeforeClass
     public static void setup() throws Exception {
         cassClient.createTable(TestDataBuilder.getBasicCreateTableInput(TestDataBuilder.getCompositePrimaryKey(), cassConfig.getKeyspace(), TestsConstants.TABLE_NAME_1));

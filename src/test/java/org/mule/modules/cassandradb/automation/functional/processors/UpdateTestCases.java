@@ -11,7 +11,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 
-public class UpdateTestCases extends CassandraDBConnectorAbstractTestCases {
+public class UpdateTestCases extends CassandraAbstractTestCases {
 
     @BeforeClass
     public static void setup() throws Exception {

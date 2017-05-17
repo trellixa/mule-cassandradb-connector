@@ -15,9 +15,9 @@ import org.mule.modules.cassandradb.CassandraDBConnector;
 import org.mule.tools.devkit.ctf.exceptions.ConfigurationLoadingFailedException;
 import org.mule.tools.devkit.ctf.junit.AbstractTestCase;
 
-public abstract class CassandraDBConnectorAbstractTestCases extends AbstractTestCase<CassandraDBConnector> {
+public abstract class CassandraAbstractTestCases extends AbstractTestCase<CassandraDBConnector> {
 
-    public CassandraDBConnectorAbstractTestCases() {
+    public CassandraAbstractTestCases() {
         super(CassandraDBConnector.class);
     }
 

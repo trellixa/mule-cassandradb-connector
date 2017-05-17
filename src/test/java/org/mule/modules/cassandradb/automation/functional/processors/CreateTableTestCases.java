@@ -9,7 +9,7 @@ import org.mule.modules.cassandradb.utils.CassandraDBException;
 import org.junit.AfterClass;
 import org.junit.Test;
 
-public class CreateTableTestCases extends CassandraDBConnectorAbstractTestCases {
+public class CreateTableTestCases extends CassandraAbstractTestCases {
 
     @AfterClass
     public static void tearDown() {

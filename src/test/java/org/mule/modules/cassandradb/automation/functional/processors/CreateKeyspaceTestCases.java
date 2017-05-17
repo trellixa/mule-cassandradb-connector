@@ -10,7 +10,7 @@ import org.mule.modules.cassandradb.utils.ReplicationStrategy;
 import org.junit.AfterClass;
 import org.junit.Test;
 
-public class CreateKeyspaceTestCases extends CassandraDBConnectorAbstractTestCases {
+public class CreateKeyspaceTestCases extends CassandraAbstractTestCases {
 
     private final static String KEYSPACE_NAME_1 = "keyspaceName1";
     private final static String KEYSPACE_NAME_2 = "keyspaceName2";

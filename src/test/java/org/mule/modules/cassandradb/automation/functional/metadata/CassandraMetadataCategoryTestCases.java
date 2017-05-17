@@ -7,7 +7,7 @@ import org.mule.modules.cassandradb.CassandraDBConnector;
 import org.mule.modules.cassandradb.automation.functional.TestDataBuilder;
 import org.mule.modules.cassandradb.metadata.CassandraMetadataCategory;
 
-public class CassandraMetadataCategoryTestCases extends AbstractCassMetaDataTestCases {
+public class CassandraMetadataCategoryTestCases extends CassandraAbstractMetaDataTestCases {
 
     public CassandraMetadataCategoryTestCases() {
         super(TestDataBuilder.cassandraCategoryMetadataTestKeys, CassandraMetadataCategory.class, CassandraDBConnector.class);
