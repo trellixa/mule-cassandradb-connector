@@ -4,6 +4,10 @@
 package org.mule.modules.cassandradb.utils;
 
 public class Constants {
+	
+	private Constants() {
+		// Empty constructor
+	}
 
     public final static String REPLICATION_FACTOR = "replication_factor";
     public final static String CLASS = "class";

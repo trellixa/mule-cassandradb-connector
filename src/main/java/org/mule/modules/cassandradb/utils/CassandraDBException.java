@@ -9,12 +9,6 @@ package org.mule.modules.cassandradb.utils;
 public class CassandraDBException extends Exception {
 
     /**
-     * Constructs a new exception with null as its detail message.
-     */
-    public CassandraDBException() {
-    }
-
-    /**
      * Constructs a new exception with the specified detail message.
      *
      * @param msg the detail message.

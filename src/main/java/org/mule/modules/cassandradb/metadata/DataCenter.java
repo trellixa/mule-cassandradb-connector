@@ -10,7 +10,7 @@ public class DataCenter {
     private Integer value;
 
     public DataCenter(){
-
+    	// Empty constructor
     }
 
     public DataCenter(String name, Integer value){

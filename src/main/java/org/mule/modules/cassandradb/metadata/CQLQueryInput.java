@@ -16,6 +16,7 @@ public class CQLQueryInput {
     }
 
     public CQLQueryInput() {
+    	// Empty constructor
     }
 
     public String getCqlQuery() {

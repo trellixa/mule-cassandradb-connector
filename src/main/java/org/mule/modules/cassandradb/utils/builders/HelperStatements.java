@@ -14,6 +14,10 @@ import java.util.List;
 import java.util.Map;
 
 public class HelperStatements {
+	
+	private HelperStatements() {
+		// Empty constructor
+	}
 
     public static SchemaStatement createKeyspaceStatement(CreateKeyspaceInput input) {
         //build create keyspace statement if not exists
