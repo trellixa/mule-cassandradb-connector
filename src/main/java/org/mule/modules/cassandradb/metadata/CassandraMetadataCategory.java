@@ -27,7 +27,7 @@ import static org.mule.common.metadata.datatype.DataType.*;
 @MetaDataCategory
 public class CassandraMetadataCategory {
 
-    final static Logger logger = LoggerFactory.getLogger(CassandraMetadataCategory.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(CassandraMetadataCategory.class);
 
     @Inject
     private CassandraDBConnector cassandraConnector;
@@ -37,7 +37,7 @@ public class CassandraMetadataCategory {
      */
     @MetaDataKeyRetriever
     public List<MetaDataKey> getMetadataKeys() {
-        logger.info("Retrieving metadata keys...");
+        LOGGER.info("Retrieving metadata keys...");
         List<MetaDataKey> keys = new ArrayList<MetaDataKey>();
         final String keyspaceUsed = cassandraConnector.getBasicAuthConnectionStrategy().getCassandraClient().getLoggedKeyspace();
         final CassandraClient cassandraClient = cassandraConnector.getBasicAuthConnectionStrategy().getCassandraClient();
@@ -79,7 +79,7 @@ public class CassandraMetadataCategory {
     }
 
     protected TableMetadata getTableMetadata(final MetaDataKey key) {
-        logger.info("Retrieving input metadata for the key: {}", key);
+        LOGGER.info("Retrieving input metadata for the key: {}", key);
         final String keyspaceUsed = cassandraConnector.getBasicAuthConnectionStrategy().getCassandraClient().getLoggedKeyspace();
         final CassandraClient cassandraClient = cassandraConnector.getBasicAuthConnectionStrategy().getCassandraClient();
 

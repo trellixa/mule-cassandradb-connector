@@ -87,7 +87,7 @@ public enum ReplicationStrategy {
         return replicationStrategy;
     }
 
-    public static LinkedHashMap<String, Object> buildDefaultReplicationStrategy() {
+    public static Map<String, Object> buildDefaultReplicationStrategy() {
         LinkedHashMap<String, Object> replicationStrategyMap = new LinkedHashMap<String, Object>();
         replicationStrategyMap.put(Constants.CLASS, SIMPLE.toString());
         replicationStrategyMap.put(Constants.REPLICATION_FACTOR, "3");

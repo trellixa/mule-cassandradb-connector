@@ -5,6 +5,7 @@ package org.mule.modules.cassandradb.api;
 
 import com.datastax.driver.core.*;
 import com.datastax.driver.core.querybuilder.*;
+import org.mule.modules.cassandradb.configurations.AdvancedConnectionParameters;
 import org.mule.modules.cassandradb.configurations.ConnectionParameters;
 import org.mule.modules.cassandradb.metadata.AlterColumnInput;
 import org.mule.modules.cassandradb.metadata.CreateKeyspaceInput;
@@ -32,7 +33,7 @@ public final class CassandraClient {
      */
     private Session cassandraSession;
 
-    final static Logger logger = LoggerFactory.getLogger(CassandraClient.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(CassandraClient.class);
 
     /**
      * Connect to Cassandra Cluster specified by provided host IP
@@ -46,7 +47,7 @@ public final class CassandraClient {
         try {
             clusterBuilder = Cluster.builder().addContactPoint(connectionParameters.getHost()).withPort(Integer.parseInt(connectionParameters.getPort()));
         } catch (IllegalArgumentException connEx) {
-            logger.error("Error while connecting to Cassandra database!", connEx);
+            LOGGER.error("Error while connecting to Cassandra database!", connEx);
             throw new org.mule.api.ConnectionException(ConnectionExceptionCode.CANNOT_REACH, null, connEx.getMessage());
         }
 
@@ -55,33 +56,14 @@ public final class CassandraClient {
         }
 
         if (connectionParameters.getAdvancedConnectionParameters() != null) {
-
-            if (StringUtils.isNotEmpty(connectionParameters.getAdvancedConnectionParameters().getClusterName())) {
-                clusterBuilder.withClusterName(connectionParameters.getAdvancedConnectionParameters().getClusterName());
-            }
-
-            if (connectionParameters.getAdvancedConnectionParameters().getMaxSchemaAgreementWaitSeconds() > 0) {
-                clusterBuilder.withMaxSchemaAgreementWaitSeconds(connectionParameters.getAdvancedConnectionParameters().getMaxSchemaAgreementWaitSeconds());
-            }
-
-            if (connectionParameters.getAdvancedConnectionParameters().getProtocolVersion() != null) {
-                clusterBuilder.withProtocolVersion(connectionParameters.getAdvancedConnectionParameters().getProtocolVersion());
-            }
-
-            if (connectionParameters.getAdvancedConnectionParameters().getCompression() != null) {
-                clusterBuilder.withCompression(connectionParameters.getAdvancedConnectionParameters().getCompression());
-            }
-
-            if (connectionParameters.getAdvancedConnectionParameters().isSsl()) {
-                clusterBuilder.withSSL();
-            }
+            addAdvancedConnectionParameters(clusterBuilder, connectionParameters.getAdvancedConnectionParameters());
         }
 
         CassandraClient client = new CassandraClient();
         client.cluster = clusterBuilder.build();
 
         try {
-            logger.info("Connecting to Cassandra Database: {} , port: {} with clusterName: {} , protocol version {} and compression type {} ",
+            LOGGER.info("Connecting to Cassandra Database: {} , port: {} with clusterName: {} , protocol version {} and compression type {} ",
                     connectionParameters.getHost(),
                     connectionParameters.getPort(),
                     connectionParameters.getAdvancedConnectionParameters() != null ? connectionParameters.getAdvancedConnectionParameters().getClusterName() : null,
@@ -89,12 +71,34 @@ public final class CassandraClient {
                     connectionParameters.getAdvancedConnectionParameters() != null ? connectionParameters.getAdvancedConnectionParameters().getCompression() : null);
             client.cassandraSession = StringUtils.isNotEmpty(connectionParameters.getKeyspace()) ? client.cluster.connect(connectionParameters.getKeyspace())
                     : client.cluster.connect();
-            logger.info("Connected to Cassandra Cluster: {} !", client.cassandraSession.getCluster().getClusterName());
+            LOGGER.info("Connected to Cassandra Cluster: {} !", client.cassandraSession.getCluster().getClusterName());
         } catch (Exception cassandraException) {
-            logger.error("Error while connecting to Cassandra database!", cassandraException);
+            LOGGER.error("Error while connecting to Cassandra database!", cassandraException);
             throw new org.mule.api.ConnectionException(ConnectionExceptionCode.UNKNOWN, null, cassandraException.getMessage());
         }
         return client;
+    }
+
+    private static void addAdvancedConnectionParameters(Cluster.Builder clusterBuilder, AdvancedConnectionParameters advancedConnectionParameters) {
+        if (StringUtils.isNotEmpty(advancedConnectionParameters.getClusterName())) {
+            clusterBuilder.withClusterName(advancedConnectionParameters.getClusterName());
+        }
+
+        if (advancedConnectionParameters.getMaxSchemaAgreementWaitSeconds() > 0) {
+            clusterBuilder.withMaxSchemaAgreementWaitSeconds(advancedConnectionParameters.getMaxSchemaAgreementWaitSeconds());
+        }
+
+        if (advancedConnectionParameters.getProtocolVersion() != null) {
+            clusterBuilder.withProtocolVersion(advancedConnectionParameters.getProtocolVersion());
+        }
+
+        if (advancedConnectionParameters.getCompression() != null) {
+            clusterBuilder.withCompression(advancedConnectionParameters.getCompression());
+        }
+
+        if (advancedConnectionParameters.isSsl()) {
+            clusterBuilder.withSSL();
+        }
     }
 
     public boolean createKeyspace(CreateKeyspaceInput input) {
@@ -150,7 +154,7 @@ public final class CassandraClient {
                 }
             }
         } catch (Exception e) {
-            logger.error("Execute cql query Request Failed: " + e.getMessage());
+            LOGGER.error("Execute cql query Request Failed: " + e.getMessage());
             throw new CassandraDBException(e.getMessage(), e);
         }
 
@@ -159,10 +163,10 @@ public final class CassandraClient {
 
     public List<String> getTableNamesFromKeyspace(String customKeyspaceName) {
         String keyspaceName = StringUtils.isNotBlank(customKeyspaceName) ? customKeyspaceName : cassandraSession.getLoggedKeyspace();
-        if (StringUtils.isNotBlank((keyspaceName))) {
-            logger.info("Retrieving table names from the keyspace: {} ...", keyspaceName);
+        if (StringUtils.isNotBlank(keyspaceName)) {
+            LOGGER.info("Retrieving table names from the keyspace: {} ...", keyspaceName);
             if (cluster.getMetadata().getKeyspace(keyspaceName) == null) {
-                return Collections.EMPTY_LIST;
+                return Collections.emptyList();
             }
             Collection<TableMetadata> tables = cluster
                     .getMetadata().getKeyspace(keyspaceName)
@@ -173,7 +177,7 @@ public final class CassandraClient {
             }
             return tableNames;
         }
-        return Collections.EMPTY_LIST;
+        return Collections.emptyList();
     }
 
     /**
@@ -183,7 +187,7 @@ public final class CassandraClient {
      */
     public TableMetadata fetchTableMetadata(final String keyspaceUsed, final String tableName) {
         if (StringUtils.isNotBlank(tableName)) {
-            logger.info("Retrieving table metadata for: {} ...", tableName);
+            LOGGER.info("Retrieving table metadata for: {} ...", tableName);
             Metadata metadata = cluster.getMetadata();
             KeyspaceMetadata ksMetadata = metadata.getKeyspace(keyspaceUsed);
             if (ksMetadata != null) {
@@ -203,14 +207,14 @@ public final class CassandraClient {
 
         try {
 
-            logger.debug("Insert Request: " + insertObject.toString());
+            LOGGER.debug("Insert Request: " + insertObject.toString());
 
             cassandraSession.execute(insertObject);
 
         } catch (Exception e) {
 
-            logger.error("Insert Request Failed: " + e.getMessage());
-            throw new CassandraDBException(e.getMessage());
+            LOGGER.error("Insert Request Failed: " + e.getMessage());
+            throw new CassandraDBException(e.getMessage(), e);
         }
     }
 
@@ -238,24 +242,24 @@ public final class CassandraClient {
 
         try {
 
-            logger.debug("Update Request: " + updateObject.toString());
+            LOGGER.debug("Update Request: " + updateObject.toString());
 
             cassandraSession.execute(updateObject);
 
         } catch (Exception e) {
 
-            logger.error("Update Request Failed: " + e.getMessage());
-            throw new CassandraDBException(e.getMessage());
+            LOGGER.error("Update Request Failed: " + e.getMessage());
+            throw new CassandraDBException(e.getMessage(), e);
         }
     }
 
-    /*
-* DELETE command can be used to:
-* - remove one or more columns from one or more rows in a table;
-* - remove the entire row (one or more);
-* - if column_name refers to a collection (a list or map), the parameter in parentheses indicates the term in the collection
-*    to be deleted
-* */
+    /**
+     * DELETE command can be used to:
+     * - remove one or more columns from one or more rows in a table;
+     * - remove the entire row (one or more);
+     * - if column_name refers to a collection (a list or map), the parameter in parentheses indicates the term in the collection
+     *    to be deleted
+     */
     public void delete(String keySpace, String table, List<String> entity, Map<String, Object> whereClause) throws CassandraDBException {
 
         if (whereClause == null) {
@@ -282,14 +286,14 @@ public final class CassandraClient {
 
         try {
 
-            logger.debug("Delete Request: " + deleteObject.toString());
+            LOGGER.debug("Delete Request: " + deleteObject.toString());
 
             cassandraSession.execute(deleteObject);
 
         } catch (Exception e) {
 
-            logger.error("Delete Request Failed: " + e.getMessage());
-            throw new CassandraDBException(e.getMessage());
+            LOGGER.error("Delete Request Failed: " + e.getMessage());
+            throw new CassandraDBException(e.getMessage(), e);
         }
     }
 
@@ -306,7 +310,7 @@ public final class CassandraClient {
                 result = cassandraSession.execute(query);
             }
         } catch (Exception e) {
-            logger.error("Select Request Failed: " + e.getMessage());
+            LOGGER.error("Select Request Failed: " + e.getMessage());
             throw new CassandraDBException(e.getMessage(), e);
         }
 
