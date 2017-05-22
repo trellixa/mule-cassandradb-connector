@@ -31,9 +31,9 @@ public class CreateKeyspaceTestCases extends CassandraAbstractTestCases {
     @Test
     public void testCreateKeyspaceWithDifferentReplicationStrategyWithSuccess() throws CassandraDBException {
         CreateKeyspaceInput keyspaceInput = new CreateKeyspaceInput();
-        keyspaceInput.setKeyspaceName(TestsConstants.KEYSPACE_NAME_2);
-        keyspaceInput.setFirstDataCenter(new DataCenter(TestsConstants.DATA_CENTER_NAME, 1));
-        keyspaceInput.setReplicationStrategyClass(ReplicationStrategy.NETWORK_TOPOLOGY.name());
+        keyspaceInput.setKeyspaceName(KEYSPACE_NAME_2);
+        keyspaceInput.setFirstDataCenter(new DataCenter(DATA_CENTER_NAME, 1));
+        keyspaceInput.setReplicationStrategyClass(ReplicationStrategy.NETWORK_TOPOLOGY.getStrategy());
 
         getConnector().createKeyspace(keyspaceInput);
     }
@@ -44,6 +44,16 @@ public class CreateKeyspaceTestCases extends CassandraAbstractTestCases {
         keyspaceInput.setKeyspaceName(TestsConstants.KEYSPACE_NAME_3);
         keyspaceInput.setReplicationFactor(3);
         keyspaceInput.setReplicationStrategyClass("SomeReplicationStrategy");
+
+        getConnector().createKeyspace(keyspaceInput);
+    }
+
+    @Test(expected = CassandraDBException.class)
+    public void shouldFail_Using_MissingReplicationFactor() throws CassandraDBException {
+        CreateKeyspaceInput keyspaceInput = new CreateKeyspaceInput();
+        keyspaceInput.setKeyspaceName(KEYSPACE_NAME_1);
+        keyspaceInput.setReplicationFactor(null);
+        keyspaceInput.setReplicationStrategyClass(ReplicationStrategy.SIMPLE.getStrategy());
 
         getConnector().createKeyspace(keyspaceInput);
     }
