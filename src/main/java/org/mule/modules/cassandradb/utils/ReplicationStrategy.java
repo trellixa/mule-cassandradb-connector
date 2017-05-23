@@ -42,14 +42,14 @@ public enum ReplicationStrategy {
         this.strategy = strategy;
     }
 
-    public String getStrategy() {
+    public String getStrategyClass() {
         return this.strategy;
     }
 
     public static ReplicationStrategy fromString(String inputToMatch) {
         if (StringUtils.isNotBlank(inputToMatch)) {
             for (ReplicationStrategy enumItem : ReplicationStrategy.values()) {
-                if (enumItem.getStrategy().equalsIgnoreCase(inputToMatch)) {
+                if (enumItem.getStrategyClass().equalsIgnoreCase(inputToMatch)) {
                     return enumItem;
                 }
             }
@@ -62,13 +62,13 @@ public enum ReplicationStrategy {
         LinkedHashMap<String, Object> replicationStrategy = new LinkedHashMap<String, Object>();
 
         //set the strategy class only if exists in the input && a valid one is provided
-        if (input.getReplicationStrategyClass() != null) {
+        if (StringUtils.isNotBlank(input.getReplicationStrategyClass())) {
             ReplicationStrategy strategy = ReplicationStrategy.fromString(input.getReplicationStrategyClass());
             //setting 'replication_factor' || 'first_data_center' || 'next data center' is pointless if no class is provided
             if (strategy != null) {
                 replicationStrategy.put(Constants.CLASS, input.getReplicationStrategyClass());
                 //'replication_factor' required if class is SimpleStrategy; otherwise, not used
-                if (strategy == ReplicationStrategy.SIMPLE) {
+                if (strategy.equals(ReplicationStrategy.SIMPLE)) {
                     replicationStrategy.put(Constants.REPLICATION_FACTOR, input.getReplicationFactor());
                 }
                 if (input.getFirstDataCenter() != null) {
@@ -90,7 +90,7 @@ public enum ReplicationStrategy {
 
     public static Map<String, Object> buildDefaultReplicationStrategy() {
         LinkedHashMap<String, Object> replicationStrategyMap = new LinkedHashMap<String, Object>();
-        replicationStrategyMap.put(Constants.CLASS, ReplicationStrategy.SIMPLE.getStrategy());
+        replicationStrategyMap.put(Constants.CLASS, ReplicationStrategy.SIMPLE.getStrategyClass());
         replicationStrategyMap.put(Constants.REPLICATION_FACTOR, 3);
         return replicationStrategyMap;
     }
