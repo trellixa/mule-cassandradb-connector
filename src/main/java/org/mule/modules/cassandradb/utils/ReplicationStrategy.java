@@ -46,7 +46,7 @@ public enum ReplicationStrategy {
         return this.strategy;
     }
 
-    public static ReplicationStrategy fromString(String inputToMatch) {
+    public static ReplicationStrategy lookup(String inputToMatch) {
         if (StringUtils.isNotBlank(inputToMatch)) {
             for (ReplicationStrategy enumItem : ReplicationStrategy.values()) {
                 if (enumItem.getStrategyClass().equalsIgnoreCase(inputToMatch)) {
@@ -63,7 +63,7 @@ public enum ReplicationStrategy {
 
         //set the strategy class only if exists in the input && a valid one is provided
         if (StringUtils.isNotBlank(input.getReplicationStrategyClass())) {
-            ReplicationStrategy strategy = ReplicationStrategy.fromString(input.getReplicationStrategyClass());
+            ReplicationStrategy strategy = ReplicationStrategy.lookup(input.getReplicationStrategyClass());
             //setting 'replication_factor' || 'first_data_center' || 'next data center' is pointless if no class is provided
             if (strategy != null) {
                 replicationStrategy.put(Constants.CLASS, input.getReplicationStrategyClass());
@@ -91,7 +91,7 @@ public enum ReplicationStrategy {
     public static Map<String, Object> buildDefaultReplicationStrategy() {
         LinkedHashMap<String, Object> replicationStrategyMap = new LinkedHashMap<String, Object>();
         replicationStrategyMap.put(Constants.CLASS, ReplicationStrategy.SIMPLE.getStrategyClass());
-        replicationStrategyMap.put(Constants.REPLICATION_FACTOR, 3);
+        replicationStrategyMap.put(Constants.REPLICATION_FACTOR, Constants.DEFAULT_REPLICATION_FACTOR);
         return replicationStrategyMap;
     }
 }

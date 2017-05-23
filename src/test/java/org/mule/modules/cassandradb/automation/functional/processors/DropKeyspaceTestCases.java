@@ -31,7 +31,7 @@ public class DropKeyspaceTestCases extends CassandraAbstractTestCases {
         CreateKeyspaceInput keyspaceInput = new CreateKeyspaceInput();
         keyspaceInput.setKeyspaceName(TestsConstants.KEYSPACE_NAME_2);
         keyspaceInput.setFirstDataCenter(new DataCenter(TestsConstants.DATA_CENTER_NAME, 1));
-        keyspaceInput.setReplicationStrategyClass(ReplicationStrategy.NETWORK_TOPOLOGY.name());
+        keyspaceInput.setReplicationStrategyClass(ReplicationStrategy.NETWORK_TOPOLOGY.getStrategyClass());
 
         getConnector().createKeyspace(keyspaceInput);
 

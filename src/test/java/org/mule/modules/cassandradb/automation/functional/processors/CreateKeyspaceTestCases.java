@@ -18,6 +18,8 @@ import java.util.List;
 
 public class CreateKeyspaceTestCases extends CassandraAbstractTestCases {
 
+    private static final int SLEEP_DURATION = 2000;
+
     @AfterClass
     public static void tearDown() {
         cassClient.dropKeyspace(TestsConstants.KEYSPACE_NAME_1);
@@ -32,7 +34,7 @@ public class CreateKeyspaceTestCases extends CassandraAbstractTestCases {
 
         Assert.assertTrue(getConnector().createKeyspace(keyspaceInput));
 
-        Thread.sleep(2000);
+        Thread.sleep(SLEEP_DURATION);
         verifyResponse(keyspaceInput);
     }
 
@@ -45,7 +47,7 @@ public class CreateKeyspaceTestCases extends CassandraAbstractTestCases {
 
         Assert.assertTrue(getConnector().createKeyspace(keyspaceInput));
 
-        Thread.sleep(2000);
+        Thread.sleep(SLEEP_DURATION);
         verifyResponse(keyspaceInput);
     }
 
