@@ -23,4 +23,5 @@ public class Constants {
     public static final String PARAM_HOLDER = "?";
     public static final String SELECT = "SELECT";
 
+    public static final int DEFAULT_REPLICATION_FACTOR = 3;
 }

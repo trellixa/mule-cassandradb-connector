@@ -317,6 +317,10 @@ public final class CassandraClient {
         return getResponseFromResultSet(result);
     }
 
+    public List<KeyspaceMetadata> getKeyspaces() {
+        return cassandraSession.getCluster().getMetadata().getKeyspaces();
+    }
+
     private void validateSelectQuery(String query, List<Object> params) throws CassandraDBException {
 
         if (!query.toUpperCase().startsWith(Constants.SELECT)) {
