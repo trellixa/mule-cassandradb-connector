@@ -77,6 +77,8 @@ public class HelperStatements {
 
     /**
      * return the DataType based on a String. Default value is DataType.text();
+     * @param dataType string to be resolved to DataType
+     * @return the resolved DataType
      */
     public static DataType resolveDataTypeFromString(String dataType) {
         DataType.Name name = DataType.Name.valueOf(dataType.toUpperCase());
@@ -109,7 +111,7 @@ public class HelperStatements {
      * retrieves the list of columns that will construct the partition key
      */
     private static List<ColumnInput> getPartitionKey(List<ColumnInput> columns) {
-        List partitionKey = new ArrayList();
+        List<ColumnInput> partitionKey = new ArrayList<ColumnInput>();
         for (ColumnInput column : columns) {
             if (column.isPrimaryKey()) {
                 partitionKey.add(column);
@@ -122,7 +124,7 @@ public class HelperStatements {
      * retrieves the list of columns that are not primary key
      */
     private static List<ColumnInput> getColumnsThatAreNotPrimaryKey(List<ColumnInput> columns) {
-        List columnsList = new ArrayList();
+        List<ColumnInput> columnsList = new ArrayList<ColumnInput>();
         for (ColumnInput column : columns) {
             if (!column.isPrimaryKey()) {
                 columnsList.add(column);

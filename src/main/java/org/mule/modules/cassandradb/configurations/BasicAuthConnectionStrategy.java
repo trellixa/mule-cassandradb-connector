@@ -99,7 +99,7 @@ public class BasicAuthConnectionStrategy {
      *
      * @param username A username. NOTE: Please use a dummy username if you have disabled authentication
      * @param password A password. NOTE: Leave empty if not required. If specified, the connector will try to login with this credentials
-     * @throws org.mule.api.ConnectionException
+     * @throws org.mule.api.ConnectionException if the connection is not established
      */
     @Connect
     @TestConnectivity

@@ -15,24 +15,24 @@ import java.util.Map;
 public enum ReplicationStrategy {
 
     /**
-     * SimpleStrategy merely places the first replica at the node whose
+     * <p>SimpleStrategy merely places the first replica at the node whose
      * token is closest to the key (as determined by the Partitioner), and
      * additional replicas on subsequent nodes along the ring in increasing
-     * Token order.
-     * <p/>
-     * Supports a single strategy option 'replication_factor' that
-     * specifies the replication factor for the cluster.
+     * Token order.</p>
+     * 
+     * <p>Supports a single strategy option 'replication_factor' that
+     * specifies the replication factor for the cluster.</p>
      */
     SIMPLE("SimpleStrategy"),
     /**
-     * With NetworkTopologyStrategy, for each datacenter, you can specify
+     * <p>With NetworkTopologyStrategy, for each datacenter, you can specify
      * how many replicas you want on a per-keyspace basis. Replicas are
-     * placed on different racks within each DC, if possible.
-     * <p/>
-     * Supports strategy options which specify the replication factor for
+     * placed on different racks within each DC, if possible.</p>
+     * 
+     * <p>Supports strategy options which specify the replication factor for
      * each datacenter. The replication factor for the entire cluster is the
      * sum of all per datacenter values. Note that the datacenter names
-     * must match those used in conf/cassandra-topology.properties.
+     * must match those used in conf/cassandra-topology.properties.</p>
      */
     NETWORK_TOPOLOGY("NetworkTopologyStrategy");
 
