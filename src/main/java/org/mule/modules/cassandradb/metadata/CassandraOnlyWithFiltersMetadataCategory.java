@@ -30,9 +30,9 @@ public class CassandraOnlyWithFiltersMetadataCategory extends CassandraMetadataC
 
         //build the metadata
         if (tableMetadata != null && tableMetadata.getColumns() != null) {
-            DynamicObjectBuilder entityModel = new DefaultMetaDataBuilder().createDynamicObject(tableMetadata.getName());
+            DynamicObjectBuilder<?> entityModel = new DefaultMetaDataBuilder().createDynamicObject(tableMetadata.getName());
 
-            DynamicObjectBuilder whereClause = entityModel.addDynamicObjectField(Constants.WHERE);
+            DynamicObjectBuilder<?> whereClause = entityModel.addDynamicObjectField(Constants.WHERE);
             if (tableMetadata.getPrimaryKey().size() == 1) {
                 for (ColumnMetadata column : tableMetadata.getPrimaryKey()) {
                     addMetadataListField(whereClause, column);
@@ -47,7 +47,7 @@ public class CassandraOnlyWithFiltersMetadataCategory extends CassandraMetadataC
         return new DefaultMetaData(null);
     }
 
-    private void addMetadataListField(DynamicObjectBuilder listEntityModel, ColumnMetadata column) {
+    private void addMetadataListField(DynamicObjectBuilder<?> listEntityModel, ColumnMetadata column) {
 
         listEntityModel.addList(column.getName()).ofSimpleField(resolveDataType(column.getType()));
     }

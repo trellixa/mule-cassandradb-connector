@@ -159,7 +159,8 @@ public class CassandraDBConnector {
      * @param entity the entity to be updated
      * @throws CassandraDBException if any error occurs when executing the update query
      */
-    @Processor
+    @SuppressWarnings("unchecked")
+	@Processor
     @MetaDataScope(CassandraWithFiltersMetadataCategory.class)
     public void update(@MetaDataKeyParam(affects = MetaDataKeyParamAffectsType.INPUT) String table,
                        @Optional String keyspaceName,
@@ -178,7 +179,8 @@ public class CassandraDBConnector {
      * @param payload operation input: columns to be deleted and where clause for the delete operation
      * @throws CassandraDBException if any error occurs when executing the delete query
      */
-    @Processor
+    @SuppressWarnings("unchecked")
+	@Processor
     @MetaDataScope(CassandraWithFiltersMetadataCategory.class)
     public void deleteColumnsValue(@MetaDataKeyParam(affects = MetaDataKeyParamAffectsType.INPUT) String table,
                                    @Optional String keyspaceName,
@@ -194,7 +196,8 @@ public class CassandraDBConnector {
      * @param payload operation input: where clause for the delete operation
      * @throws CassandraDBException if any error occurs when executing the delete query
      */
-    @Processor
+    @SuppressWarnings("unchecked")
+	@Processor
     @MetaDataScope(CassandraOnlyWithFiltersMetadataCategory.class)
     public void deleteRows(@MetaDataKeyParam(affects = MetaDataKeyParamAffectsType.INPUT) String table,
                            @Optional String keyspaceName,
@@ -252,6 +255,7 @@ public class CassandraDBConnector {
      * @param keyspaceName (optional) the keyspace which contains the table to be used
      * @param input POJO defining the name of the new column and its DataType
      * @return true if the operation succeeded or false if not
+     * @throws CassandraDBException if any error occurs when executing the operation
      */
     @Processor(friendlyName="Add new column")
     public boolean addNewColumn(String table, @Optional String keyspaceName, @RefOnly @Default(PAYLOAD) AlterColumnInput input) throws CassandraDBException {

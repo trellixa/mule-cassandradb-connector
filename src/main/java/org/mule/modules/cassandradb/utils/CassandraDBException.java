@@ -8,7 +8,9 @@ package org.mule.modules.cassandradb.utils;
  */
 public class CassandraDBException extends Exception {
 
-    /**
+	private static final long serialVersionUID = 1L;
+
+	/**
      * Constructs a new exception with the specified detail message.
      *
      * @param msg the detail message.

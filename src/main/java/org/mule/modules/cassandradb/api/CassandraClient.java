@@ -40,6 +40,8 @@ public final class CassandraClient {
      * address and port number.
      *
      * @param connectionParameters the connection parameters
+     * @return CassandraClient created
+     * @throws org.mule.api.ConnectionException if any error occurs when trying to connect
      */
     public static CassandraClient buildCassandraClient(ConnectionParameters connectionParameters) throws org.mule.api.ConnectionException {
         validateBasicParams(connectionParameters);
@@ -183,6 +185,8 @@ public final class CassandraClient {
     /**
      * Fetches table metadata using DataStax java driver, based on the keyspace provided
      *
+     * @param keyspaceUsed the Keyspace to fetch from
+     * @param tableName the Table from keyspace
      * @return the table metadata as returned by the driver.
      */
     public TableMetadata fetchTableMetadata(final String keyspaceUsed, final String tableName) {
@@ -259,6 +263,12 @@ public final class CassandraClient {
      * - remove the entire row (one or more);
      * - if column_name refers to a collection (a list or map), the parameter in parentheses indicates the term in the collection
      *    to be deleted
+     * 
+     * @param keySpace Keyspace to delete from
+     * @param table Table to delete from
+     * @param entity Entity to be removed
+     * @param whereClause WHERE clause condition
+     * @throws CassandraDBException if something goes wrong
      */
     public void delete(String keySpace, String table, List<String> entity, Map<String, Object> whereClause) throws CassandraDBException {
 
