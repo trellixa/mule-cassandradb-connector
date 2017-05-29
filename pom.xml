@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.mule.modules</groupId>
     <artifactId>mule-module-cassandradb</artifactId>
-    <version>2.0.0-SNAPSHOT</version>
+    <version>2.1.0-SNAPSHOT</version>
     <packaging>mule-module</packaging>
     <name>Mule CassandraDB Connector</name>
 
@@ -75,6 +75,20 @@
         </dependency>
     </dependencies>
 
+	<distributionManagement>
+		<repository>
+			<id>mule-ee-releases</id>
+			<name>MuleEE Releases Repository</name>
+			<url>https://repository-master.mulesoft.org/nexus/content/repositories/releases-ee/</url>
+		</repository>
+		<snapshotRepository>
+			<id>mule-ee-snapshots</id>
+			<name>MuleEE Snapshots Repository</name>
+			<url>https://repository-master.mulesoft.org/nexus/content/repositories/ci-snapshots/</url>
+			<uniqueVersion>false</uniqueVersion>
+		</snapshotRepository>
+	</distributionManagement>
+
     <repositories>
         <repository>
             <id>mulesoft-releases</id>
@@ -141,6 +155,16 @@
                     </excludes>
                 </configuration>
             </plugin>
+            <plugin>
+			    <artifactId>maven-source-plugin</artifactId>
+			    <version>2.1.2</version>
+			    <executions>
+			        <execution>
+			            <id>attach-sources</id>
+			            <phase>none</phase>
+			        </execution>
+			    </executions>
+			</plugin>
             <plugin>
                 <groupId>org.mule.certification</groupId>
                 <artifactId>project-structure-validation</artifactId>

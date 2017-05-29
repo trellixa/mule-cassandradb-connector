@@ -5,6 +5,7 @@ package org.mule.modules.cassandradb.api;
 
 import com.datastax.driver.core.*;
 import com.datastax.driver.core.querybuilder.*;
+import org.mule.modules.cassandradb.configurations.AdvancedConnectionParameters;
 import org.mule.modules.cassandradb.configurations.ConnectionParameters;
 import org.mule.modules.cassandradb.metadata.AlterColumnInput;
 import org.mule.modules.cassandradb.metadata.CreateKeyspaceInput;
@@ -32,13 +33,15 @@ public final class CassandraClient {
      */
     private Session cassandraSession;
 
-    final static Logger logger = LoggerFactory.getLogger(CassandraClient.class);
+    private static final Logger logger = LoggerFactory.getLogger(CassandraClient.class);
 
     /**
      * Connect to Cassandra Cluster specified by provided host IP
      * address and port number.
      *
      * @param connectionParameters the connection parameters
+     * @return CassandraClient created
+     * @throws org.mule.api.ConnectionException if any error occurs when trying to connect
      */
     public static CassandraClient buildCassandraClient(ConnectionParameters connectionParameters) throws org.mule.api.ConnectionException {
         validateBasicParams(connectionParameters);
@@ -55,26 +58,7 @@ public final class CassandraClient {
         }
 
         if (connectionParameters.getAdvancedConnectionParameters() != null) {
-
-            if (StringUtils.isNotEmpty(connectionParameters.getAdvancedConnectionParameters().getClusterName())) {
-                clusterBuilder.withClusterName(connectionParameters.getAdvancedConnectionParameters().getClusterName());
-            }
-
-            if (connectionParameters.getAdvancedConnectionParameters().getMaxSchemaAgreementWaitSeconds() > 0) {
-                clusterBuilder.withMaxSchemaAgreementWaitSeconds(connectionParameters.getAdvancedConnectionParameters().getMaxSchemaAgreementWaitSeconds());
-            }
-
-            if (connectionParameters.getAdvancedConnectionParameters().getProtocolVersion() != null) {
-                clusterBuilder.withProtocolVersion(connectionParameters.getAdvancedConnectionParameters().getProtocolVersion());
-            }
-
-            if (connectionParameters.getAdvancedConnectionParameters().getCompression() != null) {
-                clusterBuilder.withCompression(connectionParameters.getAdvancedConnectionParameters().getCompression());
-            }
-
-            if (connectionParameters.getAdvancedConnectionParameters().isSsl()) {
-                clusterBuilder.withSSL();
-            }
+            addAdvancedConnectionParameters(clusterBuilder, connectionParameters.getAdvancedConnectionParameters());
         }
 
         CassandraClient client = new CassandraClient();
@@ -95,6 +79,28 @@ public final class CassandraClient {
             throw new org.mule.api.ConnectionException(ConnectionExceptionCode.UNKNOWN, null, cassandraException.getMessage());
         }
         return client;
+    }
+
+    private static void addAdvancedConnectionParameters(Cluster.Builder clusterBuilder, AdvancedConnectionParameters advancedConnectionParameters) {
+        if (StringUtils.isNotEmpty(advancedConnectionParameters.getClusterName())) {
+            clusterBuilder.withClusterName(advancedConnectionParameters.getClusterName());
+        }
+
+        if (advancedConnectionParameters.getMaxSchemaAgreementWaitSeconds() > 0) {
+            clusterBuilder.withMaxSchemaAgreementWaitSeconds(advancedConnectionParameters.getMaxSchemaAgreementWaitSeconds());
+        }
+
+        if (advancedConnectionParameters.getProtocolVersion() != null) {
+            clusterBuilder.withProtocolVersion(advancedConnectionParameters.getProtocolVersion());
+        }
+
+        if (advancedConnectionParameters.getCompression() != null) {
+            clusterBuilder.withCompression(advancedConnectionParameters.getCompression());
+        }
+
+        if (advancedConnectionParameters.isSsl()) {
+            clusterBuilder.withSSL();
+        }
     }
 
     public boolean createKeyspace(CreateKeyspaceInput input) {
@@ -159,10 +165,10 @@ public final class CassandraClient {
 
     public List<String> getTableNamesFromKeyspace(String customKeyspaceName) {
         String keyspaceName = StringUtils.isNotBlank(customKeyspaceName) ? customKeyspaceName : cassandraSession.getLoggedKeyspace();
-        if (StringUtils.isNotBlank((keyspaceName))) {
+        if (StringUtils.isNotBlank(keyspaceName)) {
             logger.info("Retrieving table names from the keyspace: {} ...", keyspaceName);
             if (cluster.getMetadata().getKeyspace(keyspaceName) == null) {
-                return Collections.EMPTY_LIST;
+                return Collections.emptyList();
             }
             Collection<TableMetadata> tables = cluster
                     .getMetadata().getKeyspace(keyspaceName)
@@ -173,12 +179,14 @@ public final class CassandraClient {
             }
             return tableNames;
         }
-        return Collections.EMPTY_LIST;
+        return Collections.emptyList();
     }
 
     /**
      * Fetches table metadata using DataStax java driver, based on the keyspace provided
      *
+     * @param keyspaceUsed the Keyspace to fetch from
+     * @param tableName the Table from keyspace
      * @return the table metadata as returned by the driver.
      */
     public TableMetadata fetchTableMetadata(final String keyspaceUsed, final String tableName) {
@@ -210,7 +218,7 @@ public final class CassandraClient {
         } catch (Exception e) {
 
             logger.error("Insert Request Failed: " + e.getMessage());
-            throw new CassandraDBException(e.getMessage());
+            throw new CassandraDBException(e.getMessage(), e);
         }
     }
 
@@ -245,17 +253,23 @@ public final class CassandraClient {
         } catch (Exception e) {
 
             logger.error("Update Request Failed: " + e.getMessage());
-            throw new CassandraDBException(e.getMessage());
+            throw new CassandraDBException(e.getMessage(), e);
         }
     }
 
-    /*
-* DELETE command can be used to:
-* - remove one or more columns from one or more rows in a table;
-* - remove the entire row (one or more);
-* - if column_name refers to a collection (a list or map), the parameter in parentheses indicates the term in the collection
-*    to be deleted
-* */
+    /**
+     * DELETE command can be used to:
+     * - remove one or more columns from one or more rows in a table;
+     * - remove the entire row (one or more);
+     * - if column_name refers to a collection (a list or map), the parameter in parentheses indicates the term in the collection
+     *    to be deleted
+     * 
+     * @param keySpace Keyspace to delete from
+     * @param table Table to delete from
+     * @param entity Entity to be removed
+     * @param whereClause WHERE clause condition
+     * @throws CassandraDBException if something goes wrong
+     */
     public void delete(String keySpace, String table, List<String> entity, Map<String, Object> whereClause) throws CassandraDBException {
 
         if (whereClause == null) {
@@ -289,7 +303,7 @@ public final class CassandraClient {
         } catch (Exception e) {
 
             logger.error("Delete Request Failed: " + e.getMessage());
-            throw new CassandraDBException(e.getMessage());
+            throw new CassandraDBException(e.getMessage(), e);
         }
     }
 
@@ -311,6 +325,10 @@ public final class CassandraClient {
         }
 
         return getResponseFromResultSet(result);
+    }
+
+    public List<KeyspaceMetadata> getKeyspaces() {
+        return cassandraSession.getCluster().getMetadata().getKeyspaces();
     }
 
     private void validateSelectQuery(String query, List<Object> params) throws CassandraDBException {

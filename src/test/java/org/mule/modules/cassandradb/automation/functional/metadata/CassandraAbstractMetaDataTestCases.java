@@ -1,3 +1,6 @@
+/**
+ * (c) 2003-2017 MuleSoft, Inc. The software in this package is published under the terms of the Commercial Free Software license V.1 a copy of which has been included with this distribution in the LICENSE.md file.
+ */
 package org.mule.modules.cassandradb.automation.functional.metadata;
 
 import org.mule.modules.cassandradb.CassandraDBConnector;
@@ -18,9 +21,9 @@ import org.mule.tools.devkit.ctf.junit.AbstractMetaDataTestCase;
 
 import java.util.List;
 
-public abstract class AbstractCassMetaDataTestCases extends AbstractMetaDataTestCase<CassandraDBConnector> {
+public abstract class CassandraAbstractMetaDataTestCases extends AbstractMetaDataTestCase<CassandraDBConnector> {
 
-    public AbstractCassMetaDataTestCases(@NotNull List<String> metadataIds, @NotNull Class<?> categoryClass, Class<CassandraDBConnector> connectorClass) {
+    public CassandraAbstractMetaDataTestCases(@NotNull List<String> metadataIds, @NotNull Class<?> categoryClass, Class<CassandraDBConnector> connectorClass) {
         super(metadataIds, categoryClass, connectorClass);
     }
 

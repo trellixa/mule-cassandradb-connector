@@ -12,7 +12,7 @@ import org.junit.Test;
 
 import org.mule.modules.cassandradb.utils.CassandraDBException;
 
-public class InsertTestCases extends CassandraDBConnectorAbstractTestCases {
+public class InsertTestCases extends CassandraAbstractTestCases {
 
     @BeforeClass
     public static void setup() throws Exception {

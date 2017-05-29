@@ -17,7 +17,7 @@ import org.junit.Test;
 @Ignore
 //Test-class marked as ignored since altering of column types was removed from Cass Database v3.0.11 +
 //https://issues.apache.org/jira/browse/CASSANDRA-12443
-public class ChangeColumnTypeTestCases extends CassandraDBConnectorAbstractTestCases {
+public class ChangeColumnTypeTestCases extends CassandraAbstractTestCases {
 
     @BeforeClass
     public static void setup() throws Exception {

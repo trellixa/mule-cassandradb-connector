@@ -27,7 +27,7 @@ import static org.mule.common.metadata.datatype.DataType.*;
 @MetaDataCategory
 public class CassandraMetadataCategory {
 
-    final static Logger logger = LoggerFactory.getLogger(CassandraMetadataCategory.class);
+    private static final Logger logger = LoggerFactory.getLogger(CassandraMetadataCategory.class);
 
     @Inject
     private CassandraDBConnector cassandraConnector;

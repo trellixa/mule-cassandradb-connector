@@ -19,7 +19,7 @@ import java.util.Map;
 
 import static org.hamcrest.core.IsNull.notNullValue;
 
-public class ExecuteCqlQueryTestCases extends CassandraDBConnectorAbstractTestCases {
+public class ExecuteCqlQueryTestCases extends CassandraAbstractTestCases {
 
     private static String QUERY_PREFIX = "SELECT * FROM ";
 

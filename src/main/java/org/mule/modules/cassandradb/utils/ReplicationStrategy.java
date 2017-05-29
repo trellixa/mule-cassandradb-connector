@@ -3,6 +3,7 @@
  */
 package org.mule.modules.cassandradb.utils;
 
+import org.apache.commons.lang3.StringUtils;
 import org.mule.modules.cassandradb.metadata.CreateKeyspaceInput;
 
 import java.util.LinkedHashMap;
@@ -12,85 +13,85 @@ import java.util.Map;
  * Cassandra supported replica placement strategies
  */
 public enum ReplicationStrategy {
+
     /**
-     * SimpleStrategy merely places the first replica at the node whose
+     * <p>SimpleStrategy merely places the first replica at the node whose
      * token is closest to the key (as determined by the Partitioner), and
      * additional replicas on subsequent nodes along the ring in increasing
-     * Token order.
-     * <p/>
-     * Supports a single strategy option 'replication_factor' that
-     * specifies the replication factor for the cluster.
+     * Token order.</p>
+     * 
+     * <p>Supports a single strategy option 'replication_factor' that
+     * specifies the replication factor for the cluster.</p>
      */
-    SIMPLE {
-        /**
-         * Returns a string representation of the object.
-         * @return a string.
-         */
-        public String toString() {
-            return "org.apache.cassandra.locator.SimpleStrategy";
-        }
-    },
+    SIMPLE("SimpleStrategy"),
     /**
-     * With NetworkTopologyStrategy, for each datacenter, you can specify
+     * <p>With NetworkTopologyStrategy, for each datacenter, you can specify
      * how many replicas you want on a per-keyspace basis. Replicas are
-     * placed on different racks within each DC, if possible.
-     * <p/>
-     * Supports strategy options which specify the replication factor for
+     * placed on different racks within each DC, if possible.</p>
+     * 
+     * <p>Supports strategy options which specify the replication factor for
      * each datacenter. The replication factor for the entire cluster is the
      * sum of all per datacenter values. Note that the datacenter names
-     * must match those used in conf/cassandra-topology.properties.
+     * must match those used in conf/cassandra-topology.properties.</p>
      */
-    NETWORK_TOPOLOGY {
-        /**
-         * Returns a string representation of the object.
-         * @return a string.
-         */
-        public String toString() {
-            return "org.apache.cassandra.locator.NetworkTopologyStrategy";
-        }
-    },
-    /**
-     * OldNetworkToplogyStrategy [formerly RackAwareStrategy]
-     * places one replica in each of two datacenters, and the third on a
-     * different rack in in the first.  Additional datacenters are not
-     * guaranteed to get a replica.  Additional replicas after three are
-     * placed in ring order after the third without regard to rack or
-     * datacenter.
-     * <p/>
-     * Supports a single strategy option 'replication_factor' that
-     * specifies the replication factor for the cluster.
-     */
-    OLD_NETWORK_TOPOLOGY {
-        /**
-         * Returns a string representation of the object.
-         * @return a string.
-         */
-        public String toString() {
-            return "org.apache.cassandra.locator.OldNetworkTopologyStrategy";
-        }
-    };
+    NETWORK_TOPOLOGY("NetworkTopologyStrategy");
 
+    private final String strategy;
+
+    ReplicationStrategy(String strategy) {
+        this.strategy = strategy;
+    }
+
+    public String getStrategyClass() {
+        return this.strategy;
+    }
+
+    public static ReplicationStrategy lookup(String inputToMatch) {
+        if (StringUtils.isNotBlank(inputToMatch)) {
+            for (ReplicationStrategy enumItem : ReplicationStrategy.values()) {
+                if (enumItem.getStrategyClass().equalsIgnoreCase(inputToMatch)) {
+                    return enumItem;
+                }
+            }
+        }
+        return null;
+    }
+
+    //based on http://docs.datastax.com/en/cql/3.1/cql/cql_reference/create_keyspace_r.html rules
     public static Map<String, Object> buildReplicationStrategy(CreateKeyspaceInput input) {
         LinkedHashMap<String, Object> replicationStrategy = new LinkedHashMap<String, Object>();
-        if (input.getReplicationStrategyClass() == null || input.getReplicationFactor() == null) {
-            return buildDefaultReplicationStrategy();
+
+        //set the strategy class only if exists in the input && a valid one is provided
+        if (StringUtils.isNotBlank(input.getReplicationStrategyClass())) {
+            ReplicationStrategy strategy = ReplicationStrategy.lookup(input.getReplicationStrategyClass());
+            //setting 'replication_factor' || 'first_data_center' || 'next data center' is pointless if no class is provided
+            if (strategy != null) {
+                replicationStrategy.put(Constants.CLASS, input.getReplicationStrategyClass());
+                //'replication_factor' required if class is SimpleStrategy; otherwise, not used
+                if (strategy.equals(ReplicationStrategy.SIMPLE)) {
+                    replicationStrategy.put(Constants.REPLICATION_FACTOR, input.getReplicationFactor());
+                }
+                if (input.getFirstDataCenter() != null) {
+                    if (StringUtils.isNotBlank(input.getFirstDataCenter().getName())) {
+                        replicationStrategy.put(input.getFirstDataCenter().getName(), input.getFirstDataCenter().getValue());
+                    }
+                }
+                if (input.getNextDataCenter() != null) {
+                    if (StringUtils.isNotBlank(input.getNextDataCenter().getName())) {
+                        replicationStrategy.put(input.getNextDataCenter().getName(), input.getNextDataCenter().getValue());
+                    }
+                }
+            }
         } else {
-            replicationStrategy.put(Constants.CLASS, input.getReplicationStrategyClass());
-            replicationStrategy.put(Constants.REPLICATION_FACTOR, input.getReplicationFactor());
-            if (input.getFirstDataCenter() != null) {
-                replicationStrategy.put(input.getFirstDataCenter().getName(), input.getFirstDataCenter().getValue());
-            }
-            if (input.getNextDataCenter() != null) {
-                replicationStrategy.put(input.getNextDataCenter().getName(), input.getNextDataCenter().getValue());
-            }
+            return buildDefaultReplicationStrategy();
         }
         return replicationStrategy;
     }
 
-    public static LinkedHashMap<String, Object> buildDefaultReplicationStrategy() {
+    public static Map<String, Object> buildDefaultReplicationStrategy() {
         LinkedHashMap<String, Object> replicationStrategyMap = new LinkedHashMap<String, Object>();
-        replicationStrategyMap.put(Constants.CLASS, SIMPLE.toString());
-        replicationStrategyMap.put(Constants.REPLICATION_FACTOR, "3");
+        replicationStrategyMap.put(Constants.CLASS, ReplicationStrategy.SIMPLE.getStrategyClass());
+        replicationStrategyMap.put(Constants.REPLICATION_FACTOR, Constants.DEFAULT_REPLICATION_FACTOR);
         return replicationStrategyMap;
     }
 }

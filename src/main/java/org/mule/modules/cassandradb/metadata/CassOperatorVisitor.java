@@ -13,10 +13,4 @@ import org.mule.common.query.DefaultOperatorVisitor;
 
 public class CassOperatorVisitor extends DefaultOperatorVisitor {
 
-    //todo
-//    @Override
-//    public String notEqualsOperator() {
-//        return " != ";
-//    }
-
 }

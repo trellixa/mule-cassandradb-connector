@@ -19,7 +19,7 @@ import org.mule.modules.cassandradb.utils.CassandraDBException;
 
 import static org.hamcrest.Matchers.*;
 
-public class SelectTestCases extends CassandraDBConnectorAbstractTestCases {
+public class SelectTestCases extends CassandraAbstractTestCases {
 
     public static final String VALID_PARAMETERIZED_QUERY =
             "SELECT " + TestsConstants.VALID_COLUMN_2 +
