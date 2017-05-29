@@ -1,22 +1,22 @@
-Mule Cassandra Module
-====================
+## Anypoint Connector for Cassandra Database
 
-Mule Module support for Cassandra.
+Apache Cassandra is a massively scalable open source non-relational database that offers continuous availability, linear 
+scale performance, operational simplicity and easy data distribution across multiple data centers and cloud availability zones.
+Cassandra was originally developed at Facebook, was open sourced in 2008, and became a top-level Apache project in 2010.
 
-The Apache Cassandra database is the right choice when you need scalability and high availability without
-compromising performance. Linear scalability and proven fault-tolerance on commodity hardware or cloud infrastructure
-make it the perfect platform for mission-critical data. Cassandra's support for replicating across multiple
-datacenters is best-in-class, providing lower latency for your users and the peace of mind of knowing that
-you can survive regional outages.
+The connector exposes Data manipulation && Schema manipulation operations.
 
+## Author
+ 
+MuleSoft Inc.
 
-Installation and Usage
-----------------------
+## Supported Mule runtime versions
 
-For information about usage and installation you can check our documentation at mulesoft.github.io/CassandraDB-connector
+Mule 3.6+
 
-Reporting Issues
-----------------
+## Installation 
 
-We use GitHub:Issues for tracking issues with this module. You can report new issues at this
-link https://github.com/mulesoft/CassandraDB-connector/issues
+* Apache Cassandra is a open source software and can be installed following the instructions here http://cassandra.apache.org/download/
+* After finishing the installation find the cassandra.yaml config file and change the value of the authenticator from AllowAllAuthenticator to PasswordAuthenticator
+* After starting the cassandra service, you can connect to the database that will be running at port 9042 by default; the default credentials are cassandra/cassandra but also other admin accounts can be created
+* Install the connector in Anypoint Studio; all setup is now finished.

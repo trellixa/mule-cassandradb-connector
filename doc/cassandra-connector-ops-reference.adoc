@@ -1,3 +1,5 @@
+:imagesdir: _images
+
 = Cassandra Connector Operations Reference
 
 The Cassandra connector was implemented using the DataStax Java Driver for Apache Cassandra 3.1. The connector exposes multiple operations that are described in the javadoc. Some of these operations accept some custom POJOs as input parameters, which are needed for the DataSense functionality.

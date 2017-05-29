@@ -1,0 +1,1086 @@
+<!--
+
+    (c) 2003-2017 MuleSoft, Inc. The software in this package is published under the terms of the Commercial Free Software license V.1 a copy of which has been included with this distribution in the LICENSE.md file.
+
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.0/jquery.js"></script>
+    <link rel="stylesheet" type="text/css"
+          href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.1.1/css/bootstrap.css">
+    <script
+            src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.1.1/js/bootstrap.js"></script>
+</head>
+<body>
+<style>
+    body {
+        padding-top: 40px;
+        padding-bottom: 40px;
+        background-color: #eee;
+    }
+
+    .form-signin {
+        max-width: 500px;
+        padding: 15px;
+        margin: 0 auto;
+    }
+
+    .form-signin .form-signin-heading, .form-signin .checkbox {
+        margin-bottom: 10px;
+    }
+
+    .form-signin .checkbox {
+        font-weight: normal;
+    }
+
+    .form-signin .form-control {
+        position: relative;
+        height: auto;
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
+        padding: 10px;
+        font-size: 16px;
+    }
+
+    .form-signin .form-control:focus {
+        z-index: 2;
+    }
+
+    .form-signin input[type="email"] {
+        margin-bottom: -1px;
+        border-bottom-right-radius: 0;
+        border-bottom-left-radius: 0;
+    }
+
+    .required {
+        color: red;
+    }
+
+    .get-tables-result {
+        resize: none;
+        height: 300px !important;
+    }
+</style>
+<script type="text/javascript">
+    (function ($) {
+        $.fn.serializeToJSON = function () {
+
+            var o = {};
+            var a = this.serializeArray();
+            $.each(a, function () {
+                if (o[this.name]) {
+                    if (!o[this.name].push) {
+                        o[this.name] = [o[this.name]];
+                    }
+                    o[this.name].push(this.value || '');
+                } else {
+                    o[this.name] = this.value || '';
+                }
+            });
+            return o;
+        };
+    })(jQuery);
+
+    var create_demo_payload = '{' +
+            '"tableName":"demo_table",' +
+            '"keyspaceName":"demo_keyspace",' +
+            '"columns":[{' +
+            '"name":"id", ' +
+            '"type":"INT",' +
+            '"primaryKey":"true"' +
+            '},' +
+            '{' +
+            '"name":"name",' +
+            '"type":"TEXT",' +
+            '"primaryKey":"false"' +
+            '},' +
+            '{' +
+            '"name":"event",' +
+            '"type":"TEXT",' +
+            '"primaryKey":"false"' +
+            '}' +
+            ']' +
+            '}';
+
+    var options =
+            [
+                {
+                    "text"  : "ASCII",
+                    "value" : "ASCII"
+                },
+                {
+                    "text"     : "BIGINT",
+                    "value"    : "BIGINT"
+                },
+                {
+                    "text"  : "BLOB",
+                    "value" : "BLOB"
+                },
+                {
+                    "text"  : "BOOLEAN",
+                    "value" : "BOOLEAN"
+                },
+                {
+                    "text"  : "COUNTER",
+                    "value" : "COUNTER"
+                },
+                {
+                    "text"  : "DECIMAL",
+                    "value" : "DECIMAL"
+                },
+                {
+                    "text"  : "DOUBLE",
+                    "value" : "DOUBLE"
+                },
+                {
+                    "text"  : "FLOAT",
+                    "value" : "FLOAT"
+                },
+                {
+                    "text"  : "INET",
+                    "value" : "INET"
+                },
+                {
+                    "text"  : "INT",
+                    "value" : "INT"
+                },
+                {
+                    "text"  : "TEXT",
+                    "value" : "TEXT"
+                },
+                {
+                    "text"  : "TIMESTAMP",
+                    "value" : "TIMESTAMP"
+                },
+                {
+                    "text"  : "UUID",
+                    "value" : "UUID"
+                },
+                {
+                    "text"  : "VARCHAR",
+                    "value" : "VARCHAR"
+                },
+                {
+                    "text"  : "VARINT",
+                    "value" : "VARINT"
+                },
+                {
+                    "text"  : "TIMEUUID",
+                    "value" : "TIMEUUID"
+                },
+                {
+                    "text"  : "SMALLINT",
+                    "value" : "SMALLINT"
+                },
+                {
+                    "text"  : "TINYINT",
+                    "value" : "TINYINT"
+                },
+                {
+                    "text"  : "DATE",
+                    "value" : "DATE"
+                },
+                {
+                    "text"  : "TIME",
+                    "value" : "TIME"
+                }
+            ];
+
+    var create_keyspace_payload = '{' +
+            '"keyspaceName":"demo_keyspace"' +
+            '}';
+
+    $(document).ready( function() {
+        //create a default keyspace called DEMO
+        $.ajax({
+            type: 'POST',
+            url: '/createKeyspace',
+            data: create_keyspace_payload,
+            contentType: 'application/json',
+            success: function(data) {
+                //create a default table called DEMO
+                $.ajax({
+                    type: 'POST',
+                    url: '/createTable',
+                    data: create_demo_payload,
+                    contentType: 'application/json',
+                    success: function(data) {
+
+                    },
+                    error: function(request, status, error) {
+
+                    }
+                });
+            },
+            error: function(request, status, error) {
+
+            }
+        });
+
+        $('#create_table').click(function() {
+            var table_info = $('#create_table_table_info :input').serializeToJSON();
+            var columns = new Array();
+            $(".new-column").each(function(i) {
+                var columnInputs = $(this).children().first().find(":input");
+                columns.push( columnInputs.serializeToJSON() );
+            });
+            table_info.columns = columns;
+
+            $.ajax({
+                type: 'POST',
+                url: '/createTable',
+                data: JSON.stringify(table_info),
+                contentType: 'application/json',
+                success: function(data) {
+                    $('#create_table_table_info :input').val('');
+                    $(".new-column").each(function(i) {
+                        $(this).children().first().find(":input").val('');
+                    });
+                    alert(JSON.stringify(data));
+                },
+                error: function(request, status, error) {
+                    alert(request.responseText);
+                }
+            });
+
+            return false;
+        });
+
+        $('#drop_table').click(function() {
+            var payload = new Object();
+            var tableName = $('#drop_table_name').val();
+            var keyspace = $('#drop_table_keyspace').val();
+
+            payload.tableName = tableName;
+            payload.keyspaceName = keyspace;
+
+            $.ajax({
+                type: 'POST',
+                url: '/dropTable',
+                data: JSON.stringify(payload),
+                contentType: 'application/json',
+                success: function(data) {
+                    $('#drop_table_name').val('');
+                    $('#drop_table_keyspace').val('');
+                    alert(JSON.stringify(data));
+                },
+                error: function(request, status, error){
+                    alert(request.responseText);
+                }
+            });
+
+            return false;
+        });
+
+        $('#get_tables').click(function() {
+            var payload = new Object();
+            payload.keyspaceName = $('#get_tables_input').val();
+
+            $.ajax({
+                type: 'POST',
+                url: '/getTablesFromKeyspace',
+                data: JSON.stringify(payload),
+                contentType: 'application/json',
+                success: function(data) {
+                    $('#get_tables_result').append(JSON.stringify(data) + '\n' + '----------' + '\n');
+                    $('#get_tables_input').val('');
+                },
+                error: function(request, status, error){
+                    alert(request.responseText);
+                }
+            });
+
+            return false;
+        });
+
+        $('#add_new_column').click(function() {
+            var payload = new Object();
+            payload.keyspaceName = $('#add_column_keyspace_name').val();
+            payload.tableName = $('#add_column_table_name').val();
+            payload.column = $('#add_column_column_name').val();
+            payload.type = $('#add_column_column_type').val();
+
+            $.ajax({
+                type: 'POST',
+                url: '/addNewColumn',
+                data: JSON.stringify(payload),
+                contentType: 'application/json',
+                success: function(data) {
+                    $('#add_column_keyspace_name').val('');
+                    $('#add_column_table_name').val('');
+                    $('#add_column_column_name').val('');
+                    $('#add_column_column_type').val('');
+                    alert(JSON.stringify(data));
+                },
+                error: function(request, status, error){
+                    alert(request.responseText);
+                }
+            });
+
+            return false;
+        });
+
+        $('#remove_column').click(function() {
+            var payload = new Object();
+            payload.keyspaceName = $('#remove_column_keyspace_name').val();
+            payload.columnName = $('#remove_column_column_name').val();
+            payload.tableName = $('#remove_column_table_name').val();
+
+            $.ajax({
+                type: 'POST',
+                url: '/removeColumn',
+                data: JSON.stringify(payload),
+                contentType: 'application/json',
+                success: function(data) {
+                    $('#remove_column_keyspace_name').val('');
+                    $('#remove_column_column_name').val('');
+                    $('#remove_column_table_name').val('');
+                    alert(JSON.stringify(data));
+                },
+                error: function(request, status, error){
+                    alert(request.responseText);
+                }
+            });
+
+            return false;
+        });
+
+        $('#rename_column').click(function() {
+            var payload = new Object();
+            payload.keyspaceName = $('#rename_column_keyspace_name').val();
+            payload.tableName = $('#rename_column_table_name').val();
+            payload.oldName = $('#old_column_name').val();
+            payload.newName = $('#new_column_name').val();
+
+            $.ajax({
+                type: 'POST',
+                url: '/renameColumn',
+                data: JSON.stringify(payload),
+                contentType: 'application/json',
+                success: function(data) {
+                    $('#rename_column_keyspace_name').val('');
+                    $('#rename_column_table_name').val('');
+                    $('#old_column_name').val('');
+                    $('#new_column_name').val('');
+                    alert(JSON.stringify(data));
+                },
+                error: function(request, status, error){
+                    alert(request.responseText);
+                }
+            });
+
+            return false;
+        });
+
+        $('#change_column_type').click(function() {
+            var payload = new Object();
+            payload.keyspaceName = $('#change_column_type_keyspace_name').val();
+            payload.tableName = $('#change_column_type_table_name').val();
+            payload.column = $('#change_column_type_column_name').val();
+            payload.type = $('#change_column_type_new_column_type').val();
+
+            $.ajax({
+                type: 'POST',
+                url: '/changeColumnType',
+                data: JSON.stringify(payload),
+                contentType: 'application/json',
+                success: function(data) {
+                    $('#change_column_type_keyspace_name').val('');
+                    $('#change_column_type_table_name').val('');
+                    $('#change_column_type_column_name').val('');
+                    $('#change_column_type_new_column_type').val('');
+                    alert(JSON.stringify(data));
+                },
+                error: function(request, status, error){
+                    alert(request.responseText);
+                }
+            });
+
+            return false;
+        });
+
+        $('#insert').click(function() {
+            var payload = new Object();
+            payload.id = parseInt($('#insert_id').val(), 10);
+            payload.name = $('#insert_name').val();
+            payload.event = $('#insert_event').val();
+
+            $.ajax({
+                type: 'POST',
+                url: '/insert',
+                data: JSON.stringify(payload),
+                contentType: 'application/json',
+                success: function(data) {
+                    $('#insert_id').val('');
+                    $('#insert_name').val('');
+                    $('#insert_event').val('');
+                    alert(JSON.stringify(data));
+                },
+                error: function(request, status, error){
+                    alert(request.responseText);
+                }
+            });
+
+            return false;
+        });
+
+        $('#select').click(function() {
+
+            $.get( "/select", function( data ) {
+                $( "#select_result" ).append( JSON.stringify(data) + '\n' + '-----------' + '\n' );
+
+            });
+
+            return false;
+        });
+
+        $('#update').click(function() {
+            var columns = new Object();
+            if ($('#update_name').val().length > 0 ) {
+                columns.name = $('#update_name').val();
+            }
+            if($('#update_event').val().length > 0 ) {
+                columns.event = $('#update_event').val();
+            }
+
+            var where = new Array();
+            var myArray = $('#where_ids').val().split(",");
+            for(var i=0; i<myArray.length; i++) { where.push( parseInt(myArray[i], 10) ); }
+
+            var payload = new Object();
+            payload.columns = columns;
+            payload.where = where;
+
+            $.ajax({
+                type: 'POST',
+                url: '/update',
+                data: JSON.stringify(payload),
+                contentType: 'application/json',
+                success: function(data) {
+                    $('#update_id').val('');
+                    $('#update_name').val('');
+                    $('#update_event').val('');
+                    $('#where_ids').val('');
+                    alert(JSON.stringify(data));
+                },
+                error: function(request, status, error){
+                    alert(request.responseText);
+                }
+            });
+
+            return false;
+        });
+
+        $('#delete_columns').click(function() {
+            var columns = new Array();
+            if ($('#delete_columns_name').is(":checked"))
+            {
+                columns.push("name");
+            }
+            if ($('#delete_columns_event').is(":checked"))
+            {
+                columns.push("event");
+            }
+
+            var where = new Array();
+            var myArray = $('#delete_columns_where_ids').val().split(",");
+            for(var i=0; i<myArray.length; i++) { where.push( parseInt(myArray[i], 10) ); }
+
+            var payload = new Object();
+            payload.columns = columns;
+            payload.where = where;
+
+            $.ajax({
+                type: 'POST',
+                url: '/deleteColumns',
+                data: JSON.stringify(payload),
+                contentType: 'application/json',
+                success: function(data) {
+                    $('#delete_columns_name').val('');
+                    $('#delete_columns_id').val('');
+                    $('#delete_columns_event').val('');
+                    $('#delete_columns_where_ids').val('');
+                    alert(JSON.stringify(data));
+                },
+                error: function(request, status, error){
+                    alert(request.responseText);
+                }
+            });
+
+            return false;
+        });
+
+
+        $('#delete_rows').click(function() {
+            var where = new Array();
+            var myArray = $('#delete_rows_ids').val().split(",");
+            for(var i=0; i<myArray.length; i++) { where.push( parseInt(myArray[i], 10) ); }
+
+            var payload = new Object();
+            payload.ids = where;
+
+            $.ajax({
+                type: 'POST',
+                url: '/deleteRows',
+                data: JSON.stringify(payload),
+                contentType: 'application/json',
+                success: function(data) {
+                    $('#delete_rows_ids').val('');
+                    alert(JSON.stringify(data));
+                },
+                error: function(request, status, error){
+                    alert(request.responseText);
+                }
+            });
+
+            return false;
+        });
+
+        $('#execute_cql').click(function() {
+            var payload = new Object();
+            payload.cqlQuery = $('#query').val();
+            var parameters = new Array();
+            var parametersValues = new Array();
+            if( $('#parameters').val().trim().length !== 0 ) {
+                parametersValues = $('#parameters').val().trim().split(",");
+            }
+
+            for(var i=0; i<parametersValues.length; i++) { parameters.push( parseInt(parametersValues[i], 10) ); }
+            payload.parameters = parameters;
+
+            $.ajax({
+                type: 'POST',
+                url: '/executeCqlQuery',
+                data: JSON.stringify(payload),
+                contentType: 'application/json',
+                success: function(data) {
+                    $('#cql_result').append(JSON.stringify(data) + '\n'+ '------------------' + '\n');
+                },
+                error: function(request, status, error){
+                    alert(request.responseText);
+                }
+            });
+
+            return false;
+        });
+
+        $('#create_keyspace').click(function() {
+            var payload = new Object();
+            payload.keyspaceName = $('#create_keyspace_name').val();
+            payload.replicationStrategyClass = $('#create_keyspace_strategy_class').val();
+            payload.replicationFactor = parseInt($('#create_keyspace_replication_factor').val(), 10);
+
+            $.ajax({
+                type: 'POST',
+                url: '/createKeyspace',
+                data: JSON.stringify(payload),
+                contentType: 'application/json',
+                success: function(data) {
+                    $('#create_keyspace_name').val('');
+                    $('#create_keyspace_strategy_class').val('');
+                    $('#create_keyspace_replication_factor').val('');
+                    alert(JSON.stringify(data));
+                },
+                error: function(request, status, error){
+                    alert(request.responseText);
+                }
+            });
+
+            return false;
+        });
+
+        $('#drop_keyspace').click(function() {
+            var payload = new Object();
+            payload.keyspaceName = $('#drop_keyspace_name').val();
+
+            $.ajax({
+                type: 'POST',
+                url: '/dropKeyspace',
+                data: JSON.stringify(payload),
+                contentType: 'application/json',
+                success: function(data) {
+                    $('#drop_keyspace_name').val('');
+                    alert(JSON.stringify(data));
+                },
+                error: function(request, status, error){
+                    alert(request.responseText);
+                }
+            });
+
+            return false;
+        });
+
+
+        $("#add_column").click(function () {
+            $("#columns").append('<div class="row new-column" style="margin-bottom: 10px; margin-top: 10px;">' +
+                    '<div class="form-group">' +
+                    '<div class="col-sm-4"><input type="text" class="form-control" name="name" placeholder="Column Name"></div>' +
+                    '<div class="col-sm-4">' +
+                    '<select id="create_table_column_type" name="type" class="form-control">' +
+                    '<option value="" disabled selected>Required</option>' +
+                    '<option value="ASCII">ASCII</option>' +
+                    '<option value="BIGINT">BIGINT</option>' +
+                    '<option value="BLOB">BLOB</option>' +
+                    '<option value="BOOLEAN">BOOLEAN</option>' +
+                    '<option value="COUNTER">COUNTER</option>' +
+                    '<option value="DECIMAL">DECIMAL</option>' +
+                    '<option value="DOUBLE">DOUBLE</option>' +
+                    '<option value="FLOAT">FLOAT</option>' +
+                    '<option value="INET">INET</option>' +
+                    '<option value="INT">INT</option>' +
+                    '<option value="TEXT">TEXT</option>' +
+                    '<option value="TIMESTAMP">TIMESTAMP</option>' +
+                    '<option value="UUID">UUID</option>' +
+                    '<option value="VARCHAR">VARCHAR</option>' +
+                    '<option value="VARINT">VARINT</option>' +
+                    '<option value="TIMEUUID">TIMEUUID</option>' +
+                    '<option value="SMALLINT">SMALLINT</option>' +
+                    '<option value="TINYINT">TINYINT</option>' +
+                    '<option value="DATE">DATE</option>' +
+                    '<option value="TIME">TIME</option>' +
+                    '</select>' +
+                    '</div>' +
+                    '<div class="col-sm-4">' +
+                    '<select name="primaryKey" class="form-control">' +
+                    '<option value="" disabled selected>Partition key</option>' +
+                    '<option value="true">True</option>' +
+                    '<option value="false">False</option>' +
+                    '</select>' +
+                    '</div>' +
+                    '</div>');
+        });
+    });
+
+</script>
+
+<div class="container">
+    <h3>Cassandra Connector Demo</h3>
+
+    <div class="alert alert-info">
+        <strong>Info!</strong> When running the demo a default keyspace(demo_keyspace) and a default table(demo_table(id-INT,name-TEXT,event-TEXT)) in this keyspace are created in order to be further used by some operations.
+    </div>
+
+    <div class="panel-group" id="accordion">
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h2 class="panel-title form-signin-heading">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#createKeyspaceDiv">Create Keyspace</a>
+                </h2>
+            </div>
+            <div id="createKeyspaceDiv" class="panel-collapse collapse in">
+                <div class="panel-body">
+                    <form id="createKeyspaceForm" class="form-signin" role="form" onsubmit="return false;">
+                        <div id = "create_keyspace_info">
+                            <label>Keyspace</label> <input type="text" id="create_keyspace_name" name="keyspaceName" value="" class="form-control" placeholder="Required"><br>
+                            <label>Replication Strategy class</label> <input type="text" id="create_keyspace_strategy_class" name="strategyClass" value="" class="form-control" placeholder="Optional"><br>
+                            <label>Replication Factor</label> <input type="text" id="create_keyspace_replication_factor" name="replicationFactor" value="" class="form-control" placeholder="Optional"><br>
+                        </div>
+                        <br>
+                        <input id="create_keyspace" class="btn btn-lg btn-primary btn-block" type="submit" value="Create Keyspace"><br>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h2 class="panel-title form-signin-heading">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#createTableFormDiv">Create Table</a>
+                </h2>
+            </div>
+            <div id="createTableFormDiv" class="panel-collapse collapse">
+                <div class="panel-body">
+                    <form id="createTableForm" class="form-signin" role="form" onsubmit="return false;">
+                        <div id = "create_table_table_info">
+                            <label>Table Name</label> <input type="text" name="tableName" value="" class="form-control" placeholder="Required"><br>
+                            <label>Keyspace</label> <input type="text" name="keyspaceName" value="" class="form-control" placeholder="Optional"><br>
+                        </div>
+                        <label>Columns</label>
+                        <div id = "columns" class = "row" style="margin-bottom: 10px;">
+                            <div class="row new-column">
+                                <div class="form-group">
+                                    <div class="col-sm-4"><input type="text" name="name" class="form-control" placeholder="Column Name"></div>
+                                    <div class="col-sm-4">
+                                        <select id="create_table_column_type" name="type" class="form-control">
+                                            <option value="" disabled selected>Required</option>
+                                            <option value="ASCII">ASCII</option>
+                                            <option value="BIGINT">BIGINT</option>
+                                            <option value="BLOB">BLOB</option>
+                                            <option value="BOOLEAN">BOOLEAN</option>
+                                            <option value="COUNTER">COUNTER</option>
+                                            <option value="DECIMAL">DECIMAL</option>
+                                            <option value="DOUBLE">DOUBLE</option>
+                                            <option value="FLOAT">FLOAT</option>
+                                            <option value="INET">INET</option>
+                                            <option value="INT">INT</option>
+                                            <option value="TEXT">TEXT</option>
+                                            <option value="TIMESTAMP">TIMESTAMP</option>
+                                            <option value="UUID">UUID</option>
+                                            <option value="VARCHAR">VARCHAR</option>
+                                            <option value="VARINT">VARINT</option>
+                                            <option value="TIMEUUID">TIMEUUID</option>
+                                            <option value="SMALLINT">SMALLINT</option>
+                                            <option value="TINYINT">TINYINT</option>
+                                            <option value="DATE">DATE</option>
+                                            <option value="TIME">TIME</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <select name="primaryKey" class="form-control">
+                                            <option value="" disabled selected>Partition key</option>
+                                            <option value="true">True</option>
+                                            <option value="false">False</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4"></div>
+                            <div class="col-md-4 text-center">
+                                <button class="btn btn-primary btn-block" id="add_column">Add column</button>
+                            </div>
+                        </div>
+                        <br>
+                        <input id="create_table" class="btn btn-lg btn-primary btn-block" type="submit" value="Create Table"><br>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h2 class="panel-title form-signin-heading">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#getTablesFormDiv">Get tables from keyspace</a>
+                </h2>
+            </div>
+            <div id="getTablesFormDiv" class="panel-collapse collapse">
+                <div class="panel-body">
+                    <form id="getTablesForm" class="form-signin" role="form" onsubmit="return false;">
+                        <div id = "get_tables_table_info">
+                            <label>Keyspace</label> <input id="get_tables_input" type="text" name="keyspaceName" value="" class="form-control" placeholder="Optional"><br>
+                        </div>
+                        <br>
+                        <input id="get_tables" class="btn btn-lg btn-primary btn-block" type="submit" value="Get Tables From Keyspace"><br>
+                    </form>
+                </div>
+                <div class="form-group">
+                    <textarea id="get_tables_result" class="form-control form-signin get-tables-result" placeholder="Tables" readonly=true></textarea>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h2 class="panel-title form-signin-heading">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#addColumnFormDiv">Alter Table - Add new column</a>
+                </h2>
+            </div>
+            <div id="addColumnFormDiv" class="panel-collapse collapse">
+                <div class="panel-body">
+                    <form id="addColumnForm" class="form-signin" role="form" onsubmit="return false;">
+                        <div id = "add_column_table_info">
+                            <label>Keyspace Name</label> <input id="add_column_keyspace_name" type="text" value="" class="form-control" placeholder="Optional"><br>
+                            <label>Table Name</label> <input id="add_column_table_name" type="text" value="" class="form-control" placeholder="Required"><br>
+                            <label>Column Name</label> <input id="add_column_column_name" type="text" value="" class="form-control" placeholder="Required"><br>
+                            <label>Column Type</label>
+                            <select id="add_column_column_type" name="type" class="form-control">
+                                <option value="" disabled selected>Required</option>
+                                <option value="ASCII">ASCII</option>
+                                <option value="BIGINT">BIGINT</option>
+                                <option value="BLOB">BLOB</option>
+                                <option value="BOOLEAN">BOOLEAN</option>
+                                <option value="COUNTER">COUNTER</option>
+                                <option value="DECIMAL">DECIMAL</option>
+                                <option value="DOUBLE">DOUBLE</option>
+                                <option value="FLOAT">FLOAT</option>
+                                <option value="INET">INET</option>
+                                <option value="INT">INT</option>
+                                <option value="TEXT">TEXT</option>
+                                <option value="TIMESTAMP">TIMESTAMP</option>
+                                <option value="UUID">UUID</option>
+                                <option value="VARCHAR">VARCHAR</option>
+                                <option value="VARINT">VARINT</option>
+                                <option value="TIMEUUID">TIMEUUID</option>
+                                <option value="SMALLINT">SMALLINT</option>
+                                <option value="TINYINT">TINYINT</option>
+                                <option value="DATE">DATE</option>
+                                <option value="TIME">TIME</option>
+                            </select><br>
+                        </div>
+                        <br>
+                        <input id="add_new_column" class="btn btn-lg btn-primary btn-block" type="submit" value="Add Column"><br>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h2 class="panel-title form-signin-heading">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#removeColumnFormDiv">Alter Table - Remove column</a>
+                </h2>
+            </div>
+            <div id="removeColumnFormDiv" class="panel-collapse collapse">
+                <div class="panel-body">
+                    <form id="removeColumnForm" class="form-signin" role="form" onsubmit="return false;">
+                        <div id = "remove_column_table_info">
+                            <label>Keyspace Name</label> <input id="remove_column_keyspace_name" type="text" value="" class="form-control" placeholder="Optional"><br>
+                            <label>Table Name</label> <input id="remove_column_table_name" type="text" value="" class="form-control" placeholder="Required"><br>
+                            <label>Column Name</label> <input id="remove_column_column_name" type="text" value="" class="form-control" placeholder="Required"><br>
+                        </div>
+                        <br>
+                        <input id="remove_column" class="btn btn-lg btn-primary btn-block" type="submit" value="Remove Column"><br>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h2 class="panel-title form-signin-heading">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#renameColumnFormDiv">Alter Table - Rename column</a>
+                </h2>
+            </div>
+            <div id="renameColumnFormDiv" class="panel-collapse collapse">
+                <div class="panel-body">
+                    <form id="renameColumnForm" class="form-signin" role="form" onsubmit="return false;">
+                        <div id = "rename_table_info">
+                            <label>Keyspace Name</label> <input id="rename_column_keyspace_name" type="text" value="" class="form-control" placeholder="Optional"><br>
+                            <label>Table Name</label> <input id="rename_column_table_name" type="text" value="" class="form-control" placeholder="Required"><br>
+                            <label>Old Column Name</label> <input id="old_column_name" type="text" value="" class="form-control" placeholder="Required"><br>
+                            <label>New Column Name</label> <input id="new_column_name" type="text" value="" class="form-control" placeholder="Required"><br>
+                        </div>
+                        <br>
+                        <input id="rename_column" class="btn btn-lg btn-primary btn-block" type="submit" value="Rename Column"><br>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h2 class="panel-title form-signin-heading">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#changeColumnTypeFormDiv">Alter Table - Change column type</a>
+                </h2>
+            </div>
+            <div id="changeColumnTypeFormDiv" class="panel-collapse collapse">
+                <div class="panel-body">
+                    <form id="changeColumnTypeForm" class="form-signin" role="form" onsubmit="return false;">
+                        <div id = "change_column_type_table_info">
+                            <label>Keyspace Name</label> <input id="change_column_type_keyspace_name" type="text" value="" class="form-control" placeholder="Optional"><br>
+                            <label>Table Name</label> <input id="change_column_type_table_name" type="text" value="" class="form-control" placeholder="Required"><br>
+                            <label>Column Name</label> <input id="change_column_type_column_name" type="text" value="" class="form-control" placeholder="Required"><br>
+                            <label>New Column Type</label>
+                            <select id="change_column_type_new_column_type" name="type" class="form-control">
+                                <option value="" disabled selected>Required</option>
+                                <option value="ASCII">ASCII</option>
+                                <option value="BIGINT">BIGINT</option>
+                                <option value="BLOB">BLOB</option>
+                                <option value="BOOLEAN">BOOLEAN</option>
+                                <option value="COUNTER">COUNTER</option>
+                                <option value="DECIMAL">DECIMAL</option>
+                                <option value="DOUBLE">DOUBLE</option>
+                                <option value="FLOAT">FLOAT</option>
+                                <option value="INET">INET</option>
+                                <option value="INT">INT</option>
+                                <option value="TEXT">TEXT</option>
+                                <option value="TIMESTAMP">TIMESTAMP</option>
+                                <option value="UUID">UUID</option>
+                                <option value="VARCHAR">VARCHAR</option>
+                                <option value="VARINT">VARINT</option>
+                                <option value="TIMEUUID">TIMEUUID</option>
+                                <option value="SMALLINT">SMALLINT</option>
+                                <option value="TINYINT">TINYINT</option>
+                                <option value="DATE">DATE</option>
+                                <option value="TIME">TIME</option>
+                            </select>
+                            <br>
+                        </div>
+                        <br>
+                        <input id="change_column_type" class="btn btn-lg btn-primary btn-block" type="submit" value="Change Column Type"><br>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h2 class="panel-title form-signin-heading">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#insertFormDiv">Insert into demo_table table</a>
+                </h2>
+            </div>
+            <div id="insertFormDiv" class="panel-collapse collapse">
+                <div class="panel-body">
+                    <form id="insertForm" class="form-signin" role="form" onsubmit="return false;">
+                        <div id = "insert_table_info">
+                            <label>Id</label> <input id="insert_id" type="text" value="" class="form-control" placeholder="Required"><br>
+                            <label>Name</label> <input id="insert_name" type="text" value="" class="form-control" placeholder="Optional"><br>
+                            <label>Event</label> <input id="insert_event" type="text" value="" class="form-control" placeholder="Optional"><br>
+                        </div>
+                        <br>
+                        <input id="insert" class="btn btn-lg btn-primary btn-block" type="submit" value="Insert"><br>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h2 class="panel-title form-signin-heading">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#selectFormDiv">Select all from demo_table table</a>
+                </h2>
+            </div>
+            <div id="selectFormDiv" class="panel-collapse collapse">
+                <div class="panel-body">
+                    <form id="selectForm" class="form-signin" role="form" onsubmit="return false;">
+                        <div id = "select_table_info">
+                            <label>Query that is being executed</label> <br>
+                            <input id="select_query" type="text" value="" class="form-control" readonly=true placeholder="SELECT id, name, event FROM demo_table"><br>
+                        </div>
+                        <br>
+                        <input id="select" class="btn btn-lg btn-primary btn-block" type="submit" value="Select"><br>
+                    </form>
+                </div>
+                <div class="form-group">
+                    <textarea id="select_result" class="form-control form-signin get-tables-result" readonly=true></textarea>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h2 class="panel-title form-signin-heading">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#updateFormDiv">Update into demo_table table</a>
+                </h2>
+            </div>
+            <div id="updateFormDiv" class="panel-collapse collapse">
+                <div class="panel-body">
+                    <form id="updateForm" class="form-signin" role="form" onsubmit="return false;">
+                        <div id = "update_table_info">
+                            <h4>Columns</h4>
+                            <label>Name</label> <input id="update_name" type="text" value="" class="form-control" placeholder="Optional"><br>
+                            <label>Event</label> <input id="update_event" type="text" value="" class="form-control" placeholder="Optional"><br>
+                            <h4>Where</h4>
+                            <label>Ids</label> <input id="where_ids" type="text" value="" class="form-control" placeholder="Comma separated ids"><br>
+                        </div>
+                        <br>
+                        <input id="update" class="btn btn-lg btn-primary btn-block" type="submit" value="Update"><br>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h2 class="panel-title form-signin-heading">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#deleteRowsFormDiv">Delete rows from demo_table table</a>
+                </h2>
+            </div>
+            <div id="deleteRowsFormDiv" class="panel-collapse collapse">
+                <div class="panel-body">
+                    <form id="deleteRowsForm" class="form-signin" role="form" onsubmit="return false;">
+                        <div id = "delete_rows_table_info">
+                            <h4>Where</h4>
+                            <label>Ids</label> <input id="delete_rows_ids" type="text" value="" class="form-control" placeholder="Comma separated ids"><br>
+                        </div>
+                        <br>
+                        <input id="delete_rows" class="btn btn-lg btn-primary btn-block" type="submit" value="Delete rows"><br>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h2 class="panel-title form-signin-heading">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#deleteColumnsFormDiv">Delete columns from demo_table table</a>
+                </h2>
+            </div>
+            <div id="deleteColumnsFormDiv" class="panel-collapse collapse">
+                <div class="panel-body">
+                    <form id="deleteColumnsForm" class="form-signin" role="form" onsubmit="return false;">
+                        <div id = "delete_column_table_info">
+                            <h4>Columns</h4>
+                            <label>Name</label> <input id="delete_columns_name" type="checkbox" class="form-control"><br>
+                            <label>Event</label> <input id="delete_columns_event" type="checkbox" class="form-control"><br>
+                            <h4>Where</h4>
+                            <label>Ids</label> <input id="delete_columns_where_ids" type="text" value="" class="form-control" placeholder="Comma separated ids"><br>
+                        </div>
+                        <br>
+                        <input id="delete_columns" class="btn btn-lg btn-primary btn-block" type="submit" value="Delete columns"><br>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h2 class="panel-title form-signin-heading">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#executeCqlQueryFormDiv">Execute CQL query(Select from demo_table)</a>
+                </h2>
+            </div>
+            <div id="executeCqlQueryFormDiv" class="panel-collapse collapse">
+                <div class="panel-body">
+                    <form id="executeCqlQueryForm" class="form-signin" role="form" onsubmit="return false;">
+                        <div id = "execute_cql_query_table_info">
+                            <label>Query</label> <input id="query" type="text" class="form-control" value="SELECT * FROM demo_keyspace.demo_table WHERE id IN (?,?)"><br>
+                            <label>Parameters</label> <input id="parameters" type="text" class="form-control" value="1,2"><br>
+                        </div>
+                        <br>
+                        <input id="execute_cql" class="btn btn-lg btn-primary btn-block" type="submit" value="Execute CQL query"><br>
+                    </form>
+                </div>
+                <div class="form-group">
+                    <textarea id="cql_result" class="form-control form-signin get-tables-result" readonly=true></textarea>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h2 class="panel-title form-signin-heading">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#dropTableFormDiv">Drop Table</a>
+                </h2>
+            </div>
+            <div id="dropTableFormDiv" class="panel-collapse collapse">
+                <div class="panel-body">
+                    <form id="dropTableForm" class="form-signin" role="form" onsubmit="return false;">
+                        <div id = "drop_table_table_info">
+                            <label>Table Name</label> <input type="text" id="drop_table_name" name="tableName" value="" id="table-name" class="form-control" placeholder="Required"><br>
+                            <label>Keyspace</label> <input type="text" id="drop_table_keyspace" name="keyspaceName" value="" id="keyspace" class="form-control" placeholder="Optional"><br>
+                        </div>
+                        <br>
+                        <input id="drop_table" class="btn btn-lg btn-primary btn-block" type="submit" value="Drop Table"><br>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h2 class="panel-title form-signin-heading">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#dropKeyspaceDiv">Drop Keyspace</a>
+                </h2>
+            </div>
+            <div id="dropKeyspaceDiv" class="panel-collapse collapse">
+                <div class="panel-body">
+                    <form id="dropKeyspaceForm" class="form-signin" role="form" onsubmit="return false;">
+                        <div id = "drop_keyspace_info">
+                            <label>Keyspace</label> <input type="text" id="drop_keyspace_name" name="keyspaceName" value="" class="form-control" placeholder="Required"><br>
+                        </div>
+                        <br>
+                        <input id="drop_keyspace" class="btn btn-lg btn-primary btn-block" type="submit" value="Drop Keyspace"><br>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
