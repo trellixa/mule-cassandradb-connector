@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<namespace xmlns="http://www.mulesoft.org/schema/mule/tooling.attributes" xmlns:mule="http://www.mulesoft.org/schema/mule/core" url="http://www.mulesoft.org/schema/mule/cassandradb" prefix="cassandradb">
+  <global-cloud-connector versions="[3.6.0,8.0.0]" caption="CassandraDB" description="" icon="" localId="parentConfig" image="" abstract="true" extends="http://www.mulesoft.org/schema/mule/cassandradb/abstractCassandradbConnectorGeneric"></global-cloud-connector>
+  <nested caption="" description="" localId="connection-pooling-profile" abstract="true">
+    <radioBoolean name="defaultPoolingProfile" caption="Use default connection pool configuration" description="Use default connection pool configuration." fillLine="true"></radioBoolean>
+    <radioBoolean name="customPoolingProfile" caption="Define connection pool configuration" description="Define connection pool configuration." fillLine="true"></radioBoolean>
+    <integer defaultValue="5" min="-1" step="0" name="maxActive" caption="Max active" description="Controls the maximum number of connections that can be borrowed from the pool at one time. When set to a negative value, there is no limit to the number of connections that may be active at one time. When maxActive is exceeded, the pool is said to be exhausted." controlled="customPoolingProfile" indented="true" fillLine="true"></integer>
+    <integer defaultValue="5" min="-1" step="0" name="maxIdle" caption="Max idle" description="Controls the maximum number of connections that can sit idle in the pool at any time. When set to a negative value, there is no limit to the number of connections that may be idle at one time." controlled="customPoolingProfile" indented="true" fillLine="true"></integer>
+    <enum defaultValue="INITIALISE_ONE" name="initialisationPolicy" caption="Initialisation policy" description="Determines how connections in a pool should be initialized. The possible values are: INITIALISE_NONE (will not load any connection into the pool on startup), INITIALISE_ONE (will load one initial connection into the pool on startup), or INITIALISE_ALL (will load all connections in the pool on startup)" alwaysFill="true" controlled="customPoolingProfile" indented="true">
+      <option value="INITIALISE_NONE"></option>
+      <option value="INITIALISE_ONE"></option>
+      <option value="INITIALISE_ALL"></option>
+    </enum>
+    <enum defaultValue="WHEN_EXHAUSTED_GROW" name="exhaustedAction" caption="Exhausted action" description="Specifies the behavior of the connection pool when the pool is exhausted. Possible values are: &quot;WHEN_EXHAUSTED_FAIL&quot;, which will throw a NoSuchElementException, &quot;WHEN_EXHAUSTED_WAIT&quot;, which will block by invoking Object.wait(long) until a new or idle object is available, or WHEN_EXHAUSTED_GROW, which will create a new connection and return it, essentially making maxActive meaningless. If a positive maxWait value is supplied, it will block for at most that many milliseconds, after which a NoSuchElementException will be thrown. If maxThreadWait is a negative value, it will block indefinitely." alwaysFill="true" controlled="customPoolingProfile" indented="true">
+      <option value="WHEN_EXHAUSTED_WAIT"></option>
+      <option value="WHEN_EXHAUSTED_FAIL"></option>
+      <option value="WHEN_EXHAUSTED_GROW"></option>
+    </enum>
+    <integer defaultValue="5" min="-1" step="0" name="maxWait" caption="Max wait" description="When exhausted action is Wait (or block) this is the amount of time in milliseconds that the pool will wait before failing. Setting a negative value will block indefinitely until an idle instance becomes available." controlled="customPoolingProfile" indented="true" fillLine="true"></integer>
+    <integer defaultValue="1800000" min="-1" step="0" name="minEvictionMillis" caption="Min eviction (ms)" description="Determines the minimum amount of time a connection may sit idle in the pool before it is eligible for eviction. When non-positive, no connections will be evicted from the pool due to idle time alone." controlled="customPoolingProfile" indented="true" fillLine="true"></integer>
+    <integer defaultValue="-1" min="-1" step="0" name="evictionCheckIntervalMillis" caption="Eviction check interval (ms)" description="Specifies the number of milliseconds between runs of the connection evictor. When non-positive, no connection evictor is executed." controlled="customPoolingProfile" indented="true" fillLine="true"></integer>
+  </nested>
+  <nested caption="" description="" localId="reconnectionStrategyElement" abstract="true">
+    <label name="connectionLabel" caption="Define how mule should attempt to handle a connection failure" description=""></label>
+    <radioBoolean name="noReconnection" caption="Do not use a Reconnection strategy" description="Disable reconection strategy" fillLine="true"></radioBoolean>
+    <radioBoolean name="standardReconnection" caption="Standard Reconnection" description="A reconnection strategy that allows the user to configure how many times a reconnection should be attempted and how long to wait between attempts." fillLine="true"></radioBoolean>
+    <integer defaultValue="2000" min="1" max="2147483647" step="1" name="reconnectionFrequency" caption="Frequency (ms)" description="How often (in ms) to reconnect" controlled="standardReconnection" indented="true"></integer>
+    <integer defaultValue="2" min="1" max="2147483647" step="1" name="reconnectionAttemps" caption="Reconnection Attempts" description="How many reconnection attempts to make" controlled="standardReconnection,!reconnectForever" indented="true"></integer>
+    <boolean name="reconnectForever" caption="Reconnect Forever" description="A reconnection strategy that retries an infinite number of times at the specified frequency." supportsExpressions="false" controlled="standardReconnection" indented="true"></boolean>
+    <radioBoolean name="customReconnection" caption="Custom Reconnection" description="A user-defined reconnection strategy." fillLine="true"></radioBoolean>
+    <classname name="class" caption="Class" description="A class that implements the RetryPolicyTemplate interface." controlled="customReconnection" indented="true"></classname>
+    <childElement allowMultiple="true" name="http://www.springframework.org/schema/beans/property" caption="Properties" description="Property elements." controlled="customReconnection"></childElement>
+  </nested>
+  <global-cloud-connector versions="[3.6.0,8.0.0]" caption="CassandraDB: Configuration" description="Global Configuration configuration information." icon="icons/theme.classic/cassandradb-connector-small.png" localId="config" image="icons/theme.classic/cassandradb-connector-large.png" abstract="false" extends="http://www.mulesoft.org/schema/mule/cassandradb/parentConfig" connectivityTesting="on" connectivityTestingLabel="Test Connection..." metaData="dynamic" metaDataKeyDisplay="DISPLAY_NAME" supportsUserDefinedMetaData="false">
+    <attribute-category caption="General" description="Cassandradb configuration properties.">
+      <group id="cassandradbGenericProperties" caption="Basic Settings">
+        <name name="name" caption="Name" description="Give a name to this configuration so it can be later referenced by config-ref." required="true"></name>
+      </group>
+      <group id="connection" caption="Connection">
+        <string name="username" caption="Username" description="A username. NOTE: Please use a dummy username if you have disabled authentication." required="false" javaType="java.lang.String"></string>
+        <password name="password" caption="Password" description="A password. NOTE: Leave empty if not required. If specified, the connector will try to login with this credentials." required="false" javaType="java.lang.String"></password>
+      </group>
+      <group id="general" caption="General">
+        <useMetaData name="useMetaData" caption="useMetaData"></useMetaData>
+        <string defaultValue="localhost" name="host" caption="Host" description="Host name or IP address." supportsExpressions="false" required="false" javaType="java.lang.String"></string>
+        <string defaultValue="" name="keyspace" caption="Keyspace" description="Cassandra keyspace." supportsExpressions="false" required="false" javaType="java.lang.String"></string>
+        <string defaultValue="9042" name="port" caption="Port" description="Port (default is 9042)." supportsExpressions="false" required="false" javaType="java.lang.String"></string>
+      </group>
+      <group id="advanced Settings" caption="Advanced Settings">
+        <string name="clusterName" caption="Cluster Name" description="Cassandra cluster name." supportsExpressions="false" required="false" javaType="java.lang.String"></string>
+        <enum allowsCustom="true" name="protocolVersion" caption="Protocol Version" description="Version of the native protocol supported by the driver." supportsExpressions="false" required="false" javaType="com.datastax.driver.core.ProtocolVersion">
+          <option value="V1"></option>
+          <option value="V2"></option>
+          <option value="V3"></option>
+          <option value="V4"></option>
+        </enum>
+        <integer min="0" step="1" name="maxSchemaAgreementWaitSeconds" caption="Max Schema Agreement Wait Seconds" description="The maximum time to wait for schema agreement before returning from a DDL query." supportsExpressions="false" required="false" javaType="int"></integer>
+        <enum allowsCustom="true" name="compression" caption="Compression" description="The compression to use for the transport." supportsExpressions="false" required="false" javaType="com.datastax.driver.core.ProtocolOptions.Compression">
+          <option value="LZ4"></option>
+          <option value="NONE"></option>
+          <option value="SNAPPY"></option>
+        </enum>
+        <boolean defaultValue="false" name="sslEnabled" caption="SSL" description="Enables the use of SSL for the cluster." supportsExpressions="false" required="false" javaType="boolean"></boolean>
+      </group>
+    </attribute-category>
+    <attribute-category caption="Pooling Profile" description="Pooling profile options.">
+      <group id="poolingProfile" caption="Pooling Profile">
+        <childElement inplace="true" name="http://www.mulesoft.org/schema/mule/cassandradb/connection-pooling-profile" caption="" description="" valuePersistence="org.mule.tooling.ui.modules.core.widgets.meta.PoolingProfileValuePersistence"></childElement>
+      </group>
+    </attribute-category>
+    <attribute-category caption="Reconnection" description="Reconnection options.">
+      <group id="reconnectionStrategies" caption="Strategies">
+        <childElement inplace="true" name="http://www.mulesoft.org/schema/mule/core/reconnectionStrategyElement" caption="" description="" valuePersistence="org.mule.tooling.ui.modules.core.widgets.meta.HTTPTransactionValuePersistence"></childElement>
+        <childElement allowSubTypes="true" allowedSubTypes="http://www.mulesoft.org/schema/mule/core/reconnect,http://www.mulesoft.org/schema/mule/core/reconnect-custom-strategy,http://www.mulesoft.org/schema/mule/core/reconnect-forever" name="http://www.mulesoft.org/schema/mule/core/abstractReconnectionStrategy" caption="" description="" visibleInDialog="false"></childElement>
+      </group>
+    </attribute-category>
+  </global-cloud-connector>
+  <cloud-connector caption="Abstractcassandradbconnectorgeneric" description="Interact with Cassandradb." icon="icons/theme.classic/cassandradb-connector-small.png" localId="abstractCassandradbConnectorGeneric" image="icons/theme.classic/cassandradb-connector-large.png" abstract="true">
+    <attribute-category caption="General" description="General.">
+      <group id="abstractCassandradbConnectorGeneric" caption="Basic Settings">
+        <globalRef requiredType="http://www.mulesoft.org/schema/mule/cassandradb/config" name="config-ref" caption="Connector Configuration" description="Specify which configuration to use for this invocation." required="true"></globalRef>
+      </group>
+    </attribute-category>
+  </cloud-connector>
+  <cloud-connector versions="[3.6.0,8.0.0]" aliasId="org.mule.tooling.ui.modules.core.pattern.cassandradb" caption="CassandraDB" description="The Apache Cassandra database is the right choice when you need scalability and high availability without compromising performance.
+Cassandra's ColumnFamily data model offers the convenience of column indexes with the performance of log-structured updates, strong support for materialized views, and powerful built-in caching." icon="icons/theme.classic/cassandradb-connector-small.png" localId="cassandradb-connector" image="icons/theme.classic/cassandradb-connector-large.png" extends="http://www.mulesoft.org/schema/mule/cassandradb/abstractCassandradbConnectorGeneric">
+    <attribute-category caption="General" description="General.">
+      <group id="cassandradbConnectorGeneric" caption="Basic Settings">
+        <modeSwitch alwaysCombo="true" name="Cassandradb operations to execute" caption="Operation" description="Operation.">
+          <no-operation abstractElement="http://www.mulesoft.org/schema/mule/cassandradb/abstractCassandradbConnectorGeneric" versions="[3.6.0,8.0.0]" connector-name="processor"></no-operation>
+          <mode modeId="http://www.mulesoft.org/schema/mule/cassandradb/add-new-column" modeLabel="Add new column"></mode>
+          <mode modeId="http://www.mulesoft.org/schema/mule/cassandradb/change-column-type" modeLabel="Change the type of a column"></mode>
+          <mode modeId="http://www.mulesoft.org/schema/mule/cassandradb/create-keyspace" modeLabel="Create keyspace"></mode>
+          <mode modeId="http://www.mulesoft.org/schema/mule/cassandradb/create-table" modeLabel="Create table"></mode>
+          <mode modeId="http://www.mulesoft.org/schema/mule/cassandradb/delete-columns-value" modeLabel="Delete columns value"></mode>
+          <mode modeId="http://www.mulesoft.org/schema/mule/cassandradb/delete-rows" modeLabel="Delete rows"></mode>
+          <mode modeId="http://www.mulesoft.org/schema/mule/cassandradb/drop-keyspace" modeLabel="Drop keyspace"></mode>
+          <mode modeId="http://www.mulesoft.org/schema/mule/cassandradb/drop-table" modeLabel="Drop table"></mode>
+          <mode modeId="http://www.mulesoft.org/schema/mule/cassandradb/execute-c-q-l-query" modeLabel="Execute CQL Query"></mode>
+          <mode modeId="http://www.mulesoft.org/schema/mule/cassandradb/get-table-names-from-keyspace" modeLabel="Get table names from keyspace"></mode>
+          <mode modeId="http://www.mulesoft.org/schema/mule/cassandradb/insert" modeLabel="Insert"></mode>
+          <mode modeId="http://www.mulesoft.org/schema/mule/cassandradb/drop-column" modeLabel="Remove column"></mode>
+          <mode modeId="http://www.mulesoft.org/schema/mule/cassandradb/rename-column" modeLabel="Rename column"></mode>
+          <mode modeId="http://www.mulesoft.org/schema/mule/cassandradb/select" modeLabel="Select"></mode>
+          <mode modeId="http://www.mulesoft.org/schema/mule/cassandradb/update" modeLabel="Update"></mode>
+        </modeSwitch>
+      </group>
+    </attribute-category>
+  </cloud-connector>
+  <cloud-connector returnType="boolean" caption="Add New Column" icon="icons/theme.classic/cassandradb-connector-small.png" localId="add-new-column" image="icons/theme.classic/cassandradb-connector-large.png" abstract="true" extends="http://www.mulesoft.org/schema/mule/cassandradb/abstractCassandradbConnectorGeneric" metaData="static">
+    <attribute-category caption="General" description="General.">
+      <group id="general" caption="General">
+        <string name="keyspaceName" caption="Keyspace Name" description="(optional) the keyspace which contains the table to be used." required="false" javaType="java.lang.String"></string>
+        <string name="table" caption="Table" description="The name of the table to be used for the operation." required="true" javaType="java.lang.String"></string>
+        <string defaultValue="#[payload]" name="input-ref" caption="Input Reference" description="POJO defining the name of the new column and its DataType." required="false" javaType="org.mule.modules.cassandradb.metadata.AlterColumnInput"></string>
+      </group>
+    </attribute-category>
+  </cloud-connector>
+  <cloud-connector returnType="boolean" caption="Change The Type Of A Column" icon="icons/theme.classic/cassandradb-connector-small.png" localId="change-column-type" image="icons/theme.classic/cassandradb-connector-large.png" abstract="true" extends="http://www.mulesoft.org/schema/mule/cassandradb/abstractCassandradbConnectorGeneric" metaData="static">
+    <attribute-category caption="General" description="General.">
+      <group id="general" caption="General">
+        <string name="keyspaceName" caption="Keyspace Name" description="(optional) the keyspace which contains the table to be used." required="false" javaType="java.lang.String"></string>
+        <string name="table" caption="Table" description="The name of the table to be used for the operation." required="true" javaType="java.lang.String"></string>
+        <string defaultValue="#[payload]" name="input-ref" caption="Input Reference" description="POJO defining the name of the column to be changed and the new DataType." required="false" javaType="org.mule.modules.cassandradb.metadata.AlterColumnInput"></string>
+      </group>
+    </attribute-category>
+  </cloud-connector>
+  <cloud-connector returnType="boolean" caption="Create Keyspace" icon="icons/theme.classic/cassandradb-connector-small.png" localId="create-keyspace" image="icons/theme.classic/cassandradb-connector-large.png" abstract="true" extends="http://www.mulesoft.org/schema/mule/cassandradb/abstractCassandradbConnectorGeneric" metaData="static">
+    <attribute-category caption="General" description="General.">
+      <group id="general" caption="General">
+        <string defaultValue="#[payload]" name="input-ref" caption="Input Reference" description="Operation input containing the keyspace name and the replication details." required="false" javaType="org.mule.modules.cassandradb.metadata.CreateKeyspaceInput"></string>
+      </group>
+    </attribute-category>
+  </cloud-connector>
+  <cloud-connector returnType="boolean" caption="Create Table" icon="icons/theme.classic/cassandradb-connector-small.png" localId="create-table" image="icons/theme.classic/cassandradb-connector-large.png" abstract="true" extends="http://www.mulesoft.org/schema/mule/cassandradb/abstractCassandradbConnectorGeneric" metaData="static">
+    <attribute-category caption="General" description="General.">
+      <group id="general" caption="General">
+        <string defaultValue="#[payload]" name="input-ref" caption="Input Reference" description="Operation input describing the table name, the keyspace name and the list of columns." required="false" javaType="org.mule.modules.cassandradb.metadata.CreateTableInput"></string>
+      </group>
+    </attribute-category>
+  </cloud-connector>
+  <cloud-connector returnType="void" categories="CassandraWithFiltersMetadataCategory" caption="Delete Columns Value" icon="icons/theme.classic/cassandradb-connector-small.png" localId="delete-columns-value" image="icons/theme.classic/cassandradb-connector-large.png" abstract="true" extends="http://www.mulesoft.org/schema/mule/cassandradb/abstractCassandradbConnectorGeneric" metaData="dynamic">
+    <attribute-category caption="General" description="General.">
+      <group id="general" caption="General">
+        <string name="keyspaceName" caption="Keyspace Name" description="(optional) the keyspace which contains the table to be used." required="false" javaType="java.lang.String"></string>
+        <type-chooser associatedConfig="config-ref" affects="INPUT" name="table" caption="Table" description="The name of the table." supportsExpressions="true" required="true" javaType="java.lang.String"></type-chooser>
+        <string defaultValue="#[payload]" name="payload-ref" caption="Payload Reference" description="Operation input: columns to be deleted and where clause for the delete operation." required="false" javaType="java.util.Map&lt;java.lang.String,java.lang.Object&gt;"></string>
+      </group>
+    </attribute-category>
+  </cloud-connector>
+  <cloud-connector returnType="void" categories="CassandraOnlyWithFiltersMetadataCategory" caption="Delete Rows" icon="icons/theme.classic/cassandradb-connector-small.png" localId="delete-rows" image="icons/theme.classic/cassandradb-connector-large.png" abstract="true" extends="http://www.mulesoft.org/schema/mule/cassandradb/abstractCassandradbConnectorGeneric" metaData="dynamic">
+    <attribute-category caption="General" description="General.">
+      <group id="general" caption="General">
+        <string name="keyspaceName" caption="Keyspace Name" description="(optional) the keyspace which contains the table to be used." required="false" javaType="java.lang.String"></string>
+        <type-chooser associatedConfig="config-ref" affects="INPUT" name="table" caption="Table" description="The name of the table." supportsExpressions="true" required="true" javaType="java.lang.String"></type-chooser>
+        <string defaultValue="#[payload]" name="payload-ref" caption="Payload Reference" description="Operation input: where clause for the delete operation." required="false" javaType="java.util.Map&lt;java.lang.String,java.lang.Object&gt;"></string>
+      </group>
+    </attribute-category>
+  </cloud-connector>
+  <cloud-connector returnType="boolean" caption="Remove Column" icon="icons/theme.classic/cassandradb-connector-small.png" localId="drop-column" image="icons/theme.classic/cassandradb-connector-large.png" abstract="true" extends="http://www.mulesoft.org/schema/mule/cassandradb/abstractCassandradbConnectorGeneric" metaData="static">
+    <attribute-category caption="General" description="General.">
+      <group id="general" caption="General">
+        <string defaultValue="#[payload]" name="columnName" caption="Column Name Reference" description="The name of the column to be removed." required="false" javaType="java.lang.String"></string>
+        <string name="keyspaceName" caption="Keyspace Name" description="(optional) the keyspace which contains the table to be used." required="false" javaType="java.lang.String"></string>
+        <string name="table" caption="Table" description="The name of the table to be used for the operation." required="true" javaType="java.lang.String"></string>
+      </group>
+    </attribute-category>
+  </cloud-connector>
+  <cloud-connector returnType="boolean" caption="Drop Keyspace" icon="icons/theme.classic/cassandradb-connector-small.png" localId="drop-keyspace" image="icons/theme.classic/cassandradb-connector-large.png" abstract="true" extends="http://www.mulesoft.org/schema/mule/cassandradb/abstractCassandradbConnectorGeneric" metaData="static">
+    <attribute-category caption="General" description="General.">
+      <group id="general" caption="General">
+        <string name="keyspaceName" caption="Keyspace Name" description="The name of the keyspace to be dropped." required="true" javaType="java.lang.String"></string>
+      </group>
+    </attribute-category>
+  </cloud-connector>
+  <cloud-connector returnType="boolean" caption="Drop Table" icon="icons/theme.classic/cassandradb-connector-small.png" localId="drop-table" image="icons/theme.classic/cassandradb-connector-large.png" abstract="true" extends="http://www.mulesoft.org/schema/mule/cassandradb/abstractCassandradbConnectorGeneric" metaData="static">
+    <attribute-category caption="General" description="General.">
+      <group id="general" caption="General">
+        <string name="keyspaceName" caption="Keyspace Name" description="(optional) the keyspace which contains the table to be dropped." required="false" javaType="java.lang.String"></string>
+        <string name="tableName" caption="Table Name" description="The name of the table to be dropped." required="true" javaType="java.lang.String"></string>
+      </group>
+    </attribute-category>
+  </cloud-connector>
+  <cloud-connector returnType="java.util.List&lt;java.util.Map&lt;java.lang.String,java.lang.Object&gt;&gt;" caption="Execute Cql Query" icon="icons/theme.classic/cassandradb-connector-small.png" localId="execute-c-q-l-query" image="icons/theme.classic/cassandradb-connector-large.png" abstract="true" extends="http://www.mulesoft.org/schema/mule/cassandradb/abstractCassandradbConnectorGeneric" metaData="static">
+    <attribute-category caption="General" description="General.">
+      <group id="query" caption="Query">
+        <string defaultValue="#[payload]" name="input-ref" caption="Input Reference" description="CQLQueryInput describing the parametrized query to be executed along with the parameters." required="false" javaType="org.mule.modules.cassandradb.metadata.CQLQueryInput"></string>
+      </group>
+    </attribute-category>
+  </cloud-connector>
+  <cloud-connector returnType="java.util.List&lt;java.lang.String&gt;" caption="Get Table Names From Keyspace" icon="icons/theme.classic/cassandradb-connector-small.png" localId="get-table-names-from-keyspace" image="icons/theme.classic/cassandradb-connector-large.png" abstract="true" extends="http://www.mulesoft.org/schema/mule/cassandradb/abstractCassandradbConnectorGeneric" metaData="static">
+    <attribute-category caption="General" description="General.">
+      <group id="general" caption="General">
+        <string name="keyspaceName" caption="Keyspace Name" description="The name of the keyspace to be used on the operation." required="false" javaType="java.lang.String"></string>
+      </group>
+    </attribute-category>
+  </cloud-connector>
+  <cloud-connector returnType="void" categories="CassandraMetadataCategory" caption="Insert" icon="icons/theme.classic/cassandradb-connector-small.png" localId="insert" image="icons/theme.classic/cassandradb-connector-large.png" abstract="true" extends="http://www.mulesoft.org/schema/mule/cassandradb/abstractCassandradbConnectorGeneric" metaData="dynamic">
+    <attribute-category caption="General" description="General.">
+      <group id="general" caption="General">
+        <string name="keyspaceName" caption="Keyspace Name" description="(optional) the keyspace which contains the table to be used." required="false" javaType="java.lang.String"></string>
+        <type-chooser associatedConfig="config-ref" affects="INPUT" name="table" caption="Table" description="The table name in which the entity will be inserted." supportsExpressions="true" required="true" javaType="java.lang.String"></type-chooser>
+        <string defaultValue="#[payload]" name="entity-ref" caption="Entity Reference" description="The entity to be inserted." required="false" javaType="java.util.Map&lt;java.lang.String,java.lang.Object&gt;"></string>
+      </group>
+    </attribute-category>
+  </cloud-connector>
+  <cloud-connector returnType="boolean" caption="Rename Column" icon="icons/theme.classic/cassandradb-connector-small.png" localId="rename-column" image="icons/theme.classic/cassandradb-connector-large.png" abstract="true" extends="http://www.mulesoft.org/schema/mule/cassandradb/abstractCassandradbConnectorGeneric" metaData="static">
+    <attribute-category caption="General" description="General.">
+      <group id="general" caption="General">
+        <string name="keyspaceName" caption="Keyspace Name" description="(optional) the keyspace which contains the table to be used." required="false" javaType="java.lang.String"></string>
+        <string name="newColumnName" caption="New Column Name" description="The new value for the name of the column." required="true" javaType="java.lang.String"></string>
+        <string defaultValue="#[payload]" name="oldColumnName" caption="Old Column Name" description="The name of the column to be changed." required="false" javaType="java.lang.String"></string>
+        <string name="table" caption="Table" description="The name of the table to be used for the operation." required="true" javaType="java.lang.String"></string>
+      </group>
+    </attribute-category>
+  </cloud-connector>
+  <cloud-connector returnType="java.util.List&lt;java.util.Map&lt;java.lang.String,java.lang.Object&gt;&gt;" categories="CassandraMetadataCategory" caption="Select" icon="icons/theme.classic/cassandradb-connector-small.png" localId="select" image="icons/theme.classic/cassandradb-connector-large.png" abstract="true" extends="http://www.mulesoft.org/schema/mule/cassandradb/abstractCassandradbConnectorGeneric" metaData="dynamic">
+    <attribute-category caption="General" description="General.">
+      <group id="query" caption="Query">
+        <element-query associatedConfig="config-ref" andOperator="enabled" orOperator="enabled" nativeQuery="enabled" limit="enabled" offset="enabled" orderBy="enabled" name="query" caption="Query" description="The query to be executed." supportsExpressions="true" required="false" javaType="java.lang.String"></element-query>
+      </group>
+      <group id="general" caption="General">
+        <element-controller-list listName="parameters" localName="select-parameters" itemName="parameter" caption="Parameters" description="The query parameters." required="false" javaType="java.util.List&lt;java.lang.Object&gt;"></element-controller-list>
+      </group>
+    </attribute-category>
+  </cloud-connector>
+  <cloud-connector returnType="void" categories="CassandraWithFiltersMetadataCategory" caption="Update" icon="icons/theme.classic/cassandradb-connector-small.png" localId="update" image="icons/theme.classic/cassandradb-connector-large.png" abstract="true" extends="http://www.mulesoft.org/schema/mule/cassandradb/abstractCassandradbConnectorGeneric" metaData="dynamic">
+    <attribute-category caption="General" description="General.">
+      <group id="general" caption="General">
+        <string name="keyspaceName" caption="Keyspace Name" description="(optional) the keyspace which contains the table to be dropped." required="false" javaType="java.lang.String"></string>
+        <type-chooser associatedConfig="config-ref" affects="INPUT" name="table" caption="Table" description="The table name in which the entity will be updated." supportsExpressions="true" required="true" javaType="java.lang.String"></type-chooser>
+        <string defaultValue="#[payload]" name="entity-ref" caption="Entity Reference" description="The entity to be updated." required="false" javaType="java.util.Map&lt;java.lang.String,java.lang.Object&gt;"></string>
+      </group>
+    </attribute-category>
+  </cloud-connector>
+</namespace>

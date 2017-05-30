@@ -1,0 +1,6 @@
+org.mule.modules.cassandradb
+org.mule.modules.cassandradb.api
+org.mule.modules.cassandradb.configurations
+org.mule.modules.cassandradb.metadata
+org.mule.modules.cassandradb.utils
+org.mule.modules.cassandradb.utils.builders
