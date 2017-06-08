@@ -5,11 +5,11 @@ package org.mule.modules.cassandradb.automation.functional.metadata;
 
 import org.mule.modules.cassandradb.CassandraDBConnector;
 import org.mule.modules.cassandradb.automation.functional.TestDataBuilder;
-import org.mule.modules.cassandradb.metadata.CassandraMetadataCategory;
+import org.mule.modules.cassandradb.metadata.CassandraWithFiltersMetadataCategory;
 
-public class CassandraMetadataCategoryTestCases extends CassandraAbstractMetaDataTestCases {
+public class CassandraWithFiltersCategoryMetaDataTestCases extends CassandraAbstractMetaDataTestCases {
 
-    public CassandraMetadataCategoryTestCases() {
-        super(TestDataBuilder.cassandraCategoryMetadataTestKeys, CassandraMetadataCategory.class, CassandraDBConnector.class);
+    public CassandraWithFiltersCategoryMetaDataTestCases() {
+        super(TestDataBuilder.cassandraCategoryMetadataTestKeys, CassandraWithFiltersMetadataCategory.class, CassandraDBConnector.class);
     }
 }
