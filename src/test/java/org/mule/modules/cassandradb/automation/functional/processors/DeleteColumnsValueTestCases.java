@@ -11,7 +11,7 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-public class DeleteTestCases extends CassandraAbstractTestCases {
+public class DeleteColumnsValueTestCases extends CassandraAbstractTestCases {
 
     @BeforeClass
     public static void setup() throws Exception {
@@ -33,28 +33,12 @@ public class DeleteTestCases extends CassandraAbstractTestCases {
     }
 
     @Test
-    public void testDeleteRowUsingEqWithSuccess() throws CassandraDBException {
-        // set up the data
-        cassClient.insert(cassConfig.getKeyspace(), TestsConstants.TABLE_NAME_1, TestDataBuilder.getValidEntity());
-
-        getConnector().deleteRows(TestsConstants.TABLE_NAME_1, null, TestDataBuilder.getPayloadColumnsAndFilters(null, TestDataBuilder.getValidWhereClauseWithEq()));
-    }
-
-    @Test
     public void testDeleteColumnUsingINWithSuccess() throws CassandraDBException {
         // set up the data
         cassClient.insert(cassConfig.getKeyspace(), TestsConstants.TABLE_NAME_1, TestDataBuilder.getValidEntity());
 
         getConnector().deleteColumnsValue(TestsConstants.TABLE_NAME_1, null,
                 TestDataBuilder.getPayloadColumnsAndFilters(TestDataBuilder.getValidColumnsListForDelete(), TestDataBuilder.getValidWhereClauseWithIN()));
-    }
-
-    @Test
-    public void testDeleteRowUsingINWithSuccess() throws CassandraDBException {
-        // set up the data
-        cassClient.insert(cassConfig.getKeyspace(), TestsConstants.TABLE_NAME_1, TestDataBuilder.getValidEntity());
-
-        getConnector().deleteRows(TestsConstants.TABLE_NAME_1, null, TestDataBuilder.getPayloadColumnsAndFilters(null, TestDataBuilder.getValidWhereClauseWithIN()));
     }
 
     @Test
