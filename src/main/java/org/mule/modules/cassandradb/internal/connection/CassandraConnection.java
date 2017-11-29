@@ -70,4 +70,8 @@ public final class CassandraConnection implements ConnectorConnection {
     public Session getCassandraSession() {
         return cassandraSession;
     }
+
+    public Cluster getCluster() {
+        return cluster;
+    }
 }

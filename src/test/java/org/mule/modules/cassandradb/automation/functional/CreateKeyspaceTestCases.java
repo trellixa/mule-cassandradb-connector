@@ -3,18 +3,26 @@
  */
 package org.mule.modules.cassandradb.automation.functional;
 
+import com.datastax.driver.core.KeyspaceMetadata;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mule.modules.cassandradb.api.CreateKeyspaceInput;
 import org.mule.modules.cassandradb.api.DataCenter;
 import org.mule.modules.cassandradb.internal.exception.CassandraError;
+import java.util.Map;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mule.modules.cassandradb.api.ReplicationStrategy.SIMPLE;
 import static org.mule.modules.cassandradb.automation.util.TestsConstants.*;
 import static org.mule.modules.cassandradb.api.ReplicationStrategy.NETWORK_TOPOLOGY;
+
 public class CreateKeyspaceTestCases extends AbstractTestCases {
+
+    private static final int SLEEP_DURATION = 2000;
 
     @Before
     @After
@@ -29,16 +37,22 @@ public class CreateKeyspaceTestCases extends AbstractTestCases {
         CreateKeyspaceInput createKeyspaceInput = new CreateKeyspaceInput();
         createKeyspaceInput.setKeyspaceName(KEYSPACE_NAME_1);
         assertTrue(createKeyspace(createKeyspaceInput));
+
+        Thread.sleep(SLEEP_DURATION);
+        verifyResponse(createKeyspaceInput);
     }
 
     @Test
     public void testCreateKeyspaceWithDifferentReplicationStrategyWithSuccess() throws Exception {
-        CreateKeyspaceInput keyspaceInput = new CreateKeyspaceInput();
-        keyspaceInput.setKeyspaceName(KEYSPACE_NAME_2);
-        keyspaceInput.setFirstDataCenter(new DataCenter(DATA_CENTER_NAME, 1));
-        keyspaceInput.setReplicationStrategyClass(NETWORK_TOPOLOGY.getStrategyClass());
+        CreateKeyspaceInput createKeyspaceInput = new CreateKeyspaceInput();
+        createKeyspaceInput.setKeyspaceName(KEYSPACE_NAME_2);
+        createKeyspaceInput.setFirstDataCenter(new DataCenter(DATA_CENTER_NAME, 1));
+        createKeyspaceInput.setReplicationStrategyClass(NETWORK_TOPOLOGY.getStrategyClass());
 
-        assertTrue(createKeyspace(keyspaceInput));
+        assertTrue(createKeyspace(createKeyspaceInput));
+
+        Thread.sleep(SLEEP_DURATION);
+        verifyResponse(createKeyspaceInput);
     }
 
     @Test
@@ -59,5 +73,25 @@ public class CreateKeyspaceTestCases extends AbstractTestCases {
         keyspaceInput.setReplicationStrategyClass(SIMPLE.getStrategyClass());
 
         createKeyspaceExpException(keyspaceInput, CassandraError.UNKNOWN);
+    }
+
+    private void verifyResponse(CreateKeyspaceInput keyspaceInput) {
+        boolean wasCreated = false;
+        KeyspaceMetadata ksMedata = getKeyspaceMetadata(keyspaceInput.getKeyspaceName());
+        assertNotNull(ksMedata);
+
+        String replicationStrategyClass = keyspaceInput.getReplicationStrategyClass();
+        Map<String, String> replication = ksMedata.getReplication();
+        if (StringUtils.isNotBlank(replicationStrategyClass)) {
+            assertTrue(StringUtils.endsWithIgnoreCase(replication.get("class"), replicationStrategyClass));
+        }
+        if (keyspaceInput.getReplicationFactor() != null) {
+            assertEquals(keyspaceInput.getReplicationFactor(), replication.get("replication_factor"));
+        }
+        if (keyspaceInput.getFirstDataCenter() != null) {
+            assertTrue(replication.containsKey(keyspaceInput.getFirstDataCenter().getName()));
+            String datacenterName = replication.get(keyspaceInput.getFirstDataCenter().getName());
+            assertEquals(String.valueOf(keyspaceInput.getFirstDataCenter().getValue()), datacenterName);
+        }
     }
 }

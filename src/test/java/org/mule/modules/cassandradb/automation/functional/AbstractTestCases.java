@@ -1,6 +1,7 @@
 package org.mule.modules.cassandradb.automation.functional;
 
 
+import com.datastax.driver.core.KeyspaceMetadata;
 import org.junit.After;
 import org.junit.Before;
 import org.mule.functional.junit4.MuleArtifactFunctionalTestCase;
@@ -106,5 +107,9 @@ public class AbstractTestCases extends MuleArtifactFunctionalTestCase {
 
     public CassandraConnection getCassandraConnection() {
         return cassandraConnection;
+    }
+
+    public KeyspaceMetadata getKeyspaceMetadata(String keyspaceName) {
+        return getCassandraConnection().getCluster().getMetadata().getKeyspace(keyspaceName);
     }
 }

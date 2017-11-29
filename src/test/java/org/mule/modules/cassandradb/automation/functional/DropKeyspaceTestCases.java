@@ -9,8 +9,8 @@ import org.mule.modules.cassandradb.api.DataCenter;
 import org.mule.modules.cassandradb.automation.util.TestsConstants;
 
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.mule.modules.cassandradb.api.ReplicationStrategy.NETWORK_TOPOLOGY;
 import static org.mule.modules.cassandradb.automation.util.TestsConstants.KEYSPACE_NAME_1;
@@ -21,22 +21,30 @@ public class DropKeyspaceTestCases extends AbstractTestCases {
     @Test
     public void testDropSimpleKeyspace() throws Exception {
         CreateKeyspaceInput keyspaceInput = new CreateKeyspaceInput();
-        keyspaceInput.setKeyspaceName(KEYSPACE_NAME_1);
-
+        String keyspaceName = KEYSPACE_NAME_1;
+        keyspaceInput.setKeyspaceName(keyspaceName);
         getCassandraService().createKeyspace(keyspaceInput);
 
-        assertTrue(dropKeyspace(KEYSPACE_NAME_1));
+        assertNotNull(getKeyspaceMetadata(keyspaceName));
+
+        assertTrue(dropKeyspace(keyspaceName));
+
+        assertNull(getKeyspaceMetadata(keyspaceName));
     }
 
     @Test
     public void testDropKeyspaceWithDifferentConfigurations() throws Exception {
         CreateKeyspaceInput keyspaceInput = new CreateKeyspaceInput();
-        keyspaceInput.setKeyspaceName(KEYSPACE_NAME_2);
+        String keyspaceName = KEYSPACE_NAME_2;
+        keyspaceInput.setKeyspaceName(keyspaceName);
         keyspaceInput.setFirstDataCenter(new DataCenter(TestsConstants.DATA_CENTER_NAME, 1));
         keyspaceInput.setReplicationStrategyClass(NETWORK_TOPOLOGY.getStrategyClass());
-
         getCassandraService().createKeyspace(keyspaceInput);
 
-        assertTrue(dropKeyspace(KEYSPACE_NAME_2));
+        assertNotNull(getKeyspaceMetadata(keyspaceName));
+
+        assertTrue(dropKeyspace(keyspaceName));
+
+        assertNull(getKeyspaceMetadata(keyspaceName));
     }
 }
