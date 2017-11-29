@@ -1,5 +1,6 @@
 package org.mule.modules.cassandradb.internal.config;
 
+import org.mule.connectors.commons.template.config.ConnectorConfig;
 import org.mule.modules.cassandradb.internal.connection.BasicAuthConnectionProvider;
 import org.mule.modules.cassandradb.internal.operation.CassandraOperations;
 import org.mule.runtime.extension.api.annotation.Configuration;
@@ -13,5 +14,5 @@ import org.mule.runtime.extension.api.annotation.connectivity.ConnectionProvider
 @Operations({
         CassandraOperations.class,
 })
-public class CassandraConfig {
+public class CassandraConfig implements ConnectorConfig {
 }

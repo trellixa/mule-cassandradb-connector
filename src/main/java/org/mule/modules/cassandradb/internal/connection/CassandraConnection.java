@@ -123,4 +123,8 @@ public final class CassandraConnection implements ConnectorConnection {
             throw new CassandraException("Connection is invalid");
         }
     }
+
+    public Session getCassandraSession() {
+        return cassandraSession;
+    }
 }

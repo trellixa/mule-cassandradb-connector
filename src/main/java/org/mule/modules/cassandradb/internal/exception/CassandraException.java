@@ -37,4 +37,8 @@ public class CassandraException extends RuntimeException {
     public CassandraException(Throwable cause) {
         super(cause);
     }
+
+    public CassandraError getErrorCode() {
+        return CassandraError.UNKNOWN;
+    }
 }
