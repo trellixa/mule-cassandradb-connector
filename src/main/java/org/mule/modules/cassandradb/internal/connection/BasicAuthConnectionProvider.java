@@ -102,7 +102,7 @@ public class BasicAuthConnectionProvider implements CachedConnectionProvider<Cas
     @Override
     public CassandraConnection connect() throws ConnectionException {
         AdvancedConnectionParameters advancedConnectionParameters = new AdvancedConnectionParameters(protocolVersion, clusterName, maxSchemaAgreementWaitSeconds, compression, sslEnabled);
-        return CassandraConnection.buildCassandraClient(new ConnectionParameters(host, port, username,
+        return CassandraConnection.build(new ConnectionParameters(host, port, username,
                 password, keyspace, advancedConnectionParameters));
     }
 
