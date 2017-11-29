@@ -7,7 +7,7 @@ import com.datastax.driver.core.schemabuilder.CreateKeyspace;
 import com.datastax.driver.core.schemabuilder.SchemaBuilder;
 import com.datastax.driver.core.schemabuilder.SchemaStatement;
 import org.mule.modules.cassandradb.api.CreateKeyspaceInput;
-import org.mule.modules.cassandradb.internal.util.ReplicationStrategy;
+import org.mule.modules.cassandradb.api.ReplicationStrategy;
 
 
 public class HelperStatements {
