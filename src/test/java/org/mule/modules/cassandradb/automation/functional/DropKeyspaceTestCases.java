@@ -23,7 +23,7 @@ public class DropKeyspaceTestCases extends AbstractTestCases {
         CreateKeyspaceInput keyspaceInput = new CreateKeyspaceInput();
         keyspaceInput.setKeyspaceName(KEYSPACE_NAME_1);
 
-        createKeyspace(keyspaceInput);
+        getCassandraService().createKeyspace(keyspaceInput);
 
         assertTrue(dropKeyspace(KEYSPACE_NAME_1));
     }
@@ -35,7 +35,7 @@ public class DropKeyspaceTestCases extends AbstractTestCases {
         keyspaceInput.setFirstDataCenter(new DataCenter(TestsConstants.DATA_CENTER_NAME, 1));
         keyspaceInput.setReplicationStrategyClass(NETWORK_TOPOLOGY.getStrategyClass());
 
-        createKeyspace(keyspaceInput);
+        getCassandraService().createKeyspace(keyspaceInput);
 
         assertTrue(dropKeyspace(KEYSPACE_NAME_2));
     }

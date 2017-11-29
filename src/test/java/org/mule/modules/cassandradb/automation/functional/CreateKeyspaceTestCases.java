@@ -3,6 +3,8 @@
  */
 package org.mule.modules.cassandradb.automation.functional;
 
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.mule.modules.cassandradb.api.CreateKeyspaceInput;
 import org.mule.modules.cassandradb.api.DataCenter;
@@ -12,8 +14,15 @@ import static org.junit.Assert.assertTrue;
 import static org.mule.modules.cassandradb.api.ReplicationStrategy.SIMPLE;
 import static org.mule.modules.cassandradb.automation.util.TestsConstants.*;
 import static org.mule.modules.cassandradb.api.ReplicationStrategy.NETWORK_TOPOLOGY;
-
 public class CreateKeyspaceTestCases extends AbstractTestCases {
+
+    @Before
+    @After
+    public void dropKeyspaces() {
+        getCassandraService().dropKeyspace(KEYSPACE_NAME_1);
+        getCassandraService().dropKeyspace(KEYSPACE_NAME_2);
+        getCassandraService().dropKeyspace(KEYSPACE_NAME_3);
+    }
 
     @Test
     public void testCreateKeyspaceWithDefaultReplicationStrategyWithSuccess() throws Exception {
