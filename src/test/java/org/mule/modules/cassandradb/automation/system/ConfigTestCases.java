@@ -1,7 +1,7 @@
 /**
  * (c) 2003-2017 MuleSoft, Inc. The software in this package is published under the terms of the Commercial Free Software license V.1 a copy of which has been included with this distribution in the LICENSE.md file.
  */
-package org.mule.modules.cassandradb.system;
+package org.mule.modules.cassandradb.automation.system;
 
 import com.datastax.driver.core.ProtocolOptions;
 import com.datastax.driver.core.ProtocolVersion;
@@ -10,9 +10,9 @@ import org.mule.modules.cassandradb.internal.exception.CassandraException;
 import org.mule.modules.cassandradb.internal.connection.AdvancedConnectionParameters;
 import org.mule.modules.cassandradb.internal.connection.CassandraConnection;
 import org.mule.modules.cassandradb.internal.connection.ConnectionParameters;
-import org.mule.modules.cassandradb.util.CassandraProperties;
-import org.mule.modules.cassandradb.util.PropertiesLoaderUtil;
-import org.mule.modules.cassandradb.util.TestsConstants;
+import org.mule.modules.cassandradb.automation.util.CassandraProperties;
+import org.mule.modules.cassandradb.automation.util.PropertiesLoaderUtil;
+import org.mule.modules.cassandradb.automation.util.TestsConstants;
 
 import java.io.IOException;
 
