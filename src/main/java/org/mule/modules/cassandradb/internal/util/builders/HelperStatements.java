@@ -22,4 +22,8 @@ public class HelperStatements {
 
         return createKeyspaceStatement.with().replication(ReplicationStrategy.buildReplicationStrategy(input));
     }
+
+    public static SchemaStatement dropKeyspaceStatement(String keyspaceName) {
+        return SchemaBuilder.dropKeyspace(keyspaceName).ifExists();
+    }
 }

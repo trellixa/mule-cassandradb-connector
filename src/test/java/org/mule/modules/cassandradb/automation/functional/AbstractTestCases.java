@@ -41,4 +41,13 @@ public class AbstractTestCases extends MuleArtifactFunctionalTestCase {
                 .withPayload(keyspaceInput)
                 .runExpectingException(ErrorTypeMatcher.errorType(errorType));
     }
+
+    protected boolean dropKeyspace(String keyspaceName) throws Exception {
+        return (boolean) flowRunner("deleteKeyspace-flow")
+                .withVariable("keyspaceName", keyspaceName)
+                .run()
+                .getMessage()
+                .getPayload()
+                .getValue();
+    }
 }

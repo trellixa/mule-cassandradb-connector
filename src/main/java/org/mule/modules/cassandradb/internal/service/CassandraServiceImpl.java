@@ -18,4 +18,10 @@ public class CassandraServiceImpl extends DefaultConnectorService<CassandraConfi
         String queryString = HelperStatements.createKeyspaceStatement(input).getQueryString();
         return getConnection().getCassandraSession().execute(queryString).wasApplied();
     }
+
+    @Override
+    public boolean dropKeyspace(String keyspaceName) {
+        String queryString = HelperStatements.dropKeyspaceStatement(keyspaceName).getQueryString();
+        return getConnection().getCassandraSession().execute(queryString).wasApplied();
+    }
 }

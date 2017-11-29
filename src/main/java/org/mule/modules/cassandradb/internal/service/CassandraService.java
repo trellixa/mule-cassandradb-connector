@@ -7,4 +7,6 @@ import org.mule.runtime.extension.api.annotation.param.Content;
 public interface CassandraService extends ConnectorService {
 
     boolean createKeyspace(@Content CreateKeyspaceInput input);
+
+    boolean dropKeyspace(@Content String keyspaceName);
 }

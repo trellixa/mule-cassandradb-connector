@@ -8,8 +8,7 @@ import org.mule.modules.cassandradb.api.CreateKeyspaceInput;
 import org.mule.modules.cassandradb.api.DataCenter;
 import org.mule.modules.cassandradb.internal.exception.CassandraError;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertTrue;
 import static org.mule.modules.cassandradb.api.ReplicationStrategy.SIMPLE;
 import static org.mule.modules.cassandradb.automation.util.TestsConstants.*;
 import static org.mule.modules.cassandradb.api.ReplicationStrategy.NETWORK_TOPOLOGY;
@@ -20,7 +19,7 @@ public class CreateKeyspaceTestCases extends AbstractTestCases {
     public void testCreateKeyspaceWithDefaultReplicationStrategyWithSuccess() throws Exception {
         CreateKeyspaceInput createKeyspaceInput = new CreateKeyspaceInput();
         createKeyspaceInput.setKeyspaceName(KEYSPACE_NAME_1);
-        assertThat(createKeyspace(createKeyspaceInput), is(true));
+        assertTrue(createKeyspace(createKeyspaceInput));
     }
 
     @Test
@@ -30,7 +29,7 @@ public class CreateKeyspaceTestCases extends AbstractTestCases {
         keyspaceInput.setFirstDataCenter(new DataCenter(DATA_CENTER_NAME, 1));
         keyspaceInput.setReplicationStrategyClass(NETWORK_TOPOLOGY.getStrategyClass());
 
-        assertThat(createKeyspace(keyspaceInput), is(true));
+        assertTrue(createKeyspace(keyspaceInput));
     }
 
     @Test

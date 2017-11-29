@@ -48,6 +48,20 @@ public class CassandraOperations extends ConnectorOperations<CassandraConfig, Ca
         return newExecutionBuilder(config, connection).execute(CassandraService::createKeyspace).withParam(input);
     }
 
+    /**
+     * Drops the entire keyspace
+     * @param keyspaceName the name of the keyspace to be dropped
+     * @return true if the operation succeeded, false otherwise
+     */
+    public boolean dropKeyspace(@Config CassandraConfig config,
+                                @Connection CassandraConnection connection,
+                                String keyspaceName) {
+        if (logger.isDebugEnabled()) {
+            logger.debug("Dropping keyspace " + keyspaceName);
+        }
+        return newExecutionBuilder(config, connection).execute(CassandraService::dropKeyspace).withParam(keyspaceName);
+    }
+
     private <T extends Throwable> DefinedExceptionHandler<T> handle(Class<T> exceptionClass, CassandraError errorCode) {
         return new DefinedExceptionHandler<>(exceptionClass, exception -> {
             throw new ModuleException(errorCode, exception);
