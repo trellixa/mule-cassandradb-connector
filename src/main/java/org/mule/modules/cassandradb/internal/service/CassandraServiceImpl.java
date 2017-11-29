@@ -3,7 +3,7 @@ package org.mule.modules.cassandradb.internal.service;
 import org.mule.connectors.commons.template.service.DefaultConnectorService;
 import org.mule.modules.cassandradb.internal.config.CassandraConfig;
 import org.mule.modules.cassandradb.internal.connection.CassandraConnection;
-import org.mule.modules.cassandradb.internal.operation.parameters.CreateKeyspaceInput;
+import org.mule.modules.cassandradb.api.CreateKeyspaceInput;
 import org.mule.modules.cassandradb.internal.util.builders.HelperStatements;
 
 

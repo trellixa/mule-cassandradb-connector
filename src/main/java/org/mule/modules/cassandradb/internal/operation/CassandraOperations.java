@@ -2,13 +2,12 @@ package org.mule.modules.cassandradb.internal.operation;
 
 import org.mule.connectors.atlantic.commons.builder.config.exception.DefinedExceptionHandler;
 import org.mule.connectors.atlantic.commons.builder.execution.ExecutionBuilder;
-import org.mule.connectors.atlantic.commons.builder.lambda.function.BiFunction;
 import org.mule.connectors.commons.template.operation.ConnectorOperations;
 import org.mule.modules.cassandradb.internal.config.CassandraConfig;
 import org.mule.modules.cassandradb.internal.connection.CassandraConnection;
 import org.mule.modules.cassandradb.internal.exception.CassandraError;
 import org.mule.modules.cassandradb.internal.exception.CassandraException;
-import org.mule.modules.cassandradb.internal.operation.parameters.CreateKeyspaceInput;
+import org.mule.modules.cassandradb.api.CreateKeyspaceInput;
 import org.mule.modules.cassandradb.internal.service.CassandraService;
 import org.mule.modules.cassandradb.internal.service.CassandraServiceImpl;
 import org.mule.runtime.extension.api.annotation.param.Config;
