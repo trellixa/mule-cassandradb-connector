@@ -3,6 +3,7 @@ package org.mule.modules.cassandradb.internal.operation;
 import org.mule.connectors.atlantic.commons.builder.config.exception.DefinedExceptionHandler;
 import org.mule.connectors.atlantic.commons.builder.execution.ExecutionBuilder;
 import org.mule.connectors.commons.template.operation.ConnectorOperations;
+import org.mule.modules.cassandradb.api.CreateTableInput;
 import org.mule.modules.cassandradb.internal.config.CassandraConfig;
 import org.mule.modules.cassandradb.internal.connection.CassandraConnection;
 import org.mule.modules.cassandradb.internal.exception.CassandraError;
@@ -60,6 +61,22 @@ public class CassandraOperations extends ConnectorOperations<CassandraConfig, Ca
             logger.debug("Dropping keyspace " + keyspaceName);
         }
         return newExecutionBuilder(config, connection).execute(CassandraService::dropKeyspace).withParam(keyspaceName);
+    }
+
+
+    /**
+     * Creates a table(column family) in a specific keyspace; If no keyspace is specified the keyspace used for login will be used
+     *
+     * @param createTableInput operation createTableInput describing the table name, the keyspace name and the list of columns
+     * @return true if the operation succeeded, false otherwise
+     */
+    public boolean createTable(@Config CassandraConfig config,
+                               @Connection CassandraConnection connection,
+                               @Content CreateTableInput createTableInput) {
+        if (logger.isDebugEnabled()) {
+            logger.debug("Creating table " + createTableInput.toString());
+        }
+        return newExecutionBuilder(config, connection).execute(CassandraService::createTable).withParam(createTableInput);
     }
 
     private <T extends Throwable> DefinedExceptionHandler<T> handle(Class<T> exceptionClass, CassandraError errorCode) {
