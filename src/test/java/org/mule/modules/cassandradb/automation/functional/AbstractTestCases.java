@@ -6,6 +6,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.mule.functional.junit4.MuleArtifactFunctionalTestCase;
 import org.mule.modules.cassandradb.api.CreateKeyspaceInput;
+import org.mule.modules.cassandradb.api.CreateTableInput;
 import org.mule.modules.cassandradb.automation.util.CassandraProperties;
 import org.mule.modules.cassandradb.automation.util.PropertiesLoaderUtil;
 import org.mule.modules.cassandradb.internal.config.CassandraConfig;
@@ -65,7 +66,7 @@ public class AbstractTestCases extends MuleArtifactFunctionalTestCase {
         cassandraService.dropKeyspace(cassandraProperties.getKeyspace());
     }
 
-    protected boolean createKeyspace(final CreateKeyspaceInput keyspaceInput) throws Exception {
+    boolean createKeyspace(final CreateKeyspaceInput keyspaceInput) throws Exception {
         return (boolean) flowRunner("createKeyspace-flow")
                 .withPayload(keyspaceInput)
                 .run()
@@ -74,15 +75,24 @@ public class AbstractTestCases extends MuleArtifactFunctionalTestCase {
                 .getValue();
     }
 
-    protected void createKeyspaceExpException(final CreateKeyspaceInput keyspaceInput, ErrorTypeDefinition errorType) throws Exception {
+    void createKeyspaceExpException(final CreateKeyspaceInput keyspaceInput, ErrorTypeDefinition errorType) throws Exception {
         flowRunner("createKeyspace-flow")
                 .withPayload(keyspaceInput)
                 .runExpectingException(ErrorTypeMatcher.errorType(errorType));
     }
 
-    protected boolean dropKeyspace(String keyspaceName) throws Exception {
+    boolean dropKeyspace(String keyspaceName) throws Exception {
         return (boolean) flowRunner("deleteKeyspace-flow")
                 .withVariable("keyspaceName", keyspaceName)
+                .run()
+                .getMessage()
+                .getPayload()
+                .getValue();
+    }
+
+    boolean createTable(CreateTableInput basicCreateTableInput) throws Exception {
+        return (boolean) flowRunner("createTable-flow")
+                .withPayload(basicCreateTableInput)
                 .run()
                 .getMessage()
                 .getPayload()

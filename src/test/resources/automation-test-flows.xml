@@ -21,4 +21,8 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
     <flow name="deleteKeyspace-flow" doc:id="6e8378e9-2d2e-472d-b30a-6248c80dc37b" >
         <cassandra-db:drop-keyspace doc:name="Drop keyspace" doc:id="773cd789-a71a-440a-88a8-5ab16a7e0487" config-ref="CassandraDB_Config" keyspaceName="#[vars.keyspaceName]"/>
     </flow>
+
+    <flow name="createTable-flow" doc:id="6e8378e9-2d2e-472d-b30a-6248c80dc37b" >
+        <cassandra-db:create-table doc:name="Create table" doc:id="710999ed-cea1-4b17-94b9-d0ee9a703f7b" config-ref="CassandraDB_Config"/>
+    </flow>
 </mule>
