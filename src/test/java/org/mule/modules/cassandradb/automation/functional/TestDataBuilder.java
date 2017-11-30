@@ -4,7 +4,6 @@
 package org.mule.modules.cassandradb.automation.functional;
 
 
-import com.sun.istack.internal.NotNull;
 import org.mule.modules.cassandradb.api.ColumnInput;
 import org.mule.modules.cassandradb.api.ColumnType;
 import org.mule.modules.cassandradb.api.CreateTableInput;
@@ -25,7 +24,6 @@ public class TestDataBuilder {
 
     }
 
-    @NotNull
     public static Map<String, Object> getInvalidEntity() {
         Map<String, Object> entity = new HashMap<String, Object>();
         entity.put("invalid_column", "someValue");

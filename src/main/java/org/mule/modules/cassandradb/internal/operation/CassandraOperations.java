@@ -14,6 +14,7 @@ import org.mule.modules.cassandradb.internal.service.CassandraServiceImpl;
 import org.mule.runtime.extension.api.annotation.param.Config;
 import org.mule.runtime.extension.api.annotation.param.Connection;
 import org.mule.runtime.extension.api.annotation.param.Content;
+import org.mule.runtime.extension.api.annotation.param.Optional;
 import org.mule.runtime.extension.api.exception.ModuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -77,6 +78,24 @@ public class CassandraOperations extends ConnectorOperations<CassandraConfig, Ca
             logger.debug("Creating table " + createTableInput.toString());
         }
         return newExecutionBuilder(config, connection).execute(CassandraService::createTable).withParam(createTableInput);
+    }
+
+    /**
+     * Drops an entire table form the specified keyspace or from the keyspace used for login if none is specified as an operation parameter
+     * @param tableName the name of the table to be dropped
+     * @param keyspaceName (optional) the keyspace which contains the table to be dropped
+     * @return true if the operation succeeded, false otherwise
+     */
+    public boolean dropTable(@Config CassandraConfig config,
+                             @Connection CassandraConnection connection,
+                             String tableName,
+                             @Optional String keyspaceName) {
+        if (logger.isDebugEnabled()) {
+            logger.debug("Dropping table " + tableName);
+        }
+        return newExecutionBuilder(config, connection).execute(CassandraService::dropTable)
+                .withParam(tableName)
+                .withParam(keyspaceName);
     }
 
     private <T extends Throwable> DefinedExceptionHandler<T> handle(Class<T> exceptionClass, CassandraError errorCode) {

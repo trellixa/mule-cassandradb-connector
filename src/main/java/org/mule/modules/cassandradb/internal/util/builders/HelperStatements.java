@@ -57,6 +57,10 @@ public class HelperStatements {
         return table;
     }
 
+    public static SchemaStatement dropTable(String tableName, String keyspaceName) {
+        return SchemaBuilder.dropTable(keyspaceName, tableName).ifExists();
+    }
+
     /**
      * return the DataType based on a String. Default value is DataType.text();
      * @param dataType string to be resolved to DataType

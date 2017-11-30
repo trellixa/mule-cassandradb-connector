@@ -35,6 +35,12 @@ public class CassandraServiceImpl extends DefaultConnectorService<CassandraConfi
         return getCassandraSession().execute(queryString).wasApplied();
     }
 
+    @Override
+    public boolean dropTable(String tableName, String keyspaceName) {
+        String keyspace = StringUtils.isNotBlank(keyspaceName) ? keyspaceName : getCassandraSession().getLoggedKeyspace();
+        return getCassandraSession().execute(HelperStatements.dropTable(tableName, keyspace)).wasApplied();
+    }
+
     private Session getCassandraSession() {
         return getConnection().getCassandraSession();
     }

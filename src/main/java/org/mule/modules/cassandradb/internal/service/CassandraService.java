@@ -12,4 +12,6 @@ public interface CassandraService extends ConnectorService {
     boolean dropKeyspace(@Content String keyspaceName);
 
     boolean createTable(@Content CreateTableInput input);
+
+    boolean dropTable(String tableName, String keyspaceName);
 }

@@ -99,6 +99,16 @@ public class AbstractTestCases extends MuleArtifactFunctionalTestCase {
                 .getValue();
     }
 
+    boolean dropTable(String tableName, String keyspaceName) throws Exception {
+        return (boolean) flowRunner("dropTable-flow")
+                .withVariable("tableName", tableName)
+                .withVariable("keyspaceName", keyspaceName)
+                .run()
+                .getMessage()
+                .getPayload()
+                .getValue();
+    }
+
     public static CassandraProperties getCassandraProperties() {
         //load required properties
         CassandraProperties cassProperties = null;
