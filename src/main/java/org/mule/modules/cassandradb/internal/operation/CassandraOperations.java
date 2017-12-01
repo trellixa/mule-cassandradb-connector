@@ -138,6 +138,24 @@ public class CassandraOperations extends ConnectorOperations<CassandraConfig, Ca
                 .withParam(columnName);
     }
 
+    /**
+     * Renames a column
+     * @param table the name of the table to be used for the operation
+     * @param keyspaceName (optional) the keyspace which contains the table to be used
+     * @param oldColumnName the name of the column to be changed
+     * @param newColumnName the new value for the name of the column
+     * @return true if the operation succeeded or false if not
+     */
+    public boolean renameColumn(@Config CassandraConfig config,
+                                @Connection CassandraConnection connection,
+                                String table, @Optional String keyspaceName, @Content String oldColumnName, String newColumnName) {
+        return newExecutionBuilder(config, connection).execute(CassandraService::renameColumn)
+                .withParam(table)
+                .withParam(keyspaceName)
+                .withParam(oldColumnName)
+                .withParam(newColumnName);
+    }
+
     private <T extends Throwable> DefinedExceptionHandler<T> handle(Class<T> exceptionClass, CassandraError errorCode) {
         return new DefinedExceptionHandler<>(exceptionClass, exception -> {
             throw new ModuleException(errorCode, exception);

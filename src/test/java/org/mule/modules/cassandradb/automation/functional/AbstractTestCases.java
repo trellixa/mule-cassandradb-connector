@@ -148,6 +148,27 @@ public class AbstractTestCases extends MuleArtifactFunctionalTestCase {
                 .runExpectingException(ErrorTypeMatcher.errorType(CassandraError.UNKNOWN));
     }
 
+    boolean renameColumn(String tableName, String keyspaceName, String column, String newColumn) throws Exception {
+        return (boolean) flowRunner("renameColumn-flow")
+                .withPayload(column)
+                .withVariable("tableName", tableName)
+                .withVariable("keyspaceName", keyspaceName)
+                .withVariable("newColumnName", newColumn)
+                .run()
+                .getMessage()
+                .getPayload()
+                .getValue();
+    }
+
+    void renameColumnExpException(String tableName, String keyspaceName, String column, String newColumn) throws Exception {
+        flowRunner("renameColumn-flow")
+                .withPayload(column)
+                .withVariable("tableName", tableName)
+                .withVariable("keyspaceName", keyspaceName)
+                .withVariable("newColumnName", newColumn)
+                .runExpectingException(ErrorTypeMatcher.errorType(CassandraError.UNKNOWN));
+    }
+
     public static CassandraProperties getCassandraProperties() {
         //load required properties
         CassandraProperties cassProperties = null;

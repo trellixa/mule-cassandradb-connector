@@ -57,6 +57,13 @@ public class CassandraServiceImpl extends DefaultConnectorService<CassandraConfi
         return getCassandraSession().execute(statement).wasApplied();
     }
 
+    @Override
+    public boolean renameColumn(String tableName, String keyspaceName, String oldColumnName, String newColumnName) {
+        String keyspace = StringUtils.isNotBlank(keyspaceName) ? keyspaceName : getCassandraSession().getLoggedKeyspace();
+        SchemaStatement statement = HelperStatements.renameColumn(tableName, keyspace, oldColumnName, newColumnName);
+        return getCassandraSession().execute(statement).wasApplied();
+    }
+
     private Session getCassandraSession() {
         return getConnection().getCassandraSession();
     }
