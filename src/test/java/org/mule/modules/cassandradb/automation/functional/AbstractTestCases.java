@@ -21,6 +21,7 @@ import org.mule.tck.junit4.matcher.ErrorTypeMatcher;
 import org.mule.test.runner.ArtifactClassLoaderRunnerConfig;
 
 import java.io.IOException;
+import java.util.List;
 
 @ArtifactClassLoaderRunnerConfig(
         exportPluginClasses = {CassandraError.class, CassandraService.class,
@@ -186,6 +187,15 @@ public class AbstractTestCases extends MuleArtifactFunctionalTestCase {
                 .withVariable("tableName", tableName)
                 .withVariable("keyspaceName", keyspaceName)
                 .runExpectingException(ErrorTypeMatcher.errorType(CassandraError.UNKNOWN));
+    }
+
+    List<String> getTableNamesFromKeyspace(String keyspaceName) throws Exception {
+        return (List<String>) flowRunner("getTableNamesFromKeyspace-flow")
+                .withVariable("keyspaceName", keyspaceName)
+                .run()
+                .getMessage()
+                .getPayload()
+                .getValue();
     }
 
     public static CassandraProperties getCassandraProperties() {

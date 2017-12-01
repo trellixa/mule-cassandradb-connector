@@ -21,6 +21,8 @@ import org.mule.runtime.extension.api.exception.ModuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.List;
+
 import static org.mule.modules.cassandradb.internal.exception.CassandraError.UNKNOWN;
 
 public class CassandraOperations extends ConnectorOperations<CassandraConfig, CassandraConnection, CassandraService> {
@@ -170,6 +172,19 @@ public class CassandraOperations extends ConnectorOperations<CassandraConfig, Ca
                 .withParam(table)
                 .withParam(keyspaceName)
                 .withParam(alterColumnInput);
+    }
+
+    /**
+     * Returns all the table names from the specified keyspace
+     * @param keyspaceName the name of the keyspace to be used on the operation
+     * @return a list of table names
+     */
+    public List<String> getTableNamesFromKeyspace(@Config CassandraConfig config,
+                                                  @Connection CassandraConnection connection,
+                                                  @Optional String keyspaceName) {
+        return newExecutionBuilder(config, connection).execute(CassandraService::getTableNamesFromKeyspace)
+                .withParam(keyspaceName);
+
     }
 
     private <T extends Throwable> DefinedExceptionHandler<T> handle(Class<T> exceptionClass, CassandraError errorCode) {

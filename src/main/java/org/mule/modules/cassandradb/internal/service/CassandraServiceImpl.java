@@ -2,6 +2,7 @@ package org.mule.modules.cassandradb.internal.service;
 
 import com.datastax.driver.core.DataType;
 import com.datastax.driver.core.Session;
+import com.datastax.driver.core.TableMetadata;
 import com.datastax.driver.core.schemabuilder.SchemaStatement;
 import org.apache.commons.lang3.StringUtils;
 import org.mule.connectors.commons.template.service.DefaultConnectorService;
@@ -11,6 +12,11 @@ import org.mule.modules.cassandradb.internal.config.CassandraConfig;
 import org.mule.modules.cassandradb.internal.connection.CassandraConnection;
 import org.mule.modules.cassandradb.api.CreateKeyspaceInput;
 import org.mule.modules.cassandradb.internal.util.builders.HelperStatements;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 
 public class CassandraServiceImpl extends DefaultConnectorService<CassandraConfig, CassandraConnection> implements CassandraService{
@@ -70,6 +76,26 @@ public class CassandraServiceImpl extends DefaultConnectorService<CassandraConfi
         SchemaStatement statement = HelperStatements.changeColumnType(tableName, keyspace, input);
         return getCassandraSession().execute(statement).wasApplied();
     }
+
+    @Override
+    public List<String> getTableNamesFromKeyspace(String customKeyspaceName) {
+        String keyspaceName = StringUtils.isNotBlank(customKeyspaceName) ? customKeyspaceName : getCassandraSession().getLoggedKeyspace();
+        if (StringUtils.isNotBlank(keyspaceName)) {
+            if (getCassandraSession().getCluster().getMetadata().getKeyspace(keyspaceName) == null) {
+                return Collections.emptyList();
+            }
+            Collection<TableMetadata> tables = getCassandraSession().getCluster()
+                    .getMetadata().getKeyspace(keyspaceName)
+                    .getTables();
+            ArrayList<String> tableNames = new ArrayList<String>();
+            for (TableMetadata table : tables) {
+                tableNames.add(table.getName());
+            }
+            return tableNames;
+        }
+        return Collections.emptyList();
+    }
+
 
     private Session getCassandraSession() {
         return getConnection().getCassandraSession();

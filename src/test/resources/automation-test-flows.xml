@@ -10,7 +10,7 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
     <configuration-properties file="automation-credentials.properties"/>
 
     <cassandra-db:config name="CassandraDB_Config" doc:name="CassandraDB Config" doc:id="72442113-b403-4d56-ae65-ec181af222b7" >
-        <cassandra-db:connection host="${config.host}" port="${config.port}" />
+        <cassandra-db:connection host="${config.host}" port="${config.port}" keyspace="${config.keyspace}" />
     </cassandra-db:config>
 
     <flow name="createKeyspace-flow" doc:id="56defe09-c6a4-4405-9870-23ee1f5ed3ee" >
@@ -44,5 +44,9 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
 
     <flow name="changeColumnType-flow" doc:id="4768c8ea-e151-4f6b-b710-7fef94b56914" >
         <cassandra-db:change-column-type doc:name="Change column" doc:id="35f8c437-83f5-4d24-85ab-46fab50375a0" config-ref="CassandraDB_Config" table="#[vars.tableName]" keyspaceName="#[vars.keyspaceName]"/>
+    </flow>
+
+    <flow name="getTableNamesFromKeyspace-flow" doc:id="4768c8ea-e151-4f6b-b710-7fef94b56914" >
+        <cassandra-db:get-table-names-from-keyspace config-ref="CassandraDB_Config" keyspaceName="#[vars.keyspaceName]"/>
     </flow>
 </mule>

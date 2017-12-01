@@ -7,6 +7,8 @@ import org.mule.modules.cassandradb.api.CreateKeyspaceInput;
 import org.mule.modules.cassandradb.api.CreateTableInput;
 import org.mule.runtime.extension.api.annotation.param.Content;
 
+import java.util.List;
+
 public interface CassandraService extends ConnectorService {
 
     boolean createKeyspace(@Content CreateKeyspaceInput input);
@@ -25,4 +27,5 @@ public interface CassandraService extends ConnectorService {
 
     boolean changeColumnType(String tableName, String keyspaceName, AlterColumnInput alterColumnInput);
 
+    List<String> getTableNamesFromKeyspace(String keyspaceName);
 }
