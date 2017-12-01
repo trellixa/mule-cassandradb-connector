@@ -129,6 +129,25 @@ public class AbstractTestCases extends MuleArtifactFunctionalTestCase {
                  .runExpectingException(ErrorTypeMatcher.errorType(CassandraError.UNKNOWN));
     }
 
+    boolean dropColumn(String tableName, String keyspaceName, String column) throws Exception {
+        return (boolean) flowRunner("dropColumn-flow")
+                .withPayload(column)
+                .withVariable("tableName", tableName)
+                .withVariable("keyspaceName", keyspaceName)
+                .run()
+                .getMessage()
+                .getPayload()
+                .getValue();
+    }
+
+    void dropColumnExpException(String tableName, String keyspaceName, String column) throws Exception {
+        flowRunner("dropColumn-flow")
+                .withPayload(column)
+                .withVariable("tableName", tableName)
+                .withVariable("keyspaceName", keyspaceName)
+                .runExpectingException(ErrorTypeMatcher.errorType(CassandraError.UNKNOWN));
+    }
+
     public static CassandraProperties getCassandraProperties() {
         //load required properties
         CassandraProperties cassProperties = null;

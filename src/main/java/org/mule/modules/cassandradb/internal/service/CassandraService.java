@@ -17,4 +17,6 @@ public interface CassandraService extends ConnectorService {
     boolean dropTable(String tableName, String keyspaceName);
 
     boolean addNewColumn(String tableName, String keyspaceName, String column, DataType dataType);
+
+    boolean dropColumn(String tableName, String keyspaceName, String column);
 }

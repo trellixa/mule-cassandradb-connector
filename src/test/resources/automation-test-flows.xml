@@ -33,4 +33,8 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
     <flow name="addColumn-flow" doc:id="b089036d-9344-4fbf-9c86-0148efcd52b9" >
         <cassandra-db:add-new-column doc:name="Add new column" doc:id="ec493f78-6a4e-42df-ad83-74b762099593" config-ref="CassandraDB_Config" table="#[vars.tableName]" keyspaceName="#[vars.keyspaceName]"/>
     </flow>
+
+    <flow name="dropColumn-flow" doc:id="4768c8ea-e151-4f6b-b710-7fef94b56914" >
+        <cassandra-db:drop-column doc:name="Drop column" doc:id="35f8c437-83f5-4d24-85ab-46fab50375a0" config-ref="CassandraDB_Config" table="#[vars.tableName]" keyspaceName="#[vars.keyspaceName]"/>
+    </flow>
 </mule>

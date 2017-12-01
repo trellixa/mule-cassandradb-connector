@@ -122,6 +122,22 @@ public class CassandraOperations extends ConnectorOperations<CassandraConfig, Ca
                 .withParam(ColumnType.resolveDataType(alterColumnInput.getType()));
     }
 
+    /**
+     * Removes a column
+     * @param table the name of the table to be used for the operation
+     * @param keyspaceName (optional) the keyspace which contains the table to be used
+     * @param columnName the name of the column to be removed
+     * @return true if the operation succeeded or false if not
+     */
+    public boolean dropColumn(@Config CassandraConfig config,
+                              @Connection CassandraConnection connection,
+                              String table, @Optional String keyspaceName, @Content String columnName) {
+        return newExecutionBuilder(config, connection).execute(CassandraService::dropColumn)
+                .withParam(table)
+                .withParam(keyspaceName)
+                .withParam(columnName);
+    }
+
     private <T extends Throwable> DefinedExceptionHandler<T> handle(Class<T> exceptionClass, CassandraError errorCode) {
         return new DefinedExceptionHandler<>(exceptionClass, exception -> {
             throw new ModuleException(errorCode, exception);
