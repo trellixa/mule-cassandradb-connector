@@ -156,6 +156,22 @@ public class CassandraOperations extends ConnectorOperations<CassandraConfig, Ca
                 .withParam(newColumnName);
     }
 
+    /**
+     * Changes the type of a column - check compatibility here: <a href="http://docs.datastax.com/en/cql/3.1/cql/cql_reference/cql_data_types_c.html#concept_ds_wbk_zdt_xj__cql_data_type_compatibility">CQL type compatibility</a>
+     * @param table the name of the table to be used for the operation
+     * @param keyspaceName (optional) the keyspace which contains the table to be used
+     * @param alterColumnInput POJO defining the name of the column to be changed and the new DataType
+     * @return true if the operation succeeded or false if not
+     */
+    public boolean changeColumnType(@Config CassandraConfig config,
+                                    @Connection CassandraConnection connection,
+                                    String table, @Optional String keyspaceName, @Content AlterColumnInput alterColumnInput){
+        return newExecutionBuilder(config, connection).execute(CassandraService::changeColumnType)
+                .withParam(table)
+                .withParam(keyspaceName)
+                .withParam(alterColumnInput);
+    }
+
     private <T extends Throwable> DefinedExceptionHandler<T> handle(Class<T> exceptionClass, CassandraError errorCode) {
         return new DefinedExceptionHandler<>(exceptionClass, exception -> {
             throw new ModuleException(errorCode, exception);

@@ -5,6 +5,7 @@ import com.datastax.driver.core.Session;
 import com.datastax.driver.core.schemabuilder.SchemaStatement;
 import org.apache.commons.lang3.StringUtils;
 import org.mule.connectors.commons.template.service.DefaultConnectorService;
+import org.mule.modules.cassandradb.api.AlterColumnInput;
 import org.mule.modules.cassandradb.api.CreateTableInput;
 import org.mule.modules.cassandradb.internal.config.CassandraConfig;
 import org.mule.modules.cassandradb.internal.connection.CassandraConnection;
@@ -61,6 +62,12 @@ public class CassandraServiceImpl extends DefaultConnectorService<CassandraConfi
     public boolean renameColumn(String tableName, String keyspaceName, String oldColumnName, String newColumnName) {
         String keyspace = StringUtils.isNotBlank(keyspaceName) ? keyspaceName : getCassandraSession().getLoggedKeyspace();
         SchemaStatement statement = HelperStatements.renameColumn(tableName, keyspace, oldColumnName, newColumnName);
+        return getCassandraSession().execute(statement).wasApplied();
+    }
+
+    public boolean changeColumnType(String tableName, String keyspaceName, AlterColumnInput input) {
+        String keyspace = StringUtils.isNotBlank(keyspaceName) ? keyspaceName : getCassandraSession().getLoggedKeyspace();
+        SchemaStatement statement = HelperStatements.changeColumnType(tableName, keyspace, input);
         return getCassandraSession().execute(statement).wasApplied();
     }
 

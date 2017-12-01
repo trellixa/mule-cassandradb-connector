@@ -73,6 +73,10 @@ public class HelperStatements {
         return SchemaBuilder.alterTable(keyspaceName, tableName).renameColumn(oldColumnName).to(newColumnName);
     }
 
+    public static SchemaStatement changeColumnType(String tableName, String keyspaceName, AlterColumnInput input) {
+        return SchemaBuilder.alterTable(keyspaceName, tableName).alterColumn(input.getColumn()).type(ColumnType.resolveDataType(input.getType()));
+    }
+
     /**
      * return the DataType based on a String. Default value is DataType.text();
      * @param dataType string to be resolved to DataType
