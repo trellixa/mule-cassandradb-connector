@@ -3,6 +3,8 @@ package org.mule.modules.cassandradb.internal.operation;
 import org.mule.connectors.atlantic.commons.builder.config.exception.DefinedExceptionHandler;
 import org.mule.connectors.atlantic.commons.builder.execution.ExecutionBuilder;
 import org.mule.connectors.commons.template.operation.ConnectorOperations;
+import org.mule.modules.cassandradb.api.AlterColumnInput;
+import org.mule.modules.cassandradb.api.ColumnType;
 import org.mule.modules.cassandradb.api.CreateTableInput;
 import org.mule.modules.cassandradb.internal.config.CassandraConfig;
 import org.mule.modules.cassandradb.internal.connection.CassandraConnection;
@@ -96,6 +98,28 @@ public class CassandraOperations extends ConnectorOperations<CassandraConfig, Ca
         return newExecutionBuilder(config, connection).execute(CassandraService::dropTable)
                 .withParam(tableName)
                 .withParam(keyspaceName);
+    }
+
+    /**
+     * Adds a new column
+     * @param table the name of the table to be used for the operation
+     * @param keyspaceName (optional) the keyspace which contains the table to be used
+     * @param alterColumnInput POJO defining the name of the new column and its DataType
+     * @return true if the operation succeeded or false if not
+     */
+    public boolean addNewColumn(@Config CassandraConfig config,
+                                @Connection CassandraConnection connection,
+                                String table,
+                                @Optional String keyspaceName,
+                                @Content AlterColumnInput alterColumnInput) {
+        if (logger.isDebugEnabled()) {
+            logger.debug("Adding new column " + alterColumnInput.toString());
+        }
+        return newExecutionBuilder(config, connection).execute(CassandraService::addNewColumn)
+                .withParam(table)
+                .withParam(keyspaceName)
+                .withParam(alterColumnInput.getColumn())
+                .withParam(ColumnType.resolveDataType(alterColumnInput.getType()));
     }
 
     private <T extends Throwable> DefinedExceptionHandler<T> handle(Class<T> exceptionClass, CassandraError errorCode) {

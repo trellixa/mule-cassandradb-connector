@@ -5,6 +5,7 @@ import com.datastax.driver.core.KeyspaceMetadata;
 import org.junit.After;
 import org.junit.Before;
 import org.mule.functional.junit4.MuleArtifactFunctionalTestCase;
+import org.mule.modules.cassandradb.api.AlterColumnInput;
 import org.mule.modules.cassandradb.api.CreateKeyspaceInput;
 import org.mule.modules.cassandradb.api.CreateTableInput;
 import org.mule.modules.cassandradb.automation.util.CassandraProperties;
@@ -107,6 +108,25 @@ public class AbstractTestCases extends MuleArtifactFunctionalTestCase {
                 .getMessage()
                 .getPayload()
                 .getValue();
+    }
+
+    boolean addNewColumn(String tableName, String keyspaceName, AlterColumnInput alterColumnInput) throws Exception {
+        return (boolean) flowRunner("addColumn-flow")
+                .withPayload(alterColumnInput)
+                .withVariable("tableName", tableName)
+                .withVariable("keyspaceName", keyspaceName)
+                .run()
+                .getMessage()
+                .getPayload()
+                .getValue();
+    }
+
+     void addNewColumnExpException(String tableName, String keyspaceName, AlterColumnInput alterColumnInput) throws Exception {
+         flowRunner("addColumn-flow")
+                 .withPayload(alterColumnInput)
+                 .withVariable("tableName", tableName)
+                 .withVariable("keyspaceName", keyspaceName)
+                 .runExpectingException(ErrorTypeMatcher.errorType(CassandraError.UNKNOWN));
     }
 
     public static CassandraProperties getCassandraProperties() {

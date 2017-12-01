@@ -1,6 +1,8 @@
 package org.mule.modules.cassandradb.internal.service;
 
+import com.datastax.driver.core.DataType;
 import com.datastax.driver.core.Session;
+import com.datastax.driver.core.schemabuilder.SchemaStatement;
 import org.apache.commons.lang3.StringUtils;
 import org.mule.connectors.commons.template.service.DefaultConnectorService;
 import org.mule.modules.cassandradb.api.CreateTableInput;
@@ -40,6 +42,14 @@ public class CassandraServiceImpl extends DefaultConnectorService<CassandraConfi
         String keyspace = StringUtils.isNotBlank(keyspaceName) ? keyspaceName : getCassandraSession().getLoggedKeyspace();
         return getCassandraSession().execute(HelperStatements.dropTable(tableName, keyspace)).wasApplied();
     }
+
+    @Override
+    public boolean addNewColumn(String tableName, String keyspaceName, String columnName, DataType columnType) {
+        String keyspace = StringUtils.isNotBlank(keyspaceName) ? keyspaceName : getCassandraSession().getLoggedKeyspace();
+        SchemaStatement statement = HelperStatements.addNewColumn(tableName, keyspace, columnName, columnType);
+        return getCassandraSession().execute(statement).wasApplied();
+    }
+
 
     private Session getCassandraSession() {
         return getConnection().getCassandraSession();

@@ -4,6 +4,7 @@
 package org.mule.modules.cassandradb.automation.functional;
 
 
+import org.mule.modules.cassandradb.api.AlterColumnInput;
 import org.mule.modules.cassandradb.api.ColumnInput;
 import org.mule.modules.cassandradb.api.ColumnType;
 import org.mule.modules.cassandradb.api.CreateTableInput;
@@ -210,12 +211,12 @@ public class TestDataBuilder {
         return input;
     }
 
-//    public static AlterColumnInput getAlterColumnInput(String columnName, ColumnType type){
-//        AlterColumnInput result = new AlterColumnInput();
-//        result.setColumn(columnName);
-//        result.setType(type);
-//        return result;
-//    }
+    public static AlterColumnInput getAlterColumnInput(String columnName, ColumnType type){
+        AlterColumnInput result = new AlterColumnInput();
+        result.setColumn(columnName);
+        result.setType(type);
+        return result;
+    }
 
     public static Map<String, String> getRenameColumnInput(String oldName, String newName){
         Map<String, String> result = new HashMap<String, String>();

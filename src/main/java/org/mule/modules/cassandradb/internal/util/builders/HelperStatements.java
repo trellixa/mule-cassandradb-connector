@@ -61,6 +61,10 @@ public class HelperStatements {
         return SchemaBuilder.dropTable(keyspaceName, tableName).ifExists();
     }
 
+    public static SchemaStatement addNewColumn(String tableName, String keyspaceName, String columnName, DataType columnType) {
+        return SchemaBuilder.alterTable(keyspaceName, tableName).addColumn(columnName).type(columnType);
+    }
+
     /**
      * return the DataType based on a String. Default value is DataType.text();
      * @param dataType string to be resolved to DataType

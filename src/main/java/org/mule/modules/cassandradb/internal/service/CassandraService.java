@@ -1,5 +1,6 @@
 package org.mule.modules.cassandradb.internal.service;
 
+import com.datastax.driver.core.DataType;
 import org.mule.connectors.commons.template.service.ConnectorService;
 import org.mule.modules.cassandradb.api.CreateKeyspaceInput;
 import org.mule.modules.cassandradb.api.CreateTableInput;
@@ -14,4 +15,6 @@ public interface CassandraService extends ConnectorService {
     boolean createTable(@Content CreateTableInput input);
 
     boolean dropTable(String tableName, String keyspaceName);
+
+    boolean addNewColumn(String tableName, String keyspaceName, String column, DataType dataType);
 }

@@ -29,4 +29,8 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
     <flow name="dropTable-flow" doc:id="b089036d-9344-4fbf-9c86-0148efcd52b9" >
         <cassandra-db:drop-table doc:name="Drop table" doc:id="8b383719-4f86-49a4-9332-b42bbe7e9c47" config-ref="CassandraDB_Config" tableName="#[vars.tableName]" keyspaceName="#[vars.keyspaceName]"/>
     </flow>
+
+    <flow name="addColumn-flow" doc:id="b089036d-9344-4fbf-9c86-0148efcd52b9" >
+        <cassandra-db:add-new-column doc:name="Add new column" doc:id="ec493f78-6a4e-42df-ad83-74b762099593" config-ref="CassandraDB_Config" table="#[vars.tableName]" keyspaceName="#[vars.keyspaceName]"/>
+    </flow>
 </mule>
