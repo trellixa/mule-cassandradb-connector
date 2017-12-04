@@ -4,15 +4,18 @@ import org.mule.connectors.atlantic.commons.builder.config.exception.DefinedExce
 import org.mule.connectors.atlantic.commons.builder.execution.ExecutionBuilder;
 import org.mule.connectors.commons.template.operation.ConnectorOperations;
 import org.mule.modules.cassandradb.api.AlterColumnInput;
+import org.mule.modules.cassandradb.api.CQLQueryInput;
 import org.mule.modules.cassandradb.api.ColumnType;
+import org.mule.modules.cassandradb.api.CreateKeyspaceInput;
 import org.mule.modules.cassandradb.api.CreateTableInput;
 import org.mule.modules.cassandradb.internal.config.CassandraConfig;
 import org.mule.modules.cassandradb.internal.connection.CassandraConnection;
 import org.mule.modules.cassandradb.internal.exception.CassandraError;
 import org.mule.modules.cassandradb.internal.exception.CassandraException;
-import org.mule.modules.cassandradb.api.CreateKeyspaceInput;
+import org.mule.modules.cassandradb.internal.metadata.TmpMetadataToRemove;
 import org.mule.modules.cassandradb.internal.service.CassandraService;
 import org.mule.modules.cassandradb.internal.service.CassandraServiceImpl;
+import org.mule.runtime.extension.api.annotation.metadata.OutputResolver;
 import org.mule.runtime.extension.api.annotation.param.Config;
 import org.mule.runtime.extension.api.annotation.param.Connection;
 import org.mule.runtime.extension.api.annotation.param.Content;
@@ -231,6 +234,25 @@ public class CassandraOperations extends ConnectorOperations<CassandraConfig, Ca
                 .withParam((Map) entityToUpdate.get(COLUMNS))
                 .withParam((Map) entityToUpdate.get(WHERE));
     }
+
+    /**
+     * Executes the raw input query provided
+     *
+     * @param cqlInput CQLQueryInput describing the parametrized query to be executed along with the parameters
+     * @return the result of the query execution
+     */
+    @OutputResolver(output = TmpMetadataToRemove.class)
+    public List<Map<String, Object>> executeCQLQuery(@Config CassandraConfig config,
+                                                     @Connection CassandraConnection connection,
+                                                     @Content CQLQueryInput cqlInput) {
+        if (logger.isDebugEnabled()) {
+            logger.debug("Executing query " + cqlInput.toString());
+        }
+        return newExecutionBuilder(config, connection).execute(CassandraService::executeCQLQuery)
+                .withParam(cqlInput.getCqlQuery())
+                .withParam(cqlInput.getParameters());
+    }
+
 
     private <T extends Throwable> DefinedExceptionHandler<T> handle(Class<T> exceptionClass, CassandraError errorCode) {
         return new DefinedExceptionHandler<>(exceptionClass, exception -> {

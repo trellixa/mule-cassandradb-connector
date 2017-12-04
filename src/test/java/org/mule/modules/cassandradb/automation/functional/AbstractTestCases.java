@@ -6,6 +6,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.mule.functional.junit4.MuleArtifactFunctionalTestCase;
 import org.mule.modules.cassandradb.api.AlterColumnInput;
+import org.mule.modules.cassandradb.api.CQLQueryInput;
 import org.mule.modules.cassandradb.api.CreateKeyspaceInput;
 import org.mule.modules.cassandradb.api.CreateTableInput;
 import org.mule.modules.cassandradb.automation.util.CassandraProperties;
@@ -27,7 +28,7 @@ import java.util.Map;
 @ArtifactClassLoaderRunnerConfig(
         exportPluginClasses = {CassandraError.class, CassandraService.class,
                 CassandraConnection.class, CassandraProperties.class,
-                CassandraConfig.class }
+                CassandraConfig.class, CQLQueryInput.class }
 )
 public class AbstractTestCases extends MuleArtifactFunctionalTestCase {
 
@@ -234,6 +235,22 @@ public class AbstractTestCases extends MuleArtifactFunctionalTestCase {
                 .withPayload(entityToUpdate)
                 .withVariable("tableName", tableName)
                 .withVariable("keyspaceName", keyspaceName)
+                .runExpectingException(ErrorTypeMatcher.errorType(CassandraError.UNKNOWN));
+    }
+
+    protected List<Map<String, Object>> executeCQLQuery(CQLQueryInput query) throws Exception {
+        return (List<Map<String, Object>>) flowRunner("executeCQLQuery-flow")
+                .withPayload(query)
+                .run()
+                .getMessage()
+                .getPayload()
+                .getValue();
+    }
+
+
+    protected void executeCQLQueryExpException(CQLQueryInput query) throws Exception {
+        flowRunner("executeCQLQuery-flow")
+                .withPayload(query)
                 .runExpectingException(ErrorTypeMatcher.errorType(CassandraError.UNKNOWN));
     }
 

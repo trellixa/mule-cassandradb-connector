@@ -1,12 +1,16 @@
 package org.mule.modules.cassandradb.internal.service;
 
 import com.datastax.driver.core.DataType;
+import com.datastax.driver.core.PreparedStatement;
+import com.datastax.driver.core.ResultSet;
+import com.datastax.driver.core.Row;
 import com.datastax.driver.core.Session;
 import com.datastax.driver.core.TableMetadata;
 import com.datastax.driver.core.querybuilder.Insert;
 import com.datastax.driver.core.querybuilder.QueryBuilder;
 import com.datastax.driver.core.querybuilder.Update;
 import com.datastax.driver.core.schemabuilder.SchemaStatement;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.mule.connectors.commons.template.service.DefaultConnectorService;
 import org.mule.modules.cassandradb.api.AlterColumnInput;
@@ -132,6 +136,49 @@ public class CassandraServiceImpl extends DefaultConnectorService<CassandraConfi
         getCassandraSession().execute(updateObject);
     }
 
+    @Override
+    public List<Map<String, Object>> executeCQLQuery(String cqlQuery, List<Object> params) {
+        ResultSet result = null;
+
+        if (StringUtils.isNotBlank(cqlQuery)) {
+            if (!CollectionUtils.isEmpty(params)) {
+                result = executePreparedStatement(cqlQuery, params);
+            } else {
+                result = getCassandraSession().execute(cqlQuery);
+            }
+        }
+
+        return getResponseFromResultSet(result);
+    }
+
+    private ResultSet executePreparedStatement(String query, List<Object> params) {
+        PreparedStatement ps = getCassandraSession().prepare(query);
+        Object[] paramArray = params.toArray(new Object[params.size()]);
+        return getCassandraSession().execute(ps.bind(paramArray));
+    }
+
+    private List<Map<String, Object>> getResponseFromResultSet(ResultSet result) {
+        List<Map<String, Object>> responseList = new LinkedList<Map<String, Object>>();
+
+        if (result != null) {
+            for (Row row : result.all()) {
+
+                int columnsSize = row.getColumnDefinitions().size();
+
+                Map<String, Object> mappedRow = new HashMap<String, Object>();
+
+                for (int i = 0; i < columnsSize; i++) {
+                    String columnName = row.getColumnDefinitions().getName(i);
+                    Object columnValue = row.getObject(i);
+                    mappedRow.put(columnName, columnValue);
+                }
+
+                responseList.add(mappedRow);
+            }
+        }
+
+        return responseList;
+    }
 
     private Session getCassandraSession() {
         return getConnection().getCassandraSession();
