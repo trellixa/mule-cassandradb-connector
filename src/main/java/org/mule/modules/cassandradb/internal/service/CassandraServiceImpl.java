@@ -5,14 +5,16 @@ import com.datastax.driver.core.Session;
 import com.datastax.driver.core.TableMetadata;
 import com.datastax.driver.core.querybuilder.Insert;
 import com.datastax.driver.core.querybuilder.QueryBuilder;
+import com.datastax.driver.core.querybuilder.Update;
 import com.datastax.driver.core.schemabuilder.SchemaStatement;
 import org.apache.commons.lang3.StringUtils;
 import org.mule.connectors.commons.template.service.DefaultConnectorService;
 import org.mule.modules.cassandradb.api.AlterColumnInput;
+import org.mule.modules.cassandradb.api.CreateKeyspaceInput;
 import org.mule.modules.cassandradb.api.CreateTableInput;
 import org.mule.modules.cassandradb.internal.config.CassandraConfig;
 import org.mule.modules.cassandradb.internal.connection.CassandraConnection;
-import org.mule.modules.cassandradb.api.CreateKeyspaceInput;
+import org.mule.modules.cassandradb.internal.exception.CassandraException;
 import org.mule.modules.cassandradb.internal.util.builders.HelperStatements;
 
 import java.util.*;
@@ -106,6 +108,28 @@ public class CassandraServiceImpl extends DefaultConnectorService<CassandraConfi
         }
 
         getCassandraSession().execute(insertObject);
+    }
+
+    @Override
+    public void update(String keySpace, String table, Map<String, Object> entity, Map<String, Object> whereClause) {
+        if (entity == null || whereClause == null) {
+            throw new CassandraException("Mismatched input. SET and WHERE clause must not be null.");
+        }
+        Update updateObject = QueryBuilder.update(keySpace, table);
+
+        for (Map.Entry<String, Object> entry : entity.entrySet()) {
+            updateObject.with().and(QueryBuilder.set(entry.getKey(), entry.getValue()));
+        }
+        // In where clause in cassandra, when using it with update command, can be used only eq and IN operators
+        for (Map.Entry<String, Object> entry : whereClause.entrySet()) {
+            if (entry.getValue() instanceof List) {
+                updateObject.where(QueryBuilder.in(entry.getKey(), (List) entry.getValue()));
+            } else {
+                updateObject.where(QueryBuilder.eq(entry.getKey(), entry.getValue()));
+            }
+        }
+
+        getCassandraSession().execute(updateObject);
     }
 
 

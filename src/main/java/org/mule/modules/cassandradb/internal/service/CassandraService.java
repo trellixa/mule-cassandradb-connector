@@ -31,4 +31,6 @@ public interface CassandraService extends ConnectorService {
     List<String> getTableNamesFromKeyspace(String keyspaceName);
 
     void insert(String keyspaceName, String table, Map<String, Object> entity);
+
+    void update(String keySpace, String table, Map<String, Object> entity, Map<String, Object> whereClause);
 }

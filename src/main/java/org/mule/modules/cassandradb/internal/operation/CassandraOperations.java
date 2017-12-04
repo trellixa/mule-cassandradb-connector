@@ -25,6 +25,8 @@ import java.util.List;
 import java.util.Map;
 
 import static org.mule.modules.cassandradb.internal.exception.CassandraError.UNKNOWN;
+import static org.mule.modules.cassandradb.internal.util.Constants.COLUMNS;
+import static org.mule.modules.cassandradb.internal.util.Constants.WHERE;
 
 public class CassandraOperations extends ConnectorOperations<CassandraConfig, CassandraConnection, CassandraService> {
 
@@ -206,6 +208,28 @@ public class CassandraOperations extends ConnectorOperations<CassandraConfig, Ca
                 .withParam(keyspaceName)
                 .withParam(table)
                 .withParam(entity);
+    }
+
+    /**
+     * Executes the update entity operation
+     * @param table the table name in which the entity will be updated
+     * @param keyspaceName (optional) the keyspace which contains the table to be dropped
+     * @param entityToUpdate the entity to be updated
+     */
+    @SuppressWarnings("unchecked")
+    public void update(@Config CassandraConfig config,
+                       @Connection CassandraConnection connection,
+                       String table,
+                       @Optional String keyspaceName,
+                       @Content Map<String, Object> entityToUpdate) {
+        if (logger.isDebugEnabled()) {
+            logger.debug("Updating  entity" + entityToUpdate + " into the " + table + " table ");
+        }
+        newExecutionBuilder(config, connection).execute(CassandraService::update)
+                .withParam(keyspaceName)
+                .withParam(table)
+                .withParam((Map) entityToUpdate.get(COLUMNS))
+                .withParam((Map) entityToUpdate.get(WHERE));
     }
 
     private <T extends Throwable> DefinedExceptionHandler<T> handle(Class<T> exceptionClass, CassandraError errorCode) {
