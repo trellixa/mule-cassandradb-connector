@@ -3,6 +3,8 @@ package org.mule.modules.cassandradb.internal.service;
 import com.datastax.driver.core.DataType;
 import com.datastax.driver.core.Session;
 import com.datastax.driver.core.TableMetadata;
+import com.datastax.driver.core.querybuilder.Insert;
+import com.datastax.driver.core.querybuilder.QueryBuilder;
 import com.datastax.driver.core.schemabuilder.SchemaStatement;
 import org.apache.commons.lang3.StringUtils;
 import org.mule.connectors.commons.template.service.DefaultConnectorService;
@@ -13,10 +15,7 @@ import org.mule.modules.cassandradb.internal.connection.CassandraConnection;
 import org.mule.modules.cassandradb.api.CreateKeyspaceInput;
 import org.mule.modules.cassandradb.internal.util.builders.HelperStatements;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 
 public class CassandraServiceImpl extends DefaultConnectorService<CassandraConfig, CassandraConnection> implements CassandraService{
@@ -94,6 +93,19 @@ public class CassandraServiceImpl extends DefaultConnectorService<CassandraConfi
             return tableNames;
         }
         return Collections.emptyList();
+    }
+
+    @Override
+    public void insert(String keyspaceName, String table, Map<String, Object> entity) {
+        String keyspace = StringUtils.isNotBlank(keyspaceName) ? keyspaceName : getCassandraSession().getLoggedKeyspace();
+
+        Insert insertObject = QueryBuilder.insertInto(keyspace, table);
+
+        for (Map.Entry<String, Object> entry : entity.entrySet()) {
+            insertObject.value(entry.getKey(), entry.getValue());
+        }
+
+        getCassandraSession().execute(insertObject);
     }
 
 

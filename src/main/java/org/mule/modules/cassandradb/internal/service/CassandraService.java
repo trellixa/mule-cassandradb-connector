@@ -8,6 +8,7 @@ import org.mule.modules.cassandradb.api.CreateTableInput;
 import org.mule.runtime.extension.api.annotation.param.Content;
 
 import java.util.List;
+import java.util.Map;
 
 public interface CassandraService extends ConnectorService {
 
@@ -28,4 +29,6 @@ public interface CassandraService extends ConnectorService {
     boolean changeColumnType(String tableName, String keyspaceName, AlterColumnInput alterColumnInput);
 
     List<String> getTableNamesFromKeyspace(String keyspaceName);
+
+    void insert(String keyspaceName, String table, Map<String, Object> entity);
 }

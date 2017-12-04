@@ -22,6 +22,7 @@ import org.mule.test.runner.ArtifactClassLoaderRunnerConfig;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 @ArtifactClassLoaderRunnerConfig(
         exportPluginClasses = {CassandraError.class, CassandraService.class,
@@ -196,6 +197,25 @@ public class AbstractTestCases extends MuleArtifactFunctionalTestCase {
                 .getMessage()
                 .getPayload()
                 .getValue();
+    }
+
+    void insert(String tableName, String keyspaceName, Map<String, Object> entity) throws Exception {
+        flowRunner("insert-flow")
+                .withPayload(entity)
+                .withVariable("tableName", tableName)
+                .withVariable("keyspaceName", keyspaceName)
+                .run()
+                .getMessage()
+                .getPayload()
+                .getValue();
+    }
+
+    void insertExpError(String tableName, String keyspaceName, Map<String, Object> entity) throws Exception {
+        flowRunner("insert-flow")
+                .withPayload(entity)
+                .withVariable("tableName", tableName)
+                .withVariable("keyspaceName", keyspaceName)
+                .runExpectingException(ErrorTypeMatcher.errorType(CassandraError.UNKNOWN));
     }
 
     public static CassandraProperties getCassandraProperties() {

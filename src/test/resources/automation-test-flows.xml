@@ -49,4 +49,8 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
     <flow name="getTableNamesFromKeyspace-flow" doc:id="4768c8ea-e151-4f6b-b710-7fef94b56914" >
         <cassandra-db:get-table-names-from-keyspace config-ref="CassandraDB_Config" keyspaceName="#[vars.keyspaceName]"/>
     </flow>
+
+    <flow name="insert-flow" doc:id="4768c8ea-e151-4f6b-b710-7fef94b56914" >
+        <cassandra-db:insert config-ref="CassandraDB_Config" keyspaceName="#[vars.keyspaceName]" table="#[vars.tableName]"/>
+    </flow>
 </mule>

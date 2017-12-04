@@ -22,6 +22,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
+import java.util.Map;
 
 import static org.mule.modules.cassandradb.internal.exception.CassandraError.UNKNOWN;
 
@@ -185,6 +186,26 @@ public class CassandraOperations extends ConnectorOperations<CassandraConfig, Ca
         return newExecutionBuilder(config, connection).execute(CassandraService::getTableNamesFromKeyspace)
                 .withParam(keyspaceName);
 
+    }
+
+    /**
+     * Executes the insert entity operation
+     * @param table the table name in which the entity will be inserted
+     * @param keyspaceName (optional) the keyspace which contains the table to be used
+     * @param entity the entity to be inserted
+     */
+    public void insert(@Config CassandraConfig config,
+                       @Connection CassandraConnection connection,
+                       String table,
+                       @Optional String keyspaceName,
+                       @Content Map<String, Object> entity) {
+        if (logger.isDebugEnabled()) {
+            logger.debug("Inserting entity " + entity + " into the " + table + " table ");
+        }
+        newExecutionBuilder(config, connection).execute(CassandraService::insert)
+                .withParam(keyspaceName)
+                .withParam(table)
+                .withParam(entity);
     }
 
     private <T extends Throwable> DefinedExceptionHandler<T> handle(Class<T> exceptionClass, CassandraError errorCode) {
