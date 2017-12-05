@@ -4,11 +4,10 @@ package org.mule.modules.cassandradb.automation.functional;
 import com.datastax.driver.core.KeyspaceMetadata;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.mule.functional.junit4.MuleArtifactFunctionalTestCase;
-import org.mule.modules.cassandradb.api.AlterColumnInput;
 import org.mule.modules.cassandradb.api.CQLQueryInput;
 import org.mule.modules.cassandradb.api.CreateKeyspaceInput;
-import org.mule.modules.cassandradb.api.CreateTableInput;
 import org.mule.modules.cassandradb.automation.util.CassandraProperties;
 import org.mule.modules.cassandradb.automation.util.PropertiesLoaderUtil;
 import org.mule.modules.cassandradb.internal.config.CassandraConfig;
@@ -17,13 +16,11 @@ import org.mule.modules.cassandradb.internal.connection.ConnectionParameters;
 import org.mule.modules.cassandradb.internal.exception.CassandraError;
 import org.mule.modules.cassandradb.internal.service.CassandraService;
 import org.mule.modules.cassandradb.internal.service.CassandraServiceImpl;
-import org.mule.runtime.extension.api.error.ErrorTypeDefinition;
-import org.mule.tck.junit4.matcher.ErrorTypeMatcher;
+import org.mule.tck.junit4.rule.SystemProperty;
+import org.mule.tck.util.TestConnectivityUtils;
 import org.mule.test.runner.ArtifactClassLoaderRunnerConfig;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.Map;
 
 @ArtifactClassLoaderRunnerConfig(
         exportPluginClasses = {CassandraError.class, CassandraService.class,
@@ -37,6 +34,9 @@ public class AbstractTestCases extends MuleArtifactFunctionalTestCase {
     private CassandraConnection cassandraConnection;
     private CassandraService cassandraService;
     private CassandraProperties cassandraProperties;
+
+    @Rule
+    public SystemProperty rule2 = TestConnectivityUtils.disableAutomaticTestConnectivity();
 
     @Override
     public int getTestTimeoutSecs() {
