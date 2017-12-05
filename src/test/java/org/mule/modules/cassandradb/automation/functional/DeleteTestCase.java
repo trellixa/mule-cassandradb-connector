@@ -26,22 +26,22 @@ import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder
 import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getValidWhereClauseWithIN;
 import static org.mule.modules.cassandradb.automation.util.TestsConstants.TABLE_NAME_1;
 
-public class DeleteTestCases extends AbstractTestCases {
+public class DeleteTestCase extends AbstractTestCases {
 
     @Before
     public void setup() throws Exception {
-        CreateTableInput basicCreateTableInput = TestDataBuilder.getBasicCreateTableInput(getColumns(), getCassandraProperties().getKeyspace(), TABLE_NAME_1);
+        CreateTableInput basicCreateTableInput = TestDataBuilder.getBasicCreateTableInput(getColumns(), getKeyspaceFromProperties(), TABLE_NAME_1);
         getCassandraService().createTable(basicCreateTableInput);
     }
 
     @After
     public void tearDown() {
-        getCassandraService().dropTable(TABLE_NAME_1, getCassandraProperties().getKeyspace());
+        getCassandraService().dropTable(TABLE_NAME_1, getKeyspaceFromProperties());
     }
 
     @Test
     public void testDeleteColumnUsingEqWithSuccess() throws Exception {
-        getCassandraService().insert(getCassandraProperties().getKeyspace(), TABLE_NAME_1, getValidEntity());
+        getCassandraService().insert(getKeyspaceFromProperties(), TABLE_NAME_1, getValidEntity());
 
         Map<String, Object> payloadColumnsAndFilters = getPayloadColumnsAndFilters(getValidColumnsListForDelete(), getValidWhereClauseWithEq());
         deleteColumnsValue(TABLE_NAME_1, null, payloadColumnsAndFilters);
@@ -49,7 +49,7 @@ public class DeleteTestCases extends AbstractTestCases {
 
     @Test
     public void testDeleteRowUsingEqWithSuccess() throws Exception {
-        getCassandraService().insert(getCassandraProperties().getKeyspace(), TABLE_NAME_1, getValidEntity());
+        getCassandraService().insert(getKeyspaceFromProperties(), TABLE_NAME_1, getValidEntity());
 
         Map<String, Object> payloadColumnsAndFilters = getPayloadColumnsAndFilters(null, getValidWhereClauseWithEq());
         deleteRows(TABLE_NAME_1, null, payloadColumnsAndFilters);
@@ -57,7 +57,7 @@ public class DeleteTestCases extends AbstractTestCases {
 
     @Test
     public void testDeleteColumnUsingINWithSuccess() throws Exception {
-        getCassandraService().insert(getCassandraProperties().getKeyspace(), TABLE_NAME_1, getValidEntity());
+        getCassandraService().insert(getKeyspaceFromProperties(), TABLE_NAME_1, getValidEntity());
 
         Map<String, Object> payloadColumnsAndFilters = getPayloadColumnsAndFilters(getValidColumnsListForDelete(), getValidWhereClauseWithIN());
         deleteColumnsValue(TABLE_NAME_1, null, payloadColumnsAndFilters);
@@ -65,7 +65,7 @@ public class DeleteTestCases extends AbstractTestCases {
 
     @Test
     public void testDeleteRowUsingINWithSuccess() throws Exception {
-        getCassandraService().insert(getCassandraProperties().getKeyspace(), TABLE_NAME_1, getValidEntity());
+        getCassandraService().insert(getKeyspaceFromProperties(), TABLE_NAME_1, getValidEntity());
 
         Map<String, Object> payloadColumnsAndFilters = getPayloadColumnsAndFilters(null, getValidWhereClauseWithIN());
         deleteRows(TABLE_NAME_1, null, payloadColumnsAndFilters);
@@ -73,8 +73,8 @@ public class DeleteTestCases extends AbstractTestCases {
 
     @Test
     public void testDeleteItemFromListWithSuccess() throws Exception {
-        getCassandraService().addNewColumn(TABLE_NAME_1, getCassandraProperties().getKeyspace(), TestsConstants.VALID_LIST_COLUMN, DataType.list(DataType.text()));
-        getCassandraService().insert(getCassandraProperties().getKeyspace(), TABLE_NAME_1, TestDataBuilder.getValidEntityWithList());
+        getCassandraService().addNewColumn(TABLE_NAME_1, getKeyspaceFromProperties(), TestsConstants.VALID_LIST_COLUMN, DataType.list(DataType.text()));
+        getCassandraService().insert(getKeyspaceFromProperties(), TABLE_NAME_1, TestDataBuilder.getValidEntityWithList());
 
         Map<String, Object> payloadColumnsAndFilters = getPayloadColumnsAndFilters(getValidListItem(), getValidWhereClauseWithEq());
         deleteColumnsValue(TABLE_NAME_1, null, payloadColumnsAndFilters);
@@ -82,8 +82,8 @@ public class DeleteTestCases extends AbstractTestCases {
 
     @Test
     public void testDeleteItemFromMapWithSuccess() throws Exception {
-        getCassandraService().addNewColumn(TABLE_NAME_1, getCassandraProperties().getKeyspace(), TestsConstants.VALID_MAP_COLUMN, DataType.map(DataType.text(), DataType.text()));
-        getCassandraService().insert(getCassandraProperties().getKeyspace(), TABLE_NAME_1, TestDataBuilder.getValidEntityWithMap());
+        getCassandraService().addNewColumn(TABLE_NAME_1, getKeyspaceFromProperties(), TestsConstants.VALID_MAP_COLUMN, DataType.map(DataType.text(), DataType.text()));
+        getCassandraService().insert(getKeyspaceFromProperties(), TABLE_NAME_1, TestDataBuilder.getValidEntityWithMap());
 
         Map<String, Object> payloadColumnsAndFilters = getPayloadColumnsAndFilters(getValidMapItem(), getValidWhereClauseWithEq());
         deleteColumnsValue(TABLE_NAME_1, null, payloadColumnsAndFilters);
@@ -91,8 +91,8 @@ public class DeleteTestCases extends AbstractTestCases {
 
     @Test
     public void testDeleteSetColumnWithSuccess() throws Exception {
-        getCassandraService().addNewColumn(TABLE_NAME_1, getCassandraProperties().getKeyspace(), TestsConstants.VALID_SET_COLUMN, DataType.set(DataType.text()));
-        getCassandraService().insert(getCassandraProperties().getKeyspace(), TABLE_NAME_1, getValidEntityWithSet());
+        getCassandraService().addNewColumn(TABLE_NAME_1, getKeyspaceFromProperties(), TestsConstants.VALID_SET_COLUMN, DataType.set(DataType.text()));
+        getCassandraService().insert(getKeyspaceFromProperties(), TABLE_NAME_1, getValidEntityWithSet());
 
         Map<String, Object> payloadColumnsAndFilters = getPayloadColumnsAndFilters(getValidSet(), getValidWhereClauseWithEq());
         deleteColumnsValue(TABLE_NAME_1, null, payloadColumnsAndFilters);
@@ -100,7 +100,7 @@ public class DeleteTestCases extends AbstractTestCases {
 
     @Test
     public void testDeleteWithInvalidInput() throws Exception {
-        getCassandraService().insert(getCassandraProperties().getKeyspace(), TABLE_NAME_1, getValidEntity());
+        getCassandraService().insert(getKeyspaceFromProperties(), TABLE_NAME_1, getValidEntity());
 
         Map<String, Object> payloadColumnsAndFilters = getPayloadColumnsAndFilters(getInvalidEntityForDelete(), getValidWhereClauseWithEq());
         deleteColumnsValueExpException(TABLE_NAME_1, null, payloadColumnsAndFilters);
@@ -108,9 +108,10 @@ public class DeleteTestCases extends AbstractTestCases {
 
     @Test
     public void testDeleteWithInvalidWhereClause() throws Exception {
-        getCassandraService().insert(getCassandraProperties().getKeyspace(), TABLE_NAME_1, getValidEntity());
+        getCassandraService().insert(getKeyspaceFromProperties(), TABLE_NAME_1, getValidEntity());
 
         Map<String, Object> payloadColumnsAndFilters = getPayloadColumnsAndFilters(getValidColumnsListForDelete(), getInvalidWhereClause());
         deleteColumnsValueExpException(TABLE_NAME_1, null, payloadColumnsAndFilters);
     }
+
 }

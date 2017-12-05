@@ -7,18 +7,18 @@ import org.junit.*;
 import org.mule.modules.cassandradb.api.CreateTableInput;
 import org.mule.modules.cassandradb.automation.util.TestsConstants;
 
-public class UpdateTestCases extends AbstractTestCases {
+public class UpdateTestCase extends AbstractTestCases {
 
     @Before
     public void setup() throws Exception {
-        CreateTableInput basicCreateTableInput = TestDataBuilder.getBasicCreateTableInput(TestDataBuilder.getColumns(), getCassandraProperties().getKeyspace(), TestsConstants.TABLE_NAME_1);
+        CreateTableInput basicCreateTableInput = TestDataBuilder.getBasicCreateTableInput(TestDataBuilder.getColumns(), getKeyspaceFromProperties(), TestsConstants.TABLE_NAME_1);
         getCassandraService().createTable(basicCreateTableInput);
-        getCassandraService().insert(getCassandraProperties().getKeyspace(), TestsConstants.TABLE_NAME_1, TestDataBuilder.getValidEntity());
+        getCassandraService().insert(getKeyspaceFromProperties(), TestsConstants.TABLE_NAME_1, TestDataBuilder.getValidEntity());
     }
 
     @After
     public void tearDown() {
-        getCassandraService().dropTable(TestsConstants.TABLE_NAME_1, getCassandraProperties().getKeyspace());
+        getCassandraService().dropTable(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties());
     }
 
     @Test

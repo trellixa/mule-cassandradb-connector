@@ -20,7 +20,7 @@ import static org.mule.modules.cassandradb.api.ReplicationStrategy.SIMPLE;
 import static org.mule.modules.cassandradb.automation.util.TestsConstants.*;
 import static org.mule.modules.cassandradb.api.ReplicationStrategy.NETWORK_TOPOLOGY;
 
-public class CreateKeyspaceTestCases extends AbstractTestCases {
+public class CreateKeyspaceTestCase extends AbstractTestCases {
 
     private static final int SLEEP_DURATION = 2000;
 

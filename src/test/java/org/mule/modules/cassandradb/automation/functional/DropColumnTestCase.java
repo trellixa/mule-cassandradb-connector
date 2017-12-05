@@ -13,28 +13,28 @@ import org.mule.modules.cassandradb.automation.util.TestsConstants;
 import static org.junit.Assert.assertTrue;
 
 
-public class DropColumnTestCases extends AbstractTestCases {
+public class DropColumnTestCase extends AbstractTestCases {
 
     @Before
     public void setup() throws Exception {
-        CreateTableInput basicCreateTableInput = TestDataBuilder.getBasicCreateTableInput(TestDataBuilder.getColumns(), getCassandraProperties().getKeyspace(), TestsConstants.TABLE_NAME_1);
+        CreateTableInput basicCreateTableInput = TestDataBuilder.getBasicCreateTableInput(TestDataBuilder.getColumns(), getKeyspaceFromProperties(), TestsConstants.TABLE_NAME_1);
         getCassandraService().createTable(basicCreateTableInput);
     }
 
     @After
     public void tearDown() {
-        getCassandraService().dropTable(TestsConstants.TABLE_NAME_1, getCassandraProperties().getKeyspace());
+        getCassandraService().dropTable(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties());
     }
 
     @Test
     public void testRemoveColumnWithSuccess() throws Exception {
-        assertTrue(dropColumn(TestsConstants.TABLE_NAME_1, getCassandraProperties().getKeyspace(), TestsConstants.VALID_COLUMN_1));
-        assertTrue(dropColumn(TestsConstants.TABLE_NAME_1, getCassandraProperties().getKeyspace(), TestsConstants.VALID_COLUMN_2));
+        assertTrue(dropColumn(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties(), TestsConstants.VALID_COLUMN_1));
+        assertTrue(dropColumn(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties(), TestsConstants.VALID_COLUMN_2));
     }
 
 
     @Test
     public void testRemoveColumnWithInvalidName() throws Exception {
-        dropColumnExpException(TestsConstants.TABLE_NAME_1, getCassandraProperties().getKeyspace(), TestsConstants.COLUMN);
+        dropColumnExpException(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties(), TestsConstants.COLUMN);
     }
 }

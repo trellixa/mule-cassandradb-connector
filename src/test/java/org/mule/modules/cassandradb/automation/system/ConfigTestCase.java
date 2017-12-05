@@ -15,7 +15,7 @@ import org.mule.modules.cassandradb.automation.util.CassandraProperties;
 import org.mule.modules.cassandradb.automation.util.TestsConstants;
 
 
-public class ConfigTestCases {
+public class ConfigTestCase {
 
     private static String INVALID_HOST = "INVALID_HOST";
 

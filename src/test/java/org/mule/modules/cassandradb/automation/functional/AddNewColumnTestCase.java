@@ -13,28 +13,28 @@ import org.mule.modules.cassandradb.automation.util.TestsConstants;
 import static org.junit.Assert.assertTrue;
 
 
-public class AddNewColumnTestCases extends AbstractTestCases {
+public class AddNewColumnTestCase extends AbstractTestCases {
 
     @Before
     public void setup() {
-        CreateTableInput basicCreateTableInput = TestDataBuilder.getBasicCreateTableInput(TestDataBuilder.getColumns(), getCassandraProperties().getKeyspace(), TestsConstants.TABLE_NAME_1);
+        CreateTableInput basicCreateTableInput = TestDataBuilder.getBasicCreateTableInput(TestDataBuilder.getColumns(), getKeyspaceFromProperties(), TestsConstants.TABLE_NAME_1);
         getCassandraService().createTable(basicCreateTableInput);
     }
 
     @After
     public void tearDown() {
-        getCassandraService().dropTable(TestsConstants.TABLE_NAME_1, getCassandraProperties().getKeyspace());
+        getCassandraService().dropTable(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties());
     }
 
     @Test
     public void testAddNewColumnOfPrimitiveTypeWithSuccess() throws Exception {
         AlterColumnInput alterColumnInput = TestDataBuilder.getAlterColumnInput(DataType.text().toString() + System.currentTimeMillis(), ColumnType.TEXT);
-        assertTrue(addNewColumn(TestsConstants.TABLE_NAME_1, getCassandraProperties().getKeyspace(), alterColumnInput));
+        assertTrue(addNewColumn(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties(), alterColumnInput));
     }
 
     @Test
     public void testAddNewColumnWithSameName() throws Exception {
         AlterColumnInput alterColumnInput = TestDataBuilder.getAlterColumnInput(TestsConstants.VALID_COLUMN_1, ColumnType.TEXT);
-        addNewColumnExpException(TestsConstants.TABLE_NAME_1, getCassandraProperties().getKeyspace(), alterColumnInput);
+        addNewColumnExpException(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties(), alterColumnInput);
     }
 }

@@ -14,26 +14,26 @@ import org.mule.modules.cassandradb.automation.util.TestsConstants;
 
 import static org.junit.Assert.assertTrue;
 
-public class RenameColumnTestCases extends AbstractTestCases {
+public class RenameColumnTestCase extends AbstractTestCases {
     @Before
     public  void setup() throws Exception {
-        CreateTableInput basicCreateTableInput = TestDataBuilder.getBasicCreateTableInput(TestDataBuilder.getCompositePrimaryKey(), getCassandraProperties().getKeyspace(), TestsConstants.TABLE_NAME_1);
+        CreateTableInput basicCreateTableInput = TestDataBuilder.getBasicCreateTableInput(TestDataBuilder.getCompositePrimaryKey(), getKeyspaceFromProperties(), TestsConstants.TABLE_NAME_1);
         getCassandraService().createTable(basicCreateTableInput);
     }
 
     @After
     public void tearDown() {
-        getCassandraService().dropTable(TestsConstants.TABLE_NAME_1, getCassandraProperties().getKeyspace());
+        getCassandraService().dropTable(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties());
     }
 
     @Test
     public void shouldRenamePKColumnWithSuccess() throws Exception {
-        assertTrue(renameColumn(TestsConstants.TABLE_NAME_1, getCassandraProperties().getKeyspace(), TestsConstants.VALID_COLUMN_1, "renamed"));
+        assertTrue(renameColumn(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties(), TestsConstants.VALID_COLUMN_1, "renamed"));
     }
 
     @Test
     public void shouldNotRenameNonPKColumn() throws Exception {
-        getCassandraService().addNewColumn(TestsConstants.TABLE_NAME_1, getCassandraProperties().getKeyspace(), TestsConstants.VALID_LIST_COLUMN, DataType.list(DataType.text()));
-        renameColumnExpException(TestsConstants.TABLE_NAME_1, getCassandraProperties().getKeyspace(), TestsConstants.VALID_LIST_COLUMN, "renamed");
+        getCassandraService().addNewColumn(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties(), TestsConstants.VALID_LIST_COLUMN, DataType.list(DataType.text()));
+        renameColumnExpException(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties(), TestsConstants.VALID_LIST_COLUMN, "renamed");
     }
 }

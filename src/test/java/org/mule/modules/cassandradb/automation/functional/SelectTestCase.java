@@ -17,7 +17,7 @@ import java.util.Map;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.junit.Assert.assertThat;
 
-public class SelectTestCases extends AbstractTestCases {
+public class SelectTestCase extends AbstractTestCases {
 
     public static final String VALID_PARAMETERIZED_QUERY =
             "SELECT " + TestsConstants.VALID_COLUMN_2 +
@@ -29,15 +29,15 @@ public class SelectTestCases extends AbstractTestCases {
 
     @Before
     public void setup() throws Exception {
-        CreateTableInput basicCreateTableInput = TestDataBuilder.getBasicCreateTableInput(TestDataBuilder.getPrimaryKey(), getCassandraProperties().getKeyspace(), TestsConstants.TABLE_NAME_1);
+        CreateTableInput basicCreateTableInput = TestDataBuilder.getBasicCreateTableInput(TestDataBuilder.getPrimaryKey(), getKeyspaceFromProperties(), TestsConstants.TABLE_NAME_1);
         getCassandraService().createTable(basicCreateTableInput);
-        getCassandraService().addNewColumn(TestsConstants.TABLE_NAME_1, getCassandraProperties().getKeyspace(), TestsConstants.VALID_COLUMN_2, DataType.text());
-        getCassandraService().insert(getCassandraProperties().getKeyspace(), TestsConstants.TABLE_NAME_1, TestDataBuilder.getValidEntity());
+        getCassandraService().addNewColumn(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties(), TestsConstants.VALID_COLUMN_2, DataType.text());
+        getCassandraService().insert(getKeyspaceFromProperties(), TestsConstants.TABLE_NAME_1, TestDataBuilder.getValidEntity());
     }
 
     @After
     public void tearDown() {
-        getCassandraService().dropTable(TestsConstants.TABLE_NAME_1, getCassandraProperties().getKeyspace());
+        getCassandraService().dropTable(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties());
     }
 
     @Test

@@ -8,17 +8,17 @@ import org.junit.*;
 import org.mule.modules.cassandradb.api.CreateTableInput;
 import org.mule.modules.cassandradb.automation.util.TestsConstants;
 
-public class InsertTestCases extends AbstractTestCases {
+public class InsertTestCase extends AbstractTestCases {
 
     @Before
     public void setup() throws Exception {
-        CreateTableInput basicCreateTableInput = TestDataBuilder.getBasicCreateTableInput(TestDataBuilder.getColumns(), getCassandraProperties().getKeyspace(), TestsConstants.TABLE_NAME_1);
+        CreateTableInput basicCreateTableInput = TestDataBuilder.getBasicCreateTableInput(TestDataBuilder.getColumns(), getKeyspaceFromProperties(), TestsConstants.TABLE_NAME_1);
         getCassandraService().createTable(basicCreateTableInput);
     }
 
     @After
     public void tearDown()  {
-        getCassandraService().dropTable(TestsConstants.TABLE_NAME_1, getCassandraProperties().getKeyspace());
+        getCassandraService().dropTable(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties());
     }
 
     @Test
@@ -29,21 +29,21 @@ public class InsertTestCases extends AbstractTestCases {
 
     @Test
     public void testInsertInListColumnWithSuccess() throws Exception {
-        getCassandraService().addNewColumn(TestsConstants.TABLE_NAME_1, getCassandraProperties().getKeyspace(), TestsConstants.VALID_LIST_COLUMN, DataType.list(DataType.text()));
+        getCassandraService().addNewColumn(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties(), TestsConstants.VALID_LIST_COLUMN, DataType.list(DataType.text()));
 
         insert(TestsConstants.TABLE_NAME_1, null, TestDataBuilder.getValidEntityWithList());
     }
 
     @Test
     public void testInsertInMapColumnWithSuccess() throws Exception {
-        getCassandraService().addNewColumn(TestsConstants.TABLE_NAME_1, getCassandraProperties().getKeyspace(), TestsConstants.VALID_MAP_COLUMN, DataType.map(DataType.text(), DataType.text()));
+        getCassandraService().addNewColumn(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties(), TestsConstants.VALID_MAP_COLUMN, DataType.map(DataType.text(), DataType.text()));
 
         insert(TestsConstants.TABLE_NAME_1, null, TestDataBuilder.getValidEntityWithMap());
     }
 
     @Test
     public void testInsertISetColumnWithSuccess() throws Exception {
-        getCassandraService().addNewColumn(TestsConstants.TABLE_NAME_1, getCassandraProperties().getKeyspace(), TestsConstants.VALID_SET_COLUMN, DataType.set(DataType.text()));
+        getCassandraService().addNewColumn(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties(), TestsConstants.VALID_SET_COLUMN, DataType.set(DataType.text()));
 
         insert(TestsConstants.TABLE_NAME_1, null, TestDataBuilder.getValidEntityWithSet());
     }

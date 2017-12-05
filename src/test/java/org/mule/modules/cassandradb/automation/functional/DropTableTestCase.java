@@ -13,12 +13,12 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-public class DropTableTestCases extends AbstractTestCases {
+public class DropTableTestCase extends AbstractTestCases {
 
     @Test
     public void testDropTable() throws Exception {
         String tableName = TestsConstants.TABLE_NAME_1;
-        String keyspace = getCassandraProperties().getKeyspace();
+        String keyspace = getKeyspaceFromProperties();
         CreateTableInput basicCreateTableInput = TestDataBuilder.getBasicCreateTableInput(TestDataBuilder.getColumns(), keyspace, tableName);
         getCassandraService().createTable(basicCreateTableInput);
         assertNotNull(getTableMetadata(tableName, keyspace));
@@ -32,7 +32,7 @@ public class DropTableTestCases extends AbstractTestCases {
     @Test
     public void testDropTableWithCompositePK() throws Exception {
         String tableName = TestsConstants.TABLE_NAME_2;
-        String keyspace = getCassandraProperties().getKeyspace();
+        String keyspace = getKeyspaceFromProperties();
         CreateTableInput basicCreateTableInput = TestDataBuilder.getBasicCreateTableInput(TestDataBuilder.getCompositePrimaryKey(), keyspace, tableName);
         getCassandraService().createTable(basicCreateTableInput);
         assertNotNull(getTableMetadata(tableName, keyspace));

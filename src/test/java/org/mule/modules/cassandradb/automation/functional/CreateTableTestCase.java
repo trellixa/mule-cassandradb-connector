@@ -12,16 +12,16 @@ import org.mule.modules.cassandradb.automation.util.TestsConstants;
 import static org.junit.Assert.assertTrue;
 
 
-public class CreateTableTestCases extends AbstractTestCases {
+public class CreateTableTestCase extends AbstractTestCases {
     @Test
     public void testCreateTableWithSuccess() throws Exception {
-        CreateTableInput basicCreateTableInput = TestDataBuilder.getBasicCreateTableInput(TestDataBuilder.getColumns(), getCassandraProperties().getKeyspace(), TestsConstants.TABLE_NAME_1);
+        CreateTableInput basicCreateTableInput = TestDataBuilder.getBasicCreateTableInput(TestDataBuilder.getColumns(), getKeyspaceFromProperties(), TestsConstants.TABLE_NAME_1);
         assertTrue(createTable(basicCreateTableInput));
     }
 
     @Test
     public void testCreateTableWithCompositePKWithSuccess() throws Exception {
-        CreateTableInput basicCreateTableInput = TestDataBuilder.getBasicCreateTableInput(TestDataBuilder.getCompositePrimaryKey(), getCassandraProperties().getKeyspace(), TestsConstants.TABLE_NAME_2);
+        CreateTableInput basicCreateTableInput = TestDataBuilder.getBasicCreateTableInput(TestDataBuilder.getCompositePrimaryKey(), getKeyspaceFromProperties(), TestsConstants.TABLE_NAME_2);
         assertTrue(createTable(basicCreateTableInput));
     }
 }

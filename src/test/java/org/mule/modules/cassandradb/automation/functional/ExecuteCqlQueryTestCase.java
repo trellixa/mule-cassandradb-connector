@@ -18,21 +18,21 @@ import java.util.Map;
 import static org.hamcrest.core.IsNull.notNullValue;
 import static org.junit.Assert.assertNotNull;
 
-public class ExecuteCqlQueryTestCases extends AbstractTestCases {
+public class ExecuteCqlQueryTestCase extends AbstractTestCases {
 
     private static String QUERY_PREFIX = "SELECT * FROM ";
 
     @Before
     public void setup() throws Exception {
-        CreateTableInput basicCreateTableInput = TestDataBuilder.getBasicCreateTableInput(TestDataBuilder.getPrimaryKey(), getCassandraProperties().getKeyspace(), TestsConstants.TABLE_NAME_2);
+        CreateTableInput basicCreateTableInput = TestDataBuilder.getBasicCreateTableInput(TestDataBuilder.getPrimaryKey(), getKeyspaceFromProperties(), TestsConstants.TABLE_NAME_2);
         getCassandraService().createTable(basicCreateTableInput);
-        getCassandraService().addNewColumn(TestsConstants.TABLE_NAME_2, getCassandraProperties().getKeyspace(), TestsConstants.VALID_COLUMN_2, DataType.ascii());
-        getCassandraService().insert(getCassandraProperties().getKeyspace(), TestsConstants.TABLE_NAME_2, TestDataBuilder.getValidEntity());
+        getCassandraService().addNewColumn(TestsConstants.TABLE_NAME_2, getKeyspaceFromProperties(), TestsConstants.VALID_COLUMN_2, DataType.ascii());
+        getCassandraService().insert(getKeyspaceFromProperties(), TestsConstants.TABLE_NAME_2, TestDataBuilder.getValidEntity());
     }
 
     @After
     public void tearDown()  {
-        getCassandraService().dropTable(TestsConstants.TABLE_NAME_2, getCassandraProperties().getKeyspace());
+        getCassandraService().dropTable(TestsConstants.TABLE_NAME_2, getKeyspaceFromProperties());
     }
 
     @Test

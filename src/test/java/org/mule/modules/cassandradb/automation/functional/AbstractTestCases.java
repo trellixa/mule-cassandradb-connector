@@ -333,6 +333,7 @@ public class AbstractTestCases extends MuleArtifactFunctionalTestCase {
         return getCassandraConnection().getCluster().getMetadata().getKeyspace(keyspaceName);
     }
 
-
-
+    protected String getKeyspaceFromProperties() {
+        return getCassandraProperties().getKeyspace();
+    }
 }
