@@ -10,6 +10,7 @@ import org.mule.modules.cassandradb.internal.connection.CassandraConnection;
 import org.mule.modules.cassandradb.internal.exception.CassandraErrorTypeProvider;
 import org.mule.modules.cassandradb.internal.metadata.TmpMetadataToRemove;
 import org.mule.modules.cassandradb.internal.service.CassandraService;
+import org.mule.modules.cassandradb.internal.util.DataTypeResolver;
 import org.mule.modules.cassandradb.internal.util.DefaultDsqlQueryTranslator;
 import org.mule.runtime.extension.api.annotation.error.Throws;
 import org.mule.runtime.extension.api.annotation.metadata.MetadataKeyId;
@@ -115,7 +116,7 @@ public class CassandraOperations extends CassandraBaseOperarations  {
                 .withParam(table)
                 .withParam(keyspaceName)
                 .withParam(alterColumnInput.getColumn())
-                .withParam(ColumnType.resolveDataType(alterColumnInput.getType()));
+                .withParam(DataTypeResolver.resolve(alterColumnInput.getType()));
     }
 
     /**

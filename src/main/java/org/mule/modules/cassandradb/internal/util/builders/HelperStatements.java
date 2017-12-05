@@ -10,6 +10,8 @@ import com.datastax.driver.core.schemabuilder.SchemaBuilder;
 import com.datastax.driver.core.schemabuilder.SchemaStatement;
 import org.mule.modules.cassandradb.api.*;
 import org.mule.modules.cassandradb.internal.exception.CassandraException;
+import org.mule.modules.cassandradb.internal.util.DataTypeResolver;
+import org.mule.modules.cassandradb.internal.util.ReplicationStrategyBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +27,7 @@ public class HelperStatements {
         //build create keyspace statement if not exists
         CreateKeyspace createKeyspaceStatement = SchemaBuilder.createKeyspace(input.getKeyspaceName()).ifNotExists();
 
-        return createKeyspaceStatement.with().replication(ReplicationStrategy.buildReplicationStrategy(input));
+        return createKeyspaceStatement.with().replication(ReplicationStrategyBuilder.buildReplicationStrategy(input));
     }
 
     public static SchemaStatement dropKeyspaceStatement(String keyspaceName) {
@@ -51,7 +53,7 @@ public class HelperStatements {
         List<ColumnInput> otherColumns = getColumnsThatAreNotPrimaryKey(input.getColumns());
         if (!otherColumns.isEmpty()) {
             for (ColumnInput column : otherColumns) {
-                table.addColumn(column.getName(), ColumnType.resolveDataType(column.getType()));
+                table.addColumn(column.getName(), DataTypeResolver.resolve(column.getType()));
             }
         }
         return table;
@@ -74,7 +76,7 @@ public class HelperStatements {
     }
 
     public static SchemaStatement changeColumnType(String tableName, String keyspaceName, AlterColumnInput input) {
-        return SchemaBuilder.alterTable(keyspaceName, tableName).alterColumn(input.getColumn()).type(ColumnType.resolveDataType(input.getType()));
+        return SchemaBuilder.alterTable(keyspaceName, tableName).alterColumn(input.getColumn()).type(DataTypeResolver.resolve(input.getType()));
     }
 
     /**

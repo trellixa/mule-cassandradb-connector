@@ -3,8 +3,6 @@
  */
 package org.mule.modules.cassandradb.api;
 
-import com.datastax.driver.core.DataType;
-
 public enum ColumnType {
 
     ASCII,
@@ -27,30 +25,4 @@ public enum ColumnType {
     TINYINT,
     DATE,
     TIME;
-
-    public static DataType resolveDataType(ColumnType type){
-        switch (type){
-            case ASCII: return DataType.ascii();
-            case BIGINT: return DataType.bigint();
-            case BLOB: return DataType.blob();
-            case BOOLEAN: return DataType.cboolean();
-            case COUNTER: return DataType.counter();
-            case DECIMAL: return DataType.decimal();
-            case DOUBLE: return DataType.cdouble();
-            case FLOAT: return DataType.cfloat();
-            case INET: return DataType.inet();
-            case TINYINT: return DataType.tinyint();
-            case SMALLINT: return DataType.smallint();
-            case INT: return DataType.cint();
-            case TEXT: return DataType.text();
-            case TIMESTAMP: return DataType.timestamp();
-            case DATE: return DataType.date();
-            case TIME: return DataType.time();
-            case UUID: return DataType.uuid();
-            case VARCHAR: return DataType.varchar();
-            case VARINT: return DataType.varint();
-            case TIMEUUID: return DataType.timeuuid();
-            default: return DataType.text();
-        }
-    }
 }
