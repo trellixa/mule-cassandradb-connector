@@ -7,6 +7,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.mule.modules.cassandradb.api.CreateKeyspaceInput;
 import org.mule.modules.cassandradb.api.ReplicationStrategy;
 
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -16,45 +17,45 @@ import java.util.Map;
 public class ReplicationStrategyBuilder {
 
     public static ReplicationStrategy lookup(String inputToMatch) {
-        if (StringUtils.isNotBlank(inputToMatch)) {
-            for (ReplicationStrategy enumItem : ReplicationStrategy.values()) {
-                if (enumItem.getStrategyClass().equalsIgnoreCase(inputToMatch)) {
-                    return enumItem;
-                }
-            }
-        }
-        return null;
+        return Arrays.stream(ReplicationStrategy.values())
+                .filter(enumItem -> enumItem.getStrategyClass().equalsIgnoreCase(inputToMatch))
+                .findFirst()
+                .orElse(null);
     }
 
     //based on http://docs.datastax.com/en/cql/3.1/cql/cql_reference/create_keyspace_r.html rules
     public static Map<String, Object> buildReplicationStrategy(CreateKeyspaceInput input) {
-        LinkedHashMap<String, Object> replicationStrategy = new LinkedHashMap<String, Object>();
+        LinkedHashMap<String, Object> replicationStrategyProps = new LinkedHashMap<String, Object>();
 
         //set the strategy class only if exists in the input && a valid one is provided
         if (StringUtils.isNotBlank(input.getReplicationStrategyClass())) {
             ReplicationStrategy strategy = ReplicationStrategyBuilder.lookup(input.getReplicationStrategyClass());
             //setting 'replication_factor' || 'first_data_center' || 'next data center' is pointless if no class is provided
             if (strategy != null) {
-                replicationStrategy.put(Constants.CLASS, input.getReplicationStrategyClass());
-                //'replication_factor' required if class is SimpleStrategy; otherwise, not used
-                if (strategy.equals(ReplicationStrategy.SIMPLE)) {
-                    replicationStrategy.put(Constants.REPLICATION_FACTOR, input.getReplicationFactor());
-                }
-                if (input.getFirstDataCenter() != null) {
-                    if (StringUtils.isNotBlank(input.getFirstDataCenter().getName())) {
-                        replicationStrategy.put(input.getFirstDataCenter().getName(), input.getFirstDataCenter().getValue());
-                    }
-                }
-                if (input.getNextDataCenter() != null) {
-                    if (StringUtils.isNotBlank(input.getNextDataCenter().getName())) {
-                        replicationStrategy.put(input.getNextDataCenter().getName(), input.getNextDataCenter().getValue());
-                    }
-                }
+                addStrategyProps(input, replicationStrategyProps, strategy);
             }
         } else {
             return buildDefaultReplicationStrategy();
         }
-        return replicationStrategy;
+        return replicationStrategyProps;
+    }
+
+    private static void addStrategyProps(CreateKeyspaceInput input, LinkedHashMap<String, Object> replicationStrategyProps, ReplicationStrategy strategy) {
+        replicationStrategyProps.put(Constants.CLASS, input.getReplicationStrategyClass());
+        //'replication_factor' required if class is SimpleStrategy; otherwise, not used
+        if (strategy.equals(ReplicationStrategy.SIMPLE)) {
+            replicationStrategyProps.put(Constants.REPLICATION_FACTOR, input.getReplicationFactor());
+        }
+        if (input.getFirstDataCenter() != null) {
+            if (StringUtils.isNotBlank(input.getFirstDataCenter().getName())) {
+                replicationStrategyProps.put(input.getFirstDataCenter().getName(), input.getFirstDataCenter().getValue());
+            }
+        }
+        if (input.getNextDataCenter() != null) {
+            if (StringUtils.isNotBlank(input.getNextDataCenter().getName())) {
+                replicationStrategyProps.put(input.getNextDataCenter().getName(), input.getNextDataCenter().getValue());
+            }
+        }
     }
 
     public static Map<String, Object> buildDefaultReplicationStrategy() {

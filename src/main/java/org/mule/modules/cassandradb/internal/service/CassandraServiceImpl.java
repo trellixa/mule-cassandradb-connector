@@ -1,11 +1,11 @@
 package org.mule.modules.cassandradb.internal.service;
 
+import com.datastax.driver.core.AbstractTableMetadata;
 import com.datastax.driver.core.DataType;
 import com.datastax.driver.core.PreparedStatement;
 import com.datastax.driver.core.ResultSet;
 import com.datastax.driver.core.Row;
 import com.datastax.driver.core.Session;
-import com.datastax.driver.core.TableMetadata;
 import com.datastax.driver.core.querybuilder.Delete;
 import com.datastax.driver.core.querybuilder.Insert;
 import com.datastax.driver.core.querybuilder.QueryBuilder;
@@ -21,20 +21,17 @@ import org.mule.modules.cassandradb.internal.config.CassandraConfig;
 import org.mule.modules.cassandradb.internal.connection.CassandraConnection;
 import org.mule.modules.cassandradb.internal.exception.CassandraException;
 import org.mule.modules.cassandradb.internal.util.builders.HelperStatements;
+import static java.util.stream.Collectors.toList;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static org.mule.modules.cassandradb.internal.util.Constants.PARAM_HOLDER;
 import static org.mule.modules.cassandradb.internal.util.Constants.SELECT;
-
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
-
 
 public class CassandraServiceImpl extends DefaultConnectorService<CassandraConfig, CassandraConnection> implements CassandraService{
 
@@ -97,25 +94,23 @@ public class CassandraServiceImpl extends DefaultConnectorService<CassandraConfi
     @Override
     public List<String> getTableNamesFromKeyspace(String customKeyspaceName) {
         String keyspaceName = isNotBlank(customKeyspaceName) ? customKeyspaceName : getCassandraSession().getLoggedKeyspace();
+        List<String> tableNames = Collections.emptyList();
         if (isNotBlank(keyspaceName)) {
-            if (getCassandraSession().getCluster().getMetadata().getKeyspace(keyspaceName) == null) {
-                return Collections.emptyList();
+            if (!(getCassandraSession().getCluster().getMetadata().getKeyspace(keyspaceName) == null)) {
+                tableNames = getCassandraSession().getCluster()
+                        .getMetadata().getKeyspace(keyspaceName)
+                        .getTables()
+                        .stream()
+                        .map(AbstractTableMetadata::getName).collect(toList());
             }
-            Collection<TableMetadata> tables = getCassandraSession().getCluster()
-                    .getMetadata().getKeyspace(keyspaceName)
-                    .getTables();
-            ArrayList<String> tableNames = new ArrayList<String>();
-            for (TableMetadata table : tables) {
-                tableNames.add(table.getName());
-            }
-            return tableNames;
+
         }
-        return Collections.emptyList();
+        return tableNames;
     }
 
     @Override
     public void insert(String keyspaceName, String table, Map<String, Object> entity) {
-        String keyspace = StringUtils.isNotBlank(keyspaceName) ? keyspaceName : getCassandraSession().getLoggedKeyspace();
+        String keyspace = isNotBlank(keyspaceName) ? keyspaceName : getCassandraSession().getLoggedKeyspace();
 
         Insert insertObject = QueryBuilder.insertInto(keyspace, table);
 
@@ -152,7 +147,7 @@ public class CassandraServiceImpl extends DefaultConnectorService<CassandraConfi
     public List<Map<String, Object>> executeCQLQuery(String cqlQuery, List<Object> params) {
         ResultSet result = null;
 
-        if (StringUtils.isNotBlank(cqlQuery)) {
+        if (isNotBlank(cqlQuery)) {
             if (!CollectionUtils.isEmpty(params)) {
                 result = executePreparedStatement(cqlQuery, params);
             } else {
@@ -232,23 +227,24 @@ public class CassandraServiceImpl extends DefaultConnectorService<CassandraConfi
         List<Map<String, Object>> responseList = new LinkedList<Map<String, Object>>();
 
         if (result != null) {
-            for (Row row : result.all()) {
-
-                int columnsSize = row.getColumnDefinitions().size();
-
-                Map<String, Object> mappedRow = new HashMap<String, Object>();
-
-                for (int i = 0; i < columnsSize; i++) {
-                    String columnName = row.getColumnDefinitions().getName(i);
-                    Object columnValue = row.getObject(i);
-                    mappedRow.put(columnName, columnValue);
-                }
-
-                responseList.add(mappedRow);
-            }
+            responseList = result.all().stream()
+                    .map(row -> mapProperties(row))
+                    .collect(toList());
         }
 
         return responseList;
+    }
+
+    private static Map<String, Object> mapProperties(Row row){
+        Map<String, Object> mappedRow = new HashMap<String, Object>();
+
+        int columnsSize = row.getColumnDefinitions().size();
+        for (int i = 0; i < columnsSize; i++) {
+            String columnName = row.getColumnDefinitions().getName(i);
+            Object columnValue = row.getObject(i);
+            mappedRow.put(columnName, columnValue);
+        }
+        return mappedRow;
     }
 
     private Session getCassandraSession() {
