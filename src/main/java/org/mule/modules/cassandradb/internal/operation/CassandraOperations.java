@@ -1,8 +1,5 @@
 package org.mule.modules.cassandradb.internal.operation;
 
-import org.mule.connectors.atlantic.commons.builder.config.exception.DefinedExceptionHandler;
-import org.mule.connectors.atlantic.commons.builder.execution.ExecutionBuilder;
-import org.mule.connectors.commons.template.operation.ConnectorOperations;
 import org.mule.modules.cassandradb.api.AlterColumnInput;
 import org.mule.modules.cassandradb.api.CQLQueryInput;
 import org.mule.modules.cassandradb.api.ColumnType;
@@ -10,12 +7,9 @@ import org.mule.modules.cassandradb.api.CreateKeyspaceInput;
 import org.mule.modules.cassandradb.api.CreateTableInput;
 import org.mule.modules.cassandradb.internal.config.CassandraConfig;
 import org.mule.modules.cassandradb.internal.connection.CassandraConnection;
-import org.mule.modules.cassandradb.internal.exception.CassandraError;
 import org.mule.modules.cassandradb.internal.exception.CassandraErrorTypeProvider;
-import org.mule.modules.cassandradb.internal.exception.CassandraException;
 import org.mule.modules.cassandradb.internal.metadata.TmpMetadataToRemove;
 import org.mule.modules.cassandradb.internal.service.CassandraService;
-import org.mule.modules.cassandradb.internal.service.CassandraServiceImpl;
 import org.mule.modules.cassandradb.internal.util.DefaultDsqlQueryTranslator;
 import org.mule.runtime.extension.api.annotation.error.Throws;
 import org.mule.runtime.extension.api.annotation.metadata.MetadataKeyId;
@@ -25,34 +19,20 @@ import org.mule.runtime.extension.api.annotation.param.Connection;
 import org.mule.runtime.extension.api.annotation.param.Content;
 import org.mule.runtime.extension.api.annotation.param.Optional;
 import org.mule.runtime.extension.api.annotation.param.Query;
-import org.mule.runtime.extension.api.exception.ModuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Map;
 
-import static org.mule.modules.cassandradb.internal.exception.CassandraError.UNKNOWN;
 import static org.mule.modules.cassandradb.internal.util.Constants.COLUMNS;
 import static org.mule.modules.cassandradb.internal.util.Constants.WHERE;
 
 
 @Throws(CassandraErrorTypeProvider.class)
-public class CassandraOperations extends ConnectorOperations<CassandraConfig, CassandraConnection, CassandraService> {
-
-    public CassandraOperations() {
-        super(CassandraServiceImpl::new);
-    }
+public class CassandraOperations extends CassandraBaseOperarations  {
 
     private static final Logger logger = LoggerFactory.getLogger(CassandraOperations.class);
-
-    @Override
-    protected ExecutionBuilder<CassandraService> newExecutionBuilder(CassandraConfig config, CassandraConnection connection) {
-        return super.newExecutionBuilder(config, connection)
-                .withExceptionHandler(handle(Exception.class, UNKNOWN))
-                .withExceptionHandler(handleCassandraException());
-//                .withExceptionHandler(CassandraException.class, exception -> new ModuleException(exception.getErrorCode(), exception));
-    }
 
     /**
      * Creates a new keyspace
@@ -198,7 +178,6 @@ public class CassandraOperations extends ConnectorOperations<CassandraConfig, Ca
                                                   @Optional String keyspaceName) {
         return newExecutionBuilder(config, connection).execute(CassandraService::getTableNamesFromKeyspace)
                 .withParam(keyspaceName);
-
     }
 
     /**
@@ -292,7 +271,6 @@ public class CassandraOperations extends ConnectorOperations<CassandraConfig, Ca
                            String table,
                            @Optional String keyspaceName,
                            @Content Map<String, Object> payload) {
-
         newExecutionBuilder(config, connection).execute(CassandraService::delete)
                 .withParam(keyspaceName)
                 .withParam(table)
@@ -311,23 +289,10 @@ public class CassandraOperations extends ConnectorOperations<CassandraConfig, Ca
                                    String table,
                                    @Optional String keyspaceName,
                                    @Content Map<String, Object> payload) {
-
         newExecutionBuilder(config, connection).execute(CassandraService::delete)
                 .withParam(keyspaceName)
                 .withParam(table)
                 .withParam((List) payload.get(COLUMNS))
                 .withParam((Map) payload.get(WHERE));
-    }
-
-    private <T extends Throwable> DefinedExceptionHandler<T> handle(Class<T> exceptionClass, CassandraError errorCode) {
-        return new DefinedExceptionHandler<>(exceptionClass, exception -> {
-            throw new ModuleException(errorCode, exception);
-        });
-    }
-
-    private DefinedExceptionHandler<CassandraException> handleCassandraException() {
-        return new DefinedExceptionHandler<>(CassandraException.class, exception -> {
-            throw new ModuleException(exception.getErrorCode(), exception);
-        });
     }
 }
