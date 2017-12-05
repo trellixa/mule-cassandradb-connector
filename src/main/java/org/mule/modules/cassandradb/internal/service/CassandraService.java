@@ -1,6 +1,7 @@
 package org.mule.modules.cassandradb.internal.service;
 
 import com.datastax.driver.core.DataType;
+import com.datastax.driver.core.TableMetadata;
 import org.mule.connectors.commons.template.service.ConnectorService;
 import org.mule.modules.cassandradb.api.AlterColumnInput;
 import org.mule.modules.cassandradb.api.CreateKeyspaceInput;

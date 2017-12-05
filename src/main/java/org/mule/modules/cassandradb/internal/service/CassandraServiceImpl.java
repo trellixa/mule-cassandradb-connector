@@ -33,6 +33,8 @@ import java.util.Map;
 import static org.mule.modules.cassandradb.internal.util.Constants.PARAM_HOLDER;
 import static org.mule.modules.cassandradb.internal.util.Constants.SELECT;
 
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
+
 
 public class CassandraServiceImpl extends DefaultConnectorService<CassandraConfig, CassandraConnection> implements CassandraService{
 
@@ -54,48 +56,48 @@ public class CassandraServiceImpl extends DefaultConnectorService<CassandraConfi
 
     @Override
     public boolean createTable(CreateTableInput input) {
-        String keyspaceName = StringUtils.isNotBlank(input.getKeyspaceName()) ? input.getKeyspaceName() : getCassandraSession().getLoggedKeyspace();
+        String keyspaceName = isNotBlank(input.getKeyspaceName()) ? input.getKeyspaceName() : getCassandraSession().getLoggedKeyspace();
         String queryString = HelperStatements.createTable(keyspaceName, input).getQueryString();
         return getCassandraSession().execute(queryString).wasApplied();
     }
 
     @Override
     public boolean dropTable(String tableName, String keyspaceName) {
-        String keyspace = StringUtils.isNotBlank(keyspaceName) ? keyspaceName : getCassandraSession().getLoggedKeyspace();
+        String keyspace = isNotBlank(keyspaceName) ? keyspaceName : getCassandraSession().getLoggedKeyspace();
         return getCassandraSession().execute(HelperStatements.dropTable(tableName, keyspace)).wasApplied();
     }
 
     @Override
     public boolean addNewColumn(String tableName, String keyspaceName, String columnName, DataType columnType) {
-        String keyspace = StringUtils.isNotBlank(keyspaceName) ? keyspaceName : getCassandraSession().getLoggedKeyspace();
+        String keyspace = isNotBlank(keyspaceName) ? keyspaceName : getCassandraSession().getLoggedKeyspace();
         SchemaStatement statement = HelperStatements.addNewColumn(tableName, keyspace, columnName, columnType);
         return getCassandraSession().execute(statement).wasApplied();
     }
 
     @Override
     public boolean dropColumn(String tableName, String keyspaceName, String column) {
-        String keyspace = StringUtils.isNotBlank(keyspaceName) ? keyspaceName : getCassandraSession().getLoggedKeyspace();
+        String keyspace = isNotBlank(keyspaceName) ? keyspaceName : getCassandraSession().getLoggedKeyspace();
         SchemaStatement statement = HelperStatements.dropColumn(tableName, keyspace, column);
         return getCassandraSession().execute(statement).wasApplied();
     }
 
     @Override
     public boolean renameColumn(String tableName, String keyspaceName, String oldColumnName, String newColumnName) {
-        String keyspace = StringUtils.isNotBlank(keyspaceName) ? keyspaceName : getCassandraSession().getLoggedKeyspace();
+        String keyspace = isNotBlank(keyspaceName) ? keyspaceName : getCassandraSession().getLoggedKeyspace();
         SchemaStatement statement = HelperStatements.renameColumn(tableName, keyspace, oldColumnName, newColumnName);
         return getCassandraSession().execute(statement).wasApplied();
     }
 
     public boolean changeColumnType(String tableName, String keyspaceName, AlterColumnInput input) {
-        String keyspace = StringUtils.isNotBlank(keyspaceName) ? keyspaceName : getCassandraSession().getLoggedKeyspace();
+        String keyspace = isNotBlank(keyspaceName) ? keyspaceName : getCassandraSession().getLoggedKeyspace();
         SchemaStatement statement = HelperStatements.changeColumnType(tableName, keyspace, input);
         return getCassandraSession().execute(statement).wasApplied();
     }
 
     @Override
     public List<String> getTableNamesFromKeyspace(String customKeyspaceName) {
-        String keyspaceName = StringUtils.isNotBlank(customKeyspaceName) ? customKeyspaceName : getCassandraSession().getLoggedKeyspace();
-        if (StringUtils.isNotBlank(keyspaceName)) {
+        String keyspaceName = isNotBlank(customKeyspaceName) ? customKeyspaceName : getCassandraSession().getLoggedKeyspace();
+        if (isNotBlank(keyspaceName)) {
             if (getCassandraSession().getCluster().getMetadata().getKeyspace(keyspaceName) == null) {
                 return Collections.emptyList();
             }
