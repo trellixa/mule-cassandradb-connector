@@ -21,7 +21,16 @@ import org.mule.modules.cassandradb.internal.connection.CassandraConnection;
 import org.mule.modules.cassandradb.internal.exception.CassandraException;
 import org.mule.modules.cassandradb.internal.util.builders.HelperStatements;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
+import static org.mule.modules.cassandradb.internal.util.Constants.PARAM_HOLDER;
+import static org.mule.modules.cassandradb.internal.util.Constants.SELECT;
 
 
 public class CassandraServiceImpl extends DefaultConnectorService<CassandraConfig, CassandraConnection> implements CassandraService{
@@ -149,6 +158,38 @@ public class CassandraServiceImpl extends DefaultConnectorService<CassandraConfi
         }
 
         return getResponseFromResultSet(result);
+    }
+
+    @Override
+    public List<Map<String, Object>> select(String query, List<Object> params) {
+        validateSelectQuery(query, params);
+
+        ResultSet result = null;
+
+        if (!CollectionUtils.isEmpty(params)) {
+            result = executePreparedStatement(query, params);
+        } else {
+            result = getCassandraSession().execute(query);
+        }
+
+        return getResponseFromResultSet(result);
+    }
+
+    private void validateParams(String query, List<Object> params) throws CassandraException {
+        int expectedParams = StringUtils.countMatches(query, PARAM_HOLDER);
+        int parameterSize = (params == null) ? 0 : params.size();
+
+        if (expectedParams != parameterSize) {
+            throw new CassandraException("Expected query parameters is " + expectedParams + " but found " + parameterSize);
+        }
+    }
+
+    private void validateSelectQuery(String query, List<Object> params) {
+        if (!query.toUpperCase().startsWith(SELECT)) {
+            throw new CassandraException("It must be a SELECT action.");
+        }
+
+        validateParams(query, params);
     }
 
     private ResultSet executePreparedStatement(String query, List<Object> params) {

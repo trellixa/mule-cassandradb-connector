@@ -35,4 +35,6 @@ public interface CassandraService extends ConnectorService {
     void update(String keySpace, String table, Map<String, Object> entity, Map<String, Object> whereClause);
 
     List<Map<String, Object>> executeCQLQuery(String cqlQuery, List<Object> params);
+
+    List<Map<String, Object>> select(String query, List<Object> params);
 }

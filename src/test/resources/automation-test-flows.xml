@@ -61,4 +61,10 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
     <flow name="executeCQLQuery-flow" doc:id="4768c8ea-e151-4f6b-b710-7fef94b56914" >
         <cassandra-db:execute-cql-query config-ref="CassandraDB_Config" />
     </flow>
+
+    <flow name="select-flow" doc:id="4768c8ea-e151-4f6b-b710-7fef94b56914" >
+        <cassandra-db:select config-ref="CassandraDB_Config" parameters="#[vars.parameters]">
+            <cassandra-db:query >#[payload]</cassandra-db:query>
+        </cassandra-db:select>
+    </flow>
 </mule>

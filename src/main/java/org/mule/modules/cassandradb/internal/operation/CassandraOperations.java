@@ -11,15 +11,20 @@ import org.mule.modules.cassandradb.api.CreateTableInput;
 import org.mule.modules.cassandradb.internal.config.CassandraConfig;
 import org.mule.modules.cassandradb.internal.connection.CassandraConnection;
 import org.mule.modules.cassandradb.internal.exception.CassandraError;
+import org.mule.modules.cassandradb.internal.exception.CassandraErrorTypeProvider;
 import org.mule.modules.cassandradb.internal.exception.CassandraException;
 import org.mule.modules.cassandradb.internal.metadata.TmpMetadataToRemove;
 import org.mule.modules.cassandradb.internal.service.CassandraService;
 import org.mule.modules.cassandradb.internal.service.CassandraServiceImpl;
+import org.mule.modules.cassandradb.internal.util.DefaultDsqlQueryTranslator;
+import org.mule.runtime.extension.api.annotation.error.Throws;
+import org.mule.runtime.extension.api.annotation.metadata.MetadataKeyId;
 import org.mule.runtime.extension.api.annotation.metadata.OutputResolver;
 import org.mule.runtime.extension.api.annotation.param.Config;
 import org.mule.runtime.extension.api.annotation.param.Connection;
 import org.mule.runtime.extension.api.annotation.param.Content;
 import org.mule.runtime.extension.api.annotation.param.Optional;
+import org.mule.runtime.extension.api.annotation.param.Query;
 import org.mule.runtime.extension.api.exception.ModuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,6 +36,8 @@ import static org.mule.modules.cassandradb.internal.exception.CassandraError.UNK
 import static org.mule.modules.cassandradb.internal.util.Constants.COLUMNS;
 import static org.mule.modules.cassandradb.internal.util.Constants.WHERE;
 
+
+@Throws(CassandraErrorTypeProvider.class)
 public class CassandraOperations extends ConnectorOperations<CassandraConfig, CassandraConnection, CassandraService> {
 
     public CassandraOperations() {
@@ -43,7 +50,8 @@ public class CassandraOperations extends ConnectorOperations<CassandraConfig, Ca
     protected ExecutionBuilder<CassandraService> newExecutionBuilder(CassandraConfig config, CassandraConnection connection) {
         return super.newExecutionBuilder(config, connection)
                 .withExceptionHandler(handle(Exception.class, UNKNOWN))
-                .withExceptionHandler(CassandraException.class, exception -> new ModuleException(exception.getErrorCode(), exception));
+                .withExceptionHandler(handleCassandraException());
+//                .withExceptionHandler(CassandraException.class, exception -> new ModuleException(exception.getErrorCode(), exception));
     }
 
     /**
@@ -253,10 +261,34 @@ public class CassandraOperations extends ConnectorOperations<CassandraConfig, Ca
                 .withParam(cqlInput.getParameters());
     }
 
+    /**
+     * Executes a select query
+     * @param query  the query to be executed
+     * @param parameters the query parameters
+     * @return list of entities returned by the select query
+     */
+    @Query(translator = DefaultDsqlQueryTranslator.class, entityResolver = TmpMetadataToRemove.class, nativeOutputResolver = TmpMetadataToRemove.class)
+    public List<Map<String, Object>>  select(@Config CassandraConfig config,
+                                             @Connection CassandraConnection connection,
+                                             @MetadataKeyId final String query,
+                                             @Optional List<Object> parameters)  {
+        if (logger.isDebugEnabled()) {
+            logger.debug("Executing select query: " + query + " with the parameters: " + parameters);
+        }
+        return newExecutionBuilder(config, connection).execute(CassandraService::select)
+                .withParam(query)
+                .withParam(parameters);
+    }
 
     private <T extends Throwable> DefinedExceptionHandler<T> handle(Class<T> exceptionClass, CassandraError errorCode) {
         return new DefinedExceptionHandler<>(exceptionClass, exception -> {
             throw new ModuleException(errorCode, exception);
+        });
+    }
+
+    private DefinedExceptionHandler<CassandraException> handleCassandraException() {
+        return new DefinedExceptionHandler<>(CassandraException.class, exception -> {
+            throw new ModuleException(exception.getErrorCode(), exception);
         });
     }
 }

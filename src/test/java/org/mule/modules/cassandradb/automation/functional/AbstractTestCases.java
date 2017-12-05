@@ -247,6 +247,22 @@ public class AbstractTestCases extends MuleArtifactFunctionalTestCase {
                 .getValue();
     }
 
+    protected List<Map<String, Object>> select(String validParameterizedQuery, List<Object> validParmList) throws Exception {
+        return (List<Map<String, Object>>) flowRunner("select-flow")
+                .withPayload(validParameterizedQuery)
+                .withVariable("parameters", validParmList)
+                .run()
+                .getMessage()
+                .getPayload()
+                .getValue();
+    }
+
+    protected void selectExpException(String validParameterizedQuery, List<Object> validParmList) throws Exception {
+        flowRunner("select-flow")
+                .withPayload(validParameterizedQuery)
+                .withVariable("parameters", validParmList)
+                .runExpectingException(ErrorTypeMatcher.errorType(CassandraError.UNKNOWN));
+    }
 
     protected void executeCQLQueryExpException(CQLQueryInput query) throws Exception {
         flowRunner("executeCQLQuery-flow")
@@ -277,4 +293,6 @@ public class AbstractTestCases extends MuleArtifactFunctionalTestCase {
     public KeyspaceMetadata getKeyspaceMetadata(String keyspaceName) {
         return getCassandraConnection().getCluster().getMetadata().getKeyspace(keyspaceName);
     }
+
+
 }
