@@ -49,4 +49,30 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
     <flow name="getTableNamesFromKeyspace-flow" doc:id="4768c8ea-e151-4f6b-b710-7fef94b56914" >
         <cassandra-db:get-table-names-from-keyspace config-ref="CassandraDB_Config" keyspaceName="#[vars.keyspaceName]"/>
     </flow>
+
+    <flow name="insert-flow" doc:id="4768c8ea-e151-4f6b-b710-7fef94b56914" >
+        <cassandra-db:insert config-ref="CassandraDB_Config" keyspaceName="#[vars.keyspaceName]" table="#[vars.tableName]"/>
+    </flow>
+
+    <flow name="update-flow" doc:id="4768c8ea-e151-4f6b-b710-7fef94b56914" >
+        <cassandra-db:update config-ref="CassandraDB_Config" keyspaceName="#[vars.keyspaceName]" table="#[vars.tableName]"/>
+    </flow>
+
+    <flow name="executeCQLQuery-flow" doc:id="4768c8ea-e151-4f6b-b710-7fef94b56914" >
+        <cassandra-db:execute-cql-query config-ref="CassandraDB_Config" />
+    </flow>
+
+    <flow name="select-flow" doc:id="4768c8ea-e151-4f6b-b710-7fef94b56914" >
+        <cassandra-db:select config-ref="CassandraDB_Config" parameters="#[vars.parameters]">
+            <cassandra-db:query >#[payload]</cassandra-db:query>
+        </cassandra-db:select>
+    </flow>
+
+    <flow name="deleteColumnsValue-flow" doc:id="4768c8ea-e151-4f6b-b710-7fef94b56914" >
+        <cassandra-db:delete-columns-value config-ref="CassandraDB_Config" keyspaceName="#[vars.keyspaceName]" table="#[vars.tableName]"/>
+    </flow>
+
+    <flow name="deleteRows-flow" doc:id="4768c8ea-e151-4f6b-b710-7fef94b56914" >
+        <cassandra-db:delete-rows config-ref="CassandraDB_Config" keyspaceName="#[vars.keyspaceName]" table="#[vars.tableName]"/>
+    </flow>
 </mule>

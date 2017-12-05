@@ -12,14 +12,16 @@ import org.mule.modules.cassandradb.automation.util.TestsConstants;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getBasicCreateTableInput;
+import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getCompositePrimaryKey;
 
-public class DropTableTestCases extends AbstractTestCases {
+public class DropTableTestCase extends AbstractTestCases {
 
     @Test
     public void testDropTable() throws Exception {
         String tableName = TestsConstants.TABLE_NAME_1;
-        String keyspace = getCassandraProperties().getKeyspace();
-        CreateTableInput basicCreateTableInput = TestDataBuilder.getBasicCreateTableInput(TestDataBuilder.getColumns(), keyspace, tableName);
+        String keyspace = getKeyspaceFromProperties();
+        CreateTableInput basicCreateTableInput = getBasicCreateTableInput(TestDataBuilder.getColumns(), keyspace, tableName);
         getCassandraService().createTable(basicCreateTableInput);
         assertNotNull(getTableMetadata(tableName, keyspace));
 
@@ -32,8 +34,8 @@ public class DropTableTestCases extends AbstractTestCases {
     @Test
     public void testDropTableWithCompositePK() throws Exception {
         String tableName = TestsConstants.TABLE_NAME_2;
-        String keyspace = getCassandraProperties().getKeyspace();
-        CreateTableInput basicCreateTableInput = TestDataBuilder.getBasicCreateTableInput(TestDataBuilder.getCompositePrimaryKey(), keyspace, tableName);
+        String keyspace = getKeyspaceFromProperties();
+        CreateTableInput basicCreateTableInput = getBasicCreateTableInput(getCompositePrimaryKey(), keyspace, tableName);
         getCassandraService().createTable(basicCreateTableInput);
         assertNotNull(getTableMetadata(tableName, keyspace));
 
@@ -46,5 +48,15 @@ public class DropTableTestCases extends AbstractTestCases {
     private TableMetadata getTableMetadata(String tableName, String keyspaceName) {
         KeyspaceMetadata keyspaceMetadata = getKeyspaceMetadata(keyspaceName);
         return keyspaceMetadata.getTable(tableName);
+    }
+
+    boolean dropTable(String tableName, String keyspaceName) throws Exception {
+        return (boolean) flowRunner("dropTable-flow")
+                .withVariable("tableName", tableName)
+                .withVariable("keyspaceName", keyspaceName)
+                .run()
+                .getMessage()
+                .getPayload()
+                .getValue();
     }
 }

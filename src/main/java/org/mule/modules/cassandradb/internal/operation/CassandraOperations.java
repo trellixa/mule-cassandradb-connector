@@ -1,44 +1,39 @@
 package org.mule.modules.cassandradb.internal.operation;
 
-import org.mule.connectors.atlantic.commons.builder.config.exception.DefinedExceptionHandler;
-import org.mule.connectors.atlantic.commons.builder.execution.ExecutionBuilder;
-import org.mule.connectors.commons.template.operation.ConnectorOperations;
 import org.mule.modules.cassandradb.api.AlterColumnInput;
+import org.mule.modules.cassandradb.api.CQLQueryInput;
 import org.mule.modules.cassandradb.api.ColumnType;
+import org.mule.modules.cassandradb.api.CreateKeyspaceInput;
 import org.mule.modules.cassandradb.api.CreateTableInput;
 import org.mule.modules.cassandradb.internal.config.CassandraConfig;
 import org.mule.modules.cassandradb.internal.connection.CassandraConnection;
-import org.mule.modules.cassandradb.internal.exception.CassandraError;
-import org.mule.modules.cassandradb.internal.exception.CassandraException;
-import org.mule.modules.cassandradb.api.CreateKeyspaceInput;
+import org.mule.modules.cassandradb.internal.exception.CassandraErrorTypeProvider;
+import org.mule.modules.cassandradb.internal.metadata.TmpMetadataToRemove;
 import org.mule.modules.cassandradb.internal.service.CassandraService;
-import org.mule.modules.cassandradb.internal.service.CassandraServiceImpl;
+import org.mule.modules.cassandradb.internal.util.DataTypeResolver;
+import org.mule.modules.cassandradb.internal.util.DefaultDsqlQueryTranslator;
+import org.mule.runtime.extension.api.annotation.error.Throws;
+import org.mule.runtime.extension.api.annotation.metadata.MetadataKeyId;
+import org.mule.runtime.extension.api.annotation.metadata.OutputResolver;
 import org.mule.runtime.extension.api.annotation.param.Config;
 import org.mule.runtime.extension.api.annotation.param.Connection;
 import org.mule.runtime.extension.api.annotation.param.Content;
 import org.mule.runtime.extension.api.annotation.param.Optional;
-import org.mule.runtime.extension.api.exception.ModuleException;
+import org.mule.runtime.extension.api.annotation.param.Query;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
+import java.util.Map;
 
-import static org.mule.modules.cassandradb.internal.exception.CassandraError.UNKNOWN;
+import static org.mule.modules.cassandradb.internal.util.Constants.COLUMNS;
+import static org.mule.modules.cassandradb.internal.util.Constants.WHERE;
 
-public class CassandraOperations extends ConnectorOperations<CassandraConfig, CassandraConnection, CassandraService> {
 
-    public CassandraOperations() {
-        super(CassandraServiceImpl::new);
-    }
+@Throws(CassandraErrorTypeProvider.class)
+public class CassandraOperations extends CassandraBaseOperarations  {
 
     private static final Logger logger = LoggerFactory.getLogger(CassandraOperations.class);
-
-    @Override
-    protected ExecutionBuilder<CassandraService> newExecutionBuilder(CassandraConfig config, CassandraConnection connection) {
-        return super.newExecutionBuilder(config, connection)
-                .withExceptionHandler(handle(Exception.class, UNKNOWN))
-                .withExceptionHandler(CassandraException.class, exception -> new ModuleException(exception.getErrorCode(), exception));
-    }
 
     /**
      * Creates a new keyspace
@@ -121,7 +116,7 @@ public class CassandraOperations extends ConnectorOperations<CassandraConfig, Ca
                 .withParam(table)
                 .withParam(keyspaceName)
                 .withParam(alterColumnInput.getColumn())
-                .withParam(ColumnType.resolveDataType(alterColumnInput.getType()));
+                .withParam(DataTypeResolver.resolve(alterColumnInput.getType()));
     }
 
     /**
@@ -184,12 +179,121 @@ public class CassandraOperations extends ConnectorOperations<CassandraConfig, Ca
                                                   @Optional String keyspaceName) {
         return newExecutionBuilder(config, connection).execute(CassandraService::getTableNamesFromKeyspace)
                 .withParam(keyspaceName);
-
     }
 
-    private <T extends Throwable> DefinedExceptionHandler<T> handle(Class<T> exceptionClass, CassandraError errorCode) {
-        return new DefinedExceptionHandler<>(exceptionClass, exception -> {
-            throw new ModuleException(errorCode, exception);
-        });
+    /**
+     * Executes the insert entity operation
+     * @param table the table name in which the entity will be inserted
+     * @param keyspaceName (optional) the keyspace which contains the table to be used
+     * @param entity the entity to be inserted
+     */
+    public void insert(@Config CassandraConfig config,
+                       @Connection CassandraConnection connection,
+                       String table,
+                       @Optional String keyspaceName,
+                       @Content Map<String, Object> entity) {
+        if (logger.isDebugEnabled()) {
+            logger.debug("Inserting entity " + entity + " into the " + table + " table ");
+        }
+        newExecutionBuilder(config, connection).execute(CassandraService::insert)
+                .withParam(keyspaceName)
+                .withParam(table)
+                .withParam(entity);
+    }
+
+    /**
+     * Executes the update entity operation
+     * @param table the table name in which the entity will be updated
+     * @param keyspaceName (optional) the keyspace which contains the table to be dropped
+     * @param entityToUpdate the entity to be updated
+     */
+    @SuppressWarnings("unchecked")
+    public void update(@Config CassandraConfig config,
+                       @Connection CassandraConnection connection,
+                       String table,
+                       @Optional String keyspaceName,
+                       @Content Map<String, Object> entityToUpdate) {
+        if (logger.isDebugEnabled()) {
+            logger.debug("Updating  entity" + entityToUpdate + " into the " + table + " table ");
+        }
+        newExecutionBuilder(config, connection).execute(CassandraService::update)
+                .withParam(keyspaceName)
+                .withParam(table)
+                .withParam((Map) entityToUpdate.get(COLUMNS))
+                .withParam((Map) entityToUpdate.get(WHERE));
+    }
+
+    /**
+     * Executes the raw input query provided
+     *
+     * @param cqlInput CQLQueryInput describing the parametrized query to be executed along with the parameters
+     * @return the result of the query execution
+     */
+    @OutputResolver(output = TmpMetadataToRemove.class)
+    public List<Map<String, Object>> executeCQLQuery(@Config CassandraConfig config,
+                                                     @Connection CassandraConnection connection,
+                                                     @Content CQLQueryInput cqlInput) {
+        if (logger.isDebugEnabled()) {
+            logger.debug("Executing query " + cqlInput.toString());
+        }
+        return newExecutionBuilder(config, connection).execute(CassandraService::executeCQLQuery)
+                .withParam(cqlInput.getCqlQuery())
+                .withParam(cqlInput.getParameters());
+    }
+
+    /**
+     * Executes a select query
+     * @param query  the query to be executed
+     * @param parameters the query parameters
+     * @return list of entities returned by the select query
+     */
+    @Query(translator = DefaultDsqlQueryTranslator.class, entityResolver = TmpMetadataToRemove.class, nativeOutputResolver = TmpMetadataToRemove.class)
+    public List<Map<String, Object>>  select(@Config CassandraConfig config,
+                                             @Connection CassandraConnection connection,
+                                             @MetadataKeyId final String query,
+                                             @Optional List<Object> parameters)  {
+        if (logger.isDebugEnabled()) {
+            logger.debug("Executing select query: " + query + " with the parameters: " + parameters);
+        }
+        return newExecutionBuilder(config, connection).execute(CassandraService::select)
+                .withParam(query)
+                .withParam(parameters);
+    }
+
+    /**
+     * Deletes an entire record
+     * @param table the name of the table
+     * @param keyspaceName (optional) the keyspace which contains the table to be used
+     * @param payload operation input: where clause for the delete operation
+     */
+    //@OutputResolver(output = TmpMetadataToRemove.class)
+    public void deleteRows(@Config CassandraConfig config,
+                           @Connection CassandraConnection connection,
+                           String table,
+                           @Optional String keyspaceName,
+                           @Content Map<String, Object> payload) {
+        newExecutionBuilder(config, connection).execute(CassandraService::delete)
+                .withParam(keyspaceName)
+                .withParam(table)
+                .withParam(null)
+                .withParam((Map) payload.get(WHERE));
+    }
+
+    /**
+     * Deletes values from an object specified by the where clause
+     * @param table the name of the table
+     * @param keyspaceName (optional) the keyspace which contains the table to be used
+     * @param payload operation input: columns to be deleted and where clause for the delete operation
+     */
+    public void deleteColumnsValue(@Config CassandraConfig config,
+                                   @Connection CassandraConnection connection,
+                                   String table,
+                                   @Optional String keyspaceName,
+                                   @Content Map<String, Object> payload) {
+        newExecutionBuilder(config, connection).execute(CassandraService::delete)
+                .withParam(keyspaceName)
+                .withParam(table)
+                .withParam((List) payload.get(COLUMNS))
+                .withParam((Map) payload.get(WHERE));
     }
 }

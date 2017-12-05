@@ -5,31 +5,31 @@ package org.mule.modules.cassandradb.automation.functional;
 
 import org.junit.Test;
 import org.mule.modules.cassandradb.api.CreateKeyspaceInput;
-import org.mule.modules.cassandradb.automation.util.TestsConstants;
 
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getColumns;
 import static org.mule.modules.cassandradb.automation.util.TestsConstants.KEYSPACE_NAME_3;
 import static org.mule.modules.cassandradb.automation.util.TestsConstants.TABLE_NAME_1;
 import static org.mule.modules.cassandradb.automation.util.TestsConstants.TABLE_NAME_2;
 
-public class GetTableNamesFromKeyspaceTestCases extends AbstractTestCases {
+public class GetTableNamesFromKeyspaceTestCase extends AbstractTestCases {
 
     @Test
     public void testTableNamesFromLoggedInKeyspace() throws Exception {
-        getCassandraService().createTable(TestDataBuilder.getBasicCreateTableInput(TestDataBuilder.getColumns(), getCassandraProperties().getKeyspace(), TABLE_NAME_1));
-        getCassandraService().createTable(TestDataBuilder.getBasicCreateTableInput(TestDataBuilder.getColumns(), getCassandraProperties().getKeyspace(), TABLE_NAME_2));
+        getCassandraService().createTable(TestDataBuilder.getBasicCreateTableInput(getColumns(), getKeyspaceFromProperties(), TABLE_NAME_1));
+        getCassandraService().createTable(TestDataBuilder.getBasicCreateTableInput(getColumns(), getKeyspaceFromProperties(), TABLE_NAME_2));
 
-        List<String> tableNames = getTableNamesFromKeyspace(null);
+        List<String> tableNames = getTableNamesFromKeyspace(getKeyspaceFromProperties());
 
         assertEquals(2, tableNames.size());
         assertTrue(tableNames.contains(TABLE_NAME_1));
         assertTrue(tableNames.contains(TABLE_NAME_2));
 
-        getCassandraService().dropTable(TABLE_NAME_1, getCassandraProperties().getKeyspace());
-        getCassandraService().dropTable(TABLE_NAME_2, getCassandraProperties().getKeyspace());
+        getCassandraService().dropTable(TABLE_NAME_1, getKeyspaceFromProperties());
+        getCassandraService().dropTable(TABLE_NAME_2, getKeyspaceFromProperties());
     }
 
     @Test
@@ -40,9 +40,9 @@ public class GetTableNamesFromKeyspaceTestCases extends AbstractTestCases {
 
         getCassandraService().createKeyspace(keyspaceInput);
 
-        getCassandraService().createTable(TestDataBuilder.getBasicCreateTableInput(TestDataBuilder.getColumns(), KEYSPACE_NAME_3, TABLE_NAME_1));
-        getCassandraService().createTable(TestDataBuilder.getBasicCreateTableInput(TestDataBuilder.getColumns(), KEYSPACE_NAME_3, TABLE_NAME_2));
-        getCassandraService().createTable(TestDataBuilder.getBasicCreateTableInput(TestDataBuilder.getColumns(), getCassandraProperties().getKeyspace(), testTable));
+        getCassandraService().createTable(TestDataBuilder.getBasicCreateTableInput(getColumns(), KEYSPACE_NAME_3, TABLE_NAME_1));
+        getCassandraService().createTable(TestDataBuilder.getBasicCreateTableInput(getColumns(), KEYSPACE_NAME_3, TABLE_NAME_2));
+        getCassandraService().createTable(TestDataBuilder.getBasicCreateTableInput(getColumns(), getKeyspaceFromProperties(), testTable));
 
         List<String> tableNames = getTableNamesFromKeyspace(KEYSPACE_NAME_3);
 
@@ -51,5 +51,14 @@ public class GetTableNamesFromKeyspaceTestCases extends AbstractTestCases {
         assertTrue(tableNames.contains(TABLE_NAME_2));
 
         getCassandraService().dropKeyspace(KEYSPACE_NAME_3);
+    }
+
+    List<String> getTableNamesFromKeyspace(String keyspaceName) throws Exception {
+        return (List<String>) flowRunner("getTableNamesFromKeyspace-flow")
+                .withVariable("keyspaceName", keyspaceName)
+                .run()
+                .getMessage()
+                .getPayload()
+                .getValue();
     }
 }

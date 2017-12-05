@@ -16,7 +16,7 @@ import static org.mule.modules.cassandradb.api.ReplicationStrategy.NETWORK_TOPOL
 import static org.mule.modules.cassandradb.automation.util.TestsConstants.KEYSPACE_NAME_1;
 import static org.mule.modules.cassandradb.automation.util.TestsConstants.KEYSPACE_NAME_2;
 
-public class DropKeyspaceTestCases extends AbstractTestCases {
+public class DropKeyspaceTestCase extends AbstractTestCases {
 
     @Test
     public void testDropSimpleKeyspace() throws Exception {
@@ -46,5 +46,14 @@ public class DropKeyspaceTestCases extends AbstractTestCases {
         assertTrue(dropKeyspace(keyspaceName));
 
         assertNull(getKeyspaceMetadata(keyspaceName));
+    }
+
+    boolean dropKeyspace(String keyspaceName) throws Exception {
+        return (boolean) flowRunner("deleteKeyspace-flow")
+                .withVariable("keyspaceName", keyspaceName)
+                .run()
+                .getMessage()
+                .getPayload()
+                .getValue();
     }
 }

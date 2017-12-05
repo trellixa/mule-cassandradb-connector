@@ -4,10 +4,10 @@ package org.mule.modules.cassandradb.automation.functional;
 import com.datastax.driver.core.KeyspaceMetadata;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.mule.functional.junit4.MuleArtifactFunctionalTestCase;
-import org.mule.modules.cassandradb.api.AlterColumnInput;
+import org.mule.modules.cassandradb.api.CQLQueryInput;
 import org.mule.modules.cassandradb.api.CreateKeyspaceInput;
-import org.mule.modules.cassandradb.api.CreateTableInput;
 import org.mule.modules.cassandradb.automation.util.CassandraProperties;
 import org.mule.modules.cassandradb.automation.util.PropertiesLoaderUtil;
 import org.mule.modules.cassandradb.internal.config.CassandraConfig;
@@ -16,17 +16,16 @@ import org.mule.modules.cassandradb.internal.connection.ConnectionParameters;
 import org.mule.modules.cassandradb.internal.exception.CassandraError;
 import org.mule.modules.cassandradb.internal.service.CassandraService;
 import org.mule.modules.cassandradb.internal.service.CassandraServiceImpl;
-import org.mule.runtime.extension.api.error.ErrorTypeDefinition;
-import org.mule.tck.junit4.matcher.ErrorTypeMatcher;
+import org.mule.tck.junit4.rule.SystemProperty;
+import org.mule.tck.util.TestConnectivityUtils;
 import org.mule.test.runner.ArtifactClassLoaderRunnerConfig;
 
 import java.io.IOException;
-import java.util.List;
 
 @ArtifactClassLoaderRunnerConfig(
         exportPluginClasses = {CassandraError.class, CassandraService.class,
                 CassandraConnection.class, CassandraProperties.class,
-                CassandraConfig.class }
+                CassandraConfig.class, CQLQueryInput.class }
 )
 public class AbstractTestCases extends MuleArtifactFunctionalTestCase {
 
@@ -35,6 +34,9 @@ public class AbstractTestCases extends MuleArtifactFunctionalTestCase {
     private CassandraConnection cassandraConnection;
     private CassandraService cassandraService;
     private CassandraProperties cassandraProperties;
+
+    @Rule
+    public SystemProperty rule2 = TestConnectivityUtils.disableAutomaticTestConnectivity();
 
     @Override
     public int getTestTimeoutSecs() {
@@ -68,136 +70,6 @@ public class AbstractTestCases extends MuleArtifactFunctionalTestCase {
         cassandraService.dropKeyspace(cassandraProperties.getKeyspace());
     }
 
-    boolean createKeyspace(final CreateKeyspaceInput keyspaceInput) throws Exception {
-        return (boolean) flowRunner("createKeyspace-flow")
-                .withPayload(keyspaceInput)
-                .run()
-                .getMessage()
-                .getPayload()
-                .getValue();
-    }
-
-    void createKeyspaceExpException(final CreateKeyspaceInput keyspaceInput, ErrorTypeDefinition errorType) throws Exception {
-        flowRunner("createKeyspace-flow")
-                .withPayload(keyspaceInput)
-                .runExpectingException(ErrorTypeMatcher.errorType(errorType));
-    }
-
-    boolean dropKeyspace(String keyspaceName) throws Exception {
-        return (boolean) flowRunner("deleteKeyspace-flow")
-                .withVariable("keyspaceName", keyspaceName)
-                .run()
-                .getMessage()
-                .getPayload()
-                .getValue();
-    }
-
-    boolean createTable(CreateTableInput basicCreateTableInput) throws Exception {
-        return (boolean) flowRunner("createTable-flow")
-                .withPayload(basicCreateTableInput)
-                .run()
-                .getMessage()
-                .getPayload()
-                .getValue();
-    }
-
-    boolean dropTable(String tableName, String keyspaceName) throws Exception {
-        return (boolean) flowRunner("dropTable-flow")
-                .withVariable("tableName", tableName)
-                .withVariable("keyspaceName", keyspaceName)
-                .run()
-                .getMessage()
-                .getPayload()
-                .getValue();
-    }
-
-    boolean addNewColumn(String tableName, String keyspaceName, AlterColumnInput alterColumnInput) throws Exception {
-        return (boolean) flowRunner("addColumn-flow")
-                .withPayload(alterColumnInput)
-                .withVariable("tableName", tableName)
-                .withVariable("keyspaceName", keyspaceName)
-                .run()
-                .getMessage()
-                .getPayload()
-                .getValue();
-    }
-
-     void addNewColumnExpException(String tableName, String keyspaceName, AlterColumnInput alterColumnInput) throws Exception {
-         flowRunner("addColumn-flow")
-                 .withPayload(alterColumnInput)
-                 .withVariable("tableName", tableName)
-                 .withVariable("keyspaceName", keyspaceName)
-                 .runExpectingException(ErrorTypeMatcher.errorType(CassandraError.UNKNOWN));
-    }
-
-    boolean dropColumn(String tableName, String keyspaceName, String column) throws Exception {
-        return (boolean) flowRunner("dropColumn-flow")
-                .withPayload(column)
-                .withVariable("tableName", tableName)
-                .withVariable("keyspaceName", keyspaceName)
-                .run()
-                .getMessage()
-                .getPayload()
-                .getValue();
-    }
-
-    void dropColumnExpException(String tableName, String keyspaceName, String column) throws Exception {
-        flowRunner("dropColumn-flow")
-                .withPayload(column)
-                .withVariable("tableName", tableName)
-                .withVariable("keyspaceName", keyspaceName)
-                .runExpectingException(ErrorTypeMatcher.errorType(CassandraError.UNKNOWN));
-    }
-
-    boolean renameColumn(String tableName, String keyspaceName, String column, String newColumn) throws Exception {
-        return (boolean) flowRunner("renameColumn-flow")
-                .withPayload(column)
-                .withVariable("tableName", tableName)
-                .withVariable("keyspaceName", keyspaceName)
-                .withVariable("newColumnName", newColumn)
-                .run()
-                .getMessage()
-                .getPayload()
-                .getValue();
-    }
-
-    void renameColumnExpException(String tableName, String keyspaceName, String column, String newColumn) throws Exception {
-        flowRunner("renameColumn-flow")
-                .withPayload(column)
-                .withVariable("tableName", tableName)
-                .withVariable("keyspaceName", keyspaceName)
-                .withVariable("newColumnName", newColumn)
-                .runExpectingException(ErrorTypeMatcher.errorType(CassandraError.UNKNOWN));
-    }
-
-    boolean changeColumnType(String tableName, String keyspaceName, AlterColumnInput input) throws Exception {
-        return (boolean) flowRunner("changeColumnType-flow")
-                .withPayload(input)
-                .withVariable("tableName", tableName)
-                .withVariable("keyspaceName", keyspaceName)
-                .run()
-                .getMessage()
-                .getPayload()
-                .getValue();
-    }
-
-    void changeColumnTypeExpException(String tableName, String keyspaceName, AlterColumnInput input) throws Exception {
-        flowRunner("changeColumnType-flow")
-                .withPayload(input)
-                .withVariable("tableName", tableName)
-                .withVariable("keyspaceName", keyspaceName)
-                .runExpectingException(ErrorTypeMatcher.errorType(CassandraError.UNKNOWN));
-    }
-
-    List<String> getTableNamesFromKeyspace(String keyspaceName) throws Exception {
-        return (List<String>) flowRunner("getTableNamesFromKeyspace-flow")
-                .withVariable("keyspaceName", keyspaceName)
-                .run()
-                .getMessage()
-                .getPayload()
-                .getValue();
-    }
-
     public static CassandraProperties getCassandraProperties() {
         //load required properties
         CassandraProperties cassProperties = null;
@@ -220,5 +92,9 @@ public class AbstractTestCases extends MuleArtifactFunctionalTestCase {
 
     public KeyspaceMetadata getKeyspaceMetadata(String keyspaceName) {
         return getCassandraConnection().getCluster().getMetadata().getKeyspace(keyspaceName);
+    }
+
+    protected String getKeyspaceFromProperties() {
+        return getCassandraProperties().getKeyspace();
     }
 }
