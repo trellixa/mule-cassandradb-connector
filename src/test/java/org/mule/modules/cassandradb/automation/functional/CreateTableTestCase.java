@@ -10,18 +10,30 @@ import org.mule.modules.cassandradb.api.CreateTableInput;
 import org.mule.modules.cassandradb.automation.util.TestsConstants;
 
 import static org.junit.Assert.assertTrue;
+import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getBasicCreateTableInput;
+import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getColumns;
+import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getCompositePrimaryKey;
 
 
 public class CreateTableTestCase extends AbstractTestCases {
     @Test
     public void testCreateTableWithSuccess() throws Exception {
-        CreateTableInput basicCreateTableInput = TestDataBuilder.getBasicCreateTableInput(TestDataBuilder.getColumns(), getKeyspaceFromProperties(), TestsConstants.TABLE_NAME_1);
+        CreateTableInput basicCreateTableInput = getBasicCreateTableInput(getColumns(), getKeyspaceFromProperties(), TestsConstants.TABLE_NAME_1);
         assertTrue(createTable(basicCreateTableInput));
     }
 
     @Test
     public void testCreateTableWithCompositePKWithSuccess() throws Exception {
-        CreateTableInput basicCreateTableInput = TestDataBuilder.getBasicCreateTableInput(TestDataBuilder.getCompositePrimaryKey(), getKeyspaceFromProperties(), TestsConstants.TABLE_NAME_2);
+        CreateTableInput basicCreateTableInput = getBasicCreateTableInput(getCompositePrimaryKey(), getKeyspaceFromProperties(), TestsConstants.TABLE_NAME_2);
         assertTrue(createTable(basicCreateTableInput));
+    }
+
+    boolean createTable(CreateTableInput basicCreateTableInput) throws Exception {
+        return (boolean) flowRunner("createTable-flow")
+                .withPayload(basicCreateTableInput)
+                .run()
+                .getMessage()
+                .getPayload()
+                .getValue();
     }
 }

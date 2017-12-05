@@ -47,4 +47,13 @@ public class DropKeyspaceTestCase extends AbstractTestCases {
 
         assertNull(getKeyspaceMetadata(keyspaceName));
     }
+
+    boolean dropKeyspace(String keyspaceName) throws Exception {
+        return (boolean) flowRunner("deleteKeyspace-flow")
+                .withVariable("keyspaceName", keyspaceName)
+                .run()
+                .getMessage()
+                .getPayload()
+                .getValue();
+    }
 }

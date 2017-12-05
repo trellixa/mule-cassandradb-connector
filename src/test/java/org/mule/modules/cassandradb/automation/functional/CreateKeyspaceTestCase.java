@@ -11,6 +11,9 @@ import org.junit.Test;
 import org.mule.modules.cassandradb.api.CreateKeyspaceInput;
 import org.mule.modules.cassandradb.api.DataCenter;
 import org.mule.modules.cassandradb.internal.exception.CassandraError;
+import org.mule.runtime.extension.api.error.ErrorTypeDefinition;
+import org.mule.tck.junit4.matcher.ErrorTypeMatcher;
+
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
@@ -93,5 +96,20 @@ public class CreateKeyspaceTestCase extends AbstractTestCases {
             String datacenterName = replication.get(keyspaceInput.getFirstDataCenter().getName());
             assertEquals(String.valueOf(keyspaceInput.getFirstDataCenter().getValue()), datacenterName);
         }
+    }
+
+    boolean createKeyspace(final CreateKeyspaceInput keyspaceInput) throws Exception {
+        return (boolean) flowRunner("createKeyspace-flow")
+                .withPayload(keyspaceInput)
+                .run()
+                .getMessage()
+                .getPayload()
+                .getValue();
+    }
+
+    void createKeyspaceExpException(final CreateKeyspaceInput keyspaceInput, ErrorTypeDefinition errorType) throws Exception {
+        flowRunner("createKeyspace-flow")
+                .withPayload(keyspaceInput)
+                .runExpectingException(ErrorTypeMatcher.errorType(errorType));
     }
 }

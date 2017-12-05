@@ -9,6 +9,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mule.modules.cassandradb.api.CreateTableInput;
 import org.mule.modules.cassandradb.automation.util.TestsConstants;
+import org.mule.modules.cassandradb.internal.exception.CassandraError;
+import org.mule.tck.junit4.matcher.ErrorTypeMatcher;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -61,4 +63,21 @@ public class SelectTestCase extends AbstractTestCases {
         assertThat(Integer.valueOf(result.size()),greaterThan(0));
     }
 
+    protected List<Map<String, Object>> select(String validParameterizedQuery, List<Object> validParmList) throws Exception {
+        return (List<Map<String, Object>>) flowRunner("select-flow")
+                .withPayload(validParameterizedQuery)
+                .withVariable("parameters", validParmList)
+                .run()
+                .getMessage()
+                .getPayload()
+                .getValue();
+    }
+
+
+    protected void selectExpException(String validParameterizedQuery, List<Object> validParmList) throws Exception {
+        flowRunner("select-flow")
+                .withPayload(validParameterizedQuery)
+                .withVariable("parameters", validParmList)
+                .runExpectingException(ErrorTypeMatcher.errorType(CassandraError.UNKNOWN));
+    }
 }

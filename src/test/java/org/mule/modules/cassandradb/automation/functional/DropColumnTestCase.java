@@ -9,15 +9,19 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mule.modules.cassandradb.api.CreateTableInput;
 import org.mule.modules.cassandradb.automation.util.TestsConstants;
+import org.mule.modules.cassandradb.internal.exception.CassandraError;
+import org.mule.tck.junit4.matcher.ErrorTypeMatcher;
 
 import static org.junit.Assert.assertTrue;
+import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getBasicCreateTableInput;
+import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getColumns;
 
 
 public class DropColumnTestCase extends AbstractTestCases {
 
     @Before
     public void setup() throws Exception {
-        CreateTableInput basicCreateTableInput = TestDataBuilder.getBasicCreateTableInput(TestDataBuilder.getColumns(), getKeyspaceFromProperties(), TestsConstants.TABLE_NAME_1);
+        CreateTableInput basicCreateTableInput = getBasicCreateTableInput(getColumns(), getKeyspaceFromProperties(), TestsConstants.TABLE_NAME_1);
         getCassandraService().createTable(basicCreateTableInput);
     }
 
@@ -36,5 +40,24 @@ public class DropColumnTestCase extends AbstractTestCases {
     @Test
     public void testRemoveColumnWithInvalidName() throws Exception {
         dropColumnExpException(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties(), TestsConstants.COLUMN);
+    }
+
+    boolean dropColumn(String tableName, String keyspaceName, String column) throws Exception {
+        return (boolean) flowRunner("dropColumn-flow")
+                .withPayload(column)
+                .withVariable("tableName", tableName)
+                .withVariable("keyspaceName", keyspaceName)
+                .run()
+                .getMessage()
+                .getPayload()
+                .getValue();
+    }
+
+    void dropColumnExpException(String tableName, String keyspaceName, String column) throws Exception {
+        flowRunner("dropColumn-flow")
+                .withPayload(column)
+                .withVariable("tableName", tableName)
+                .withVariable("keyspaceName", keyspaceName)
+                .runExpectingException(ErrorTypeMatcher.errorType(CassandraError.UNKNOWN));
     }
 }

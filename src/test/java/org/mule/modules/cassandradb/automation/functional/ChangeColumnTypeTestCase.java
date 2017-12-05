@@ -5,8 +5,14 @@ package org.mule.modules.cassandradb.automation.functional;
 
 import com.datastax.driver.core.DataType;
 import org.junit.*;
+import org.mule.modules.cassandradb.api.AlterColumnInput;
 import org.mule.modules.cassandradb.api.ColumnType;
 import org.mule.modules.cassandradb.automation.util.TestsConstants;
+import org.mule.modules.cassandradb.internal.exception.CassandraError;
+import org.mule.tck.junit4.matcher.ErrorTypeMatcher;
+
+import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getAlterColumnInput;
+import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getPrimaryKey;
 
 @Ignore
 //Test-class marked as ignored since altering of column types was removed from Cass Database v3.0.11 +
@@ -17,7 +23,7 @@ public class ChangeColumnTypeTestCase extends AbstractTestCases {
 
     @Before
     public void setup() throws Exception {
-        getCassandraService().createTable(TestDataBuilder.getBasicCreateTableInput(TestDataBuilder.getPrimaryKey(), getKeyspaceFromProperties(), TestsConstants.TABLE_NAME_1));
+        getCassandraService().createTable(TestDataBuilder.getBasicCreateTableInput(getPrimaryKey(), getKeyspaceFromProperties(), TestsConstants.TABLE_NAME_1));
     }
 
     @After
@@ -30,7 +36,7 @@ public class ChangeColumnTypeTestCase extends AbstractTestCases {
     public void testChangeTypeFromAsciiToBlobWithSuccess() throws Exception {
         String columnName = TestsConstants.COLUMN + DataType.ascii().toString() + DataType.blob().toString();
         getCassandraService().addNewColumn(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties(), columnName, DataType.text());
-        changeColumnType(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties(), TestDataBuilder.getAlterColumnInput(columnName, ColumnType.BLOB));
+        changeColumnType(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties(), getAlterColumnInput(columnName, ColumnType.BLOB));
     }
 
     @Test
@@ -38,7 +44,7 @@ public class ChangeColumnTypeTestCase extends AbstractTestCases {
     public void testChangeTypeFromAsciiToTextWithSuccess() throws Exception {
         String columnName = TestsConstants.COLUMN + DataType.ascii().toString() + DataType.text().toString();
         getCassandraService().addNewColumn(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties(), columnName, DataType.ascii());
-        changeColumnType(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties(), TestDataBuilder.getAlterColumnInput(columnName, ColumnType.TEXT));
+        changeColumnType(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties(), getAlterColumnInput(columnName, ColumnType.TEXT));
     }
 
     @Test
@@ -46,7 +52,7 @@ public class ChangeColumnTypeTestCase extends AbstractTestCases {
     public void testChangeTypeFromAsciiToVarcharWithSuccess() throws Exception {
         String columnName = TestsConstants.COLUMN + DataType.ascii().toString() + DataType.varchar().toString();
         getCassandraService().addNewColumn(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties(), columnName, DataType.ascii());
-        changeColumnType(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties(), TestDataBuilder.getAlterColumnInput(columnName, ColumnType.VARCHAR));
+        changeColumnType(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties(), getAlterColumnInput(columnName, ColumnType.VARCHAR));
     }
 
     @Test
@@ -54,7 +60,7 @@ public class ChangeColumnTypeTestCase extends AbstractTestCases {
     public void testChangeTypeFromBigintToBlobWithSuccess() throws Exception {
         String columnName = TestsConstants.COLUMN + DataType.bigint().toString() + DataType.blob().toString();
         getCassandraService().addNewColumn(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties(), columnName, DataType.bigint());
-        changeColumnType(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties(), TestDataBuilder.getAlterColumnInput(columnName, ColumnType.BLOB));
+        changeColumnType(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties(), getAlterColumnInput(columnName, ColumnType.BLOB));
     }
 
     @Test
@@ -62,7 +68,7 @@ public class ChangeColumnTypeTestCase extends AbstractTestCases {
     public void testChangeTypeFromBigintToTimestampWithSuccess() throws Exception {
         String columnName = TestsConstants.COLUMN + DataType.bigint().toString() + DataType.timestamp().toString();
         getCassandraService().addNewColumn(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties(), columnName, DataType.bigint());
-        changeColumnType(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties(), TestDataBuilder.getAlterColumnInput(columnName, ColumnType.TIMESTAMP));
+        changeColumnType(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties(), getAlterColumnInput(columnName, ColumnType.TIMESTAMP));
     }
 
     @Test
@@ -70,7 +76,7 @@ public class ChangeColumnTypeTestCase extends AbstractTestCases {
     public void testChangeTypeFromBigintToVarintWithSuccess() throws Exception {
         String columnName = TestsConstants.COLUMN + DataType.bigint().toString() + DataType.varint().toString();
         getCassandraService().addNewColumn(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties(), columnName, DataType.bigint());
-        changeColumnType(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties(), TestDataBuilder.getAlterColumnInput(columnName, ColumnType.VARINT));
+        changeColumnType(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties(), getAlterColumnInput(columnName, ColumnType.VARINT));
     }
 
     @Test
@@ -78,7 +84,7 @@ public class ChangeColumnTypeTestCase extends AbstractTestCases {
     public void testChangeTypeFromIntToBlobWithSuccess() throws Exception {
         String columnName = TestsConstants.COLUMN + DataType.cint().toString() + DataType.blob().toString();
         getCassandraService().addNewColumn(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties(), columnName, DataType.cint());
-        changeColumnType(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties(), TestDataBuilder.getAlterColumnInput(columnName, ColumnType.BLOB));
+        changeColumnType(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties(), getAlterColumnInput(columnName, ColumnType.BLOB));
     }
 
     @Test
@@ -86,7 +92,7 @@ public class ChangeColumnTypeTestCase extends AbstractTestCases {
     public void testChangeTypeFromIntToVarintWithSuccess() throws Exception {
         String columnName = TestsConstants.COLUMN + DataType.cint().toString() + DataType.varint().toString();
         getCassandraService().addNewColumn(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties(), columnName, DataType.cint());
-        changeColumnType(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties(), TestDataBuilder.getAlterColumnInput(columnName, ColumnType.VARINT));
+        changeColumnType(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties(), getAlterColumnInput(columnName, ColumnType.VARINT));
     }
 
     @Test
@@ -94,7 +100,7 @@ public class ChangeColumnTypeTestCase extends AbstractTestCases {
     public void testChangeTypeFromTextToBlobWithSuccess() throws Exception {
         String columnName = TestsConstants.COLUMN + DataType.text().toString() + DataType.blob().toString();
         getCassandraService().addNewColumn(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties(), columnName, DataType.text());
-        changeColumnType(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties(), TestDataBuilder.getAlterColumnInput(columnName, ColumnType.BLOB));
+        changeColumnType(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties(), getAlterColumnInput(columnName, ColumnType.BLOB));
     }
 
     @Test
@@ -102,7 +108,7 @@ public class ChangeColumnTypeTestCase extends AbstractTestCases {
     public void testChangeTypeFromTextToVarcharWithSuccess() throws Exception {
         String columnName = TestsConstants.COLUMN + DataType.text().toString() + DataType.varchar().toString();
         getCassandraService().addNewColumn(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties(), columnName, DataType.text());
-        changeColumnType(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties(), TestDataBuilder.getAlterColumnInput(columnName, ColumnType.VARCHAR));
+        changeColumnType(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties(), getAlterColumnInput(columnName, ColumnType.VARCHAR));
     }
 
     @Test
@@ -110,7 +116,7 @@ public class ChangeColumnTypeTestCase extends AbstractTestCases {
     public void testChangeTypeFromTimestampToBigintWithSuccess() throws Exception {
         String columnName = TestsConstants.COLUMN + DataType.timestamp().toString() + DataType.bigint().toString();
         getCassandraService().addNewColumn(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties(), columnName, DataType.timestamp());
-        changeColumnType(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties(), TestDataBuilder.getAlterColumnInput(columnName, ColumnType.BIGINT));
+        changeColumnType(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties(), getAlterColumnInput(columnName, ColumnType.BIGINT));
     }
 
     @Test
@@ -118,7 +124,7 @@ public class ChangeColumnTypeTestCase extends AbstractTestCases {
     public void testChangeTypeFromTimestampToBlobWithSuccess() throws Exception {
         String columnName = TestsConstants.COLUMN + DataType.timestamp().toString() + DataType.blob().toString();
         getCassandraService().addNewColumn(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties(), columnName, DataType.timestamp());
-        changeColumnType(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties(), TestDataBuilder.getAlterColumnInput(columnName, ColumnType.BLOB));
+        changeColumnType(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties(), getAlterColumnInput(columnName, ColumnType.BLOB));
     }
 
     @Test
@@ -126,7 +132,7 @@ public class ChangeColumnTypeTestCase extends AbstractTestCases {
     public void testChangeTypeFromTimestampToVarintWithSuccess() throws Exception {
         String columnName = TestsConstants.COLUMN + DataType.timestamp().toString() + DataType.varint().toString();
         getCassandraService().addNewColumn(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties(), columnName, DataType.timestamp());
-        changeColumnType(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties(), TestDataBuilder.getAlterColumnInput(columnName, ColumnType.VARINT));
+        changeColumnType(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties(), getAlterColumnInput(columnName, ColumnType.VARINT));
     }
 
     @Test
@@ -134,7 +140,7 @@ public class ChangeColumnTypeTestCase extends AbstractTestCases {
       public void testChangeTypeFromTimeuuidToBlobWithSuccess() throws Exception {
         String columnName = TestsConstants.COLUMN + DataType.timeuuid().toString() + DataType.blob().toString();
         getCassandraService().addNewColumn(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties(), columnName, DataType.timeuuid());
-        changeColumnType(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties(), TestDataBuilder.getAlterColumnInput(columnName, ColumnType.BLOB));
+        changeColumnType(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties(), getAlterColumnInput(columnName, ColumnType.BLOB));
     }
 
     @Test
@@ -142,7 +148,7 @@ public class ChangeColumnTypeTestCase extends AbstractTestCases {
     public void testChangeTypeFromTimeuuidToUuidWithSuccess() throws Exception {
         String columnName = TestsConstants.COLUMN + DataType.timeuuid().toString() + DataType.uuid().toString();
         getCassandraService().addNewColumn(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties(), columnName, DataType.timeuuid());
-        changeColumnType(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties(), TestDataBuilder.getAlterColumnInput(columnName, ColumnType.UUID));
+        changeColumnType(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties(), getAlterColumnInput(columnName, ColumnType.UUID));
     }
 
     @Test
@@ -150,7 +156,7 @@ public class ChangeColumnTypeTestCase extends AbstractTestCases {
     public void testChangeTypeFromVarcharToBlobWithSuccess() throws Exception {
         String columnName = TestsConstants.COLUMN + DataType.varchar().toString() + DataType.blob().toString();
         getCassandraService().addNewColumn(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties(), columnName, DataType.varchar());
-        changeColumnType(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties(), TestDataBuilder.getAlterColumnInput(columnName, ColumnType.BLOB));
+        changeColumnType(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties(), getAlterColumnInput(columnName, ColumnType.BLOB));
     }
 
     @Test
@@ -158,139 +164,158 @@ public class ChangeColumnTypeTestCase extends AbstractTestCases {
     public void testChangeTypeFromVarcharToTextWithSuccess() throws Exception {
         String columnName = TestsConstants.COLUMN + DataType.varchar().toString() + DataType.text().toString();
         getCassandraService().addNewColumn(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties(), columnName, DataType.varchar());
-        changeColumnType(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties(), TestDataBuilder.getAlterColumnInput(columnName, ColumnType.TEXT));
+        changeColumnType(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties(), getAlterColumnInput(columnName, ColumnType.TEXT));
     }
 
     @Test
     public void testChangeTypeFromBlobToText() throws Exception {
         String columnName = TestsConstants.COLUMN + DataType.blob().toString() + DataType.text().toString();
         getCassandraService().addNewColumn(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties(), columnName, DataType.blob());
-        changeColumnTypeExpException(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties(), TestDataBuilder.getAlterColumnInput(columnName, ColumnType.TEXT));
+        changeColumnTypeExpException(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties(), getAlterColumnInput(columnName, ColumnType.TEXT));
     }
 
     @Test
     public void testChangeTypeFromBlobToAscii() throws Exception {
         String columnName = TestsConstants.COLUMN + DataType.blob().toString() + DataType.ascii().toString();
         getCassandraService().addNewColumn(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties(), columnName, DataType.blob());
-        changeColumnTypeExpException(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties(), TestDataBuilder.getAlterColumnInput(columnName, ColumnType.ASCII));
+        changeColumnTypeExpException(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties(), getAlterColumnInput(columnName, ColumnType.ASCII));
     }
 
     @Test
     public void testChangeTypeFromBlobToBigint() throws Exception {
         String columnName = TestsConstants.COLUMN + DataType.blob().toString() + DataType.bigint().toString();
         getCassandraService().addNewColumn(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties(), columnName, DataType.blob());
-        changeColumnTypeExpException(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties(), TestDataBuilder.getAlterColumnInput(columnName, ColumnType.BIGINT));
+        changeColumnTypeExpException(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties(), getAlterColumnInput(columnName, ColumnType.BIGINT));
     }
 
     @Test
     public void testChangeTypeFromBlobToInt() throws Exception {
         String columnName = TestsConstants.COLUMN + DataType.blob().toString() + DataType.cint().toString();
         getCassandraService().addNewColumn(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties(), columnName, DataType.blob());
-        changeColumnTypeExpException(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties(), TestDataBuilder.getAlterColumnInput(columnName, ColumnType.INT));
+        changeColumnTypeExpException(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties(), getAlterColumnInput(columnName, ColumnType.INT));
     }
 
     @Test
     public void testChangeTypeFromBlobToTimestamp() throws Exception {
         String columnName = TestsConstants.COLUMN + DataType.blob().toString() + DataType.timestamp().toString();
         getCassandraService().addNewColumn(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties(), columnName, DataType.blob());
-        changeColumnTypeExpException(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties(), TestDataBuilder.getAlterColumnInput(columnName, ColumnType.TIMESTAMP));
+        changeColumnTypeExpException(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties(), getAlterColumnInput(columnName, ColumnType.TIMESTAMP));
     }
 
     @Test
     public void testChangeTypeFromBlobToTimeuuid() throws Exception {
         String columnName = TestsConstants.COLUMN + DataType.blob().toString() + DataType.timeuuid().toString();
         getCassandraService().addNewColumn(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties(), columnName, DataType.blob());
-        changeColumnTypeExpException(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties(), TestDataBuilder.getAlterColumnInput(columnName, ColumnType.TIMEUUID));
+        changeColumnTypeExpException(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties(), getAlterColumnInput(columnName, ColumnType.TIMEUUID));
     }
 
     @Test
     public void testChangeTypeFromBlobToVarchar() throws Exception {
         String columnName = TestsConstants.COLUMN + DataType.blob().toString() + DataType.varchar().toString();
         getCassandraService().addNewColumn(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties(), columnName, DataType.blob());
-        changeColumnTypeExpException(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties(), TestDataBuilder.getAlterColumnInput(columnName, ColumnType.VARCHAR));
+        changeColumnTypeExpException(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties(), getAlterColumnInput(columnName, ColumnType.VARCHAR));
     }
 
     @Test
     public void testChangeTypeFromTextToInt() throws Exception {
         String columnName = TestsConstants.COLUMN + DataType.text().toString() + DataType.cint().toString();
         getCassandraService().addNewColumn(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties(), columnName, DataType.text());
-        changeColumnTypeExpException(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties(), TestDataBuilder.getAlterColumnInput(columnName, ColumnType.INT));
+        changeColumnTypeExpException(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties(), getAlterColumnInput(columnName, ColumnType.INT));
     }
 
     @Test
     public void testChangeTypeFromTextToTimestamp() throws Exception {
         String columnName = TestsConstants.COLUMN + DataType.text().toString() + DataType.timestamp().toString();
         getCassandraService().addNewColumn(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties(), columnName, DataType.text());
-        changeColumnTypeExpException(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties(), TestDataBuilder.getAlterColumnInput(columnName, ColumnType.TIMESTAMP));
+        changeColumnTypeExpException(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties(), getAlterColumnInput(columnName, ColumnType.TIMESTAMP));
     }
 
     @Test
     public void testChangeTypeFromTextToTimeuuid() throws Exception {
         String columnName = TestsConstants.COLUMN + DataType.text().toString() + DataType.timeuuid().toString();
         getCassandraService().addNewColumn(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties(), columnName, DataType.text());
-        changeColumnTypeExpException(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties(), TestDataBuilder.getAlterColumnInput(columnName, ColumnType.TIMEUUID));
+        changeColumnTypeExpException(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties(), getAlterColumnInput(columnName, ColumnType.TIMEUUID));
     }
 
     @Test
     public void testChangeTypeFromTextToBigint() throws Exception {
         String columnName = TestsConstants.COLUMN + DataType.text().toString() + DataType.bigint().toString();
         getCassandraService().addNewColumn(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties(), columnName, DataType.text());
-        changeColumnTypeExpException(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties(), TestDataBuilder.getAlterColumnInput(columnName, ColumnType.BIGINT));
+        changeColumnTypeExpException(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties(), getAlterColumnInput(columnName, ColumnType.BIGINT));
     }
 
     @Test
     public void testChangeTypeFromTextToVarint() throws Exception {
         String columnName = TestsConstants.COLUMN + DataType.text().toString() + DataType.varint().toString();
         getCassandraService().addNewColumn(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties(), columnName, DataType.text());
-        changeColumnTypeExpException(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties(), TestDataBuilder.getAlterColumnInput(columnName, ColumnType.VARINT));
+        changeColumnTypeExpException(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties(), getAlterColumnInput(columnName, ColumnType.VARINT));
     }
 
     @Test
     public void testChangeTypeFromTextToUuid() throws Exception {
         String columnName = TestsConstants.COLUMN + DataType.text().toString() + DataType.uuid().toString();
         getCassandraService().addNewColumn(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties(), columnName, DataType.text());
-        changeColumnTypeExpException(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties(), TestDataBuilder.getAlterColumnInput(columnName, ColumnType.UUID));
+        changeColumnTypeExpException(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties(), getAlterColumnInput(columnName, ColumnType.UUID));
     }
 
     @Test
     public void testChangeTypeFromVarcharToInt() throws Exception {
         String columnName = TestsConstants.COLUMN + DataType.varchar().toString() + DataType.cint().toString();
         getCassandraService().addNewColumn(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties(), columnName, DataType.varchar());
-        changeColumnTypeExpException(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties(), TestDataBuilder.getAlterColumnInput(columnName, ColumnType.INT));
+        changeColumnTypeExpException(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties(), getAlterColumnInput(columnName, ColumnType.INT));
     }
 
     @Test
     public void testChangeTypeFromVarcharToTimestamp() throws Exception {
         String columnName = TestsConstants.COLUMN + DataType.varchar().toString() + DataType.timestamp().toString();
         getCassandraService().addNewColumn(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties(), columnName, DataType.varchar());
-        changeColumnTypeExpException(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties(), TestDataBuilder.getAlterColumnInput(columnName, ColumnType.TIMESTAMP));
+        changeColumnTypeExpException(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties(), getAlterColumnInput(columnName, ColumnType.TIMESTAMP));
     }
 
     @Test
     public void testChangeTypeFromVarcharToAscii() throws Exception {
         String columnName = TestsConstants.COLUMN + DataType.varchar().toString() + DataType.ascii().toString();
         getCassandraService().addNewColumn(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties(), columnName, DataType.varchar());
-        changeColumnTypeExpException(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties(), TestDataBuilder.getAlterColumnInput(columnName, ColumnType.ASCII));
+        changeColumnTypeExpException(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties(), getAlterColumnInput(columnName, ColumnType.ASCII));
     }
 
     @Test
     public void testChangeTypeFromTimestampToAscii() throws Exception {
         String columnName = TestsConstants.COLUMN + DataType.timestamp().toString() + DataType.ascii().toString();
         getCassandraService().addNewColumn(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties(), columnName, DataType.timestamp());
-        changeColumnTypeExpException(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties(), TestDataBuilder.getAlterColumnInput(columnName, ColumnType.ASCII));
+        changeColumnTypeExpException(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties(), getAlterColumnInput(columnName, ColumnType.ASCII));
     }
 
     @Test
     public void testChangeTypeFromTimestampToText() throws Exception {
         String columnName = TestsConstants.COLUMN + DataType.timestamp().toString() + DataType.text().toString();
         getCassandraService().addNewColumn(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties(), columnName, DataType.timestamp());
-        changeColumnTypeExpException(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties(), TestDataBuilder.getAlterColumnInput(columnName, ColumnType.TEXT));
+        changeColumnTypeExpException(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties(), getAlterColumnInput(columnName, ColumnType.TEXT));
     }
 
     @Test
     public void testChangeTypeFromTimestampToInt() throws Exception {
         String columnName = TestsConstants.COLUMN + DataType.timestamp().toString() + DataType.cint().toString();
         getCassandraService().addNewColumn(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties(), columnName, DataType.timestamp());
-        changeColumnTypeExpException(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties(), TestDataBuilder.getAlterColumnInput(columnName, ColumnType.INT));
+        changeColumnTypeExpException(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties(), getAlterColumnInput(columnName, ColumnType.INT));
+    }
+
+    boolean changeColumnType(String tableName, String keyspaceName, AlterColumnInput input) throws Exception {
+        return (boolean) flowRunner("changeColumnType-flow")
+                .withPayload(input)
+                .withVariable("tableName", tableName)
+                .withVariable("keyspaceName", keyspaceName)
+                .run()
+                .getMessage()
+                .getPayload()
+                .getValue();
+    }
+
+    void changeColumnTypeExpException(String tableName, String keyspaceName, AlterColumnInput input) throws Exception {
+        flowRunner("changeColumnType-flow")
+                .withPayload(input)
+                .withVariable("tableName", tableName)
+                .withVariable("keyspaceName", keyspaceName)
+                .runExpectingException(ErrorTypeMatcher.errorType(CassandraError.UNKNOWN));
     }
 }

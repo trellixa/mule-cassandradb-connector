@@ -9,14 +9,18 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mule.modules.cassandradb.api.CQLQueryInput;
 import org.mule.modules.cassandradb.api.CreateTableInput;
-import org.mule.modules.cassandradb.automation.util.TestsConstants;
+import org.mule.modules.cassandradb.internal.exception.CassandraError;
+import org.mule.tck.junit4.matcher.ErrorTypeMatcher;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static org.hamcrest.core.IsNull.notNullValue;
 import static org.junit.Assert.assertNotNull;
+import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getPrimaryKey;
+import static org.mule.modules.cassandradb.automation.util.TestsConstants.DUMMY_PARTITION_KEY;
+import static org.mule.modules.cassandradb.automation.util.TestsConstants.TABLE_NAME_2;
+import static org.mule.modules.cassandradb.automation.util.TestsConstants.VALID_COLUMN_2;
 
 public class ExecuteCqlQueryTestCase extends AbstractTestCases {
 
@@ -24,15 +28,15 @@ public class ExecuteCqlQueryTestCase extends AbstractTestCases {
 
     @Before
     public void setup() throws Exception {
-        CreateTableInput basicCreateTableInput = TestDataBuilder.getBasicCreateTableInput(TestDataBuilder.getPrimaryKey(), getKeyspaceFromProperties(), TestsConstants.TABLE_NAME_2);
+        CreateTableInput basicCreateTableInput = TestDataBuilder.getBasicCreateTableInput(getPrimaryKey(), getKeyspaceFromProperties(), TABLE_NAME_2);
         getCassandraService().createTable(basicCreateTableInput);
-        getCassandraService().addNewColumn(TestsConstants.TABLE_NAME_2, getKeyspaceFromProperties(), TestsConstants.VALID_COLUMN_2, DataType.ascii());
-        getCassandraService().insert(getKeyspaceFromProperties(), TestsConstants.TABLE_NAME_2, TestDataBuilder.getValidEntity());
+        getCassandraService().addNewColumn(TABLE_NAME_2, getKeyspaceFromProperties(), VALID_COLUMN_2, DataType.ascii());
+        getCassandraService().insert(getKeyspaceFromProperties(), TABLE_NAME_2, TestDataBuilder.getValidEntity());
     }
 
     @After
     public void tearDown()  {
-        getCassandraService().dropTable(TestsConstants.TABLE_NAME_2, getKeyspaceFromProperties());
+        getCassandraService().dropTable(TABLE_NAME_2, getKeyspaceFromProperties());
     }
 
     @Test
@@ -40,8 +44,8 @@ public class ExecuteCqlQueryTestCase extends AbstractTestCases {
         //Select * from dummy_table_name_2 WHERE dummy_partition_key = 'value1'
         List<Object> params = new ArrayList<Object>();
         params.add("value1");
-        String whereClause = " WHERE " + TestsConstants.DUMMY_PARTITION_KEY + " = ?";
-        CQLQueryInput query = new CQLQueryInput(QUERY_PREFIX + TestsConstants.TABLE_NAME_2 + whereClause, params);
+        String whereClause = " WHERE " + DUMMY_PARTITION_KEY + " = ?";
+        CQLQueryInput query = new CQLQueryInput(QUERY_PREFIX + TABLE_NAME_2 + whereClause, params);
 
         List<Map<String, Object>> queryResult = executeCQLQuery(query);
         assertNotNull(queryResult.get(0));
@@ -49,7 +53,7 @@ public class ExecuteCqlQueryTestCase extends AbstractTestCases {
 
     @Test
     public void shouldExecute_NonParametrizedQuery() throws Exception {
-        CQLQueryInput query = new CQLQueryInput(QUERY_PREFIX + TestsConstants.TABLE_NAME_2, new ArrayList<Object>());
+        CQLQueryInput query = new CQLQueryInput(QUERY_PREFIX + TABLE_NAME_2, new ArrayList<Object>());
         List<Map<String, Object>> queryResult = executeCQLQuery(query);
         assertNotNull(queryResult.get(0));
     }
@@ -57,8 +61,8 @@ public class ExecuteCqlQueryTestCase extends AbstractTestCases {
     @Test
     public void shouldThrowException_When_InsufficientAmountOfBindVariables() throws Exception {
         //Select * from dummy_table_name_2 WHERE dummy_partition_key = ?
-        String whereClause = " WHERE " + TestsConstants.DUMMY_PARTITION_KEY + " = ?";
-        CQLQueryInput query = new CQLQueryInput(QUERY_PREFIX + TestsConstants.TABLE_NAME_2 + whereClause, null);
+        String whereClause = " WHERE " + DUMMY_PARTITION_KEY + " = ?";
+        CQLQueryInput query = new CQLQueryInput(QUERY_PREFIX + TABLE_NAME_2 + whereClause, null);
 
         executeCQLQueryExpException(query);
     }
@@ -68,8 +72,23 @@ public class ExecuteCqlQueryTestCase extends AbstractTestCases {
         //Select * from dummy_table_name_2
         List<Object> params = new ArrayList<Object>();
         params.add("value1");
-        CQLQueryInput query = new CQLQueryInput(QUERY_PREFIX + TestsConstants.TABLE_NAME_2, params);
+        CQLQueryInput query = new CQLQueryInput(QUERY_PREFIX + TABLE_NAME_2, params);
 
         executeCQLQueryExpException(query);
+    }
+
+    protected List<Map<String, Object>> executeCQLQuery(CQLQueryInput query) throws Exception {
+        return (List<Map<String, Object>>) flowRunner("executeCQLQuery-flow")
+                .withPayload(query)
+                .run()
+                .getMessage()
+                .getPayload()
+                .getValue();
+    }
+
+    protected void executeCQLQueryExpException(CQLQueryInput query) throws Exception {
+        flowRunner("executeCQLQuery-flow")
+                .withPayload(query)
+                .runExpectingException(ErrorTypeMatcher.errorType(CassandraError.UNKNOWN));
     }
 }

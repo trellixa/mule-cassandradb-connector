@@ -6,6 +6,10 @@ package org.mule.modules.cassandradb.automation.functional;
 import org.junit.*;
 import org.mule.modules.cassandradb.api.CreateTableInput;
 import org.mule.modules.cassandradb.automation.util.TestsConstants;
+import org.mule.modules.cassandradb.internal.exception.CassandraError;
+import org.mule.tck.junit4.matcher.ErrorTypeMatcher;
+
+import java.util.Map;
 
 public class UpdateTestCase extends AbstractTestCases {
 
@@ -26,7 +30,6 @@ public class UpdateTestCase extends AbstractTestCases {
         update(TestsConstants.TABLE_NAME_1, null, TestDataBuilder.getPayloadColumnsAndFilters(TestDataBuilder.getValidEntityForUpdate(), TestDataBuilder.getValidWhereClauseWithEq()));
     }
 
-
     @Test
     public void testUpdateUsingInWithSuccess() throws Exception {
         update(TestsConstants.TABLE_NAME_1, null, TestDataBuilder.getPayloadColumnsAndFilters(TestDataBuilder.getValidEntityForUpdate(),
@@ -41,5 +44,24 @@ public class UpdateTestCase extends AbstractTestCases {
     @Test
     public void testUpdateWithInvalidWhereClause() throws Exception {
         updateExpException(TestsConstants.TABLE_NAME_1, null, TestDataBuilder.getPayloadColumnsAndFilters(TestDataBuilder.getInvalidEntity(), TestDataBuilder.getInvalidWhereClause()));
+    }
+
+    protected void update(String tableName, String keyspaceName, Map<String, Object> entityToUpdate) throws Exception {
+        flowRunner("update-flow")
+                .withPayload(entityToUpdate)
+                .withVariable("tableName", tableName)
+                .withVariable("keyspaceName", keyspaceName)
+                .run()
+                .getMessage()
+                .getPayload()
+                .getValue();
+    }
+
+    protected void updateExpException(String tableName, String keyspaceName, Map<String, Object> entityToUpdate) throws Exception {
+        flowRunner("update-flow")
+                .withPayload(entityToUpdate)
+                .withVariable("tableName", tableName)
+                .withVariable("keyspaceName", keyspaceName)
+                .runExpectingException(ErrorTypeMatcher.errorType(CassandraError.UNKNOWN));
     }
 }
