@@ -280,6 +280,45 @@ public class CassandraOperations extends ConnectorOperations<CassandraConfig, Ca
                 .withParam(parameters);
     }
 
+    /**
+     * Deletes an entire record
+     * @param table the name of the table
+     * @param keyspaceName (optional) the keyspace which contains the table to be used
+     * @param payload operation input: where clause for the delete operation
+     */
+    //@OutputResolver(output = TmpMetadataToRemove.class)
+    public void deleteRows(@Config CassandraConfig config,
+                           @Connection CassandraConnection connection,
+                           String table,
+                           @Optional String keyspaceName,
+                           @Content Map<String, Object> payload) {
+
+        newExecutionBuilder(config, connection).execute(CassandraService::delete)
+                .withParam(keyspaceName)
+                .withParam(table)
+                .withParam(null)
+                .withParam((Map) payload.get(WHERE));
+    }
+
+    /**
+     * Deletes values from an object specified by the where clause
+     * @param table the name of the table
+     * @param keyspaceName (optional) the keyspace which contains the table to be used
+     * @param payload operation input: columns to be deleted and where clause for the delete operation
+     */
+    public void deleteColumnsValue(@Config CassandraConfig config,
+                                   @Connection CassandraConnection connection,
+                                   String table,
+                                   @Optional String keyspaceName,
+                                   @Content Map<String, Object> payload) {
+
+        newExecutionBuilder(config, connection).execute(CassandraService::delete)
+                .withParam(keyspaceName)
+                .withParam(table)
+                .withParam((List) payload.get(COLUMNS))
+                .withParam((Map) payload.get(WHERE));
+    }
+
     private <T extends Throwable> DefinedExceptionHandler<T> handle(Class<T> exceptionClass, CassandraError errorCode) {
         return new DefinedExceptionHandler<>(exceptionClass, exception -> {
             throw new ModuleException(errorCode, exception);

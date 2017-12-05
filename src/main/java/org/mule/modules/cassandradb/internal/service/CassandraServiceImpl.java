@@ -6,6 +6,7 @@ import com.datastax.driver.core.ResultSet;
 import com.datastax.driver.core.Row;
 import com.datastax.driver.core.Session;
 import com.datastax.driver.core.TableMetadata;
+import com.datastax.driver.core.querybuilder.Delete;
 import com.datastax.driver.core.querybuilder.Insert;
 import com.datastax.driver.core.querybuilder.QueryBuilder;
 import com.datastax.driver.core.querybuilder.Update;
@@ -173,6 +174,33 @@ public class CassandraServiceImpl extends DefaultConnectorService<CassandraConfi
         }
 
         return getResponseFromResultSet(result);
+    }
+
+    @Override
+    public void delete(String keySpace, String table, List<String> entity, Map<String, Object> whereClause) {
+        if (whereClause == null) {
+            throw new CassandraException("Mismatched input. WHERE clause must not be null.");
+        }
+        Delete.Selection selectionObject = QueryBuilder.delete();
+        // if the entity list is empty, means that the entire row(s) is deleted
+        if (entity != null && !entity.isEmpty()) {
+            for (String entry : entity) {
+                selectionObject.column(entry);
+            }
+        }
+
+        Delete deleteObject = selectionObject.from(keySpace, table);
+
+        // In where clause in cassandra, on delete command, can be used only eq and IN operators
+        for (Map.Entry<String, Object> entry : whereClause.entrySet()) {
+            if (entry.getValue() instanceof List) {
+                deleteObject.where(QueryBuilder.in(entry.getKey(), (List) entry.getValue()));
+            } else {
+                deleteObject.where(QueryBuilder.eq(entry.getKey(), entry.getValue()));
+            }
+        }
+
+        getCassandraSession().execute(deleteObject);
     }
 
     private void validateParams(String query, List<Object> params) throws CassandraException {

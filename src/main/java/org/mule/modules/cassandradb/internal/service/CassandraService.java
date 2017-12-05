@@ -37,4 +37,6 @@ public interface CassandraService extends ConnectorService {
     List<Map<String, Object>> executeCQLQuery(String cqlQuery, List<Object> params);
 
     List<Map<String, Object>> select(String query, List<Object> params);
+
+    void delete(String keySpace, String table, List<String> entity, Map<String, Object> whereClause);
 }

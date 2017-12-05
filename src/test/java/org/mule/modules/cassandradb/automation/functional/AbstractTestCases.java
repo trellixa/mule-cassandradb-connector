@@ -238,15 +238,6 @@ public class AbstractTestCases extends MuleArtifactFunctionalTestCase {
                 .runExpectingException(ErrorTypeMatcher.errorType(CassandraError.UNKNOWN));
     }
 
-    protected List<Map<String, Object>> executeCQLQuery(CQLQueryInput query) throws Exception {
-        return (List<Map<String, Object>>) flowRunner("executeCQLQuery-flow")
-                .withPayload(query)
-                .run()
-                .getMessage()
-                .getPayload()
-                .getValue();
-    }
-
     protected List<Map<String, Object>> select(String validParameterizedQuery, List<Object> validParmList) throws Exception {
         return (List<Map<String, Object>>) flowRunner("select-flow")
                 .withPayload(validParameterizedQuery)
@@ -257,6 +248,7 @@ public class AbstractTestCases extends MuleArtifactFunctionalTestCase {
                 .getValue();
     }
 
+
     protected void selectExpException(String validParameterizedQuery, List<Object> validParmList) throws Exception {
         flowRunner("select-flow")
                 .withPayload(validParameterizedQuery)
@@ -264,9 +256,56 @@ public class AbstractTestCases extends MuleArtifactFunctionalTestCase {
                 .runExpectingException(ErrorTypeMatcher.errorType(CassandraError.UNKNOWN));
     }
 
+    protected List<Map<String, Object>> executeCQLQuery(CQLQueryInput query) throws Exception {
+        return (List<Map<String, Object>>) flowRunner("executeCQLQuery-flow")
+                .withPayload(query)
+                .run()
+                .getMessage()
+                .getPayload()
+                .getValue();
+    }
+
     protected void executeCQLQueryExpException(CQLQueryInput query) throws Exception {
         flowRunner("executeCQLQuery-flow")
                 .withPayload(query)
+                .runExpectingException(ErrorTypeMatcher.errorType(CassandraError.UNKNOWN));
+    }
+
+    protected void deleteColumnsValue(String tableName, String keyspaceName, Map<String, Object> payloadColumnsAndFilters) throws Exception {
+        flowRunner("deleteColumnsValue-flow")
+                .withPayload(payloadColumnsAndFilters)
+                .withVariable("tableName", tableName)
+                .withVariable("keyspaceName", keyspaceName)
+                .run()
+                .getMessage()
+                .getPayload()
+                .getValue();
+    }
+
+    protected void deleteColumnsValueExpException(String tableName, String keyspaceName, Map<String, Object> payloadColumnsAndFilters) throws Exception {
+        flowRunner("deleteColumnsValue-flow")
+                .withPayload(payloadColumnsAndFilters)
+                .withVariable("tableName", tableName)
+                .withVariable("keyspaceName", keyspaceName)
+                .runExpectingException(ErrorTypeMatcher.errorType(CassandraError.UNKNOWN));
+    }
+
+    protected void deleteRows(String tableName, String keyspaceName, Map<String, Object> payloadColumnsAndFilters) throws Exception {
+        flowRunner("deleteRows-flow")
+                .withPayload(payloadColumnsAndFilters)
+                .withVariable("tableName", tableName)
+                .withVariable("keyspaceName", keyspaceName)
+                .run()
+                .getMessage()
+                .getPayload()
+                .getValue();
+    }
+
+    protected void deleteRowsExpException(String tableName, String keyspaceName, Map<String, Object> payloadColumnsAndFilters) throws Exception {
+        flowRunner("deleteRows-flow")
+                .withPayload(payloadColumnsAndFilters)
+                .withVariable("tableName", tableName)
+                .withVariable("keyspaceName", keyspaceName)
                 .runExpectingException(ErrorTypeMatcher.errorType(CassandraError.UNKNOWN));
     }
 
@@ -293,6 +332,7 @@ public class AbstractTestCases extends MuleArtifactFunctionalTestCase {
     public KeyspaceMetadata getKeyspaceMetadata(String keyspaceName) {
         return getCassandraConnection().getCluster().getMetadata().getKeyspace(keyspaceName);
     }
+
 
 
 }

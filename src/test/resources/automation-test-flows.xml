@@ -67,4 +67,12 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
             <cassandra-db:query >#[payload]</cassandra-db:query>
         </cassandra-db:select>
     </flow>
+
+    <flow name="deleteColumnsValue-flow" doc:id="4768c8ea-e151-4f6b-b710-7fef94b56914" >
+        <cassandra-db:delete-columns-value config-ref="CassandraDB_Config" keyspaceName="#[vars.keyspaceName]" table="#[vars.tableName]"/>
+    </flow>
+
+    <flow name="deleteRows-flow" doc:id="4768c8ea-e151-4f6b-b710-7fef94b56914" >
+        <cassandra-db:delete-rows config-ref="CassandraDB_Config" keyspaceName="#[vars.keyspaceName]" table="#[vars.tableName]"/>
+    </flow>
 </mule>
