@@ -2,7 +2,6 @@ package org.mule.modules.cassandradb.internal.operation;
 
 import org.mule.modules.cassandradb.api.AlterColumnInput;
 import org.mule.modules.cassandradb.api.CQLQueryInput;
-import org.mule.modules.cassandradb.api.ColumnType;
 import org.mule.modules.cassandradb.api.CreateKeyspaceInput;
 import org.mule.modules.cassandradb.api.CreateTableInput;
 import org.mule.modules.cassandradb.internal.config.CassandraConfig;
@@ -11,7 +10,6 @@ import org.mule.modules.cassandradb.internal.exception.CassandraErrorTypeProvide
 import org.mule.modules.cassandradb.internal.metadata.CassandraMetadataResolver;
 import org.mule.modules.cassandradb.internal.metadata.CassandraOnlyWithFiltersMetadataResolver;
 import org.mule.modules.cassandradb.internal.metadata.CassandraWithFiltersMetadataCategory;
-import org.mule.modules.cassandradb.internal.metadata.TmpMetadataToRemove;
 import org.mule.modules.cassandradb.internal.service.CassandraService;
 import org.mule.modules.cassandradb.internal.util.DataTypeResolver;
 import org.mule.modules.cassandradb.internal.util.DefaultDsqlQueryTranslator;
@@ -233,7 +231,7 @@ public class CassandraOperations extends CassandraBaseOperarations  {
      * @param cqlInput CQLQueryInput describing the parametrized query to be executed along with the parameters
      * @return the result of the query execution
      */
-    @OutputResolver(output = TmpMetadataToRemove.class)
+    @OutputResolver(output = CassandraMetadataResolver.class)
     public List<Map<String, Object>> executeCQLQuery(@Config CassandraConfig config,
                                                      @Connection CassandraConnection connection,
                                                      @Content CQLQueryInput cqlInput) {
