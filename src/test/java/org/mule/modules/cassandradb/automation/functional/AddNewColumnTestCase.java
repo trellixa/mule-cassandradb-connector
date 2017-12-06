@@ -3,8 +3,12 @@
  */
 package org.mule.modules.cassandradb.automation.functional;
 
+import com.datastax.driver.core.ColumnMetadata;
 import com.datastax.driver.core.DataType;
+import com.datastax.driver.core.TableMetadata;
 import org.junit.*;
+import org.junit.experimental.theories.Theories;
+import org.junit.runner.notification.RunListener;
 import org.mule.modules.cassandradb.api.AlterColumnInput;
 import org.mule.modules.cassandradb.api.ColumnType;
 import org.mule.modules.cassandradb.api.CreateTableInput;
@@ -12,6 +16,7 @@ import org.mule.modules.cassandradb.automation.util.TestsConstants;
 import org.mule.modules.cassandradb.internal.exception.CassandraError;
 import org.mule.tck.junit4.matcher.ErrorTypeMatcher;
 
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getAlterColumnInput;
 import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getBasicCreateTableInput;
@@ -37,6 +42,11 @@ public class AddNewColumnTestCase extends AbstractTestCases {
     public void testAddNewColumnOfPrimitiveTypeWithSuccess() throws Exception {
         AlterColumnInput alterColumnInput = getAlterColumnInput(DataType.text().toString() + System.currentTimeMillis(), ColumnType.TEXT);
         assertTrue(addNewColumn(TABLE_NAME_1, getKeyspaceFromProperties(), alterColumnInput));
+
+        Thread.sleep(SLEEP_DURATION);
+        TableMetadata tableMetadata = fetchTableMetadata(getKeyspaceFromProperties(), TABLE_NAME_1);
+        ColumnMetadata column = tableMetadata.getColumn(alterColumnInput.getColumn());
+        assertNotNull(column);
     }
 
     @Test

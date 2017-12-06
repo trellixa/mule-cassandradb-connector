@@ -26,8 +26,6 @@ import static org.mule.modules.cassandradb.internal.exception.CassandraError.SYN
 
 public class CreateKeyspaceTestCase extends AbstractTestCases {
 
-    private static final int SLEEP_DURATION = 2000;
-
     @Before
     @After
     public void dropKeyspaces() {

@@ -4,15 +4,19 @@
 package org.mule.modules.cassandradb.automation.functional;
 
 
+import com.datastax.driver.core.ColumnMetadata;
+import com.datastax.driver.core.TableMetadata;
 import org.junit.After;
 import org.junit.Test;
 import org.mule.modules.cassandradb.api.CreateTableInput;
 import org.mule.modules.cassandradb.automation.util.TestsConstants;
 
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getBasicCreateTableInput;
 import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getColumns;
 import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getCompositePrimaryKey;
+import static org.mule.modules.cassandradb.automation.util.TestsConstants.TABLE_NAME_1;
 
 
 public class CreateTableTestCase extends AbstractTestCases {
@@ -27,6 +31,10 @@ public class CreateTableTestCase extends AbstractTestCases {
     public void testCreateTableWithSuccess() throws Exception {
         CreateTableInput basicCreateTableInput = getBasicCreateTableInput(getColumns(), getKeyspaceFromProperties(), TestsConstants.TABLE_NAME_1);
         assertTrue(createTable(basicCreateTableInput));
+
+        Thread.sleep(SLEEP_DURATION);
+        TableMetadata tableMetadata = fetchTableMetadata(getKeyspaceFromProperties(), TABLE_NAME_1);
+        assertNotNull(tableMetadata);
     }
 
     @Test

@@ -11,8 +11,11 @@ import org.mule.modules.cassandradb.api.CreateTableInput;
 import org.mule.modules.cassandradb.internal.exception.CassandraError;
 import org.mule.tck.junit4.matcher.ErrorTypeMatcher;
 
+import java.util.List;
 import java.util.Map;
 
+import static java.lang.String.format;
+import static org.junit.Assert.assertEquals;
 import static org.mule.modules.cassandradb.automation.util.TestsConstants.TABLE_NAME_1;
 import static org.mule.modules.cassandradb.automation.util.TestsConstants.VALID_LIST_COLUMN;
 import static org.mule.modules.cassandradb.automation.util.TestsConstants.VALID_MAP_COLUMN;
@@ -35,7 +38,11 @@ public class InsertTestCase extends AbstractTestCases {
     @Test
     public void testInsertWithSuccess() throws Exception {
         insert(TABLE_NAME_1, null, TestDataBuilder.getValidEntity());
-        //TODO: add validation that the objects are created.
+
+        Thread.sleep(SLEEP_DURATION);
+        String query = format("SELECT * FROM %s.%s", getKeyspaceFromProperties(), TABLE_NAME_1);
+        List<Map<String, Object>> select = getCassandraService().select(query, null);
+        assertEquals(1, select.size());
     }
 
     @Test

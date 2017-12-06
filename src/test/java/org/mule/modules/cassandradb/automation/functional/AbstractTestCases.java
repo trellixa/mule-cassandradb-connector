@@ -2,6 +2,7 @@ package org.mule.modules.cassandradb.automation.functional;
 
 
 import com.datastax.driver.core.KeyspaceMetadata;
+import com.datastax.driver.core.TableMetadata;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -33,6 +34,7 @@ import java.io.IOException;
 public abstract class AbstractTestCases extends MuleArtifactFunctionalTestCase {
 
     private static final String FLOW_CONFIG_LOCATION = "src/test/resources/automation-test-flows.xml";
+    protected static final int SLEEP_DURATION = 2000;
 
     private CassandraConnection cassandraConnection;
     private CassandraService cassandraService;
@@ -96,6 +98,10 @@ public abstract class AbstractTestCases extends MuleArtifactFunctionalTestCase {
 
     public KeyspaceMetadata getKeyspaceMetadata(String keyspaceName) {
         return cassandraMetadata.getKeyspaceMetadata(keyspaceName);
+    }
+
+    public TableMetadata fetchTableMetadata(String keyspaceName, String tableName) {
+        return cassandraMetadata.getTableMetadata(keyspaceName, tableName);
     }
 
     public CassandraMetadata getCassandraMetadata() {

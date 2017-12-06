@@ -52,9 +52,9 @@ public class TestDataBuilder {
         return entity;
     }
 
-    public static Map<String, Object> getValidEntityForUpdate() {
+    public static Map<String, Object> getValidEntityForUpdate(String newValue) {
         Map<String, Object> entity = new HashMap<String, Object>();
-        entity.put(TestsConstants.VALID_COLUMN_2, "someValue" + System.currentTimeMillis());
+        entity.put(TestsConstants.VALID_COLUMN_2, newValue);
         return entity;
     }
 

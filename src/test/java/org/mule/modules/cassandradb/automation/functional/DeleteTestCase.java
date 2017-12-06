@@ -3,7 +3,9 @@
  */
 package org.mule.modules.cassandradb.automation.functional;
 
+import com.datastax.driver.core.ColumnMetadata;
 import com.datastax.driver.core.DataType;
+import com.datastax.driver.core.TableMetadata;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -12,8 +14,13 @@ import org.mule.modules.cassandradb.automation.util.TestsConstants;
 import org.mule.modules.cassandradb.internal.exception.CassandraError;
 import org.mule.tck.junit4.matcher.ErrorTypeMatcher;
 
+import java.util.List;
 import java.util.Map;
 
+import static java.lang.String.format;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getBasicCreateTableInput;
 import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getColumns;
 import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getInvalidEntityForDelete;
@@ -30,6 +37,7 @@ import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder
 import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getValidWhereClauseWithEq;
 import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getValidWhereClauseWithIN;
 import static org.mule.modules.cassandradb.automation.util.TestsConstants.TABLE_NAME_1;
+import static org.mule.modules.cassandradb.automation.util.TestsConstants.VALID_COLUMN_2;
 import static org.mule.modules.cassandradb.internal.exception.CassandraError.QUERY_VALIDATION;
 
 public class DeleteTestCase extends AbstractTestCases {
@@ -51,6 +59,11 @@ public class DeleteTestCase extends AbstractTestCases {
 
         Map<String, Object> payloadColumnsAndFilters = getPayloadColumnsAndFilters(getValidColumnsListForDelete(), getValidWhereClauseWithEq());
         deleteColumnsValue(TABLE_NAME_1, null, payloadColumnsAndFilters);
+
+        Thread.sleep(SLEEP_DURATION);
+        String query = format("SELECT %s FROM %s.%s", VALID_COLUMN_2, getKeyspaceFromProperties(), TABLE_NAME_1);
+        String dummy_column_2 = (String) getCassandraService().select(query, null).get(0).get(VALID_COLUMN_2);
+        assertNull(dummy_column_2);
     }
 
     @Test
@@ -59,6 +72,11 @@ public class DeleteTestCase extends AbstractTestCases {
 
         Map<String, Object> payloadColumnsAndFilters = getPayloadColumnsAndFilters(null, getValidWhereClauseWithEq());
         deleteRows(TABLE_NAME_1, null, payloadColumnsAndFilters);
+
+        Thread.sleep(SLEEP_DURATION);
+        String query = format("SELECT * FROM %s.%s", getKeyspaceFromProperties(), TABLE_NAME_1);
+        List<Map<String, Object>> select = getCassandraService().select(query, null);
+        assertEquals(0, select.size());
     }
 
     @Test

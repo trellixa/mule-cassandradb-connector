@@ -3,8 +3,6 @@
  */
 package org.mule.modules.cassandradb.automation.functional;
 
-import com.datastax.driver.core.KeyspaceMetadata;
-import com.datastax.driver.core.TableMetadata;
 import org.junit.Test;
 import org.mule.modules.cassandradb.api.CreateTableInput;
 import org.mule.modules.cassandradb.automation.util.TestsConstants;
@@ -23,12 +21,12 @@ public class DropTableTestCase extends AbstractTestCases {
         String keyspace = getKeyspaceFromProperties();
         CreateTableInput basicCreateTableInput = getBasicCreateTableInput(TestDataBuilder.getColumns(), keyspace, tableName);
         getCassandraService().createTable(basicCreateTableInput);
-        assertNotNull(getTableMetadata(tableName, keyspace));
+        assertNotNull(fetchTableMetadata(keyspace, tableName));
 
         boolean result = dropTable(tableName, keyspace);
         assertTrue(result);
 
-        assertNull(getTableMetadata(tableName, keyspace));
+        assertNull(fetchTableMetadata(keyspace, tableName));
     }
 
     @Test
@@ -37,17 +35,12 @@ public class DropTableTestCase extends AbstractTestCases {
         String keyspace = getKeyspaceFromProperties();
         CreateTableInput basicCreateTableInput = getBasicCreateTableInput(getCompositePrimaryKey(), keyspace, tableName);
         getCassandraService().createTable(basicCreateTableInput);
-        assertNotNull(getTableMetadata(tableName, keyspace));
+        assertNotNull(fetchTableMetadata(tableName, keyspace));
 
-        boolean result = dropTable(tableName, keyspace);
+        boolean result = dropTable(keyspace, tableName);
         assertTrue(result);
 
-        assertNull(getTableMetadata(tableName, keyspace));
-    }
-
-    private TableMetadata getTableMetadata(String tableName, String keyspaceName) {
-        KeyspaceMetadata keyspaceMetadata = getKeyspaceMetadata(keyspaceName);
-        return keyspaceMetadata.getTable(tableName);
+        assertNull(fetchTableMetadata(keyspace, tableName));
     }
 
     boolean dropTable(String tableName, String keyspaceName) throws Exception {

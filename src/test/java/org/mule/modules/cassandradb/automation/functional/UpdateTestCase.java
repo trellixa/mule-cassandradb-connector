@@ -13,42 +13,52 @@ import org.mule.tck.junit4.matcher.ErrorTypeMatcher;
 
 import java.util.Map;
 
+import static java.lang.String.format;
+import static org.junit.Assert.assertEquals;
+import static org.mule.modules.cassandradb.automation.util.TestsConstants.TABLE_NAME_1;
+import static org.mule.modules.cassandradb.automation.util.TestsConstants.VALID_COLUMN_2;
 import static org.mule.modules.cassandradb.internal.exception.CassandraError.QUERY_VALIDATION;
 
 public class UpdateTestCase extends AbstractTestCases {
 
     @Before
     public void setup() throws Exception {
-        CreateTableInput basicCreateTableInput = TestDataBuilder.getBasicCreateTableInput(TestDataBuilder.getColumns(), getKeyspaceFromProperties(), TestsConstants.TABLE_NAME_1);
+        CreateTableInput basicCreateTableInput = TestDataBuilder.getBasicCreateTableInput(TestDataBuilder.getColumns(), getKeyspaceFromProperties(), TABLE_NAME_1);
         getCassandraService().createTable(basicCreateTableInput);
-        getCassandraService().insert(getKeyspaceFromProperties(), TestsConstants.TABLE_NAME_1, TestDataBuilder.getValidEntity());
+        getCassandraService().insert(getKeyspaceFromProperties(), TABLE_NAME_1, TestDataBuilder.getValidEntity());
     }
 
     @After
     public void tearDown() {
-        getCassandraService().dropTable(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties());
+        getCassandraService().dropTable(TABLE_NAME_1, getKeyspaceFromProperties());
     }
 
     @Test
     public void testUpdateUsingEqWithSuccess() throws Exception {
-        update(TestsConstants.TABLE_NAME_1, null, TestDataBuilder.getPayloadColumnsAndFilters(TestDataBuilder.getValidEntityForUpdate(), TestDataBuilder.getValidWhereClauseWithEq()));
+        String updatedValue = "updatedValue";
+        update(TABLE_NAME_1, null, TestDataBuilder.getPayloadColumnsAndFilters(TestDataBuilder.getValidEntityForUpdate(updatedValue), TestDataBuilder.getValidWhereClauseWithEq()));
+
+        Thread.sleep(SLEEP_DURATION);
+        String query = format("SELECT * FROM %s.%s", getKeyspaceFromProperties(), TABLE_NAME_1);
+        String newValue = (String) getCassandraService().select(query, null).get(0).get(VALID_COLUMN_2);
+        assertEquals(newValue, updatedValue);
     }
 
     @Test
     public void testUpdateUsingInWithSuccess() throws Exception {
-        update(TestsConstants.TABLE_NAME_1, null, TestDataBuilder.getPayloadColumnsAndFilters(TestDataBuilder.getValidEntityForUpdate(),
+        update(TABLE_NAME_1, null, TestDataBuilder.getPayloadColumnsAndFilters(TestDataBuilder.getValidEntityForUpdate("newValue"),
                 TestDataBuilder.getValidWhereClauseWithIN()));
     }
 
     @Test
     public void testUpdateWithInvalidInput() throws Exception {
         Map<String, Object> payloadColumnsAndFilters = TestDataBuilder.getPayloadColumnsAndFilters(TestDataBuilder.getInvalidEntity(), TestDataBuilder.getValidWhereClauseWithEq());
-        updateExpException(TestsConstants.TABLE_NAME_1, null, payloadColumnsAndFilters, QUERY_VALIDATION);
+        updateExpException(TABLE_NAME_1, null, payloadColumnsAndFilters, QUERY_VALIDATION);
     }
 
     @Test
     public void testUpdateWithInvalidWhereClause() throws Exception {
-        updateExpException(TestsConstants.TABLE_NAME_1, null, TestDataBuilder.getPayloadColumnsAndFilters(TestDataBuilder.getInvalidEntity(), TestDataBuilder.getInvalidWhereClause()), QUERY_VALIDATION);
+        updateExpException(TABLE_NAME_1, null, TestDataBuilder.getPayloadColumnsAndFilters(TestDataBuilder.getInvalidEntity(), TestDataBuilder.getInvalidWhereClause()), QUERY_VALIDATION);
     }
 
     protected void update(String tableName, String keyspaceName, Map<String, Object> entityToUpdate) throws Exception {

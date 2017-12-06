@@ -3,8 +3,10 @@
  */
 package org.mule.modules.cassandradb.automation.functional;
 
+import com.datastax.driver.core.ColumnMetadata;
 import com.datastax.driver.core.DataType;
 
+import com.datastax.driver.core.TableMetadata;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -12,6 +14,7 @@ import org.mule.modules.cassandradb.api.CreateTableInput;
 import org.mule.modules.cassandradb.internal.exception.CassandraError;
 import org.mule.tck.junit4.matcher.ErrorTypeMatcher;
 
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mule.modules.cassandradb.automation.util.TestsConstants.TABLE_NAME_1;
 import static org.mule.modules.cassandradb.automation.util.TestsConstants.VALID_COLUMN_1;
@@ -32,7 +35,13 @@ public class RenameColumnTestCase extends AbstractTestCases {
 
     @Test
     public void shouldRenamePKColumnWithSuccess() throws Exception {
-        assertTrue(renameColumn(TABLE_NAME_1, getKeyspaceFromProperties(), VALID_COLUMN_1, "renamed"));
+        String renamed = "renamed";
+        assertTrue(renameColumn(TABLE_NAME_1, getKeyspaceFromProperties(), VALID_COLUMN_1, renamed));
+
+        Thread.sleep(SLEEP_DURATION);
+        TableMetadata tableMetadata = fetchTableMetadata(getKeyspaceFromProperties(), TABLE_NAME_1);
+        ColumnMetadata column = tableMetadata.getColumn(renamed);
+        assertNotNull(column);
     }
 
     @Test

@@ -3,6 +3,8 @@
  */
 package org.mule.modules.cassandradb.automation.functional;
 
+import com.datastax.driver.core.ColumnMetadata;
+import com.datastax.driver.core.TableMetadata;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -11,9 +13,13 @@ import org.mule.modules.cassandradb.automation.util.TestsConstants;
 import org.mule.modules.cassandradb.internal.exception.CassandraError;
 import org.mule.tck.junit4.matcher.ErrorTypeMatcher;
 
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getBasicCreateTableInput;
 import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getColumns;
+import static org.mule.modules.cassandradb.automation.util.TestsConstants.TABLE_NAME_1;
+import static org.mule.modules.cassandradb.automation.util.TestsConstants.VALID_COLUMN_1;
+import static org.mule.modules.cassandradb.automation.util.TestsConstants.VALID_COLUMN_2;
 import static org.mule.modules.cassandradb.internal.exception.CassandraError.QUERY_VALIDATION;
 
 
@@ -21,25 +27,31 @@ public class DropColumnTestCase extends AbstractTestCases {
 
     @Before
     public void setup() throws Exception {
-        CreateTableInput basicCreateTableInput = getBasicCreateTableInput(getColumns(), getKeyspaceFromProperties(), TestsConstants.TABLE_NAME_1);
+        CreateTableInput basicCreateTableInput = getBasicCreateTableInput(getColumns(), getKeyspaceFromProperties(), TABLE_NAME_1);
         getCassandraService().createTable(basicCreateTableInput);
     }
 
     @After
     public void tearDown() {
-        getCassandraService().dropTable(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties());
+        getCassandraService().dropTable(TABLE_NAME_1, getKeyspaceFromProperties());
     }
 
     @Test
     public void testRemoveColumnWithSuccess() throws Exception {
-        assertTrue(dropColumn(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties(), TestsConstants.VALID_COLUMN_1));
-        assertTrue(dropColumn(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties(), TestsConstants.VALID_COLUMN_2));
-    }
+        assertTrue(dropColumn(TABLE_NAME_1, getKeyspaceFromProperties(), VALID_COLUMN_1));
+        assertTrue(dropColumn(TABLE_NAME_1, getKeyspaceFromProperties(), VALID_COLUMN_2));
 
+        Thread.sleep(SLEEP_DURATION);
+        TableMetadata tableMetadata = fetchTableMetadata(getKeyspaceFromProperties(), TABLE_NAME_1);
+        ColumnMetadata column = tableMetadata.getColumn(VALID_COLUMN_1);
+        assertNull(column);
+        ColumnMetadata column2 = tableMetadata.getColumn(VALID_COLUMN_2);
+        assertNull(column2);
+    }
 
     @Test
     public void testRemoveColumnWithInvalidName() throws Exception {
-        dropColumnExpException(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties(), TestsConstants.COLUMN, QUERY_VALIDATION );
+        dropColumnExpException(TABLE_NAME_1, getKeyspaceFromProperties(), TestsConstants.COLUMN, QUERY_VALIDATION );
     }
 
     boolean dropColumn(String tableName, String keyspaceName, String column) throws Exception {
