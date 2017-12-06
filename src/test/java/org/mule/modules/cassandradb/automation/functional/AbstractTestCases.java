@@ -10,7 +10,6 @@ import org.mule.modules.cassandradb.api.CQLQueryInput;
 import org.mule.modules.cassandradb.api.CreateKeyspaceInput;
 import org.mule.modules.cassandradb.automation.util.CassandraProperties;
 import org.mule.modules.cassandradb.automation.util.PropertiesLoaderUtil;
-import org.mule.modules.cassandradb.automation.util.TestsConstants;
 import org.mule.modules.cassandradb.internal.config.CassandraConfig;
 import org.mule.modules.cassandradb.internal.connection.CassandraConnection;
 import org.mule.modules.cassandradb.internal.connection.ConnectionParameters;
@@ -31,7 +30,7 @@ import java.io.IOException;
                 CassandraConfig.class, CQLQueryInput.class, CassandraMetadata.class
         }
 )
-public class AbstractTestCases extends MuleArtifactFunctionalTestCase {
+public abstract class AbstractTestCases extends MuleArtifactFunctionalTestCase {
 
     private static final String FLOW_CONFIG_LOCATION = "src/test/resources/automation-test-flows.xml";
 
@@ -56,7 +55,7 @@ public class AbstractTestCases extends MuleArtifactFunctionalTestCase {
     }
 
     @Before
-    public void initialSetup() throws InterruptedException {
+    public void initialSetup() {
         cassandraProperties = getCassandraProperties();
         ConnectionParameters connectionParameters = new ConnectionParameters(cassandraProperties.getHost(), cassandraProperties.getPort(), null, null, null, null);
         cassandraConnection = CassandraConnection.build(connectionParameters);

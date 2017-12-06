@@ -13,6 +13,8 @@ import org.mule.modules.cassandradb.automation.util.TestsConstants;
 import static org.mule.modules.cassandradb.api.ColumnType.BOOLEAN;
 import static org.mule.modules.cassandradb.api.ColumnType.INT;
 import static org.mule.modules.cassandradb.api.ColumnType.TEXT;
+import static org.mule.modules.cassandradb.automation.util.TestsConstants.DUMMY_PARTITION_KEY;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -45,7 +47,7 @@ public class TestDataBuilder {
 
     public static Map<String, Object> getValidEntity() {
         Map<String, Object> entity = new HashMap<String, Object>();
-        entity.put(TestsConstants.DUMMY_PARTITION_KEY, "value1");
+        entity.put(DUMMY_PARTITION_KEY, "value1");
         entity.put(TestsConstants.VALID_COLUMN_2, "someValue" + System.currentTimeMillis());
         return entity;
     }
@@ -58,7 +60,7 @@ public class TestDataBuilder {
 
     public static Map<String, Object> getValidWhereClauseWithEq() {
         Map<String, Object> entity = new HashMap<String, Object>();
-        entity.put(TestsConstants.DUMMY_PARTITION_KEY, "value1");
+        entity.put(DUMMY_PARTITION_KEY, "value1");
         return entity;
     }
 
@@ -67,7 +69,7 @@ public class TestDataBuilder {
         List list = new ArrayList();
         list.add("value1");
         list.add("value2");
-        entity.put(TestsConstants.DUMMY_PARTITION_KEY, list);
+        entity.put(DUMMY_PARTITION_KEY, list);
         return entity;
     }
 
@@ -106,7 +108,7 @@ public class TestDataBuilder {
         List<String> list = new ArrayList<String>();
         list.add("firstValue");
         list.add("secondValue");
-        entity.put(TestsConstants.DUMMY_PARTITION_KEY, "value1");
+        entity.put(DUMMY_PARTITION_KEY, "value1");
         entity.put(TestsConstants.VALID_LIST_COLUMN, list);
         entity.put(TestsConstants.VALID_COLUMN_1, 1);
         return entity;
@@ -123,7 +125,7 @@ public class TestDataBuilder {
         Map<String, Object> item = new HashMap<String, Object>();
         item.put("1", "firstValue");
         item.put("2", "secondValue");
-        entity.put(TestsConstants.DUMMY_PARTITION_KEY, "value1");
+        entity.put(DUMMY_PARTITION_KEY, "value1");
         entity.put(TestsConstants.VALID_MAP_COLUMN, item);
         entity.put(TestsConstants.VALID_COLUMN_1, 1);
         return entity;
@@ -140,7 +142,7 @@ public class TestDataBuilder {
         Set<String> item = new HashSet<String>();
         item.add("firstValue");
         item.add("secondValue");
-        entity.put(TestsConstants.DUMMY_PARTITION_KEY, "value1");
+        entity.put(DUMMY_PARTITION_KEY, "value1");
         entity.put(TestsConstants.VALID_SET_COLUMN, item);
         entity.put(TestsConstants.VALID_COLUMN_1, 1);
         return entity;
@@ -161,7 +163,7 @@ public class TestDataBuilder {
 
     public static List<ColumnInput> getPrimaryKey(){
         List<ColumnInput> columns = new ArrayList<ColumnInput>();
-        columns.add(createColumn(true, "TEXT", TEXT));
+        columns.add(createColumn(true, DUMMY_PARTITION_KEY, TEXT));
         return columns;
     }
 
@@ -186,7 +188,7 @@ public class TestDataBuilder {
 
         ColumnInput column = new ColumnInput();
         column.setPrimaryKey(true);
-        column.setName(TestsConstants.DUMMY_PARTITION_KEY);
+        column.setName(DUMMY_PARTITION_KEY);
         column.setType(TEXT);
 
         ColumnInput column2 = new ColumnInput();
@@ -205,7 +207,7 @@ public class TestDataBuilder {
 
         ColumnInput column1 = new ColumnInput();
         column1.setPrimaryKey(true);
-        column1.setName(TestsConstants.DUMMY_PARTITION_KEY);
+        column1.setName(DUMMY_PARTITION_KEY);
         column1.setType(TEXT);
 
         ColumnInput column2 = new ColumnInput();
