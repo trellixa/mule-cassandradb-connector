@@ -12,15 +12,21 @@ import org.mule.modules.cassandradb.internal.connection.CassandraConnection;
 import org.mule.modules.cassandradb.internal.service.CassandraServiceImpl;
 import org.mule.modules.cassandradb.internal.util.Constants;
 import org.mule.runtime.api.connection.ConnectionException;
+import org.mule.runtime.api.metadata.MetadataContext;
 import org.mule.runtime.api.metadata.MetadataKey;
 import org.mule.runtime.api.metadata.MetadataResolvingException;
+import org.mule.runtime.core.privileged.util.CollectionUtils;
+import org.mule.runtime.extension.api.runtime.config.ConfigurationInstance;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sun.reflect.generics.tree.BaseType;
 
+import java.util.Optional;
 import java.util.Set;
 
+import static com.datastax.driver.core.DataType.Name.CUSTOM;
 import static java.util.stream.Collectors.toSet;
+import static org.apache.commons.collections.CollectionUtils.*;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static org.mule.metadata.java.api.JavaTypeLoader.JAVA;
 import static org.mule.modules.cassandradb.internal.util.Constants.WHERE;
@@ -32,9 +38,9 @@ public class MetadataRetriever {
     private CassandraConfig config;
     private CassandraConnection connection;
 
-    public MetadataRetriever(CassandraConfig config, CassandraConnection connection){
-        this.config = config;
-        this.connection = connection;
+    public MetadataRetriever(Optional<CassandraConnection> client, Optional<CassandraConfig> config){
+        this.config = config.get();
+        this.connection = client.get();
     }
 
     public Set<MetadataKey> getMetadataKeys() throws MetadataResolvingException, ConnectionException {
@@ -53,11 +59,11 @@ public class MetadataRetriever {
         //build the metadata
         if (tableMetadata != null && tableMetadata.getColumns() != null) {
             for (ColumnMetadata column : tableMetadata.getColumns()) {
-                addMetadataField(builder, builder.objectType().id(key), column.getName(), column.getType());
+                addMetadataField(builder, builder.objectType().id(column.getName()), column.getName(), column.getType());
             }
+            return builder.build();
         }
-
-        return builder.build();
+        return builder.anyType().build();
     }
 
     public MetadataType getMetadataOnlyWithFilters(String key){
@@ -112,6 +118,8 @@ public class MetadataRetriever {
             case VARCHAR:
             case ASCII:
             case INET:
+                typeBuilder(typeBuilder, key).stringType();
+                break;
             case FLOAT:
             case DOUBLE:
             case INT:
@@ -121,24 +129,33 @@ public class MetadataRetriever {
             case DECIMAL:
             case BIGINT:
                 typeBuilder(typeBuilder, key).numberType();
+                break;
             case BOOLEAN:
                 typeBuilder(typeBuilder, key).booleanType();
+                break;
             case DATE:
                 typeBuilder(typeBuilder, key).dateType();
+                break;
             case TIMESTAMP:
                 typeBuilder(typeBuilder, key).dateTimeType();
+                break;
             case TIME:
                 typeBuilder(typeBuilder, key).timeType();
+                break;
             case LIST:
             case SET:
-                typeBuilder(typeBuilder, key).arrayType().of(addMetadataField(builder, builder.objectType().id(key), key, type.getTypeArguments().get(0))).build();
+                typeBuilder(typeBuilder, key).arrayType().of(
+                        isEmpty(type.getTypeArguments())? typeBuilder(typeBuilder, key).objectType():
+                        addMetadataField(builder, builder.objectType().id(key), key, type.getTypeArguments().get(0))
+                ).build();
+                break;
             default:
                 typeBuilder(typeBuilder, key).objectType();
-            return typeBuilder;
         }
+        return typeBuilder;
     }
 
-    public BaseTypeBuilder typeBuilder(ObjectTypeBuilder builder, String key){
+    private BaseTypeBuilder typeBuilder(ObjectTypeBuilder builder, String key){
         return builder.addField().key(key).value();
     }
 
@@ -150,5 +167,10 @@ public class MetadataRetriever {
             }
         }
         return null;
+    }
+
+    public static Optional<CassandraConfig> getConfig(MetadataContext context) {
+        Object config = context.getConfig().get();
+        return config instanceof CassandraConfig ? context.getConfig() : Optional.of((CassandraConfig) ((Optional<ConfigurationInstance>) context.getConfig().get()).get().getValue());
     }
 }

@@ -10,6 +10,7 @@ import org.mule.modules.cassandradb.api.CQLQueryInput;
 import org.mule.modules.cassandradb.api.CreateKeyspaceInput;
 import org.mule.modules.cassandradb.automation.util.CassandraProperties;
 import org.mule.modules.cassandradb.automation.util.PropertiesLoaderUtil;
+import org.mule.modules.cassandradb.automation.util.TestsConstants;
 import org.mule.modules.cassandradb.internal.config.CassandraConfig;
 import org.mule.modules.cassandradb.internal.connection.CassandraConnection;
 import org.mule.modules.cassandradb.internal.connection.ConnectionParameters;
@@ -51,7 +52,7 @@ public class AbstractTestCases extends MuleArtifactFunctionalTestCase {
     }
 
     @Before
-    public void initialSetup() {
+    public void initialSetup() throws InterruptedException {
         cassandraProperties = getCassandraProperties();
         ConnectionParameters connectionParameters = new ConnectionParameters(cassandraProperties.getHost(), cassandraProperties.getPort(), null, null, null, null);
         cassandraConnection = CassandraConnection.build(connectionParameters);
@@ -61,7 +62,6 @@ public class AbstractTestCases extends MuleArtifactFunctionalTestCase {
         //setup db env
         CreateKeyspaceInput keyspaceInput = new CreateKeyspaceInput();
         keyspaceInput.setKeyspaceName(cassandraProperties.getKeyspace());
-
         cassandraService.createKeyspace(keyspaceInput);
     }
 

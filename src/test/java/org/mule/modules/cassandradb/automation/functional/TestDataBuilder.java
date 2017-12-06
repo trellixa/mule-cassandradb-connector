@@ -12,6 +12,9 @@ import org.mule.modules.cassandradb.automation.util.TestsConstants;
 
 import java.util.*;
 
+import static org.mule.modules.cassandradb.api.ColumnType.BOOLEAN;
+import static org.mule.modules.cassandradb.api.ColumnType.INT;
+import static org.mule.modules.cassandradb.api.ColumnType.TEXT;
 
 public class TestDataBuilder {
 
@@ -149,14 +152,24 @@ public class TestDataBuilder {
 
     public static List<ColumnInput> getPrimaryKey(){
         List<ColumnInput> columns = new ArrayList<ColumnInput>();
-
-        ColumnInput column = new ColumnInput();
-        column.setPrimaryKey(true);
-        column.setName(TestsConstants.DUMMY_PARTITION_KEY);
-        column.setType(ColumnType.TEXT);
-        columns.add(column);
-
+        columns.add(createColumn(true, "TEXT", TEXT));
         return columns;
+    }
+
+    public static List<ColumnInput> getMetadataColumns(){
+        List<ColumnInput> columns = new ArrayList<ColumnInput>();
+        columns.add(createColumn(true, "NUMBER", INT));
+        columns.add(createColumn(false, "TEXT", TEXT));
+        columns.add(createColumn(false, "BOOL", BOOLEAN));
+        return columns;
+    }
+
+    public static ColumnInput createColumn(boolean isPrimary, String name, ColumnType type){
+        ColumnInput column = new ColumnInput();
+        column.setPrimaryKey(isPrimary);
+        column.setName(name);
+        column.setType(type);
+        return column;
     }
 
     public static List<ColumnInput> getCompositePrimaryKey(){
@@ -165,7 +178,7 @@ public class TestDataBuilder {
         ColumnInput column = new ColumnInput();
         column.setPrimaryKey(true);
         column.setName(TestsConstants.DUMMY_PARTITION_KEY);
-        column.setType(ColumnType.TEXT);
+        column.setType(TEXT);
 
         ColumnInput column2 = new ColumnInput();
         column2.setPrimaryKey(true);
@@ -184,7 +197,7 @@ public class TestDataBuilder {
         ColumnInput column1 = new ColumnInput();
         column1.setPrimaryKey(true);
         column1.setName(TestsConstants.DUMMY_PARTITION_KEY);
-        column1.setType(ColumnType.TEXT);
+        column1.setType(TEXT);
 
         ColumnInput column2 = new ColumnInput();
         column2.setName(TestsConstants.VALID_COLUMN_1);
@@ -192,7 +205,7 @@ public class TestDataBuilder {
 
         ColumnInput column3 = new ColumnInput();
         column3.setName(TestsConstants.VALID_COLUMN_2);
-        column3.setType(ColumnType.TEXT);
+        column3.setType(TEXT);
 
         columns.add(column1);
         columns.add(column2);

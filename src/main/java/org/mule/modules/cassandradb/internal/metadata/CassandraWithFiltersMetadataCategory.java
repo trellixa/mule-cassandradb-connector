@@ -12,15 +12,17 @@ import org.mule.runtime.api.metadata.resolving.TypeKeysResolver;
 
 import java.util.Set;
 
+import static org.mule.modules.cassandradb.internal.metadata.MetadataRetriever.getConfig;
+
 public class CassandraWithFiltersMetadataCategory implements TypeKeysResolver, InputTypeResolver<String> {
     @Override
     public Set<MetadataKey> getKeys(MetadataContext context) throws MetadataResolvingException, ConnectionException {
-        return new MetadataRetriever(CassandraConfig.class.cast(context.getConfig().get()), CassandraConnection.class.cast(context.getConnection().get())).getMetadataKeys();
+        return new MetadataRetriever(context.getConnection(), getConfig(context)).getMetadataKeys();
     }
 
     @Override
     public MetadataType getInputMetadata(MetadataContext context, String key) throws MetadataResolvingException, ConnectionException {
-        return new MetadataRetriever(CassandraConfig.class.cast(context.getConfig().get()), CassandraConnection.class.cast(context.getConnection().get())).getMetadataWithFilters(key);
+        return new MetadataRetriever(context.getConnection(), getConfig(context)).getMetadataWithFilters(key);
     }
 
     @Override
