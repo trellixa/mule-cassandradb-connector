@@ -3,6 +3,7 @@
 .project
 target
 .DS_Store
+*.pem
 bin/
 .idea/
 *.iml
