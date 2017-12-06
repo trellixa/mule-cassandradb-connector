@@ -32,10 +32,10 @@ public class MetadataRetriever {
     private CassandraConnection connection;
     private CassandraMetadata cassandraMetadata;
 
-    public MetadataRetriever(CassandraConfig config, CassandraConnection connection){
-        this.config = config;
-        this.connection = connection;
-        this.cassandraMetadata = new CassandraMetadata(connection);
+    public MetadataRetriever(Optional<CassandraConnection> connection, Optional<CassandraConfig> config){
+        this.config = config.get();
+        this.connection = connection.get();
+        this.cassandraMetadata = new CassandraMetadata(this.connection);
     }
 
     public Set<MetadataKey> getMetadataKeys() throws MetadataResolvingException, ConnectionException {
@@ -50,11 +50,12 @@ public class MetadataRetriever {
         logger.info("Retrieving input metadata for the key: {}", key);
         TableMetadata tableMetadata = fetchTableMetadata(connection.getCassandraSession().getLoggedKeyspace(), key);
         BaseTypeBuilder builder = new BaseTypeBuilder(JAVA);
+        ObjectTypeBuilder typeBuilder = builder.objectType().id(key);
 
         //build the metadata
         if (tableMetadata != null && tableMetadata.getColumns() != null) {
             for (ColumnMetadata column : tableMetadata.getColumns()) {
-                addMetadataField(builder, builder.objectType().id(column.getName()), column.getName(), column.getType());
+                addMetadataField(builder, typeBuilder, column.getName(), column.getType());
             }
             return builder.build();
         }
@@ -68,13 +69,14 @@ public class MetadataRetriever {
         BaseTypeBuilder builder = new BaseTypeBuilder(JAVA);
         //build the metadata
         if (tableMetadata != null && tableMetadata.getColumns() != null) {
+            ObjectTypeBuilder typeBuilder = builder.objectType().id(key);
             if (tableMetadata.getPrimaryKey().size() == 1) {
                 for (ColumnMetadata column : tableMetadata.getPrimaryKey()) {
-                    addMetadataField(builder, builder.objectType().id(tableMetadata.getName()), column.getName(), column.getType());
+                    addMetadataField(builder, typeBuilder, column.getName(), column.getType());
                 }
             } else {
                 ColumnMetadata columnMetadata = tableMetadata.getPrimaryKey().get(0);
-                addMetadataField(builder, builder.objectType().id(tableMetadata.getName()),  columnMetadata.getName(),columnMetadata.getType());
+                addMetadataField(builder, typeBuilder,  columnMetadata.getName(),columnMetadata.getType());
             }
             return builder.build();
         }
@@ -88,15 +90,16 @@ public class MetadataRetriever {
 
         //build the metadata
         if (tableMetadata != null && tableMetadata.getColumns() != null) {
+            ObjectTypeBuilder typeBuilder = builder.objectType().id(key);
             for (ColumnMetadata column : tableMetadata.getColumns()) {
-                addMetadataField(builder, builder.objectType().id(tableMetadata.getName()), column.getName(), column.getType());
+                addMetadataField(builder, typeBuilder, column.getName(), column.getType());
             }
             if (tableMetadata.getPrimaryKey().size() == 1) {
                 ColumnMetadata columnMetadata = tableMetadata.getPrimaryKey().get(0);
-                addMetadataField(builder, builder.objectType().id(tableMetadata.getName()),  columnMetadata.getName(),columnMetadata.getType());
+                addMetadataField(builder, typeBuilder,  columnMetadata.getName(),columnMetadata.getType());
             } else {
                 for (ColumnMetadata column : tableMetadata.getPrimaryKey()) {
-                    addMetadataField(builder, builder.objectType().id(tableMetadata.getName()), column.getName(), column.getType());
+                    addMetadataField(builder, typeBuilder, column.getName(), column.getType());
                 }
             }
             return builder.build();

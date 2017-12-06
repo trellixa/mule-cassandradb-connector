@@ -24,6 +24,10 @@ import java.util.Set;
 public class TestDataBuilder {
 
     public static List<String> cassandraCategoryMetadataTestKeys = new LinkedList<String>();
+    public static final String metadataKeyName = "dummy_table_name_2";
+    public static final String insertFlowName = "insert-flow";
+    public static final String deleteRowsFlowName = "deleteRows-flow";
+    public static final String updateFlowName = "update-flow";
 
     static {
         cassandraCategoryMetadataTestKeys.add(TestsConstants.TABLE_NAME_2);
