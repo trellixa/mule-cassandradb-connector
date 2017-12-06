@@ -8,6 +8,9 @@ import org.mule.modules.cassandradb.api.CreateTableInput;
 import org.mule.modules.cassandradb.internal.config.CassandraConfig;
 import org.mule.modules.cassandradb.internal.connection.CassandraConnection;
 import org.mule.modules.cassandradb.internal.exception.CassandraErrorTypeProvider;
+import org.mule.modules.cassandradb.internal.metadata.CassandraMetadataResolver;
+import org.mule.modules.cassandradb.internal.metadata.CassandraOnlyWithFiltersMetadataResolver;
+import org.mule.modules.cassandradb.internal.metadata.CassandraWithFiltersMetadataCategory;
 import org.mule.modules.cassandradb.internal.metadata.TmpMetadataToRemove;
 import org.mule.modules.cassandradb.internal.service.CassandraService;
 import org.mule.modules.cassandradb.internal.util.DataTypeResolver;
@@ -15,6 +18,7 @@ import org.mule.modules.cassandradb.internal.util.DefaultDsqlQueryTranslator;
 import org.mule.runtime.extension.api.annotation.error.Throws;
 import org.mule.runtime.extension.api.annotation.metadata.MetadataKeyId;
 import org.mule.runtime.extension.api.annotation.metadata.OutputResolver;
+import org.mule.runtime.extension.api.annotation.metadata.TypeResolver;
 import org.mule.runtime.extension.api.annotation.param.Config;
 import org.mule.runtime.extension.api.annotation.param.Connection;
 import org.mule.runtime.extension.api.annotation.param.Content;
@@ -189,9 +193,9 @@ public class CassandraOperations extends CassandraBaseOperarations  {
      */
     public void insert(@Config CassandraConfig config,
                        @Connection CassandraConnection connection,
-                       String table,
+                       @MetadataKeyId(CassandraMetadataResolver.class) String table,
                        @Optional String keyspaceName,
-                       @Content Map<String, Object> entity) {
+                       @Content @TypeResolver(CassandraMetadataResolver.class) Map<String, Object> entity) {
         if (logger.isDebugEnabled()) {
             logger.debug("Inserting entity " + entity + " into the " + table + " table ");
         }
@@ -210,9 +214,9 @@ public class CassandraOperations extends CassandraBaseOperarations  {
     @SuppressWarnings("unchecked")
     public void update(@Config CassandraConfig config,
                        @Connection CassandraConnection connection,
-                       String table,
+                       @MetadataKeyId(CassandraWithFiltersMetadataCategory.class) String table,
                        @Optional String keyspaceName,
-                       @Content Map<String, Object> entityToUpdate) {
+                       @Content @TypeResolver(CassandraWithFiltersMetadataCategory.class) Map<String, Object> entityToUpdate) {
         if (logger.isDebugEnabled()) {
             logger.debug("Updating  entity" + entityToUpdate + " into the " + table + " table ");
         }
@@ -247,10 +251,10 @@ public class CassandraOperations extends CassandraBaseOperarations  {
      * @param parameters the query parameters
      * @return list of entities returned by the select query
      */
-    @Query(translator = DefaultDsqlQueryTranslator.class, entityResolver = TmpMetadataToRemove.class, nativeOutputResolver = TmpMetadataToRemove.class)
+    @Query(translator = DefaultDsqlQueryTranslator.class, entityResolver = CassandraMetadataResolver.class, nativeOutputResolver = CassandraMetadataResolver.class)
     public List<Map<String, Object>>  select(@Config CassandraConfig config,
                                              @Connection CassandraConnection connection,
-                                             @MetadataKeyId final String query,
+                                             @MetadataKeyId(CassandraMetadataResolver.class) final String query,
                                              @Optional List<Object> parameters)  {
         if (logger.isDebugEnabled()) {
             logger.debug("Executing select query: " + query + " with the parameters: " + parameters);
@@ -266,12 +270,11 @@ public class CassandraOperations extends CassandraBaseOperarations  {
      * @param keyspaceName (optional) the keyspace which contains the table to be used
      * @param payload operation input: where clause for the delete operation
      */
-    //@OutputResolver(output = TmpMetadataToRemove.class)
     public void deleteRows(@Config CassandraConfig config,
                            @Connection CassandraConnection connection,
-                           String table,
+                           @MetadataKeyId(CassandraOnlyWithFiltersMetadataResolver.class) String table,
                            @Optional String keyspaceName,
-                           @Content Map<String, Object> payload) {
+                           @Content @TypeResolver(CassandraOnlyWithFiltersMetadataResolver.class) Map<String, Object> payload) {
         newExecutionBuilder(config, connection).execute(CassandraService::delete)
                 .withParam(keyspaceName)
                 .withParam(table)
@@ -287,9 +290,9 @@ public class CassandraOperations extends CassandraBaseOperarations  {
      */
     public void deleteColumnsValue(@Config CassandraConfig config,
                                    @Connection CassandraConnection connection,
-                                   String table,
+                                   @MetadataKeyId(CassandraWithFiltersMetadataCategory.class) String table,
                                    @Optional String keyspaceName,
-                                   @Content Map<String, Object> payload) {
+                                   @Content @TypeResolver(CassandraWithFiltersMetadataCategory.class) Map<String, Object> payload) {
         newExecutionBuilder(config, connection).execute(CassandraService::delete)
                 .withParam(keyspaceName)
                 .withParam(table)

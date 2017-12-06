@@ -10,17 +10,20 @@ import org.mule.metadata.api.model.MetadataType;
 import org.mule.modules.cassandradb.internal.config.CassandraConfig;
 import org.mule.modules.cassandradb.internal.connection.CassandraConnection;
 import org.mule.modules.cassandradb.internal.service.CassandraServiceImpl;
+import org.mule.modules.cassandradb.internal.util.Constants;
 import org.mule.runtime.api.connection.ConnectionException;
 import org.mule.runtime.api.metadata.MetadataKey;
 import org.mule.runtime.api.metadata.MetadataResolvingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sun.reflect.generics.tree.BaseType;
 
 import java.util.Set;
 
 import static java.util.stream.Collectors.toSet;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static org.mule.metadata.java.api.JavaTypeLoader.JAVA;
+import static org.mule.modules.cassandradb.internal.util.Constants.WHERE;
 import static org.mule.runtime.api.metadata.MetadataKeyBuilder.newKey;
 
 public class MetadataRetriever {
@@ -55,6 +58,50 @@ public class MetadataRetriever {
         }
 
         return builder.build();
+    }
+
+    public MetadataType getMetadataOnlyWithFilters(String key){
+        logger.info("Retrieving input metadata for the key: {}", key);
+        //extract tables metadata from database
+        TableMetadata tableMetadata = fetchTableMetadata(connection.getCassandraSession().getLoggedKeyspace(), key);
+        BaseTypeBuilder builder = new BaseTypeBuilder(JAVA);
+        //build the metadata
+        if (tableMetadata != null && tableMetadata.getColumns() != null) {
+            if (tableMetadata.getPrimaryKey().size() == 1) {
+                for (ColumnMetadata column : tableMetadata.getPrimaryKey()) {
+                    addMetadataField(builder, builder.objectType().id(tableMetadata.getName()), column.getName(), column.getType());
+                }
+            } else {
+                ColumnMetadata columnMetadata = tableMetadata.getPrimaryKey().get(0);
+                addMetadataField(builder, builder.objectType().id(tableMetadata.getName()),  columnMetadata.getName(),columnMetadata.getType());
+            }
+            return builder.build();
+        }
+        return builder.anyType().build();
+    }
+
+    public MetadataType getMetadataWithFilters(String key){
+        //extract tables metadata from database
+        TableMetadata tableMetadata = fetchTableMetadata(connection.getCassandraSession().getLoggedKeyspace(), key);
+        BaseTypeBuilder builder = new BaseTypeBuilder(JAVA);
+
+        //build the metadata
+        if (tableMetadata != null && tableMetadata.getColumns() != null) {
+            for (ColumnMetadata column : tableMetadata.getColumns()) {
+                addMetadataField(builder, builder.objectType().id(tableMetadata.getName()), column.getName(), column.getType());
+            }
+            if (tableMetadata.getPrimaryKey().size() == 1) {
+                ColumnMetadata columnMetadata = tableMetadata.getPrimaryKey().get(0);
+                addMetadataField(builder, builder.objectType().id(tableMetadata.getName()),  columnMetadata.getName(),columnMetadata.getType());
+            } else {
+                for (ColumnMetadata column : tableMetadata.getPrimaryKey()) {
+                    addMetadataField(builder, builder.objectType().id(tableMetadata.getName()), column.getName(), column.getType());
+                }
+            }
+            return builder.build();
+        }
+
+        return builder.anyType().build();
     }
 
     protected ObjectTypeBuilder addMetadataField(BaseTypeBuilder builder, ObjectTypeBuilder typeBuilder, String key, DataType type) {
