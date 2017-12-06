@@ -80,7 +80,6 @@ public class CreateKeyspaceTestCase extends AbstractTestCases {
     }
 
     private void verifyResponse(CreateKeyspaceInput keyspaceInput) {
-        boolean wasCreated = false;
         KeyspaceMetadata ksMedata = getKeyspaceMetadata(keyspaceInput.getKeyspaceName());
         assertNotNull(ksMedata);
 

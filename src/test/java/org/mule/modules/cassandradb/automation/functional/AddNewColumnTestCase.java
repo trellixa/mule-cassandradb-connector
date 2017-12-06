@@ -16,6 +16,7 @@ import static org.junit.Assert.assertTrue;
 import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getAlterColumnInput;
 import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getBasicCreateTableInput;
 import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getColumns;
+import static org.mule.modules.cassandradb.automation.util.TestsConstants.TABLE_NAME_1;
 import static org.mule.modules.cassandradb.internal.exception.CassandraError.QUERY_VALIDATION;
 
 
@@ -23,25 +24,25 @@ public class AddNewColumnTestCase extends AbstractTestCases {
 
     @Before
     public void setup() {
-        CreateTableInput basicCreateTableInput = getBasicCreateTableInput(getColumns(), getKeyspaceFromProperties(), TestsConstants.TABLE_NAME_1);
+        CreateTableInput basicCreateTableInput = getBasicCreateTableInput(getColumns(), getKeyspaceFromProperties(), TABLE_NAME_1);
         getCassandraService().createTable(basicCreateTableInput);
     }
 
     @After
     public void tearDown() {
-        getCassandraService().dropTable(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties());
+        getCassandraService().dropTable(TABLE_NAME_1, getKeyspaceFromProperties());
     }
 
     @Test
     public void testAddNewColumnOfPrimitiveTypeWithSuccess() throws Exception {
         AlterColumnInput alterColumnInput = getAlterColumnInput(DataType.text().toString() + System.currentTimeMillis(), ColumnType.TEXT);
-        assertTrue(addNewColumn(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties(), alterColumnInput));
+        assertTrue(addNewColumn(TABLE_NAME_1, getKeyspaceFromProperties(), alterColumnInput));
     }
 
     @Test
     public void testAddNewColumnWithSameName() throws Exception {
         AlterColumnInput alterColumnInput = getAlterColumnInput(TestsConstants.VALID_COLUMN_1, ColumnType.TEXT);
-        addNewColumnExpException(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties(), alterColumnInput, QUERY_VALIDATION);
+        addNewColumnExpException(TABLE_NAME_1, getKeyspaceFromProperties(), alterColumnInput, QUERY_VALIDATION);
     }
 
     boolean addNewColumn(String tableName, String keyspaceName, AlterColumnInput alterColumnInput) throws Exception {

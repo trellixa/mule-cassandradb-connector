@@ -2,7 +2,6 @@ package org.mule.modules.cassandradb.internal.metadata;
 
 import com.datastax.driver.core.ColumnMetadata;
 import com.datastax.driver.core.DataType;
-import com.datastax.driver.core.KeyspaceMetadata;
 import com.datastax.driver.core.TableMetadata;
 import org.mule.metadata.api.builder.BaseTypeBuilder;
 import org.mule.metadata.api.builder.ObjectTypeBuilder;
@@ -10,20 +9,16 @@ import org.mule.metadata.api.model.MetadataType;
 import org.mule.modules.cassandradb.internal.config.CassandraConfig;
 import org.mule.modules.cassandradb.internal.connection.CassandraConnection;
 import org.mule.modules.cassandradb.internal.service.CassandraServiceImpl;
-import org.mule.modules.cassandradb.internal.util.Constants;
 import org.mule.runtime.api.connection.ConnectionException;
 import org.mule.runtime.api.metadata.MetadataKey;
 import org.mule.runtime.api.metadata.MetadataResolvingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sun.reflect.generics.tree.BaseType;
 
 import java.util.Set;
 
 import static java.util.stream.Collectors.toSet;
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static org.mule.metadata.java.api.JavaTypeLoader.JAVA;
-import static org.mule.modules.cassandradb.internal.util.Constants.WHERE;
 import static org.mule.runtime.api.metadata.MetadataKeyBuilder.newKey;
 
 public class MetadataRetriever {
@@ -31,10 +26,12 @@ public class MetadataRetriever {
     private static final Logger logger = LoggerFactory.getLogger(MetadataRetriever.class);
     private CassandraConfig config;
     private CassandraConnection connection;
+    private CassandraMetadata cassandraMetadata;
 
     public MetadataRetriever(CassandraConfig config, CassandraConnection connection){
         this.config = config;
         this.connection = connection;
+        this.cassandraMetadata = new CassandraMetadata(connection);
     }
 
     public Set<MetadataKey> getMetadataKeys() throws MetadataResolvingException, ConnectionException {
@@ -143,12 +140,6 @@ public class MetadataRetriever {
     }
 
     public TableMetadata fetchTableMetadata(String keyspaceUsed, String tableName) {
-        if (isNotBlank(tableName)) {
-            KeyspaceMetadata ksMetadata = connection.getCluster().getMetadata().getKeyspace(keyspaceUsed);
-            if (ksMetadata != null) {
-                return ksMetadata.getTable(tableName);
-            }
-        }
-        return null;
+        return cassandraMetadata.getTableMetadata(keyspaceUsed, tableName);
     }
 }
