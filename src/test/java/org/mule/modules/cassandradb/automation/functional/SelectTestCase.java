@@ -18,6 +18,7 @@ import java.util.Map;
 
 import static org.hamcrest.Matchers.greaterThan;
 import static org.junit.Assert.assertThat;
+import static org.mule.modules.cassandradb.internal.exception.CassandraError.QUERY_PARAMETERS_ERROR;
 
 public class SelectTestCase extends AbstractTestCases {
 
@@ -50,11 +51,7 @@ public class SelectTestCase extends AbstractTestCases {
 
     @Test
     public void testSelectNativeQueryWithInvalidParameters() throws Exception {
-        try {
-            selectExpException(VALID_PARAMETERIZED_QUERY, new LinkedList<Object>());
-        } catch (Exception e) {
-            System.out.println("e = " + e);
-        }
+        selectExpException(VALID_PARAMETERIZED_QUERY, new LinkedList<Object>(), QUERY_PARAMETERS_ERROR);
     }
 
     @Test
@@ -74,10 +71,10 @@ public class SelectTestCase extends AbstractTestCases {
     }
 
 
-    protected void selectExpException(String validParameterizedQuery, List<Object> validParmList) throws Exception {
+    protected void selectExpException(String validParameterizedQuery, List<Object> validParmList, CassandraError error) throws Exception {
         flowRunner("select-flow")
                 .withPayload(validParameterizedQuery)
                 .withVariable("parameters", validParmList)
-                .runExpectingException(ErrorTypeMatcher.errorType(CassandraError.UNKNOWN));
+                .runExpectingException(ErrorTypeMatcher.errorType(error));
     }
 }

@@ -11,6 +11,8 @@ import org.mule.tck.junit4.matcher.ErrorTypeMatcher;
 
 import java.util.Map;
 
+import static org.mule.modules.cassandradb.internal.exception.CassandraError.QUERY_VALIDATION;
+
 public class UpdateTestCase extends AbstractTestCases {
 
     @Before
@@ -38,12 +40,13 @@ public class UpdateTestCase extends AbstractTestCases {
 
     @Test
     public void testUpdateWithInvalidInput() throws Exception {
-        updateExpException(TestsConstants.TABLE_NAME_1, null, TestDataBuilder.getPayloadColumnsAndFilters(TestDataBuilder.getInvalidEntity(), TestDataBuilder.getValidWhereClauseWithEq()));
+        Map<String, Object> payloadColumnsAndFilters = TestDataBuilder.getPayloadColumnsAndFilters(TestDataBuilder.getInvalidEntity(), TestDataBuilder.getValidWhereClauseWithEq());
+        updateExpException(TestsConstants.TABLE_NAME_1, null, payloadColumnsAndFilters, QUERY_VALIDATION);
     }
 
     @Test
     public void testUpdateWithInvalidWhereClause() throws Exception {
-        updateExpException(TestsConstants.TABLE_NAME_1, null, TestDataBuilder.getPayloadColumnsAndFilters(TestDataBuilder.getInvalidEntity(), TestDataBuilder.getInvalidWhereClause()));
+        updateExpException(TestsConstants.TABLE_NAME_1, null, TestDataBuilder.getPayloadColumnsAndFilters(TestDataBuilder.getInvalidEntity(), TestDataBuilder.getInvalidWhereClause()), QUERY_VALIDATION);
     }
 
     protected void update(String tableName, String keyspaceName, Map<String, Object> entityToUpdate) throws Exception {
@@ -57,11 +60,11 @@ public class UpdateTestCase extends AbstractTestCases {
                 .getValue();
     }
 
-    protected void updateExpException(String tableName, String keyspaceName, Map<String, Object> entityToUpdate) throws Exception {
+    protected void updateExpException(String tableName, String keyspaceName, Map<String, Object> entityToUpdate, CassandraError error) throws Exception {
         flowRunner("update-flow")
                 .withPayload(entityToUpdate)
                 .withVariable("tableName", tableName)
                 .withVariable("keyspaceName", keyspaceName)
-                .runExpectingException(ErrorTypeMatcher.errorType(CassandraError.UNKNOWN));
+                .runExpectingException(ErrorTypeMatcher.errorType(error));
     }
 }

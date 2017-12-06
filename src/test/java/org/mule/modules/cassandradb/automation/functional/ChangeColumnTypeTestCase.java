@@ -13,8 +13,9 @@ import org.mule.tck.junit4.matcher.ErrorTypeMatcher;
 
 import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getAlterColumnInput;
 import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getPrimaryKey;
+import static org.mule.modules.cassandradb.internal.exception.CassandraError.QUERY_VALIDATION;
 
-@Ignore
+//@Ignore
 //Test-class marked as ignored since altering of column types was removed from Cass Database v3.0.11 +
 //https://issues.apache.org/jira/browse/CASSANDRA-12443
 
@@ -316,6 +317,6 @@ public class ChangeColumnTypeTestCase extends AbstractTestCases {
                 .withPayload(input)
                 .withVariable("tableName", tableName)
                 .withVariable("keyspaceName", keyspaceName)
-                .runExpectingException(ErrorTypeMatcher.errorType(CassandraError.UNKNOWN));
+                .runExpectingException(ErrorTypeMatcher.errorType(QUERY_VALIDATION));
     }
 }

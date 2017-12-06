@@ -20,6 +20,7 @@ import org.mule.modules.cassandradb.api.CreateTableInput;
 import org.mule.modules.cassandradb.internal.config.CassandraConfig;
 import org.mule.modules.cassandradb.internal.connection.CassandraConnection;
 import org.mule.modules.cassandradb.internal.exception.CassandraException;
+import org.mule.modules.cassandradb.internal.exception.QueryParametersException;
 import org.mule.modules.cassandradb.internal.util.builders.HelperStatements;
 import static java.util.stream.Collectors.toList;
 
@@ -205,7 +206,7 @@ public class CassandraServiceImpl extends DefaultConnectorService<CassandraConfi
         int parameterSize = (params == null) ? 0 : params.size();
 
         if (expectedParams != parameterSize) {
-            throw new CassandraException("Expected query parameters is " + expectedParams + " but found " + parameterSize);
+            throw new QueryParametersException("Expected query parameters is " + expectedParams + " but found " + parameterSize);
         }
     }
 

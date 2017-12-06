@@ -15,6 +15,7 @@ import static org.mule.modules.cassandradb.automation.util.TestsConstants.TABLE_
 import static org.mule.modules.cassandradb.automation.util.TestsConstants.VALID_LIST_COLUMN;
 import static org.mule.modules.cassandradb.automation.util.TestsConstants.VALID_MAP_COLUMN;
 import static org.mule.modules.cassandradb.automation.util.TestsConstants.VALID_SET_COLUMN;
+import static org.mule.modules.cassandradb.internal.exception.CassandraError.QUERY_VALIDATION;
 
 public class InsertTestCase extends AbstractTestCases {
 
@@ -58,7 +59,7 @@ public class InsertTestCase extends AbstractTestCases {
 
     @Test
     public void testInsertWithInvalidInput() throws Exception {
-        insertExpError(TABLE_NAME_1, null, TestDataBuilder.getInvalidEntity());
+        insertExpError(TABLE_NAME_1, null, TestDataBuilder.getInvalidEntity(), QUERY_VALIDATION);
     }
 
     void insert(String tableName, String keyspaceName, Map<String, Object> entity) throws Exception {
@@ -72,11 +73,11 @@ public class InsertTestCase extends AbstractTestCases {
                 .getValue();
     }
 
-    void insertExpError(String tableName, String keyspaceName, Map<String, Object> entity) throws Exception {
+    void insertExpError(String tableName, String keyspaceName, Map<String, Object> entity, CassandraError error) throws Exception {
         flowRunner("insert-flow")
                 .withPayload(entity)
                 .withVariable("tableName", tableName)
                 .withVariable("keyspaceName", keyspaceName)
-                .runExpectingException(ErrorTypeMatcher.errorType(CassandraError.UNKNOWN));
+                .runExpectingException(ErrorTypeMatcher.errorType(error));
     }
 }

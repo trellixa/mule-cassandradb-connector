@@ -21,6 +21,7 @@ import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder
 import static org.mule.modules.cassandradb.automation.util.TestsConstants.DUMMY_PARTITION_KEY;
 import static org.mule.modules.cassandradb.automation.util.TestsConstants.TABLE_NAME_2;
 import static org.mule.modules.cassandradb.automation.util.TestsConstants.VALID_COLUMN_2;
+import static org.mule.modules.cassandradb.internal.exception.CassandraError.QUERY_VALIDATION;
 
 public class ExecuteCqlQueryTestCase extends AbstractTestCases {
 
@@ -64,7 +65,7 @@ public class ExecuteCqlQueryTestCase extends AbstractTestCases {
         String whereClause = " WHERE " + DUMMY_PARTITION_KEY + " = ?";
         CQLQueryInput query = new CQLQueryInput(QUERY_PREFIX + TABLE_NAME_2 + whereClause, null);
 
-        executeCQLQueryExpException(query);
+        executeCQLQueryExpException(query, QUERY_VALIDATION);
     }
 
     @Test
@@ -74,7 +75,7 @@ public class ExecuteCqlQueryTestCase extends AbstractTestCases {
         params.add("value1");
         CQLQueryInput query = new CQLQueryInput(QUERY_PREFIX + TABLE_NAME_2, params);
 
-        executeCQLQueryExpException(query);
+        executeCQLQueryExpException(query, QUERY_VALIDATION);
     }
 
     protected List<Map<String, Object>> executeCQLQuery(CQLQueryInput query) throws Exception {
@@ -86,9 +87,9 @@ public class ExecuteCqlQueryTestCase extends AbstractTestCases {
                 .getValue();
     }
 
-    protected void executeCQLQueryExpException(CQLQueryInput query) throws Exception {
+    protected void executeCQLQueryExpException(CQLQueryInput query, CassandraError error) throws Exception {
         flowRunner("executeCQLQuery-flow")
                 .withPayload(query)
-                .runExpectingException(ErrorTypeMatcher.errorType(CassandraError.UNKNOWN));
+                .runExpectingException(ErrorTypeMatcher.errorType(error));
     }
 }

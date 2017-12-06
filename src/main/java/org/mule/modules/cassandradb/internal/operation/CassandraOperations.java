@@ -33,7 +33,7 @@ import static org.mule.modules.cassandradb.internal.util.Constants.WHERE;
 
 
 @Throws(CassandraErrorTypeProvider.class)
-public class CassandraOperations extends CassandraBaseOperarations  {
+public class CassandraOperations extends CassandraBaseOperations {
 
     private static final Logger logger = LoggerFactory.getLogger(CassandraOperations.class);
 
