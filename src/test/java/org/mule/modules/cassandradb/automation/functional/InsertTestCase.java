@@ -4,7 +4,9 @@
 package org.mule.modules.cassandradb.automation.functional;
 
 import com.datastax.driver.core.DataType;
-import org.junit.*;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.mule.modules.cassandradb.api.CreateTableInput;
 import org.mule.modules.cassandradb.internal.exception.CassandraError;
 import org.mule.tck.junit4.matcher.ErrorTypeMatcher;

@@ -15,11 +15,6 @@ import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder
 import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getPrimaryKey;
 import static org.mule.modules.cassandradb.internal.exception.CassandraError.QUERY_VALIDATION;
 
-//@Ignore
-//Test-class marked as ignored since altering of column types was removed from Cass Database v3.0.11 +
-//https://issues.apache.org/jira/browse/CASSANDRA-12443
-
-//TODO: Ignoring some cases. Review if has to expect exception
 public class ChangeColumnTypeTestCase extends AbstractTestCases {
 
     @Before

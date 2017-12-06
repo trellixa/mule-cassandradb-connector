@@ -3,7 +3,6 @@
  */
 package org.mule.modules.cassandradb.automation.functional;
 
-import com.datastax.driver.core.exceptions.InvalidQueryException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

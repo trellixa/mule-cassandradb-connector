@@ -21,7 +21,6 @@ import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder
 import static org.mule.modules.cassandradb.automation.util.TestsConstants.DUMMY_PARTITION_KEY;
 import static org.mule.modules.cassandradb.automation.util.TestsConstants.TABLE_NAME_2;
 import static org.mule.modules.cassandradb.automation.util.TestsConstants.VALID_COLUMN_2;
-import static org.mule.modules.cassandradb.internal.exception.CassandraError.QUERY_ERROR;
 import static org.mule.modules.cassandradb.internal.exception.CassandraError.QUERY_VALIDATION;
 import static org.mule.modules.cassandradb.internal.exception.CassandraError.UNKNOWN;
 

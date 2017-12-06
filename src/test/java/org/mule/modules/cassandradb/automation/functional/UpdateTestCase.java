@@ -3,7 +3,9 @@
  */
 package org.mule.modules.cassandradb.automation.functional;
 
-import org.junit.*;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.mule.modules.cassandradb.api.CreateTableInput;
 import org.mule.modules.cassandradb.automation.util.TestsConstants;
 import org.mule.modules.cassandradb.internal.exception.CassandraError;
