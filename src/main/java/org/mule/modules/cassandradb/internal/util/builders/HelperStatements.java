@@ -14,7 +14,7 @@ import org.mule.modules.cassandradb.api.ColumnInput;
 import org.mule.modules.cassandradb.api.CreateKeyspaceInput;
 import org.mule.modules.cassandradb.api.CreateTableInput;
 import org.mule.modules.cassandradb.internal.exception.CassandraException;
-import org.mule.modules.cassandradb.internal.exception.QueryParametersException;
+import org.mule.modules.cassandradb.internal.exception.QueryErrorException;
 import org.mule.modules.cassandradb.internal.util.DataTypeResolver;
 import org.mule.modules.cassandradb.internal.util.ReplicationStrategyBuilder;
 
@@ -41,14 +41,14 @@ public class HelperStatements {
     public static SchemaStatement createTable(String keyspace, CreateTableInput input) throws CassandraException {
 
         if (input.getColumns() == null || input.getColumns().isEmpty()) {
-            throw new QueryParametersException("Mismatched input. Cannot create table without columns.");
+            throw new QueryErrorException("Mismatched input. Cannot create table without columns.");
         }
 
         Create table = SchemaBuilder.createTable(keyspace, input.getTableName()).ifNotExists();
 
         List<ColumnInput> partitionKey = getPartitionKey(input.getColumns());
         if (partitionKey.isEmpty()) {
-            throw new QueryParametersException("Mismatched input. Primary key is missing.");
+            throw new QueryErrorException("Mismatched input. Primary key is missing.");
         } else {
             for (ColumnInput column : getPartitionKey(input.getColumns())) {
                 table.addPartitionKey(column.getName(), resolveDataTypeFromString(String.valueOf(column.getType())));

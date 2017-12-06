@@ -49,7 +49,7 @@ public enum CassandraError implements ErrorTypeDefinition<CassandraError> {
 
 
     CassandraException(ANY),
-    QUERY_PARAMETERS_ERROR(CassandraException),
+    QUERY_ERROR(CassandraException),
 
     CONNECTIVITY(MuleErrors.CONNECTIVITY),
     UNKNOWN(CONNECTIVITY);

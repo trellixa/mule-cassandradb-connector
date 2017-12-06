@@ -18,7 +18,7 @@ import java.util.Map;
 
 import static org.hamcrest.Matchers.greaterThan;
 import static org.junit.Assert.assertThat;
-import static org.mule.modules.cassandradb.internal.exception.CassandraError.QUERY_PARAMETERS_ERROR;
+import static org.mule.modules.cassandradb.internal.exception.CassandraError.QUERY_ERROR;
 
 public class SelectTestCase extends AbstractTestCases {
 
@@ -51,7 +51,7 @@ public class SelectTestCase extends AbstractTestCases {
 
     @Test
     public void testSelectNativeQueryWithInvalidParameters() throws Exception {
-        selectExpException(VALID_PARAMETERIZED_QUERY, new LinkedList<Object>(), QUERY_PARAMETERS_ERROR);
+        selectExpException(VALID_PARAMETERIZED_QUERY, new LinkedList<Object>(), QUERY_ERROR);
     }
 
     @Test

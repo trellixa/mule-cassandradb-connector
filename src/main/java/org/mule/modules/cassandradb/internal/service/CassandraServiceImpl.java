@@ -19,8 +19,7 @@ import org.mule.modules.cassandradb.api.CreateKeyspaceInput;
 import org.mule.modules.cassandradb.api.CreateTableInput;
 import org.mule.modules.cassandradb.internal.config.CassandraConfig;
 import org.mule.modules.cassandradb.internal.connection.CassandraConnection;
-import org.mule.modules.cassandradb.internal.exception.CassandraException;
-import org.mule.modules.cassandradb.internal.exception.QueryParametersException;
+import org.mule.modules.cassandradb.internal.exception.QueryErrorException;
 import org.mule.modules.cassandradb.internal.util.builders.HelperStatements;
 import static java.util.stream.Collectors.toList;
 
@@ -125,7 +124,7 @@ public class CassandraServiceImpl extends DefaultConnectorService<CassandraConfi
     @Override
     public void update(String keySpace, String table, Map<String, Object> entity, Map<String, Object> whereClause) {
         if (entity == null || whereClause == null) {
-            throw new CassandraException("Mismatched input. SET and WHERE clause must not be null.");
+            throw new QueryErrorException("Mismatched input. SET and WHERE clause must not be null.");
         }
         Update updateObject = QueryBuilder.update(keySpace, table);
 
@@ -177,7 +176,7 @@ public class CassandraServiceImpl extends DefaultConnectorService<CassandraConfi
     @Override
     public void delete(String keySpace, String table, List<String> entity, Map<String, Object> whereClause) {
         if (whereClause == null) {
-            throw new CassandraException("Mismatched input. WHERE clause must not be null.");
+            throw new QueryErrorException("Mismatched input. WHERE clause must not be null.");
         }
         Delete.Selection selectionObject = QueryBuilder.delete();
         // if the entity list is empty, means that the entire row(s) is deleted
@@ -201,18 +200,18 @@ public class CassandraServiceImpl extends DefaultConnectorService<CassandraConfi
         getCassandraSession().execute(deleteObject);
     }
 
-    private void validateParams(String query, List<Object> params) throws CassandraException {
+    private void validateParams(String query, List<Object> params) throws QueryErrorException {
         int expectedParams = StringUtils.countMatches(query, PARAM_HOLDER);
         int parameterSize = (params == null) ? 0 : params.size();
 
         if (expectedParams != parameterSize) {
-            throw new QueryParametersException("Expected query parameters is " + expectedParams + " but found " + parameterSize);
+            throw new QueryErrorException("Expected query parameters is " + expectedParams + " but found " + parameterSize);
         }
     }
 
     private void validateSelectQuery(String query, List<Object> params) {
         if (!query.toUpperCase().startsWith(SELECT)) {
-            throw new CassandraException("It must be a SELECT action.");
+            throw new QueryErrorException("It must be a SELECT action.");
         }
 
         validateParams(query, params);
