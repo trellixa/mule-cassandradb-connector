@@ -3,7 +3,6 @@
  */
 package org.mule.modules.cassandradb.automation.functional;
 
-import com.datastax.driver.core.exceptions.InvalidQueryException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,6 +14,7 @@ import org.mule.tck.junit4.matcher.ErrorTypeMatcher;
 import static org.junit.Assert.assertTrue;
 import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getBasicCreateTableInput;
 import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getColumns;
+import static org.mule.modules.cassandradb.internal.exception.CassandraError.QUERY_VALIDATION;
 
 
 public class DropColumnTestCase extends AbstractTestCases {
@@ -39,7 +39,7 @@ public class DropColumnTestCase extends AbstractTestCases {
 
     @Test
     public void testRemoveColumnWithInvalidName() throws Exception {
-        dropColumnExpException(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties(), TestsConstants.COLUMN);
+        dropColumnExpException(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties(), TestsConstants.COLUMN, QUERY_VALIDATION );
     }
 
     boolean dropColumn(String tableName, String keyspaceName, String column) throws Exception {
@@ -53,11 +53,11 @@ public class DropColumnTestCase extends AbstractTestCases {
                 .getValue();
     }
 
-    void dropColumnExpException(String tableName, String keyspaceName, String column) throws Exception {
+    void dropColumnExpException(String tableName, String keyspaceName, String column, CassandraError error) throws Exception {
         flowRunner("dropColumn-flow")
                 .withPayload(column)
                 .withVariable("tableName", tableName)
                 .withVariable("keyspaceName", keyspaceName)
-                .runExpectingException(ErrorTypeMatcher.errorType(CassandraError.UNKNOWN));
+                .runExpectingException(ErrorTypeMatcher.errorType(error));
     }
 }

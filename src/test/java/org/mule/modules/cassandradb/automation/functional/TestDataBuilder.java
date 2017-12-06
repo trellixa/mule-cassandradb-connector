@@ -10,11 +10,16 @@ import org.mule.modules.cassandradb.api.ColumnType;
 import org.mule.modules.cassandradb.api.CreateTableInput;
 import org.mule.modules.cassandradb.automation.util.TestsConstants;
 
-import java.util.*;
-
 import static org.mule.modules.cassandradb.api.ColumnType.BOOLEAN;
 import static org.mule.modules.cassandradb.api.ColumnType.INT;
 import static org.mule.modules.cassandradb.api.ColumnType.TEXT;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class TestDataBuilder {
 

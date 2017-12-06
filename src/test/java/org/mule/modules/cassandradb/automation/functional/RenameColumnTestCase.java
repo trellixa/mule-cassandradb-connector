@@ -16,6 +16,7 @@ import static org.junit.Assert.assertTrue;
 import static org.mule.modules.cassandradb.automation.util.TestsConstants.TABLE_NAME_1;
 import static org.mule.modules.cassandradb.automation.util.TestsConstants.VALID_COLUMN_1;
 import static org.mule.modules.cassandradb.automation.util.TestsConstants.VALID_LIST_COLUMN;
+import static org.mule.modules.cassandradb.internal.exception.CassandraError.QUERY_VALIDATION;
 
 public class RenameColumnTestCase extends AbstractTestCases {
     @Before
@@ -37,7 +38,7 @@ public class RenameColumnTestCase extends AbstractTestCases {
     @Test
     public void shouldNotRenameNonPKColumn() throws Exception {
         getCassandraService().addNewColumn(TABLE_NAME_1, getKeyspaceFromProperties(), VALID_LIST_COLUMN, DataType.list(DataType.text()));
-        renameColumnExpException(TABLE_NAME_1, getKeyspaceFromProperties(), VALID_LIST_COLUMN, "renamed");
+        renameColumnExpException(TABLE_NAME_1, getKeyspaceFromProperties(), VALID_LIST_COLUMN, "renamed", QUERY_VALIDATION);
     }
 
     boolean renameColumn(String tableName, String keyspaceName, String column, String newColumn) throws Exception {
@@ -52,12 +53,12 @@ public class RenameColumnTestCase extends AbstractTestCases {
                 .getValue();
     }
 
-    void renameColumnExpException(String tableName, String keyspaceName, String column, String newColumn) throws Exception {
+    void renameColumnExpException(String tableName, String keyspaceName, String column, String newColumn, CassandraError error) throws Exception {
         flowRunner("renameColumn-flow")
                 .withPayload(column)
                 .withVariable("tableName", tableName)
                 .withVariable("keyspaceName", keyspaceName)
                 .withVariable("newColumnName", newColumn)
-                .runExpectingException(ErrorTypeMatcher.errorType(CassandraError.UNKNOWN));
+                .runExpectingException(ErrorTypeMatcher.errorType(error));
     }
 }

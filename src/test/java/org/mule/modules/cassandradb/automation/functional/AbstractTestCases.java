@@ -15,6 +15,7 @@ import org.mule.modules.cassandradb.internal.config.CassandraConfig;
 import org.mule.modules.cassandradb.internal.connection.CassandraConnection;
 import org.mule.modules.cassandradb.internal.connection.ConnectionParameters;
 import org.mule.modules.cassandradb.internal.exception.CassandraError;
+import org.mule.modules.cassandradb.internal.metadata.CassandraMetadata;
 import org.mule.modules.cassandradb.internal.service.CassandraService;
 import org.mule.modules.cassandradb.internal.service.CassandraServiceImpl;
 import org.mule.tck.junit4.rule.SystemProperty;
@@ -24,9 +25,11 @@ import org.mule.test.runner.ArtifactClassLoaderRunnerConfig;
 import java.io.IOException;
 
 @ArtifactClassLoaderRunnerConfig(
-        exportPluginClasses = {CassandraError.class, CassandraService.class,
+        exportPluginClasses = {
+                CassandraError.class, CassandraService.class,
                 CassandraConnection.class, CassandraProperties.class,
-                CassandraConfig.class, CQLQueryInput.class }
+                CassandraConfig.class, CQLQueryInput.class, CassandraMetadata.class
+        }
 )
 public class AbstractTestCases extends MuleArtifactFunctionalTestCase {
 
@@ -35,6 +38,7 @@ public class AbstractTestCases extends MuleArtifactFunctionalTestCase {
     private CassandraConnection cassandraConnection;
     private CassandraService cassandraService;
     private CassandraProperties cassandraProperties;
+    private CassandraMetadata cassandraMetadata;
 
     @Rule
     public SystemProperty rule2 = TestConnectivityUtils.disableAutomaticTestConnectivity();
@@ -56,6 +60,7 @@ public class AbstractTestCases extends MuleArtifactFunctionalTestCase {
         cassandraProperties = getCassandraProperties();
         ConnectionParameters connectionParameters = new ConnectionParameters(cassandraProperties.getHost(), cassandraProperties.getPort(), null, null, null, null);
         cassandraConnection = CassandraConnection.build(connectionParameters);
+        cassandraMetadata = new CassandraMetadata(cassandraConnection);
         cassandraService = new CassandraServiceImpl(new CassandraConfig(), cassandraConnection);
         assert cassandraConnection != null;
         assert cassandraService != null;
@@ -91,7 +96,11 @@ public class AbstractTestCases extends MuleArtifactFunctionalTestCase {
     }
 
     public KeyspaceMetadata getKeyspaceMetadata(String keyspaceName) {
-        return getCassandraConnection().getCluster().getMetadata().getKeyspace(keyspaceName);
+        return cassandraMetadata.getKeyspaceMetadata(keyspaceName);
+    }
+
+    public CassandraMetadata getCassandraMetadata() {
+        return cassandraMetadata;
     }
 
     protected String getKeyspaceFromProperties() {

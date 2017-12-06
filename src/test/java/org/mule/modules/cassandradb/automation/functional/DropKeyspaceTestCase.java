@@ -8,7 +8,6 @@ import org.mule.modules.cassandradb.api.CreateKeyspaceInput;
 import org.mule.modules.cassandradb.api.DataCenter;
 import org.mule.modules.cassandradb.automation.util.TestsConstants;
 
-
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;

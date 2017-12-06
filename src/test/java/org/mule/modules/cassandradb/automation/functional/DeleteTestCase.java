@@ -30,6 +30,7 @@ import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder
 import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getValidWhereClauseWithEq;
 import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getValidWhereClauseWithIN;
 import static org.mule.modules.cassandradb.automation.util.TestsConstants.TABLE_NAME_1;
+import static org.mule.modules.cassandradb.internal.exception.CassandraError.QUERY_VALIDATION;
 
 public class DeleteTestCase extends AbstractTestCases {
 
@@ -108,7 +109,7 @@ public class DeleteTestCase extends AbstractTestCases {
         getCassandraService().insert(getKeyspaceFromProperties(), TABLE_NAME_1, getValidEntity());
 
         Map<String, Object> payloadColumnsAndFilters = getPayloadColumnsAndFilters(getInvalidEntityForDelete(), getValidWhereClauseWithEq());
-        deleteColumnsValueExpException(TABLE_NAME_1, null, payloadColumnsAndFilters);
+        deleteColumnsValueExpException(TABLE_NAME_1, null, payloadColumnsAndFilters, QUERY_VALIDATION);
     }
 
     @Test
@@ -116,7 +117,7 @@ public class DeleteTestCase extends AbstractTestCases {
         getCassandraService().insert(getKeyspaceFromProperties(), TABLE_NAME_1, getValidEntity());
 
         Map<String, Object> payloadColumnsAndFilters = getPayloadColumnsAndFilters(getValidColumnsListForDelete(), getInvalidWhereClause());
-        deleteColumnsValueExpException(TABLE_NAME_1, null, payloadColumnsAndFilters);
+        deleteColumnsValueExpException(TABLE_NAME_1, null, payloadColumnsAndFilters, QUERY_VALIDATION);
     }
 
     protected void deleteColumnsValue(String tableName, String keyspaceName, Map<String, Object> payloadColumnsAndFilters) throws Exception {
@@ -130,12 +131,12 @@ public class DeleteTestCase extends AbstractTestCases {
                 .getValue();
     }
 
-    protected void deleteColumnsValueExpException(String tableName, String keyspaceName, Map<String, Object> payloadColumnsAndFilters) throws Exception {
+    protected void deleteColumnsValueExpException(String tableName, String keyspaceName, Map<String, Object> payloadColumnsAndFilters, CassandraError error) throws Exception {
         flowRunner("deleteColumnsValue-flow")
                 .withPayload(payloadColumnsAndFilters)
                 .withVariable("tableName", tableName)
                 .withVariable("keyspaceName", keyspaceName)
-                .runExpectingException(ErrorTypeMatcher.errorType(CassandraError.UNKNOWN));
+                .runExpectingException(ErrorTypeMatcher.errorType(error));
     }
 
     protected void deleteRows(String tableName, String keyspaceName, Map<String, Object> payloadColumnsAndFilters) throws Exception {

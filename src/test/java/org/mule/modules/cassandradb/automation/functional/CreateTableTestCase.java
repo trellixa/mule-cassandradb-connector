@@ -16,6 +16,13 @@ import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder
 
 
 public class CreateTableTestCase extends AbstractTestCases {
+
+    @After
+    public void tearDown() {
+        getCassandraService().dropTable(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties());
+        getCassandraService().dropTable(TestsConstants.TABLE_NAME_2, getKeyspaceFromProperties());
+    }
+
     @Test
     public void testCreateTableWithSuccess() throws Exception {
         CreateTableInput basicCreateTableInput = getBasicCreateTableInput(getColumns(), getKeyspaceFromProperties(), TestsConstants.TABLE_NAME_1);

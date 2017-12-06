@@ -22,6 +22,7 @@ import static org.junit.Assert.assertTrue;
 import static org.mule.modules.cassandradb.api.ReplicationStrategy.SIMPLE;
 import static org.mule.modules.cassandradb.automation.util.TestsConstants.*;
 import static org.mule.modules.cassandradb.api.ReplicationStrategy.NETWORK_TOPOLOGY;
+import static org.mule.modules.cassandradb.internal.exception.CassandraError.SYNTAX_ERROR;
 
 public class CreateKeyspaceTestCase extends AbstractTestCases {
 
@@ -75,11 +76,10 @@ public class CreateKeyspaceTestCase extends AbstractTestCases {
         keyspaceInput.setReplicationFactor(null);
         keyspaceInput.setReplicationStrategyClass(SIMPLE.getStrategyClass());
 
-        createKeyspaceExpException(keyspaceInput, CassandraError.UNKNOWN);
+        createKeyspaceExpException(keyspaceInput, SYNTAX_ERROR);
     }
 
     private void verifyResponse(CreateKeyspaceInput keyspaceInput) {
-        boolean wasCreated = false;
         KeyspaceMetadata ksMedata = getKeyspaceMetadata(keyspaceInput.getKeyspaceName());
         assertNotNull(ksMedata);
 
