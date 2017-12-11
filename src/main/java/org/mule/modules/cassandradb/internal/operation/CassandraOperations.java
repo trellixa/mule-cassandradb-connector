@@ -22,6 +22,7 @@ import org.mule.runtime.extension.api.annotation.param.Connection;
 import org.mule.runtime.extension.api.annotation.param.Content;
 import org.mule.runtime.extension.api.annotation.param.Optional;
 import org.mule.runtime.extension.api.annotation.param.Query;
+import org.mule.runtime.extension.api.annotation.param.display.Placement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -234,7 +235,7 @@ public class CassandraOperations extends CassandraBaseOperations {
     @OutputResolver(output = CassandraMetadataResolver.class)
     public List<Map<String, Object>> executeCQLQuery(@Config CassandraConfig config,
                                                      @Connection CassandraConnection connection,
-                                                     @Content CQLQueryInput cqlInput) {
+                                                     @Placement(tab = "Query") @Content CQLQueryInput cqlInput) {
         if (logger.isDebugEnabled()) {
             logger.debug("Executing query " + cqlInput.toString());
         }

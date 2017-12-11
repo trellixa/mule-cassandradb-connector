@@ -132,7 +132,6 @@ public class CassandraBaseOperations extends ConnectorOperations<CassandraConfig
                 .withExceptionHandler(handle(WriteFailureException.class, WRITE_FAILURE))
                 .withExceptionHandler(handle(WriteTimeoutException.class, WRITE_TIMEOUT))
                 .withExceptionHandler(handleCassandraException());
-//                .withExceptionHandler(CassandraException.class, exception -> new ModuleException(exception.getErrorCode(), exception));
     }
 
     private <T extends Throwable> DefinedExceptionHandler<T> handle(Class<T> exceptionClass, CassandraError errorCode) {
