@@ -13,66 +13,65 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
         <cassandra-db:connection host="${config.host}" port="${config.port}" keyspace="${config.keyspace}" />
     </cassandra-db:config>
 
-    <flow name="createKeyspace-flow" doc:id="56defe09-c6a4-4405-9870-23ee1f5ed3ee" >
-        <cassandra-db:create-keyspace doc:name="Create keyspace" doc:id="fd440328-2b3d-4192-85db-6184569ed5cc" config-ref="CassandraDB_Config">
-        </cassandra-db:create-keyspace>
+    <flow name="createKeyspace-flow">
+        <cassandra-db:create-keyspace config-ref="CassandraDB_Config"/>
     </flow>
 
-    <flow name="deleteKeyspace-flow" doc:id="6e8378e9-2d2e-472d-b30a-6248c80dc37b" >
-        <cassandra-db:drop-keyspace doc:name="Drop keyspace" doc:id="773cd789-a71a-440a-88a8-5ab16a7e0487" config-ref="CassandraDB_Config" keyspaceName="#[vars.keyspaceName]"/>
+    <flow name="deleteKeyspace-flow" >
+        <cassandra-db:drop-keyspace config-ref="CassandraDB_Config" keyspaceName="#[vars.keyspaceName]"/>
     </flow>
 
-    <flow name="createTable-flow" doc:id="6e8378e9-2d2e-472d-b30a-6248c80dc37b" >
-        <cassandra-db:create-table doc:name="Create table" doc:id="710999ed-cea1-4b17-94b9-d0ee9a703f7b" config-ref="CassandraDB_Config"/>
+    <flow name="createTable-flow">
+        <cassandra-db:create-table config-ref="CassandraDB_Config"/>
     </flow>
 
-    <flow name="dropTable-flow" doc:id="b089036d-9344-4fbf-9c86-0148efcd52b9" >
-        <cassandra-db:drop-table doc:name="Drop table" doc:id="8b383719-4f86-49a4-9332-b42bbe7e9c47" config-ref="CassandraDB_Config" tableName="#[vars.tableName]" keyspaceName="#[vars.keyspaceName]"/>
+    <flow name="dropTable-flow" >
+        <cassandra-db:drop-table config-ref="CassandraDB_Config" tableName="#[vars.tableName]" keyspaceName="#[vars.keyspaceName]"/>
     </flow>
 
-    <flow name="addColumn-flow" doc:id="b089036d-9344-4fbf-9c86-0148efcd52b9" >
-        <cassandra-db:add-new-column doc:name="Add new column" doc:id="ec493f78-6a4e-42df-ad83-74b762099593" config-ref="CassandraDB_Config" table="#[vars.tableName]" keyspaceName="#[vars.keyspaceName]"/>
+    <flow name="addColumn-flow" >
+        <cassandra-db:add-new-column config-ref="CassandraDB_Config" table="#[vars.tableName]" keyspaceName="#[vars.keyspaceName]"/>
     </flow>
 
-    <flow name="dropColumn-flow" doc:id="4768c8ea-e151-4f6b-b710-7fef94b56914" >
-        <cassandra-db:drop-column doc:name="Drop column" doc:id="35f8c437-83f5-4d24-85ab-46fab50375a0" config-ref="CassandraDB_Config" table="#[vars.tableName]" keyspaceName="#[vars.keyspaceName]"/>
+    <flow name="dropColumn-flow" >
+        <cassandra-db:drop-column config-ref="CassandraDB_Config" table="#[vars.tableName]" keyspaceName="#[vars.keyspaceName]"/>
     </flow>
 
-    <flow name="renameColumn-flow" doc:id="4768c8ea-e151-4f6b-b710-7fef94b56914" >
-        <cassandra-db:rename-column doc:name="Rename column" doc:id="35f8c437-83f5-4d24-85ab-46fab50375a0" config-ref="CassandraDB_Config" table="#[vars.tableName]" keyspaceName="#[vars.keyspaceName]" newColumnName="#[vars.newColumnName]"/>
+    <flow name="renameColumn-flow" >
+        <cassandra-db:rename-column config-ref="CassandraDB_Config" table="#[vars.tableName]" keyspaceName="#[vars.keyspaceName]" newColumnName="#[vars.newColumnName]"/>
     </flow>
 
-    <flow name="changeColumnType-flow" doc:id="4768c8ea-e151-4f6b-b710-7fef94b56914" >
-        <cassandra-db:change-column-type doc:name="Change column" doc:id="35f8c437-83f5-4d24-85ab-46fab50375a0" config-ref="CassandraDB_Config" table="#[vars.tableName]" keyspaceName="#[vars.keyspaceName]"/>
+    <flow name="changeColumnType-flow" >
+        <cassandra-db:change-column-type config-ref="CassandraDB_Config" table="#[vars.tableName]" keyspaceName="#[vars.keyspaceName]"/>
     </flow>
 
-    <flow name="getTableNamesFromKeyspace-flow" doc:id="4768c8ea-e151-4f6b-b710-7fef94b56914" >
+    <flow name="getTableNamesFromKeyspace-flow" >
         <cassandra-db:get-table-names-from-keyspace config-ref="CassandraDB_Config" keyspaceName="#[vars.keyspaceName]"/>
     </flow>
 
-    <flow name="insert-flow" doc:id="4768c8ea-e151-4f6b-b710-7fef94b56914" >
+    <flow name="insert-flow" >
         <cassandra-db:insert config-ref="CassandraDB_Config" keyspaceName="#[vars.keyspaceName]" table="#[vars.tableName]"/>
     </flow>
 
-    <flow name="update-flow" doc:id="4768c8ea-e151-4f6b-b710-7fef94b56914" >
+    <flow name="update-flow" >
         <cassandra-db:update config-ref="CassandraDB_Config" keyspaceName="#[vars.keyspaceName]" table="#[vars.tableName]"/>
     </flow>
 
-    <flow name="executeCQLQuery-flow" doc:id="4768c8ea-e151-4f6b-b710-7fef94b56914" >
+    <flow name="executeCQLQuery-flow" >
         <cassandra-db:execute-cql-query config-ref="CassandraDB_Config" />
     </flow>
 
-    <flow name="select-flow" doc:id="4768c8ea-e151-4f6b-b710-7fef94b56914" >
+    <flow name="select-flow" >
         <cassandra-db:select config-ref="CassandraDB_Config" parameters="#[vars.parameters]">
             <cassandra-db:query >#[payload]</cassandra-db:query>
         </cassandra-db:select>
     </flow>
 
-    <flow name="deleteColumnsValue-flow" doc:id="4768c8ea-e151-4f6b-b710-7fef94b56914" >
+    <flow name="deleteColumnsValue-flow" >
         <cassandra-db:delete-columns-value config-ref="CassandraDB_Config" keyspaceName="#[vars.keyspaceName]" table="#[vars.tableName]"/>
     </flow>
 
-    <flow name="deleteRows-flow" doc:id="4768c8ea-e151-4f6b-b710-7fef94b56914" >
+    <flow name="deleteRows-flow" >
         <cassandra-db:delete-rows config-ref="CassandraDB_Config" keyspaceName="#[vars.keyspaceName]" table="#[vars.tableName]"/>
     </flow>
 </mule>
