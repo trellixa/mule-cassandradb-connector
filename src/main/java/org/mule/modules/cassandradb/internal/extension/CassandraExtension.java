@@ -14,5 +14,5 @@ import org.mule.runtime.extension.api.annotation.error.ErrorTypes;
 @Extension(name = "CassandraDB")
 @Configurations(CassandraConfig.class)
 @ErrorTypes(CassandraError.class)
-public class CassandraDBExtension {
+public class CassandraExtension {
 }
