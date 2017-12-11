@@ -11,8 +11,6 @@ import org.mule.runtime.extension.api.annotation.param.Parameter;
 import org.mule.runtime.extension.api.annotation.param.display.DisplayName;
 import org.mule.runtime.extension.api.annotation.param.display.Password;
 import org.mule.runtime.extension.api.annotation.param.display.Placement;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import static org.mule.runtime.api.connection.ConnectionValidationResult.failure;
 import static org.mule.runtime.api.connection.ConnectionValidationResult.success;
@@ -76,9 +74,9 @@ public class BasicAuthConnectionProvider implements CachedConnectionProvider<Cas
      * The maximum time to wait for schema agreement before returning from a DDL query.
      */
     @Parameter
-    @Optional
+    @Optional(defaultValue = "0")
     @Placement(tab = "Advanced Settings")
-    private int maxSchemaAgreementWaitSeconds;
+    private Integer maxSchemaAgreementWaitSeconds;
 
     /**
      * The compression to use for the transport.

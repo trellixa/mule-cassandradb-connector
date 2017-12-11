@@ -9,7 +9,7 @@ import com.datastax.driver.core.ProtocolVersion;
 public class AdvancedConnectionParameters {
     private ProtocolVersion protocolVersion;
     private String clusterName;
-    private int maxSchemaAgreementWaitSeconds;
+    private Integer maxSchemaAgreementWaitSeconds;
     private ProtocolOptions.Compression compression;
     private boolean ssl;
 
@@ -30,7 +30,7 @@ public class AdvancedConnectionParameters {
         return clusterName;
     }
 
-    public int getMaxSchemaAgreementWaitSeconds() {
+    public Integer getMaxSchemaAgreementWaitSeconds() {
         return maxSchemaAgreementWaitSeconds;
     }
 
