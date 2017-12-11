@@ -6,15 +6,14 @@ package org.mule.modules.cassandradb.automation.functional;
 import org.junit.Test;
 import org.mule.modules.cassandradb.api.CreateKeyspaceInput;
 import org.mule.modules.cassandradb.api.DataCenter;
-import org.mule.modules.cassandradb.automation.util.TestsConstants;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.mule.modules.cassandradb.api.ReplicationStrategy.NETWORK_TOPOLOGY;
-import static org.mule.modules.cassandradb.automation.util.TestsConstants.DATA_CENTER_NAME;
-import static org.mule.modules.cassandradb.automation.util.TestsConstants.KEYSPACE_NAME_1;
-import static org.mule.modules.cassandradb.automation.util.TestsConstants.KEYSPACE_NAME_2;
+import static org.mule.modules.cassandradb.automation.util.TestDataBuilder.DATA_CENTER_NAME;
+import static org.mule.modules.cassandradb.automation.util.TestDataBuilder.KEYSPACE_NAME_1;
+import static org.mule.modules.cassandradb.automation.util.TestDataBuilder.KEYSPACE_NAME_2;
 
 public class DropKeyspaceTestCase extends AbstractTestCases {
 

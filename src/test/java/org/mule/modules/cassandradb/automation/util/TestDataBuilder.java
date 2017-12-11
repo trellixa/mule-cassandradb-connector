@@ -1,19 +1,17 @@
 /**
  * (c) 2003-2017 MuleSoft, Inc. The software in this package is published under the terms of the Commercial Free Software license V.1 a copy of which has been included with this distribution in the LICENSE.md file.
  */
-package org.mule.modules.cassandradb.automation.functional;
+package org.mule.modules.cassandradb.automation.util;
 
 
 import org.mule.modules.cassandradb.api.AlterColumnInput;
 import org.mule.modules.cassandradb.api.ColumnInput;
 import org.mule.modules.cassandradb.api.ColumnType;
 import org.mule.modules.cassandradb.api.CreateTableInput;
-import org.mule.modules.cassandradb.automation.util.TestsConstants;
 
 import static org.mule.modules.cassandradb.api.ColumnType.BOOLEAN;
 import static org.mule.modules.cassandradb.api.ColumnType.INT;
 import static org.mule.modules.cassandradb.api.ColumnType.TEXT;
-import static org.mule.modules.cassandradb.automation.util.TestsConstants.DUMMY_PARTITION_KEY;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,6 +23,23 @@ import java.util.Set;
 
 public class TestDataBuilder {
 
+    public final static String KEYSPACE_NAME_1 = "keyspaceName1";
+    public final static String  KEYSPACE_NAME_2 = "keyspaceName2";
+    public final static String KEYSPACE_NAME_3 = "keyspaceName3";
+    public final static String DATA_CENTER_NAME = "datacenter1";
+    public final static String TABLE_NAME_1 = "dummy_table_name_1";
+    public final static String TABLE_NAME_2 = "dummy_table_name_2";
+    public static final String VALID_COLUMN_1 = "dummy_column_1";
+    public static final String VALID_COLUMN_2 = "dummy_column_2";
+    public static final String VALID_LIST_COLUMN = "dummy_list_column";
+    public static final String VALID_MAP_COLUMN = "dummy_map_column";
+    public static final String VALID_SET_COLUMN = "dummy_set_column";
+    public static final String DUMMY_PARTITION_KEY = "dummy_partitionKey";
+    public static final String COLUMNS = "columns";
+    public static final String WHERE = "where";
+    public static final String COLUMN = "column";
+    public static final String CLUSTER_NAME = "newClusterName";
+    public static final int MAX_WAIT = 10;
     public static List<String> cassandraCategoryMetadataTestKeys = new LinkedList<String>();
     public static final String metadataKeyName = "dummy_table_name_2";
     public static final String insertFlowName = "insert-flow";
@@ -32,7 +47,7 @@ public class TestDataBuilder {
     public static final String updateFlowName = "update-flow";
 
     static {
-        cassandraCategoryMetadataTestKeys.add(TestsConstants.TABLE_NAME_2);
+        cassandraCategoryMetadataTestKeys.add(TABLE_NAME_2);
     }
 
     private TestDataBuilder() {
@@ -48,13 +63,13 @@ public class TestDataBuilder {
     public static Map<String, Object> getValidEntity() {
         Map<String, Object> entity = new HashMap<String, Object>();
         entity.put(DUMMY_PARTITION_KEY, "value1");
-        entity.put(TestsConstants.VALID_COLUMN_2, "someValue" + System.currentTimeMillis());
+        entity.put(VALID_COLUMN_2, "someValue" + System.currentTimeMillis());
         return entity;
     }
 
     public static Map<String, Object> getValidEntityForUpdate(String newValue) {
         Map<String, Object> entity = new HashMap<String, Object>();
-        entity.put(TestsConstants.VALID_COLUMN_2, newValue);
+        entity.put(VALID_COLUMN_2, newValue);
         return entity;
     }
 
@@ -79,7 +94,7 @@ public class TestDataBuilder {
     * */
     public static Map<String, Object> getInvalidWhereClause() {
         Map<String, Object> entity = new HashMap<String, Object>();
-        entity.put(TestsConstants.VALID_COLUMN_1, "someValue");
+        entity.put(VALID_COLUMN_1, "someValue");
         return entity;
     }
 
@@ -92,8 +107,8 @@ public class TestDataBuilder {
 
     public static List<String> getValidColumnsListForDelete() {
         List<String> parameters = new LinkedList<String>();
-        parameters.add(TestsConstants.VALID_COLUMN_1);
-        parameters.add(TestsConstants.VALID_COLUMN_2);
+        parameters.add(VALID_COLUMN_1);
+        parameters.add(VALID_COLUMN_2);
         return parameters;
     }
 
@@ -109,14 +124,14 @@ public class TestDataBuilder {
         list.add("firstValue");
         list.add("secondValue");
         entity.put(DUMMY_PARTITION_KEY, "value1");
-        entity.put(TestsConstants.VALID_LIST_COLUMN, list);
-        entity.put(TestsConstants.VALID_COLUMN_1, 1);
+        entity.put(VALID_LIST_COLUMN, list);
+        entity.put(VALID_COLUMN_1, 1);
         return entity;
     }
 
     public static List<String> getValidListItem() {
         List<String> entity = new ArrayList<String>();
-        entity.add(TestsConstants.VALID_LIST_COLUMN + "[0]");
+        entity.add(VALID_LIST_COLUMN + "[0]");
         return entity;
     }
 
@@ -126,14 +141,14 @@ public class TestDataBuilder {
         item.put("1", "firstValue");
         item.put("2", "secondValue");
         entity.put(DUMMY_PARTITION_KEY, "value1");
-        entity.put(TestsConstants.VALID_MAP_COLUMN, item);
-        entity.put(TestsConstants.VALID_COLUMN_1, 1);
+        entity.put(VALID_MAP_COLUMN, item);
+        entity.put(VALID_COLUMN_1, 1);
         return entity;
     }
 
     public static List<String> getValidMapItem() {
         List<String> entity = new ArrayList<String>();
-        entity.add(TestsConstants.VALID_MAP_COLUMN + "['firstValue']");
+        entity.add(VALID_MAP_COLUMN + "['firstValue']");
         return entity;
     }
 
@@ -143,21 +158,21 @@ public class TestDataBuilder {
         item.add("firstValue");
         item.add("secondValue");
         entity.put(DUMMY_PARTITION_KEY, "value1");
-        entity.put(TestsConstants.VALID_SET_COLUMN, item);
-        entity.put(TestsConstants.VALID_COLUMN_1, 1);
+        entity.put(VALID_SET_COLUMN, item);
+        entity.put(VALID_COLUMN_1, 1);
         return entity;
     }
 
     public static List<String> getValidSet() {
         List<String> entity = new ArrayList<String>();
-        entity.add(TestsConstants.VALID_SET_COLUMN);
+        entity.add(VALID_SET_COLUMN);
         return entity;
     }
 
     public static Map<String, Object> getPayloadColumnsAndFilters(Object entity, Map<String, Object> whereClause){
         Map<String, Object> payload = new HashMap<String, Object>();
-        payload.put(TestsConstants.COLUMNS, entity);
-        payload.put(TestsConstants.WHERE, whereClause);
+        payload.put(COLUMNS, entity);
+        payload.put(WHERE, whereClause);
         return payload;
     }
 
@@ -193,7 +208,7 @@ public class TestDataBuilder {
 
         ColumnInput column2 = new ColumnInput();
         column2.setPrimaryKey(true);
-        column2.setName(TestsConstants.VALID_COLUMN_1);
+        column2.setName(VALID_COLUMN_1);
         column2.setType(ColumnType.INT);
 
         columns.add(column);
@@ -211,11 +226,11 @@ public class TestDataBuilder {
         column1.setType(TEXT);
 
         ColumnInput column2 = new ColumnInput();
-        column2.setName(TestsConstants.VALID_COLUMN_1);
+        column2.setName(VALID_COLUMN_1);
         column2.setType(ColumnType.INT);
 
         ColumnInput column3 = new ColumnInput();
-        column3.setName(TestsConstants.VALID_COLUMN_2);
+        column3.setName(VALID_COLUMN_2);
         column3.setType(TEXT);
 
         columns.add(column1);

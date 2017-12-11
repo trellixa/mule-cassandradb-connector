@@ -4,15 +4,14 @@
 package org.mule.modules.cassandradb.automation.functional;
 
 import com.datastax.driver.core.KeyspaceMetadata;
-import org.apache.commons.lang3.StringUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mule.modules.cassandradb.api.CreateKeyspaceInput;
 import org.mule.modules.cassandradb.api.DataCenter;
+import org.mule.modules.cassandradb.automation.util.TestDataBuilder;
 import org.mule.modules.cassandradb.internal.exception.CassandraError;
 import org.mule.runtime.extension.api.error.ErrorTypeDefinition;
-import org.mule.tck.junit4.matcher.ErrorTypeMatcher;
 
 import java.util.Map;
 
@@ -21,9 +20,8 @@ import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-import static org.mule.modules.cassandradb.api.ReplicationStrategy.SIMPLE;
-import static org.mule.modules.cassandradb.automation.util.TestsConstants.*;
 import static org.mule.modules.cassandradb.api.ReplicationStrategy.NETWORK_TOPOLOGY;
+import static org.mule.modules.cassandradb.api.ReplicationStrategy.SIMPLE;
 import static org.mule.modules.cassandradb.internal.exception.CassandraError.SYNTAX_ERROR;
 import static org.mule.tck.junit4.matcher.ErrorTypeMatcher.errorType;
 
@@ -32,15 +30,15 @@ public class CreateKeyspaceTestCase extends AbstractTestCases {
     @Before
     @After
     public void dropKeyspaces() {
-        getCassandraService().dropKeyspace(KEYSPACE_NAME_1);
-        getCassandraService().dropKeyspace(KEYSPACE_NAME_2);
-        getCassandraService().dropKeyspace(KEYSPACE_NAME_3);
+        getCassandraService().dropKeyspace(TestDataBuilder.KEYSPACE_NAME_1);
+        getCassandraService().dropKeyspace(TestDataBuilder.KEYSPACE_NAME_2);
+        getCassandraService().dropKeyspace(TestDataBuilder.KEYSPACE_NAME_3);
     }
 
     @Test
     public void testCreateKeyspaceWithDefaultReplicationStrategyWithSuccess() throws Exception {
         CreateKeyspaceInput createKeyspaceInput = new CreateKeyspaceInput();
-        createKeyspaceInput.setKeyspaceName(KEYSPACE_NAME_1);
+        createKeyspaceInput.setKeyspaceName(TestDataBuilder.KEYSPACE_NAME_1);
         assertTrue(createKeyspace(createKeyspaceInput));
 
         Thread.sleep(SLEEP_DURATION);
@@ -50,8 +48,8 @@ public class CreateKeyspaceTestCase extends AbstractTestCases {
     @Test
     public void testCreateKeyspaceWithDifferentReplicationStrategyWithSuccess() throws Exception {
         CreateKeyspaceInput createKeyspaceInput = new CreateKeyspaceInput();
-        createKeyspaceInput.setKeyspaceName(KEYSPACE_NAME_2);
-        createKeyspaceInput.setFirstDataCenter(new DataCenter(DATA_CENTER_NAME, 1));
+        createKeyspaceInput.setKeyspaceName(TestDataBuilder.KEYSPACE_NAME_2);
+        createKeyspaceInput.setFirstDataCenter(new DataCenter(TestDataBuilder.DATA_CENTER_NAME, 1));
         createKeyspaceInput.setReplicationStrategyClass(NETWORK_TOPOLOGY.getStrategyClass());
 
         assertTrue(createKeyspace(createKeyspaceInput));
@@ -63,7 +61,7 @@ public class CreateKeyspaceTestCase extends AbstractTestCases {
     @Test
     public void testCreateKeyspaceWithInvalidReplicationStrategy() throws Exception {
         CreateKeyspaceInput keyspaceInput = new CreateKeyspaceInput();
-        keyspaceInput.setKeyspaceName(KEYSPACE_NAME_3);
+        keyspaceInput.setKeyspaceName(TestDataBuilder.KEYSPACE_NAME_3);
         keyspaceInput.setReplicationFactor(3);
         keyspaceInput.setReplicationStrategyClass("SomeReplicationStrategy");
 
@@ -73,7 +71,7 @@ public class CreateKeyspaceTestCase extends AbstractTestCases {
     @Test
     public void shouldFail_Using_MissingReplicationFactor() throws Exception {
         CreateKeyspaceInput keyspaceInput = new CreateKeyspaceInput();
-        keyspaceInput.setKeyspaceName(KEYSPACE_NAME_1);
+        keyspaceInput.setKeyspaceName(TestDataBuilder.KEYSPACE_NAME_1);
         keyspaceInput.setReplicationFactor(null);
         keyspaceInput.setReplicationStrategyClass(SIMPLE.getStrategyClass());
 

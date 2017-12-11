@@ -4,20 +4,18 @@
 package org.mule.modules.cassandradb.automation.functional;
 
 
-import com.datastax.driver.core.ColumnMetadata;
 import com.datastax.driver.core.TableMetadata;
 import org.junit.After;
 import org.junit.Test;
 import org.mule.modules.cassandradb.api.CreateTableInput;
-import org.mule.modules.cassandradb.automation.util.TestsConstants;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getBasicCreateTableInput;
-import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getColumns;
-import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getCompositePrimaryKey;
-import static org.mule.modules.cassandradb.automation.util.TestsConstants.TABLE_NAME_1;
-import static org.mule.modules.cassandradb.automation.util.TestsConstants.TABLE_NAME_2;
+import static org.mule.modules.cassandradb.automation.util.TestDataBuilder.TABLE_NAME_1;
+import static org.mule.modules.cassandradb.automation.util.TestDataBuilder.TABLE_NAME_2;
+import static org.mule.modules.cassandradb.automation.util.TestDataBuilder.getBasicCreateTableInput;
+import static org.mule.modules.cassandradb.automation.util.TestDataBuilder.getColumns;
+import static org.mule.modules.cassandradb.automation.util.TestDataBuilder.getCompositePrimaryKey;
 
 public class CreateTableTestCase extends AbstractTestCases {
 

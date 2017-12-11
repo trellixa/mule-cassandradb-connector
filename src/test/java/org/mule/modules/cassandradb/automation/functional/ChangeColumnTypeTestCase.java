@@ -4,17 +4,19 @@
 package org.mule.modules.cassandradb.automation.functional;
 
 import com.datastax.driver.core.DataType;
-import org.junit.*;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Ignore;
+import org.junit.Test;
 import org.mule.modules.cassandradb.api.AlterColumnInput;
 import org.mule.modules.cassandradb.api.ColumnType;
-import org.mule.modules.cassandradb.automation.util.TestsConstants;
 import org.mule.tck.junit4.matcher.ErrorTypeMatcher;
 
-import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getAlterColumnInput;
-import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getBasicCreateTableInput;
-import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getPrimaryKey;
-import static org.mule.modules.cassandradb.automation.util.TestsConstants.COLUMN;
-import static org.mule.modules.cassandradb.automation.util.TestsConstants.TABLE_NAME_1;
+import static org.mule.modules.cassandradb.automation.util.TestDataBuilder.COLUMN;
+import static org.mule.modules.cassandradb.automation.util.TestDataBuilder.TABLE_NAME_1;
+import static org.mule.modules.cassandradb.automation.util.TestDataBuilder.getAlterColumnInput;
+import static org.mule.modules.cassandradb.automation.util.TestDataBuilder.getBasicCreateTableInput;
+import static org.mule.modules.cassandradb.automation.util.TestDataBuilder.getPrimaryKey;
 import static org.mule.modules.cassandradb.internal.exception.CassandraError.QUERY_VALIDATION;
 
 @Ignore

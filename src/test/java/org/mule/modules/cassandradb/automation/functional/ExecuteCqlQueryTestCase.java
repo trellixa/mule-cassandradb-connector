@@ -9,19 +9,19 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mule.modules.cassandradb.api.CQLQueryInput;
 import org.mule.modules.cassandradb.api.CreateTableInput;
+import org.mule.modules.cassandradb.automation.util.TestDataBuilder;
 import org.mule.modules.cassandradb.internal.exception.CassandraError;
-import org.mule.tck.junit4.matcher.ErrorTypeMatcher;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import static org.junit.Assert.assertNotNull;
-import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getPrimaryKey;
-import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getValidEntity;
-import static org.mule.modules.cassandradb.automation.util.TestsConstants.DUMMY_PARTITION_KEY;
-import static org.mule.modules.cassandradb.automation.util.TestsConstants.TABLE_NAME_2;
-import static org.mule.modules.cassandradb.automation.util.TestsConstants.VALID_COLUMN_2;
+import static org.mule.modules.cassandradb.automation.util.TestDataBuilder.DUMMY_PARTITION_KEY;
+import static org.mule.modules.cassandradb.automation.util.TestDataBuilder.TABLE_NAME_2;
+import static org.mule.modules.cassandradb.automation.util.TestDataBuilder.VALID_COLUMN_2;
+import static org.mule.modules.cassandradb.automation.util.TestDataBuilder.getPrimaryKey;
+import static org.mule.modules.cassandradb.automation.util.TestDataBuilder.getValidEntity;
 import static org.mule.modules.cassandradb.internal.exception.CassandraError.QUERY_VALIDATION;
 import static org.mule.modules.cassandradb.internal.exception.CassandraError.UNKNOWN;
 import static org.mule.tck.junit4.matcher.ErrorTypeMatcher.errorType;

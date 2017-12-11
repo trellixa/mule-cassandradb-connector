@@ -7,24 +7,23 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mule.modules.cassandradb.api.CreateTableInput;
-import org.mule.modules.cassandradb.automation.util.TestsConstants;
+import org.mule.modules.cassandradb.automation.util.TestDataBuilder;
 import org.mule.modules.cassandradb.internal.exception.CassandraError;
-import org.mule.tck.junit4.matcher.ErrorTypeMatcher;
 
 import java.util.Map;
 
 import static java.lang.String.format;
 import static org.junit.Assert.assertEquals;
-import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getBasicCreateTableInput;
-import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getColumns;
-import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getInvalidEntity;
-import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getInvalidWhereClause;
-import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getPayloadColumnsAndFilters;
-import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getValidEntity;
-import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getValidEntityForUpdate;
-import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getValidWhereClauseWithEq;
-import static org.mule.modules.cassandradb.automation.util.TestsConstants.TABLE_NAME_1;
-import static org.mule.modules.cassandradb.automation.util.TestsConstants.VALID_COLUMN_2;
+import static org.mule.modules.cassandradb.automation.util.TestDataBuilder.TABLE_NAME_1;
+import static org.mule.modules.cassandradb.automation.util.TestDataBuilder.VALID_COLUMN_2;
+import static org.mule.modules.cassandradb.automation.util.TestDataBuilder.getBasicCreateTableInput;
+import static org.mule.modules.cassandradb.automation.util.TestDataBuilder.getColumns;
+import static org.mule.modules.cassandradb.automation.util.TestDataBuilder.getInvalidEntity;
+import static org.mule.modules.cassandradb.automation.util.TestDataBuilder.getInvalidWhereClause;
+import static org.mule.modules.cassandradb.automation.util.TestDataBuilder.getPayloadColumnsAndFilters;
+import static org.mule.modules.cassandradb.automation.util.TestDataBuilder.getValidEntity;
+import static org.mule.modules.cassandradb.automation.util.TestDataBuilder.getValidEntityForUpdate;
+import static org.mule.modules.cassandradb.automation.util.TestDataBuilder.getValidWhereClauseWithEq;
 import static org.mule.modules.cassandradb.internal.exception.CassandraError.QUERY_VALIDATION;
 import static org.mule.tck.junit4.matcher.ErrorTypeMatcher.errorType;
 

@@ -7,13 +7,14 @@ import com.datastax.driver.core.ProtocolOptions;
 import com.datastax.driver.core.ProtocolVersion;
 import org.junit.Test;
 import org.mule.modules.cassandradb.automation.functional.AbstractTestCases;
-import org.mule.modules.cassandradb.internal.exception.CassandraException;
+import org.mule.modules.cassandradb.automation.util.CassandraProperties;
 import org.mule.modules.cassandradb.internal.connection.AdvancedConnectionParameters;
 import org.mule.modules.cassandradb.internal.connection.CassandraConnection;
 import org.mule.modules.cassandradb.internal.connection.ConnectionParameters;
-import org.mule.modules.cassandradb.automation.util.CassandraProperties;
-import org.mule.modules.cassandradb.automation.util.TestsConstants;
+import org.mule.modules.cassandradb.internal.exception.CassandraException;
 
+import static org.mule.modules.cassandradb.automation.util.TestDataBuilder.CLUSTER_NAME;
+import static org.mule.modules.cassandradb.automation.util.TestDataBuilder.MAX_WAIT;
 
 public class ConfigTestCase {
 
@@ -30,7 +31,7 @@ public class ConfigTestCase {
 
     @Test
     public void shouldConnect_Using_AdvancedParams() throws Exception {
-        AdvancedConnectionParameters advancedParams = new AdvancedConnectionParameters(ProtocolVersion.V3, TestsConstants.CLUSTER_NAME, TestsConstants.MAX_WAIT, ProtocolOptions.Compression.NONE, false);
+        AdvancedConnectionParameters advancedParams = new AdvancedConnectionParameters(ProtocolVersion.V3, CLUSTER_NAME, MAX_WAIT, ProtocolOptions.Compression.NONE, false);
         cassProperties = AbstractTestCases.getCassandraProperties();
         ConnectionParameters connectionParameters = new ConnectionParameters(cassProperties.getHost(), cassProperties.getPort(), null, null, null, advancedParams);
         CassandraConnection cassClient = CassandraConnection.build(connectionParameters);
@@ -39,7 +40,7 @@ public class ConfigTestCase {
 
     @Test(expected = CassandraException.class)
     public void shouldNotConnect_Using_InvalidHost() {
-        AdvancedConnectionParameters advancedParams = new AdvancedConnectionParameters(ProtocolVersion.V3, TestsConstants.CLUSTER_NAME, TestsConstants.MAX_WAIT, ProtocolOptions.Compression.NONE, false);
+        AdvancedConnectionParameters advancedParams = new AdvancedConnectionParameters(ProtocolVersion.V3, CLUSTER_NAME, MAX_WAIT, ProtocolOptions.Compression.NONE, false);
         cassProperties = AbstractTestCases.getCassandraProperties();
         ConnectionParameters connectionParameters = new ConnectionParameters(INVALID_HOST, cassProperties.getPort(), null, null, null, advancedParams);
         CassandraConnection.build(connectionParameters);
@@ -47,21 +48,21 @@ public class ConfigTestCase {
 
     @Test(expected = IllegalArgumentException.class)
     public void shouldNotConnect_Using_NoHost() {
-        AdvancedConnectionParameters advancedParams = new AdvancedConnectionParameters(ProtocolVersion.V3, TestsConstants.CLUSTER_NAME, TestsConstants.MAX_WAIT, ProtocolOptions.Compression.NONE, false);
+        AdvancedConnectionParameters advancedParams = new AdvancedConnectionParameters(ProtocolVersion.V3, CLUSTER_NAME, MAX_WAIT, ProtocolOptions.Compression.NONE, false);
         ConnectionParameters connectionParameters = new ConnectionParameters(null, cassProperties.getPort(), null, null, null, advancedParams);
         CassandraConnection.build(connectionParameters);
     }
 
     @Test(expected = CassandraException.class)
     public void shouldNotConnect_Using_InvalidPort() {
-        AdvancedConnectionParameters advancedParams = new AdvancedConnectionParameters(ProtocolVersion.V3, TestsConstants.CLUSTER_NAME, TestsConstants.MAX_WAIT, ProtocolOptions.Compression.NONE, false);
+        AdvancedConnectionParameters advancedParams = new AdvancedConnectionParameters(ProtocolVersion.V3, CLUSTER_NAME, MAX_WAIT, ProtocolOptions.Compression.NONE, false);
         ConnectionParameters connectionParameters = new ConnectionParameters(cassProperties.getHost(), generateInvalidPort(cassProperties.getPort()), null, null, null, advancedParams);
         CassandraConnection.build(connectionParameters);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void shouldNotConnect_Using_NoPort() {
-        AdvancedConnectionParameters advancedParams = new AdvancedConnectionParameters(ProtocolVersion.V3, TestsConstants.CLUSTER_NAME, TestsConstants.MAX_WAIT, ProtocolOptions.Compression.NONE, false);
+        AdvancedConnectionParameters advancedParams = new AdvancedConnectionParameters(ProtocolVersion.V3, CLUSTER_NAME, MAX_WAIT, ProtocolOptions.Compression.NONE, false);
         ConnectionParameters connectionParameters = new ConnectionParameters(cassProperties.getHost(), null, null, null, null, advancedParams);
         CassandraConnection.build(connectionParameters);
     }

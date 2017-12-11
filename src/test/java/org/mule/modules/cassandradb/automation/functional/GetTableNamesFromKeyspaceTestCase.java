@@ -10,11 +10,11 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getBasicCreateTableInput;
-import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getColumns;
-import static org.mule.modules.cassandradb.automation.util.TestsConstants.KEYSPACE_NAME_3;
-import static org.mule.modules.cassandradb.automation.util.TestsConstants.TABLE_NAME_1;
-import static org.mule.modules.cassandradb.automation.util.TestsConstants.TABLE_NAME_2;
+import static org.mule.modules.cassandradb.automation.util.TestDataBuilder.KEYSPACE_NAME_3;
+import static org.mule.modules.cassandradb.automation.util.TestDataBuilder.TABLE_NAME_1;
+import static org.mule.modules.cassandradb.automation.util.TestDataBuilder.TABLE_NAME_2;
+import static org.mule.modules.cassandradb.automation.util.TestDataBuilder.getBasicCreateTableInput;
+import static org.mule.modules.cassandradb.automation.util.TestDataBuilder.getColumns;
 
 public class GetTableNamesFromKeyspaceTestCase extends AbstractTestCases {
 

@@ -8,9 +8,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mule.modules.cassandradb.api.CreateTableInput;
-import org.mule.modules.cassandradb.automation.util.TestsConstants;
+import org.mule.modules.cassandradb.automation.util.TestDataBuilder;
 import org.mule.modules.cassandradb.internal.exception.CassandraError;
-import org.mule.tck.junit4.matcher.ErrorTypeMatcher;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -18,11 +17,11 @@ import java.util.Map;
 
 import static org.hamcrest.Matchers.greaterThan;
 import static org.junit.Assert.assertThat;
-import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getBasicCreateTableInput;
-import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getValidEntity;
-import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getValidParmList;
-import static org.mule.modules.cassandradb.automation.util.TestsConstants.TABLE_NAME_1;
-import static org.mule.modules.cassandradb.automation.util.TestsConstants.VALID_COLUMN_2;
+import static org.mule.modules.cassandradb.automation.util.TestDataBuilder.TABLE_NAME_1;
+import static org.mule.modules.cassandradb.automation.util.TestDataBuilder.VALID_COLUMN_2;
+import static org.mule.modules.cassandradb.automation.util.TestDataBuilder.getBasicCreateTableInput;
+import static org.mule.modules.cassandradb.automation.util.TestDataBuilder.getValidEntity;
+import static org.mule.modules.cassandradb.automation.util.TestDataBuilder.getValidParmList;
 import static org.mule.modules.cassandradb.internal.exception.CassandraError.QUERY_ERROR;
 import static org.mule.tck.junit4.matcher.ErrorTypeMatcher.errorType;
 
@@ -31,7 +30,7 @@ public class SelectTestCase extends AbstractTestCases {
     public static final String VALID_PARAMETERIZED_QUERY =
             "SELECT " + VALID_COLUMN_2 +
             " FROM " + TABLE_NAME_1 +
-            " WHERE " + TestsConstants.DUMMY_PARTITION_KEY + " IN (?, ?)";
+            " WHERE " + TestDataBuilder.DUMMY_PARTITION_KEY + " IN (?, ?)";
     public static final String VALID_DSQL_QUERY = "dsql:" +
             "SELECT " + VALID_COLUMN_2 +
             " FROM " + TABLE_NAME_1;

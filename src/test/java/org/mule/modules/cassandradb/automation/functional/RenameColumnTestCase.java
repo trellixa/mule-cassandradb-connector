@@ -5,22 +5,20 @@ package org.mule.modules.cassandradb.automation.functional;
 
 import com.datastax.driver.core.ColumnMetadata;
 import com.datastax.driver.core.DataType;
-
 import com.datastax.driver.core.TableMetadata;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mule.modules.cassandradb.api.CreateTableInput;
 import org.mule.modules.cassandradb.internal.exception.CassandraError;
-import org.mule.tck.junit4.matcher.ErrorTypeMatcher;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getBasicCreateTableInput;
-import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getCompositePrimaryKey;
-import static org.mule.modules.cassandradb.automation.util.TestsConstants.TABLE_NAME_1;
-import static org.mule.modules.cassandradb.automation.util.TestsConstants.VALID_COLUMN_1;
-import static org.mule.modules.cassandradb.automation.util.TestsConstants.VALID_LIST_COLUMN;
+import static org.mule.modules.cassandradb.automation.util.TestDataBuilder.TABLE_NAME_1;
+import static org.mule.modules.cassandradb.automation.util.TestDataBuilder.VALID_COLUMN_1;
+import static org.mule.modules.cassandradb.automation.util.TestDataBuilder.VALID_LIST_COLUMN;
+import static org.mule.modules.cassandradb.automation.util.TestDataBuilder.getBasicCreateTableInput;
+import static org.mule.modules.cassandradb.automation.util.TestDataBuilder.getCompositePrimaryKey;
 import static org.mule.modules.cassandradb.internal.exception.CassandraError.QUERY_VALIDATION;
 import static org.mule.tck.junit4.matcher.ErrorTypeMatcher.errorType;
 
