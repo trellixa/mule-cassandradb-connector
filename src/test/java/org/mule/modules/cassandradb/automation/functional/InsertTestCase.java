@@ -16,17 +16,23 @@ import java.util.Map;
 
 import static java.lang.String.format;
 import static org.junit.Assert.assertEquals;
+import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getColumns;
+import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getInvalidEntity;
+import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getValidEntityWithList;
+import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getValidEntityWithMap;
+import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getValidEntityWithSet;
 import static org.mule.modules.cassandradb.automation.util.TestsConstants.TABLE_NAME_1;
 import static org.mule.modules.cassandradb.automation.util.TestsConstants.VALID_LIST_COLUMN;
 import static org.mule.modules.cassandradb.automation.util.TestsConstants.VALID_MAP_COLUMN;
 import static org.mule.modules.cassandradb.automation.util.TestsConstants.VALID_SET_COLUMN;
 import static org.mule.modules.cassandradb.internal.exception.CassandraError.QUERY_VALIDATION;
+import static org.mule.tck.junit4.matcher.ErrorTypeMatcher.errorType;
 
 public class InsertTestCase extends AbstractTestCases {
 
     @Before
     public void setup() throws Exception {
-        CreateTableInput basicCreateTableInput = TestDataBuilder.getBasicCreateTableInput(TestDataBuilder.getColumns(), getKeyspaceFromProperties(), TABLE_NAME_1);
+        CreateTableInput basicCreateTableInput = TestDataBuilder.getBasicCreateTableInput(getColumns(), getKeyspaceFromProperties(), TABLE_NAME_1);
         getCassandraService().createTable(basicCreateTableInput);
     }
 
@@ -49,26 +55,26 @@ public class InsertTestCase extends AbstractTestCases {
     public void testInsertInListColumnWithSuccess() throws Exception {
         getCassandraService().addNewColumn(TABLE_NAME_1, getKeyspaceFromProperties(), VALID_LIST_COLUMN, DataType.list(DataType.text()));
 
-        insert(TABLE_NAME_1, null, TestDataBuilder.getValidEntityWithList());
+        insert(TABLE_NAME_1, null, getValidEntityWithList());
     }
 
     @Test
     public void testInsertInMapColumnWithSuccess() throws Exception {
         getCassandraService().addNewColumn(TABLE_NAME_1, getKeyspaceFromProperties(), VALID_MAP_COLUMN, DataType.map(DataType.text(), DataType.text()));
 
-        insert(TABLE_NAME_1, null, TestDataBuilder.getValidEntityWithMap());
+        insert(TABLE_NAME_1, null, getValidEntityWithMap());
     }
 
     @Test
     public void testInsertISetColumnWithSuccess() throws Exception {
         getCassandraService().addNewColumn(TABLE_NAME_1, getKeyspaceFromProperties(), VALID_SET_COLUMN, DataType.set(DataType.text()));
 
-        insert(TABLE_NAME_1, null, TestDataBuilder.getValidEntityWithSet());
+        insert(TABLE_NAME_1, null, getValidEntityWithSet());
     }
 
     @Test
     public void testInsertWithInvalidInput() throws Exception {
-        insertExpError(TABLE_NAME_1, null, TestDataBuilder.getInvalidEntity(), QUERY_VALIDATION);
+        insertExpError(TABLE_NAME_1, null, getInvalidEntity(), QUERY_VALIDATION);
     }
 
     void insert(String tableName, String keyspaceName, Map<String, Object> entity) throws Exception {
@@ -87,6 +93,6 @@ public class InsertTestCase extends AbstractTestCases {
                 .withPayload(entity)
                 .withVariable("tableName", tableName)
                 .withVariable("keyspaceName", keyspaceName)
-                .runExpectingException(ErrorTypeMatcher.errorType(error));
+                .runExpectingException(errorType(error));
     }
 }

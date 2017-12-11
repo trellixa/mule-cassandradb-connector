@@ -20,6 +20,7 @@ import org.mule.modules.cassandradb.internal.util.ReplicationStrategyBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class HelperStatements {
 	
@@ -119,25 +120,13 @@ public class HelperStatements {
      * retrieves the list of columns that will construct the partition key
      */
     private static List<ColumnInput> getPartitionKey(List<ColumnInput> columns) {
-        List<ColumnInput> partitionKey = new ArrayList<ColumnInput>();
-        for (ColumnInput column : columns) {
-            if (column.isPrimaryKey()) {
-                partitionKey.add(column);
-            }
-        }
-        return partitionKey;
+        return columns.stream().filter(ColumnInput::isPrimaryKey).collect(Collectors.toList());
     }
 
     /**
      * retrieves the list of columns that are not primary key
      */
     private static List<ColumnInput> getColumnsThatAreNotPrimaryKey(List<ColumnInput> columns) {
-        List<ColumnInput> columnsList = new ArrayList<ColumnInput>();
-        for (ColumnInput column : columns) {
-            if (!column.isPrimaryKey()) {
-                columnsList.add(column);
-            }
-        }
-        return columnsList;
+        return columns.stream().filter(column -> !column.isPrimaryKey()).collect(Collectors.toList());
     }
 }

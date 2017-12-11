@@ -18,11 +18,13 @@ import java.util.Map;
 
 import static org.junit.Assert.assertNotNull;
 import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getPrimaryKey;
+import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getValidEntity;
 import static org.mule.modules.cassandradb.automation.util.TestsConstants.DUMMY_PARTITION_KEY;
 import static org.mule.modules.cassandradb.automation.util.TestsConstants.TABLE_NAME_2;
 import static org.mule.modules.cassandradb.automation.util.TestsConstants.VALID_COLUMN_2;
 import static org.mule.modules.cassandradb.internal.exception.CassandraError.QUERY_VALIDATION;
 import static org.mule.modules.cassandradb.internal.exception.CassandraError.UNKNOWN;
+import static org.mule.tck.junit4.matcher.ErrorTypeMatcher.errorType;
 
 public class ExecuteCqlQueryTestCase extends AbstractTestCases {
 
@@ -33,7 +35,7 @@ public class ExecuteCqlQueryTestCase extends AbstractTestCases {
         CreateTableInput basicCreateTableInput = TestDataBuilder.getBasicCreateTableInput(getPrimaryKey(), getKeyspaceFromProperties(), TABLE_NAME_2);
         getCassandraService().createTable(basicCreateTableInput);
         getCassandraService().addNewColumn(TABLE_NAME_2, getKeyspaceFromProperties(), VALID_COLUMN_2, DataType.ascii());
-        getCassandraService().insert(getKeyspaceFromProperties(), TABLE_NAME_2, TestDataBuilder.getValidEntity());
+        getCassandraService().insert(getKeyspaceFromProperties(), TABLE_NAME_2, getValidEntity());
     }
 
     @After
@@ -55,7 +57,7 @@ public class ExecuteCqlQueryTestCase extends AbstractTestCases {
 
     @Test
     public void shouldExecute_NonParametrizedQuery() throws Exception {
-        CQLQueryInput query = new CQLQueryInput(QUERY_PREFIX + TABLE_NAME_2, new ArrayList<Object>());
+        CQLQueryInput query = new CQLQueryInput(QUERY_PREFIX + TABLE_NAME_2, new ArrayList<>());
         List<Map<String, Object>> queryResult = executeCQLQuery(query);
         assertNotNull(queryResult.get(0));
     }
@@ -91,6 +93,6 @@ public class ExecuteCqlQueryTestCase extends AbstractTestCases {
     protected void executeCQLQueryExpException(CQLQueryInput query, CassandraError error) throws Exception {
         flowRunner("executeCQLQuery-flow")
                 .withPayload(query)
-                .runExpectingException(ErrorTypeMatcher.errorType(error));
+                .runExpectingException(errorType(error));
     }
 }

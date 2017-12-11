@@ -23,8 +23,6 @@ public final class CassandraConnection implements ConnectorConnection {
      */
     private Session cassandraSession;
 
-    private static final Logger logger = LoggerFactory.getLogger(CassandraConnection.class);
-
     public CassandraConnection(Cluster cluster, Session session) {
         this.cluster = cluster;
         this.cassandraSession = session;

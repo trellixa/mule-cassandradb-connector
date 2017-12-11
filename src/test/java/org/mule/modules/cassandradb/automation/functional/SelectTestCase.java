@@ -18,40 +18,46 @@ import java.util.Map;
 
 import static org.hamcrest.Matchers.greaterThan;
 import static org.junit.Assert.assertThat;
+import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getBasicCreateTableInput;
+import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getValidEntity;
+import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getValidParmList;
+import static org.mule.modules.cassandradb.automation.util.TestsConstants.TABLE_NAME_1;
+import static org.mule.modules.cassandradb.automation.util.TestsConstants.VALID_COLUMN_2;
 import static org.mule.modules.cassandradb.internal.exception.CassandraError.QUERY_ERROR;
+import static org.mule.tck.junit4.matcher.ErrorTypeMatcher.errorType;
 
 public class SelectTestCase extends AbstractTestCases {
 
     public static final String VALID_PARAMETERIZED_QUERY =
-            "SELECT " + TestsConstants.VALID_COLUMN_2 +
-            " FROM " + TestsConstants.TABLE_NAME_1 +
+            "SELECT " + VALID_COLUMN_2 +
+            " FROM " + TABLE_NAME_1 +
             " WHERE " + TestsConstants.DUMMY_PARTITION_KEY + " IN (?, ?)";
     public static final String VALID_DSQL_QUERY = "dsql:" +
-            "SELECT " + TestsConstants.VALID_COLUMN_2 +
-            " FROM " + TestsConstants.TABLE_NAME_1;
+            "SELECT " + VALID_COLUMN_2 +
+            " FROM " + TABLE_NAME_1;
 
     @Before
     public void setup() throws Exception {
-        CreateTableInput basicCreateTableInput = TestDataBuilder.getBasicCreateTableInput(TestDataBuilder.getPrimaryKey(), getKeyspaceFromProperties(), TestsConstants.TABLE_NAME_1);
+        CreateTableInput basicCreateTableInput = getBasicCreateTableInput(TestDataBuilder.getPrimaryKey(), getKeyspaceFromProperties(), TABLE_NAME_1);
         getCassandraService().createTable(basicCreateTableInput);
-        getCassandraService().addNewColumn(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties(), TestsConstants.VALID_COLUMN_2, DataType.text());
-        getCassandraService().insert(getKeyspaceFromProperties(), TestsConstants.TABLE_NAME_1, TestDataBuilder.getValidEntity());
+        getCassandraService().addNewColumn(TABLE_NAME_1, getKeyspaceFromProperties(), VALID_COLUMN_2, DataType.text());
+        getCassandraService().insert(getKeyspaceFromProperties(), TABLE_NAME_1, getValidEntity());
     }
 
     @After
     public void tearDown() {
-        getCassandraService().dropTable(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties());
+        getCassandraService().dropTable(TABLE_NAME_1, getKeyspaceFromProperties());
     }
 
     @Test
     public void testSelectNativeQueryWithParameters() throws Exception {
-        List<Map<String, Object>> result = select(VALID_PARAMETERIZED_QUERY, TestDataBuilder.getValidParmList());
+        List<Map<String, Object>> result = select(VALID_PARAMETERIZED_QUERY, getValidParmList());
         assertThat(Integer.valueOf(result.size()),greaterThan(0));
     }
 
     @Test
     public void testSelectNativeQueryWithInvalidParameters() throws Exception {
-        selectExpException(VALID_PARAMETERIZED_QUERY, new LinkedList<Object>(), QUERY_ERROR);
+        selectExpException(VALID_PARAMETERIZED_QUERY, new LinkedList<>(), QUERY_ERROR);
     }
 
     @Test
@@ -75,6 +81,6 @@ public class SelectTestCase extends AbstractTestCases {
         flowRunner("select-flow")
                 .withPayload(validParameterizedQuery)
                 .withVariable("parameters", validParmList)
-                .runExpectingException(ErrorTypeMatcher.errorType(error));
+                .runExpectingException(errorType(error));
     }
 }

@@ -12,6 +12,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.mule.modules.cassandradb.api.ReplicationStrategy.NETWORK_TOPOLOGY;
+import static org.mule.modules.cassandradb.automation.util.TestsConstants.DATA_CENTER_NAME;
 import static org.mule.modules.cassandradb.automation.util.TestsConstants.KEYSPACE_NAME_1;
 import static org.mule.modules.cassandradb.automation.util.TestsConstants.KEYSPACE_NAME_2;
 
@@ -36,7 +37,7 @@ public class DropKeyspaceTestCase extends AbstractTestCases {
         CreateKeyspaceInput keyspaceInput = new CreateKeyspaceInput();
         String keyspaceName = KEYSPACE_NAME_2;
         keyspaceInput.setKeyspaceName(keyspaceName);
-        keyspaceInput.setFirstDataCenter(new DataCenter(TestsConstants.DATA_CENTER_NAME, 1));
+        keyspaceInput.setFirstDataCenter(new DataCenter(DATA_CENTER_NAME, 1));
         keyspaceInput.setReplicationStrategyClass(NETWORK_TOPOLOGY.getStrategyClass());
         getCassandraService().createKeyspace(keyspaceInput);
 

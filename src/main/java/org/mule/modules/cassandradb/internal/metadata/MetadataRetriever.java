@@ -62,7 +62,7 @@ public class MetadataRetriever {
         return builder.anyType().build();
     }
 
-    public MetadataType getMetadataOnlyWithFilters(String key){
+    public MetadataType getMetadataOnlyWithFilters(String key) {
         logger.info("Retrieving input metadata for the key: {}", key);
         //extract tables metadata from database
         TableMetadata tableMetadata = fetchTableMetadata(connection.getCassandraSession().getLoggedKeyspace(), key);

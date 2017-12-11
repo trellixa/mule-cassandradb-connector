@@ -17,19 +17,19 @@ import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder
 import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getColumns;
 import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getCompositePrimaryKey;
 import static org.mule.modules.cassandradb.automation.util.TestsConstants.TABLE_NAME_1;
-
+import static org.mule.modules.cassandradb.automation.util.TestsConstants.TABLE_NAME_2;
 
 public class CreateTableTestCase extends AbstractTestCases {
 
     @After
     public void tearDown() {
-        getCassandraService().dropTable(TestsConstants.TABLE_NAME_1, getKeyspaceFromProperties());
-        getCassandraService().dropTable(TestsConstants.TABLE_NAME_2, getKeyspaceFromProperties());
+        getCassandraService().dropTable(TABLE_NAME_1, getKeyspaceFromProperties());
+        getCassandraService().dropTable(TABLE_NAME_2, getKeyspaceFromProperties());
     }
 
     @Test
     public void testCreateTableWithSuccess() throws Exception {
-        CreateTableInput basicCreateTableInput = getBasicCreateTableInput(getColumns(), getKeyspaceFromProperties(), TestsConstants.TABLE_NAME_1);
+        CreateTableInput basicCreateTableInput = getBasicCreateTableInput(getColumns(), getKeyspaceFromProperties(), TABLE_NAME_1);
         assertTrue(createTable(basicCreateTableInput));
 
         Thread.sleep(SLEEP_DURATION);
@@ -39,7 +39,7 @@ public class CreateTableTestCase extends AbstractTestCases {
 
     @Test
     public void testCreateTableWithCompositePKWithSuccess() throws Exception {
-        CreateTableInput basicCreateTableInput = getBasicCreateTableInput(getCompositePrimaryKey(), getKeyspaceFromProperties(), TestsConstants.TABLE_NAME_2);
+        CreateTableInput basicCreateTableInput = getBasicCreateTableInput(getCompositePrimaryKey(), getKeyspaceFromProperties(), TABLE_NAME_2);
         assertTrue(createTable(basicCreateTableInput));
     }
 

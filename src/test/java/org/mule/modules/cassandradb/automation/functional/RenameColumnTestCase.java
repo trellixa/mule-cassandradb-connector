@@ -16,15 +16,18 @@ import org.mule.tck.junit4.matcher.ErrorTypeMatcher;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getBasicCreateTableInput;
+import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getCompositePrimaryKey;
 import static org.mule.modules.cassandradb.automation.util.TestsConstants.TABLE_NAME_1;
 import static org.mule.modules.cassandradb.automation.util.TestsConstants.VALID_COLUMN_1;
 import static org.mule.modules.cassandradb.automation.util.TestsConstants.VALID_LIST_COLUMN;
 import static org.mule.modules.cassandradb.internal.exception.CassandraError.QUERY_VALIDATION;
+import static org.mule.tck.junit4.matcher.ErrorTypeMatcher.errorType;
 
 public class RenameColumnTestCase extends AbstractTestCases {
     @Before
     public  void setup() throws Exception {
-        CreateTableInput basicCreateTableInput = TestDataBuilder.getBasicCreateTableInput(TestDataBuilder.getCompositePrimaryKey(), getKeyspaceFromProperties(), TABLE_NAME_1);
+        CreateTableInput basicCreateTableInput = getBasicCreateTableInput(getCompositePrimaryKey(), getKeyspaceFromProperties(), TABLE_NAME_1);
         getCassandraService().createTable(basicCreateTableInput);
     }
 
@@ -68,6 +71,6 @@ public class RenameColumnTestCase extends AbstractTestCases {
                 .withVariable("tableName", tableName)
                 .withVariable("keyspaceName", keyspaceName)
                 .withVariable("newColumnName", newColumn)
-                .runExpectingException(ErrorTypeMatcher.errorType(error));
+                .runExpectingException(errorType(error));
     }
 }

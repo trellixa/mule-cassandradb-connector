@@ -19,8 +19,6 @@ import static org.mule.runtime.api.connection.ConnectionValidationResult.success
 
 public class BasicAuthConnectionProvider implements CachedConnectionProvider<CassandraConnection> {
 
-    private static final Logger logger = LoggerFactory.getLogger(BasicAuthConnectionProvider.class);
-
     /**
      * Host name or IP address
      */

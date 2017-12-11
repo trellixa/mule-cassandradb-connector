@@ -26,9 +26,11 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.fail;
 import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.deleteRowsFlowName;
+import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getMetadataColumns;
 import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.insertFlowName;
 import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.metadataKeyName;
 import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.updateFlowName;
+import static org.mule.modules.cassandradb.automation.util.TestsConstants.TABLE_NAME_2;
 import static org.mule.runtime.api.component.location.Location.builder;
 import static org.mule.runtime.api.metadata.MetadataKeyBuilder.newKey;
 
@@ -40,11 +42,10 @@ public class MetadataTestCase extends AbstractTestCases{
     private static Location location;
     @Inject
     protected MetadataService metadataService;
-    private File serializedMetadataFile;
     private MetadataKey metadataKey = newKey(metadataKeyName).withDisplayName(metadataKeyName).build();
     @Before
     public void setUpMetadata() throws InterruptedException {
-        getCassandraService().createTable(TestDataBuilder.getBasicCreateTableInput(TestDataBuilder.getMetadataColumns(), getCassandraProperties().getKeyspace(), TestsConstants.TABLE_NAME_2));
+        getCassandraService().createTable(TestDataBuilder.getBasicCreateTableInput(getMetadataColumns(), getCassandraProperties().getKeyspace(), TABLE_NAME_2));
         //required delay to make sure the setup is ok
         sleep(5000);
     }
@@ -90,7 +91,7 @@ public class MetadataTestCase extends AbstractTestCases{
 
     @After
     public void tearDownMetadata(){
-        getCassandraService().dropTable(TestsConstants.TABLE_NAME_2, getCassandraProperties().getKeyspace());
+        getCassandraService().dropTable(TABLE_NAME_2, getCassandraProperties().getKeyspace());
     }
 
     public String getMetadataCategory() {

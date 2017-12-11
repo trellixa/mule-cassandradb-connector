@@ -18,10 +18,12 @@ import org.mule.tck.junit4.matcher.ErrorTypeMatcher;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.mule.modules.cassandradb.api.ColumnType.*;
 import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getAlterColumnInput;
 import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getBasicCreateTableInput;
 import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getColumns;
 import static org.mule.modules.cassandradb.automation.util.TestsConstants.TABLE_NAME_1;
+import static org.mule.modules.cassandradb.automation.util.TestsConstants.VALID_COLUMN_1;
 import static org.mule.modules.cassandradb.internal.exception.CassandraError.QUERY_VALIDATION;
 
 
@@ -40,7 +42,7 @@ public class AddNewColumnTestCase extends AbstractTestCases {
 
     @Test
     public void testAddNewColumnOfPrimitiveTypeWithSuccess() throws Exception {
-        AlterColumnInput alterColumnInput = getAlterColumnInput(DataType.text().toString() + System.currentTimeMillis(), ColumnType.TEXT);
+        AlterColumnInput alterColumnInput = getAlterColumnInput(DataType.text().toString() + System.currentTimeMillis(), TEXT);
         assertTrue(addNewColumn(TABLE_NAME_1, getKeyspaceFromProperties(), alterColumnInput));
 
         Thread.sleep(SLEEP_DURATION);
@@ -51,7 +53,7 @@ public class AddNewColumnTestCase extends AbstractTestCases {
 
     @Test
     public void testAddNewColumnWithSameName() throws Exception {
-        AlterColumnInput alterColumnInput = getAlterColumnInput(TestsConstants.VALID_COLUMN_1, ColumnType.TEXT);
+        AlterColumnInput alterColumnInput = getAlterColumnInput(VALID_COLUMN_1, TEXT);
         addNewColumnExpException(TABLE_NAME_1, getKeyspaceFromProperties(), alterColumnInput, QUERY_VALIDATION);
     }
 

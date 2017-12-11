@@ -7,11 +7,16 @@ package org.mule.modules.cassandradb.internal.extension;
 
 import org.mule.modules.cassandradb.internal.config.CassandraConfig;
 import org.mule.modules.cassandradb.internal.exception.CassandraError;
+import org.mule.runtime.api.meta.Category;
 import org.mule.runtime.extension.api.annotation.Configurations;
 import org.mule.runtime.extension.api.annotation.Extension;
 import org.mule.runtime.extension.api.annotation.error.ErrorTypes;
+import org.mule.runtime.extension.api.annotation.license.RequiresEnterpriseLicense;
 
-@Extension(name = "CassandraDB")
+import static org.mule.runtime.api.meta.Category.SELECT;
+
+@Extension(name = "CassandraDB", category = SELECT)
+@RequiresEnterpriseLicense(allowEvaluationLicense = true)
 @Configurations(CassandraConfig.class)
 @ErrorTypes(CassandraError.class)
 public class CassandraExtension {

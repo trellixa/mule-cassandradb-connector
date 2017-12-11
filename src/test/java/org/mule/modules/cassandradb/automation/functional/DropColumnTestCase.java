@@ -17,6 +17,7 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getBasicCreateTableInput;
 import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getColumns;
+import static org.mule.modules.cassandradb.automation.util.TestsConstants.COLUMN;
 import static org.mule.modules.cassandradb.automation.util.TestsConstants.TABLE_NAME_1;
 import static org.mule.modules.cassandradb.automation.util.TestsConstants.VALID_COLUMN_1;
 import static org.mule.modules.cassandradb.automation.util.TestsConstants.VALID_COLUMN_2;
@@ -51,7 +52,7 @@ public class DropColumnTestCase extends AbstractTestCases {
 
     @Test
     public void testRemoveColumnWithInvalidName() throws Exception {
-        dropColumnExpException(TABLE_NAME_1, getKeyspaceFromProperties(), TestsConstants.COLUMN, QUERY_VALIDATION );
+        dropColumnExpException(TABLE_NAME_1, getKeyspaceFromProperties(), COLUMN, QUERY_VALIDATION );
     }
 
     boolean dropColumn(String tableName, String keyspaceName, String column) throws Exception {

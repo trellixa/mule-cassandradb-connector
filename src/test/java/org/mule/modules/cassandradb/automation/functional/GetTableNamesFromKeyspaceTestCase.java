@@ -10,6 +10,7 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getBasicCreateTableInput;
 import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getColumns;
 import static org.mule.modules.cassandradb.automation.util.TestsConstants.KEYSPACE_NAME_3;
 import static org.mule.modules.cassandradb.automation.util.TestsConstants.TABLE_NAME_1;
@@ -19,8 +20,8 @@ public class GetTableNamesFromKeyspaceTestCase extends AbstractTestCases {
 
     @Test
     public void testTableNamesFromLoggedInKeyspace() throws Exception {
-        getCassandraService().createTable(TestDataBuilder.getBasicCreateTableInput(getColumns(), getKeyspaceFromProperties(), TABLE_NAME_1));
-        getCassandraService().createTable(TestDataBuilder.getBasicCreateTableInput(getColumns(), getKeyspaceFromProperties(), TABLE_NAME_2));
+        getCassandraService().createTable(getBasicCreateTableInput(getColumns(), getKeyspaceFromProperties(), TABLE_NAME_1));
+        getCassandraService().createTable(getBasicCreateTableInput(getColumns(), getKeyspaceFromProperties(), TABLE_NAME_2));
 
         List<String> tableNames = getTableNamesFromKeyspace(getKeyspaceFromProperties());
 
@@ -40,9 +41,9 @@ public class GetTableNamesFromKeyspaceTestCase extends AbstractTestCases {
 
         getCassandraService().createKeyspace(keyspaceInput);
 
-        getCassandraService().createTable(TestDataBuilder.getBasicCreateTableInput(getColumns(), KEYSPACE_NAME_3, TABLE_NAME_1));
-        getCassandraService().createTable(TestDataBuilder.getBasicCreateTableInput(getColumns(), KEYSPACE_NAME_3, TABLE_NAME_2));
-        getCassandraService().createTable(TestDataBuilder.getBasicCreateTableInput(getColumns(), getKeyspaceFromProperties(), testTable));
+        getCassandraService().createTable(getBasicCreateTableInput(getColumns(), KEYSPACE_NAME_3, TABLE_NAME_1));
+        getCassandraService().createTable(getBasicCreateTableInput(getColumns(), KEYSPACE_NAME_3, TABLE_NAME_2));
+        getCassandraService().createTable(getBasicCreateTableInput(getColumns(), getKeyspaceFromProperties(), testTable));
 
         List<String> tableNames = getTableNamesFromKeyspace(KEYSPACE_NAME_3);
 

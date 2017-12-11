@@ -16,6 +16,8 @@ import org.mule.tck.junit4.matcher.ErrorTypeMatcher;
 
 import java.util.Map;
 
+import static org.apache.commons.lang3.StringUtils.endsWithIgnoreCase;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -23,6 +25,7 @@ import static org.mule.modules.cassandradb.api.ReplicationStrategy.SIMPLE;
 import static org.mule.modules.cassandradb.automation.util.TestsConstants.*;
 import static org.mule.modules.cassandradb.api.ReplicationStrategy.NETWORK_TOPOLOGY;
 import static org.mule.modules.cassandradb.internal.exception.CassandraError.SYNTAX_ERROR;
+import static org.mule.tck.junit4.matcher.ErrorTypeMatcher.errorType;
 
 public class CreateKeyspaceTestCase extends AbstractTestCases {
 
@@ -83,8 +86,8 @@ public class CreateKeyspaceTestCase extends AbstractTestCases {
 
         String replicationStrategyClass = keyspaceInput.getReplicationStrategyClass();
         Map<String, String> replication = ksMedata.getReplication();
-        if (StringUtils.isNotBlank(replicationStrategyClass)) {
-            assertTrue(StringUtils.endsWithIgnoreCase(replication.get("class"), replicationStrategyClass));
+        if (isNotBlank(replicationStrategyClass)) {
+            assertTrue(endsWithIgnoreCase(replication.get("class"), replicationStrategyClass));
         }
         if (keyspaceInput.getReplicationFactor() != null) {
             assertEquals(keyspaceInput.getReplicationFactor(), replication.get("replication_factor"));
@@ -108,6 +111,6 @@ public class CreateKeyspaceTestCase extends AbstractTestCases {
     void createKeyspaceExpException(final CreateKeyspaceInput keyspaceInput, ErrorTypeDefinition errorType) throws Exception {
         flowRunner("createKeyspace-flow")
                 .withPayload(keyspaceInput)
-                .runExpectingException(ErrorTypeMatcher.errorType(errorType));
+                .runExpectingException(errorType(errorType));
     }
 }

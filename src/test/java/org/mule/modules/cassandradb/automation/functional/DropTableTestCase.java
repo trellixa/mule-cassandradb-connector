@@ -12,12 +12,14 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getBasicCreateTableInput;
 import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getCompositePrimaryKey;
+import static org.mule.modules.cassandradb.automation.util.TestsConstants.TABLE_NAME_1;
+import static org.mule.modules.cassandradb.automation.util.TestsConstants.TABLE_NAME_2;
 
 public class DropTableTestCase extends AbstractTestCases {
 
     @Test
     public void testDropTable() throws Exception {
-        String tableName = TestsConstants.TABLE_NAME_1;
+        String tableName = TABLE_NAME_1;
         String keyspace = getKeyspaceFromProperties();
         CreateTableInput basicCreateTableInput = getBasicCreateTableInput(TestDataBuilder.getColumns(), keyspace, tableName);
         getCassandraService().createTable(basicCreateTableInput);
@@ -31,7 +33,7 @@ public class DropTableTestCase extends AbstractTestCases {
 
     @Test
     public void testDropTableWithCompositePK() throws Exception {
-        String tableName = TestsConstants.TABLE_NAME_2;
+        String tableName = TABLE_NAME_2;
         String keyspace = getKeyspaceFromProperties();
         CreateTableInput basicCreateTableInput = getBasicCreateTableInput(getCompositePrimaryKey(), keyspace, tableName);
         getCassandraService().createTable(basicCreateTableInput);

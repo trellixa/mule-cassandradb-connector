@@ -15,17 +15,26 @@ import java.util.Map;
 
 import static java.lang.String.format;
 import static org.junit.Assert.assertEquals;
+import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getBasicCreateTableInput;
+import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getColumns;
+import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getInvalidEntity;
+import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getInvalidWhereClause;
+import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getPayloadColumnsAndFilters;
+import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getValidEntity;
+import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getValidEntityForUpdate;
+import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getValidWhereClauseWithEq;
 import static org.mule.modules.cassandradb.automation.util.TestsConstants.TABLE_NAME_1;
 import static org.mule.modules.cassandradb.automation.util.TestsConstants.VALID_COLUMN_2;
 import static org.mule.modules.cassandradb.internal.exception.CassandraError.QUERY_VALIDATION;
+import static org.mule.tck.junit4.matcher.ErrorTypeMatcher.errorType;
 
 public class UpdateTestCase extends AbstractTestCases {
 
     @Before
     public void setup() throws Exception {
-        CreateTableInput basicCreateTableInput = TestDataBuilder.getBasicCreateTableInput(TestDataBuilder.getColumns(), getKeyspaceFromProperties(), TABLE_NAME_1);
+        CreateTableInput basicCreateTableInput = getBasicCreateTableInput(getColumns(), getKeyspaceFromProperties(), TABLE_NAME_1);
         getCassandraService().createTable(basicCreateTableInput);
-        getCassandraService().insert(getKeyspaceFromProperties(), TABLE_NAME_1, TestDataBuilder.getValidEntity());
+        getCassandraService().insert(getKeyspaceFromProperties(), TABLE_NAME_1, getValidEntity());
     }
 
     @After
@@ -36,7 +45,7 @@ public class UpdateTestCase extends AbstractTestCases {
     @Test
     public void testUpdateUsingEqWithSuccess() throws Exception {
         String updatedValue = "updatedValue";
-        update(TABLE_NAME_1, null, TestDataBuilder.getPayloadColumnsAndFilters(TestDataBuilder.getValidEntityForUpdate(updatedValue), TestDataBuilder.getValidWhereClauseWithEq()));
+        update(TABLE_NAME_1, null, getPayloadColumnsAndFilters(getValidEntityForUpdate(updatedValue), getValidWhereClauseWithEq()));
 
         Thread.sleep(SLEEP_DURATION);
         String query = format("SELECT * FROM %s.%s", getKeyspaceFromProperties(), TABLE_NAME_1);
@@ -46,19 +55,19 @@ public class UpdateTestCase extends AbstractTestCases {
 
     @Test
     public void testUpdateUsingInWithSuccess() throws Exception {
-        update(TABLE_NAME_1, null, TestDataBuilder.getPayloadColumnsAndFilters(TestDataBuilder.getValidEntityForUpdate("newValue"),
+        update(TABLE_NAME_1, null, getPayloadColumnsAndFilters(getValidEntityForUpdate("newValue"),
                 TestDataBuilder.getValidWhereClauseWithIN()));
     }
 
     @Test
     public void testUpdateWithInvalidInput() throws Exception {
-        Map<String, Object> payloadColumnsAndFilters = TestDataBuilder.getPayloadColumnsAndFilters(TestDataBuilder.getInvalidEntity(), TestDataBuilder.getValidWhereClauseWithEq());
+        Map<String, Object> payloadColumnsAndFilters = getPayloadColumnsAndFilters(getInvalidEntity(), getValidWhereClauseWithEq());
         updateExpException(TABLE_NAME_1, null, payloadColumnsAndFilters, QUERY_VALIDATION);
     }
 
     @Test
     public void testUpdateWithInvalidWhereClause() throws Exception {
-        updateExpException(TABLE_NAME_1, null, TestDataBuilder.getPayloadColumnsAndFilters(TestDataBuilder.getInvalidEntity(), TestDataBuilder.getInvalidWhereClause()), QUERY_VALIDATION);
+        updateExpException(TABLE_NAME_1, null, getPayloadColumnsAndFilters(getInvalidEntity(), getInvalidWhereClause()), QUERY_VALIDATION);
     }
 
     protected void update(String tableName, String keyspaceName, Map<String, Object> entityToUpdate) throws Exception {
@@ -77,6 +86,6 @@ public class UpdateTestCase extends AbstractTestCases {
                 .withPayload(entityToUpdate)
                 .withVariable("tableName", tableName)
                 .withVariable("keyspaceName", keyspaceName)
-                .runExpectingException(ErrorTypeMatcher.errorType(error));
+                .runExpectingException(errorType(error));
     }
 }
