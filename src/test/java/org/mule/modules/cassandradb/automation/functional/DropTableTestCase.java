@@ -23,7 +23,7 @@ public class DropTableTestCase extends AbstractTestCases {
         getCassandraService().createTable(basicCreateTableInput);
         assertNotNull(fetchTableMetadata(keyspace, tableName));
 
-        boolean result = dropTable(tableName, keyspace);
+        boolean result = dropTable(keyspace, tableName);
         assertTrue(result);
 
         assertNull(fetchTableMetadata(keyspace, tableName));
@@ -35,7 +35,7 @@ public class DropTableTestCase extends AbstractTestCases {
         String keyspace = getKeyspaceFromProperties();
         CreateTableInput basicCreateTableInput = getBasicCreateTableInput(getCompositePrimaryKey(), keyspace, tableName);
         getCassandraService().createTable(basicCreateTableInput);
-        assertNotNull(fetchTableMetadata(tableName, keyspace));
+        assertNotNull(fetchTableMetadata(keyspace, tableName));
 
         boolean result = dropTable(keyspace, tableName);
         assertTrue(result);
@@ -43,7 +43,7 @@ public class DropTableTestCase extends AbstractTestCases {
         assertNull(fetchTableMetadata(keyspace, tableName));
     }
 
-    boolean dropTable(String tableName, String keyspaceName) throws Exception {
+    boolean dropTable(String keyspaceName, String tableName) throws Exception {
         return (boolean) flowRunner("dropTable-flow")
                 .withVariable("tableName", tableName)
                 .withVariable("keyspaceName", keyspaceName)
