@@ -53,52 +53,52 @@ public class CassandraServiceImpl extends DefaultConnectorService<CassandraConfi
 
     @Override
     public boolean createTable(CreateTableInput input) {
-        String keyspaceName = isNotBlank(input.getKeyspaceName()) ? input.getKeyspaceName() : getCassandraSession().getLoggedKeyspace();
-        String queryString = HelperStatements.createTable(keyspaceName, input).getQueryString();
+        String keyspace = getKeyspaceNameToUse(input.getKeyspaceName());
+        String queryString = HelperStatements.createTable(keyspace, input).getQueryString();
         return getCassandraSession().execute(queryString).wasApplied();
     }
 
     @Override
     public boolean dropTable(String tableName, String keyspaceName) {
-        String keyspace = isNotBlank(keyspaceName) ? keyspaceName : getCassandraSession().getLoggedKeyspace();
+        String keyspace = getKeyspaceNameToUse(keyspaceName);
         return getCassandraSession().execute(HelperStatements.dropTable(tableName, keyspace)).wasApplied();
     }
 
     @Override
     public boolean addNewColumn(String tableName, String keyspaceName, String columnName, DataType columnType) {
-        String keyspace = isNotBlank(keyspaceName) ? keyspaceName : getCassandraSession().getLoggedKeyspace();
+        String keyspace = getKeyspaceNameToUse(keyspaceName);
         SchemaStatement statement = HelperStatements.addNewColumn(tableName, keyspace, columnName, columnType);
         return getCassandraSession().execute(statement).wasApplied();
     }
 
     @Override
     public boolean dropColumn(String tableName, String keyspaceName, String column) {
-        String keyspace = isNotBlank(keyspaceName) ? keyspaceName : getCassandraSession().getLoggedKeyspace();
+        String keyspace = getKeyspaceNameToUse(keyspaceName);
         SchemaStatement statement = HelperStatements.dropColumn(tableName, keyspace, column);
         return getCassandraSession().execute(statement).wasApplied();
     }
 
     @Override
     public boolean renameColumn(String tableName, String keyspaceName, String oldColumnName, String newColumnName) {
-        String keyspace = isNotBlank(keyspaceName) ? keyspaceName : getCassandraSession().getLoggedKeyspace();
+        String keyspace = getKeyspaceNameToUse(keyspaceName);
         SchemaStatement statement = HelperStatements.renameColumn(tableName, keyspace, oldColumnName, newColumnName);
         return getCassandraSession().execute(statement).wasApplied();
     }
 
     public boolean changeColumnType(String tableName, String keyspaceName, AlterColumnInput input) {
-        String keyspace = isNotBlank(keyspaceName) ? keyspaceName : getCassandraSession().getLoggedKeyspace();
+        String keyspace = getKeyspaceNameToUse(keyspaceName);
         SchemaStatement statement = HelperStatements.changeColumnType(tableName, keyspace, input);
         return getCassandraSession().execute(statement).wasApplied();
     }
 
     @Override
-    public List<String> getTableNamesFromKeyspace(String customKeyspaceName) {
-        String keyspaceName = isNotBlank(customKeyspaceName) ? customKeyspaceName : getCassandraSession().getLoggedKeyspace();
+    public List<String> getTableNamesFromKeyspace(String keyspaceName) {
+        String keyspace = getKeyspaceNameToUse(keyspaceName);
         List<String> tableNames = Collections.emptyList();
-        if (isNotBlank(keyspaceName)) {
-            if (!(getCassandraSession().getCluster().getMetadata().getKeyspace(keyspaceName) == null)) {
+        if (isNotBlank(keyspace)) {
+            if (!(getCassandraSession().getCluster().getMetadata().getKeyspace(keyspace) == null)) {
                 tableNames = getCassandraSession().getCluster()
-                        .getMetadata().getKeyspace(keyspaceName)
+                        .getMetadata().getKeyspace(keyspace)
                         .getTables()
                         .stream()
                         .map(AbstractTableMetadata::getName).collect(toList());
@@ -110,7 +110,7 @@ public class CassandraServiceImpl extends DefaultConnectorService<CassandraConfi
 
     @Override
     public void insert(String keyspaceName, String table, Map<String, Object> entity) {
-        String keyspace = isNotBlank(keyspaceName) ? keyspaceName : getCassandraSession().getLoggedKeyspace();
+        String keyspace = getKeyspaceNameToUse(keyspaceName);
 
         Insert insertObject = QueryBuilder.insertInto(keyspace, table);
 
@@ -162,7 +162,7 @@ public class CassandraServiceImpl extends DefaultConnectorService<CassandraConfi
     public List<Map<String, Object>> select(String query, List<Object> params) {
         validateSelectQuery(query, params);
 
-        ResultSet result = null;
+        ResultSet result;
 
         if (!CollectionUtils.isEmpty(params)) {
             result = executePreparedStatement(query, params);
@@ -224,11 +224,11 @@ public class CassandraServiceImpl extends DefaultConnectorService<CassandraConfi
     }
 
     private List<Map<String, Object>> getResponseFromResultSet(ResultSet result) {
-        List<Map<String, Object>> responseList = new LinkedList<Map<String, Object>>();
+        List<Map<String, Object>> responseList = new LinkedList<>();
 
         if (result != null) {
             responseList = result.all().stream()
-                    .map(row -> mapProperties(row))
+                    .map(CassandraServiceImpl::mapProperties)
                     .collect(toList());
         }
 
@@ -249,5 +249,9 @@ public class CassandraServiceImpl extends DefaultConnectorService<CassandraConfi
 
     private Session getCassandraSession() {
         return getConnection().getCassandraSession();
+    }
+
+    private String getKeyspaceNameToUse(String keyspaceName) {
+        return isNotBlank(keyspaceName) ? keyspaceName : getCassandraSession().getLoggedKeyspace();
     }
 }
