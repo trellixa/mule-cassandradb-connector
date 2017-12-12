@@ -90,7 +90,6 @@ public class BasicAuthConnectionProvider implements CachedConnectionProvider<Cas
      * Enables the use of SSL for the cluster.
      */
     @Parameter
-    @Optional
     @Placement(tab = "Advanced Settings")
     @DisplayName("SSL")
     private boolean sslEnabled;
