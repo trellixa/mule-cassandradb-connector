@@ -35,14 +35,4 @@ public class CreateTableInput {
     public void setColumns(List<ColumnInput> columns) {
         this.columns = columns;
     }
-
-    // FIXME: Remove toString method.
-    @Override
-    public String toString() {
-        return "CreateTableInput{" +
-                "tableName='" + tableName + '\'' +
-                ", keyspaceName='" + keyspaceName + '\'' +
-                ", columns=" + columns +
-                '}';
-    }
 }

@@ -53,16 +53,4 @@ public class CreateKeyspaceInput {
     public void setNextDataCenter(DataCenter nextDataCenter) {
         this.nextDataCenter = nextDataCenter;
     }
-
-    // FIXME: Remove toString method.
-    @Override
-    public String toString() {
-        return "CreateKeyspaceInput{" +
-                "keyspaceName='" + keyspaceName + '\'' +
-                ", replicationStrategyClass='" + replicationStrategyClass + '\'' +
-                ", replicationFactor=" + replicationFactor +
-                ", firstDataCenter=" + firstDataCenter +
-                ", nextDataCenter=" + nextDataCenter +
-                '}';
-    }
 }

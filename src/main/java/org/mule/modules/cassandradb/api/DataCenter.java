@@ -32,13 +32,4 @@ public class DataCenter {
     public void setValue(Integer value) {
         this.value = value;
     }
-
-    // FIXME: Remove toString method.
-    @Override
-    public String toString() {
-        return "DataCenter{" +
-                "name='" + name + '\'' +
-                ", value=" + value +
-                '}';
-    }
 }

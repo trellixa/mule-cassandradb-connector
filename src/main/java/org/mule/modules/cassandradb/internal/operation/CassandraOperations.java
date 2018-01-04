@@ -47,10 +47,7 @@ public class CassandraOperations extends CassandraBaseOperations {
     public boolean createKeyspace(@Config CassandraConfig config,
                                   @Connection CassandraConnection connection,
                                   @Content CreateKeyspaceInput input) {
-        // FIXME: Replace if block with 'logger.debug("Creating keyspace {}", input);'
-        if (logger.isDebugEnabled()) {
-            logger.debug("Creating keyspace " + input.toString());
-        }
+        logger.debug("Creating keyspace {}", input);
         return newExecutionBuilder(config, connection).execute(CassandraService::createKeyspace).withParam(input);
     }
 
@@ -64,9 +61,7 @@ public class CassandraOperations extends CassandraBaseOperations {
                                 @Connection CassandraConnection connection,
                                 String keyspaceName) {
         // FIXME: Replace if block as above.
-        if (logger.isDebugEnabled()) {
-            logger.debug("Dropping keyspace " + keyspaceName);
-        }
+        logger.debug("Dropping keyspace {}", keyspaceName);
         return newExecutionBuilder(config, connection).execute(CassandraService::dropKeyspace).withParam(keyspaceName);
     }
 
@@ -81,10 +76,7 @@ public class CassandraOperations extends CassandraBaseOperations {
     public boolean createTable(@Config CassandraConfig config,
                                @Connection CassandraConnection connection,
                                @Content CreateTableInput createTableInput) {
-        // FIXME: Replace if block as above.
-        if (logger.isDebugEnabled()) {
-            logger.debug("Creating table " + createTableInput.toString());
-        }
+        logger.debug("Creating table {}", createTableInput);
         return newExecutionBuilder(config, connection).execute(CassandraService::createTable).withParam(createTableInput);
     }
 
@@ -99,10 +91,7 @@ public class CassandraOperations extends CassandraBaseOperations {
                              @Connection CassandraConnection connection,
                              String tableName,
                              @Optional String keyspaceName) {
-        // FIXME: Replace if block as above.
-        if (logger.isDebugEnabled()) {
-            logger.debug("Dropping table " + tableName);
-        }
+        logger.debug("Dropping table {}", tableName);
         return newExecutionBuilder(config, connection).execute(CassandraService::dropTable)
                 .withParam(tableName)
                 .withParam(keyspaceName);
@@ -121,10 +110,7 @@ public class CassandraOperations extends CassandraBaseOperations {
                                 String table,
                                 @Optional String keyspaceName,
                                 @Content AlterColumnInput alterColumnInput) {
-        // FIXME: Replace if block as above.
-        if (logger.isDebugEnabled()) {
-            logger.debug("Adding new column " + alterColumnInput.toString());
-        }
+        logger.debug("Adding new column {}", alterColumnInput);
         return newExecutionBuilder(config, connection).execute(CassandraService::addNewColumn)
                 .withParam(table)
                 .withParam(keyspaceName)
@@ -216,10 +202,7 @@ public class CassandraOperations extends CassandraBaseOperations {
                        @MetadataKeyId(CassandraMetadataResolver.class) String table,
                        @Optional String keyspaceName,
                        @Content @TypeResolver(CassandraMetadataResolver.class) Map<String, Object> entity) {
-        // FIXME: Replace if block as above.
-        if (logger.isDebugEnabled()) {
-            logger.debug("Inserting entity " + entity + " into the " + table + " table ");
-        }
+        logger.debug("Inserting entity {} into the {} table ", entity, table);
         newExecutionBuilder(config, connection).execute(CassandraService::insert)
                 .withParam(keyspaceName)
                 .withParam(table)
@@ -238,10 +221,8 @@ public class CassandraOperations extends CassandraBaseOperations {
                        @MetadataKeyId(CassandraWithFiltersMetadataCategory.class) String table,
                        @Optional String keyspaceName,
                        @Content @TypeResolver(CassandraWithFiltersMetadataCategory.class) Map<String, Object> entityToUpdate) {
-        // FIXME: Replace if block as above.
-        if (logger.isDebugEnabled()) {
-            logger.debug("Updating  entity" + entityToUpdate + " into the " + table + " table ");
-        }
+        logger.debug("Updating entity {} into the {} table ", entityToUpdate, table);
+
         newExecutionBuilder(config, connection).execute(CassandraService::update)
                 .withParam(keyspaceName)
                 .withParam(table)
@@ -259,10 +240,8 @@ public class CassandraOperations extends CassandraBaseOperations {
     public List<Map<String, Object>> executeCQLQuery(@Config CassandraConfig config,
                                                      @Connection CassandraConnection connection,
                                                      @Placement(tab = "Query") @Content CQLQueryInput cqlInput) {
-        // FIXME: Replace if block as above.
-        if (logger.isDebugEnabled()) {
-            logger.debug("Executing query " + cqlInput.toString());
-        }
+        logger.debug("Executing query  {}", cqlInput);
+
         return newExecutionBuilder(config, connection).execute(CassandraService::executeCQLQuery)
                 .withParam(cqlInput.getCqlQuery())
                 .withParam(cqlInput.getParameters());
@@ -279,10 +258,7 @@ public class CassandraOperations extends CassandraBaseOperations {
                                              @Connection CassandraConnection connection,
                                              @MetadataKeyId(CassandraMetadataResolver.class) final String query,
                                              @Optional List<Object> parameters)  {
-        // FIXME: Replace if block as above.
-        if (logger.isDebugEnabled()) {
-            logger.debug("Executing select query: " + query + " with the parameters: " + parameters);
-        }
+        logger.debug("Executing select query: {} with the parameters: {}", query, parameters);
         return newExecutionBuilder(config, connection).execute(CassandraService::select)
                 .withParam(query)
                 .withParam(parameters);
