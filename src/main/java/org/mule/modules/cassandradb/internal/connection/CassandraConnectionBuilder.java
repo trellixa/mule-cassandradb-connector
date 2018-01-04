@@ -1,6 +1,7 @@
 package org.mule.modules.cassandradb.internal.connection;
 
 import com.datastax.driver.core.Cluster;
+import com.datastax.driver.core.ProtocolVersion;
 import com.datastax.driver.core.Session;
 import org.apache.commons.lang3.StringUtils;
 import org.mule.modules.cassandradb.internal.exception.CassandraException;
@@ -60,7 +61,8 @@ public class CassandraConnectionBuilder {
         }
 
         if (advancedConnectionParameters.getProtocolVersion() != null) {
-            clusterBuilder.withProtocolVersion(advancedConnectionParameters.getProtocolVersion());
+            ProtocolVersion cassandraProtocolVersion = ProtocolVersion.valueOf(advancedConnectionParameters.getProtocolVersion().name());
+            clusterBuilder.withProtocolVersion(cassandraProtocolVersion);
         }
 
         if (advancedConnectionParameters.getCompression() != null) {

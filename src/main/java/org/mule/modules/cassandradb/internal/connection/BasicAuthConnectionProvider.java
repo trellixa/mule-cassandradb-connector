@@ -1,20 +1,16 @@
 package org.mule.modules.cassandradb.internal.connection;
 
 import com.datastax.driver.core.ProtocolOptions;
-import com.datastax.driver.core.ProtocolVersion;
 import org.mule.connectors.commons.template.connection.ConnectorConnectionProvider;
-import org.mule.modules.cassandradb.internal.exception.CassandraException;
+import org.mule.modules.cassandradb.api.ProtocolVersion;
 import org.mule.runtime.api.connection.CachedConnectionProvider;
 import org.mule.runtime.api.connection.ConnectionException;
-import org.mule.runtime.api.connection.ConnectionValidationResult;
 import org.mule.runtime.extension.api.annotation.param.Optional;
 import org.mule.runtime.extension.api.annotation.param.Parameter;
 import org.mule.runtime.extension.api.annotation.param.display.DisplayName;
 import org.mule.runtime.extension.api.annotation.param.display.Password;
 import org.mule.runtime.extension.api.annotation.param.display.Placement;
 
-import static org.mule.runtime.api.connection.ConnectionValidationResult.failure;
-import static org.mule.runtime.api.connection.ConnectionValidationResult.success;
 
 public class BasicAuthConnectionProvider extends ConnectorConnectionProvider<CassandraConnection> implements CachedConnectionProvider<CassandraConnection> {
 
@@ -69,7 +65,6 @@ public class BasicAuthConnectionProvider extends ConnectorConnectionProvider<Cas
     @Parameter
     @Optional
     @Placement(tab = "Advanced Settings")
-    // FIXME: ProtocolVersion should not be part of the config interface.
     private ProtocolVersion protocolVersion;
 
     /**

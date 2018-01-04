@@ -4,7 +4,7 @@
 package org.mule.modules.cassandradb.internal.connection;
 
 import com.datastax.driver.core.ProtocolOptions;
-import com.datastax.driver.core.ProtocolVersion;
+import org.mule.modules.cassandradb.api.ProtocolVersion;
 
 // FIXME: This class is not necessary, the connection building process should be part of the connection provier.
 public class AdvancedConnectionParameters {
