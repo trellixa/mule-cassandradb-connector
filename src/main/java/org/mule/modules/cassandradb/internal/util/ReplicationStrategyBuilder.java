@@ -10,6 +10,8 @@ import org.mule.modules.cassandradb.api.ReplicationStrategy;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import static org.mule.modules.cassandradb.api.ReplicationStrategy.SimpleStrategy;
+
 /**
  * Cassandra supported replica placement strategies
  */
@@ -32,7 +34,7 @@ public class ReplicationStrategyBuilder {
     private static void addStrategyProps(CreateKeyspaceInput input, LinkedHashMap<String, Object> replicationStrategyProps) {
         replicationStrategyProps.put(Constants.CLASS, input.getReplicationStrategyClass().name());
         //'replication_factor' required if class is SimpleStrategy; otherwise, not used
-        if (input.getReplicationStrategyClass().equals(ReplicationStrategy.SimpleStrategy)) {
+        if (input.getReplicationStrategyClass().equals(SimpleStrategy)) {
             replicationStrategyProps.put(Constants.REPLICATION_FACTOR, input.getReplicationFactor());
         }
         if (input.getFirstDataCenter() != null) {
@@ -49,7 +51,7 @@ public class ReplicationStrategyBuilder {
 
     private static Map<String, Object> buildDefaultReplicationStrategy() {
         LinkedHashMap<String, Object> replicationStrategyMap = new LinkedHashMap<String, Object>();
-        replicationStrategyMap.put(Constants.CLASS, ReplicationStrategy.SimpleStrategy.name());
+        replicationStrategyMap.put(Constants.CLASS, SimpleStrategy.name());
         replicationStrategyMap.put(Constants.REPLICATION_FACTOR, Constants.DEFAULT_REPLICATION_FACTOR);
         return replicationStrategyMap;
     }

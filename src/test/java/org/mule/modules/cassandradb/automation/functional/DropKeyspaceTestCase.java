@@ -6,11 +6,11 @@ package org.mule.modules.cassandradb.automation.functional;
 import org.junit.Test;
 import org.mule.modules.cassandradb.api.CreateKeyspaceInput;
 import org.mule.modules.cassandradb.api.DataCenter;
-import org.mule.modules.cassandradb.api.ReplicationStrategy;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.mule.modules.cassandradb.api.ReplicationStrategy.NetworkTopologyStrategy;
 import static org.mule.modules.cassandradb.automation.util.TestDataBuilder.DATA_CENTER_NAME;
 import static org.mule.modules.cassandradb.automation.util.TestDataBuilder.KEYSPACE_NAME_1;
 import static org.mule.modules.cassandradb.automation.util.TestDataBuilder.KEYSPACE_NAME_2;
@@ -36,8 +36,11 @@ public class DropKeyspaceTestCase extends AbstractTestCases {
         CreateKeyspaceInput keyspaceInput = new CreateKeyspaceInput();
         String keyspaceName = KEYSPACE_NAME_2;
         keyspaceInput.setKeyspaceName(keyspaceName);
-        keyspaceInput.setFirstDataCenter(new DataCenter(DATA_CENTER_NAME, 1));
-        keyspaceInput.setReplicationStrategyClass(ReplicationStrategy.NetworkTopologyStrategy);
+        DataCenter firstDataCenter = new DataCenter();
+        firstDataCenter.setName(DATA_CENTER_NAME);
+        firstDataCenter.setValue(1);
+        keyspaceInput.setFirstDataCenter(firstDataCenter);
+        keyspaceInput.setReplicationStrategyClass(NetworkTopologyStrategy);
         getCassandraService().createKeyspace(keyspaceInput);
 
         assertNotNull(getKeyspaceMetadata(keyspaceName));

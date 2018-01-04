@@ -11,12 +11,6 @@ public class DataCenter {
     public DataCenter(){
     }
 
-    // FIXME: Remove this constructor.
-    public DataCenter(String name, Integer value){
-        this.name = name;
-        this.value = value;
-    }
-
     public String getName() {
         return name;
     }

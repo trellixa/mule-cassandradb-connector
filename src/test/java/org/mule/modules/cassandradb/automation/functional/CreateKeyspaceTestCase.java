@@ -19,6 +19,9 @@ import static org.apache.commons.lang3.StringUtils.endsWithIgnoreCase;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.mule.modules.cassandradb.api.ReplicationStrategy.NetworkTopologyStrategy;
+import static org.mule.modules.cassandradb.api.ReplicationStrategy.SimpleStrategy;
+import static org.mule.modules.cassandradb.automation.util.TestDataBuilder.DATA_CENTER_NAME;
 import static org.mule.modules.cassandradb.internal.exception.CassandraError.SYNTAX_ERROR;
 import static org.mule.tck.junit4.matcher.ErrorTypeMatcher.errorType;
 
@@ -46,8 +49,11 @@ public class CreateKeyspaceTestCase extends AbstractTestCases {
     public void testCreateKeyspaceWithDifferentReplicationStrategyWithSuccess() throws Exception {
         CreateKeyspaceInput createKeyspaceInput = new CreateKeyspaceInput();
         createKeyspaceInput.setKeyspaceName(TestDataBuilder.KEYSPACE_NAME_2);
-        createKeyspaceInput.setFirstDataCenter(new DataCenter(TestDataBuilder.DATA_CENTER_NAME, 1));
-        createKeyspaceInput.setReplicationStrategyClass(ReplicationStrategy.NetworkTopologyStrategy);
+        DataCenter firstDataCenter = new DataCenter();
+        firstDataCenter.setName(DATA_CENTER_NAME);
+        firstDataCenter.setValue(1);
+        createKeyspaceInput.setFirstDataCenter(firstDataCenter);
+        createKeyspaceInput.setReplicationStrategyClass(NetworkTopologyStrategy);
 
         assertTrue(createKeyspace(createKeyspaceInput));
 
@@ -60,7 +66,7 @@ public class CreateKeyspaceTestCase extends AbstractTestCases {
         CreateKeyspaceInput keyspaceInput = new CreateKeyspaceInput();
         keyspaceInput.setKeyspaceName(TestDataBuilder.KEYSPACE_NAME_1);
         keyspaceInput.setReplicationFactor(null);
-        keyspaceInput.setReplicationStrategyClass(ReplicationStrategy.SimpleStrategy);
+        keyspaceInput.setReplicationStrategyClass(SimpleStrategy);
 
         createKeyspaceExpException(keyspaceInput, SYNTAX_ERROR);
     }

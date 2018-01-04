@@ -9,8 +9,7 @@ public class CreateTableInput {
 
     private String tableName;
     private String keyspaceName;
-    // FIXME: Attribute should be private.
-    List<ColumnInput> columns;
+    private List<ColumnInput> columns;
 
     public String getTableName() {
         return tableName;
