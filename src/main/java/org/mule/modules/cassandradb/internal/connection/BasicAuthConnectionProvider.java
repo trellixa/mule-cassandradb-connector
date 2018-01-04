@@ -1,6 +1,5 @@
 package org.mule.modules.cassandradb.internal.connection;
 
-import com.datastax.driver.core.ProtocolOptions;
 import org.mule.connectors.commons.template.connection.ConnectorConnectionProvider;
 import org.mule.modules.cassandradb.api.ProtocolCompression;
 import org.mule.modules.cassandradb.api.ProtocolVersion;
@@ -97,5 +96,84 @@ public class BasicAuthConnectionProvider extends ConnectorConnectionProvider<Cas
         return CassandraConnection.build(new ConnectionParameters(host, port, username,
                 password, keyspace, new AdvancedConnectionParameters(protocolVersion, clusterName, maxSchemaAgreementWaitSeconds, compression, sslEnabled)));
     }
-    // FIXME: Add getters and setters for the parameters.
+
+    public String getHost() {
+        return host;
+    }
+
+    public void setHost(String host) {
+        this.host = host;
+    }
+
+    public String getPort() {
+        return port;
+    }
+
+    public void setPort(String port) {
+        this.port = port;
+    }
+
+    public String getKeyspace() {
+        return keyspace;
+    }
+
+    public void setKeyspace(String keyspace) {
+        this.keyspace = keyspace;
+    }
+
+    public String getClusterName() {
+        return clusterName;
+    }
+
+    public void setClusterName(String clusterName) {
+        this.clusterName = clusterName;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public ProtocolVersion getProtocolVersion() {
+        return protocolVersion;
+    }
+
+    public void setProtocolVersion(ProtocolVersion protocolVersion) {
+        this.protocolVersion = protocolVersion;
+    }
+
+    public Integer getMaxSchemaAgreementWaitSeconds() {
+        return maxSchemaAgreementWaitSeconds;
+    }
+
+    public void setMaxSchemaAgreementWaitSeconds(Integer maxSchemaAgreementWaitSeconds) {
+        this.maxSchemaAgreementWaitSeconds = maxSchemaAgreementWaitSeconds;
+    }
+
+    public ProtocolCompression getCompression() {
+        return compression;
+    }
+
+    public void setCompression(ProtocolCompression compression) {
+        this.compression = compression;
+    }
+
+    public boolean isSslEnabled() {
+        return sslEnabled;
+    }
+
+    public void setSslEnabled(boolean sslEnabled) {
+        this.sslEnabled = sslEnabled;
+    }
 }
