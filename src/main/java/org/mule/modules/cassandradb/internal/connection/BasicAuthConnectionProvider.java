@@ -2,6 +2,7 @@ package org.mule.modules.cassandradb.internal.connection;
 
 import com.datastax.driver.core.ProtocolOptions;
 import com.datastax.driver.core.ProtocolVersion;
+import org.mule.connectors.commons.template.connection.ConnectorConnectionProvider;
 import org.mule.modules.cassandradb.internal.exception.CassandraException;
 import org.mule.runtime.api.connection.CachedConnectionProvider;
 import org.mule.runtime.api.connection.ConnectionException;
@@ -15,7 +16,7 @@ import org.mule.runtime.extension.api.annotation.param.display.Placement;
 import static org.mule.runtime.api.connection.ConnectionValidationResult.failure;
 import static org.mule.runtime.api.connection.ConnectionValidationResult.success;
 
-public class BasicAuthConnectionProvider implements CachedConnectionProvider<CassandraConnection> {
+public class BasicAuthConnectionProvider extends ConnectorConnectionProvider<CassandraConnection> implements CachedConnectionProvider<CassandraConnection> {
 
     /**
      * Host name or IP address
@@ -48,7 +49,7 @@ public class BasicAuthConnectionProvider implements CachedConnectionProvider<Cas
 
     /**
      * @param username
-     *            the username to use for authentication.
+     * the username to use for authentication.
      */
     @Parameter
     @Optional(defaultValue = "")
@@ -68,6 +69,7 @@ public class BasicAuthConnectionProvider implements CachedConnectionProvider<Cas
     @Parameter
     @Optional
     @Placement(tab = "Advanced Settings")
+    // FIXME: ProtocolVersion should not be part of the config interface.
     private ProtocolVersion protocolVersion;
 
     /**
@@ -84,6 +86,7 @@ public class BasicAuthConnectionProvider implements CachedConnectionProvider<Cas
     @Parameter
     @Optional
     @Placement(tab = "Advanced Settings")
+    // FIXME: ProtocolOptions.Compression should not be part of the config interface.
     private ProtocolOptions.Compression compression;
 
     /**
@@ -96,23 +99,8 @@ public class BasicAuthConnectionProvider implements CachedConnectionProvider<Cas
 
     @Override
     public CassandraConnection connect() throws ConnectionException {
-        AdvancedConnectionParameters advancedConnectionParameters = new AdvancedConnectionParameters(protocolVersion, clusterName, maxSchemaAgreementWaitSeconds, compression, sslEnabled);
         return CassandraConnection.build(new ConnectionParameters(host, port, username,
-                password, keyspace, advancedConnectionParameters));
+                password, keyspace, new AdvancedConnectionParameters(protocolVersion, clusterName, maxSchemaAgreementWaitSeconds, compression, sslEnabled)));
     }
-
-    @Override
-    public void disconnect(CassandraConnection cassandraConnection) {
-        cassandraConnection.disconnect();
-    }
-
-    @Override
-    public ConnectionValidationResult validate(CassandraConnection cassandraConnection) {
-        try {
-            cassandraConnection.validate();
-            return success();
-        } catch (CassandraException e) {
-            return failure("Connection is no longer valid", e);
-        }
-    }
+    // FIXME: Add getters and setters for the parameters.
 }

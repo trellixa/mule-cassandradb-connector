@@ -33,6 +33,7 @@ public class ColumnInput {
         this.type = type;
     }
 
+    // FIXME: Remove toString method.
     @Override
     public String toString() {
         return "ColumnInput{" +

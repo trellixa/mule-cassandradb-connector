@@ -7,6 +7,7 @@ import org.mule.modules.cassandradb.internal.exception.CassandraException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+// FIXME: This class is not necessary, the connection building process should be part of the connection provier.
 public class CassandraConnectionBuilder {
 
     private static final Logger logger = LoggerFactory.getLogger(CassandraConnectionBuilder.class);

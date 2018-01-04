@@ -8,8 +8,10 @@ import java.util.List;
 public class CQLQueryInput {
 
     private String cqlQuery;
+    // FIXME: List of objects?
     private List<Object> parameters;
 
+    // FIXME: Remove this constructor.
     public CQLQueryInput(String cqlQuery, List<Object> parameters) {
         this.cqlQuery = cqlQuery;
         this.parameters = parameters;
@@ -35,6 +37,7 @@ public class CQLQueryInput {
         this.parameters = parameters;
     }
 
+    // FIXME: Remove toString method.
     @Override
     public String toString() {
         return "CQLQueryInput{" +

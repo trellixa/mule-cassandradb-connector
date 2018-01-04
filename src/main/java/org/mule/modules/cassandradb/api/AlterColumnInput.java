@@ -25,6 +25,7 @@ public class AlterColumnInput {
         this.type = type;
     }
 
+    // FIXME: Remove toString method.
     @Override
     public String toString() {
         return "AlterColumnInput{" +

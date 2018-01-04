@@ -3,15 +3,10 @@
  */
 package org.mule.modules.cassandradb.api;
 
-import org.apache.commons.lang3.StringUtils;
-import org.mule.modules.cassandradb.internal.util.Constants;
-
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 /**
  * Cassandra supported replica placement strategies
  */
+// FIXME: Enums should not have any kind of logic, they should only contain their values.
 public enum ReplicationStrategy {
 
     /**
@@ -23,6 +18,7 @@ public enum ReplicationStrategy {
      * <p>Supports a single strategy option 'replication_factor' that
      * specifies the replication factor for the cluster.</p>
      */
+    // FIXME: Remove the String constant.
     SIMPLE("SimpleStrategy"),
     /**
      * <p>With NetworkTopologyStrategy, for each datacenter, you can specify
@@ -34,6 +30,7 @@ public enum ReplicationStrategy {
      * sum of all per datacenter values. Note that the datacenter names
      * must match those used in conf/cassandra-topology.properties.</p>
      */
+    // FIXME: Remove the String constant.
     NETWORK_TOPOLOGY("NetworkTopologyStrategy");
 
     private final String strategy;

@@ -85,6 +85,7 @@ import static org.mule.modules.cassandradb.internal.exception.CassandraError.UNS
 import static org.mule.modules.cassandradb.internal.exception.CassandraError.WRITE_FAILURE;
 import static org.mule.modules.cassandradb.internal.exception.CassandraError.WRITE_TIMEOUT;
 
+// FIXME: This class is not necessary. Add these methods and generics to child class.
 public class CassandraBaseOperations extends ConnectorOperations<CassandraConfig, CassandraConnection, CassandraService> {
 
     public CassandraBaseOperations() {

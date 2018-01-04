@@ -3,6 +3,7 @@
  */
 package org.mule.modules.cassandradb.internal.connection;
 
+// FIXME: This class is not necessary, the connection building process should be part of the connection provier.
 public class ConnectionParameters {
     /*Cluster host IP address.*/
     private String host;

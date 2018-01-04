@@ -8,11 +8,7 @@ import org.mule.runtime.extension.api.annotation.Operations;
 import org.mule.runtime.extension.api.annotation.connectivity.ConnectionProviders;
 
 @Configuration(name = "config")
-@ConnectionProviders({
-        BasicAuthConnectionProvider.class
-})
-@Operations({
-        CassandraOperations.class,
-})
+@ConnectionProviders(BasicAuthConnectionProvider.class)
+@Operations(CassandraOperations.class)
 public class CassandraConfig implements ConnectorConfig {
 }
