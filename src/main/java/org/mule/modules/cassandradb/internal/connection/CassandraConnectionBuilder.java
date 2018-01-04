@@ -1,6 +1,7 @@
 package org.mule.modules.cassandradb.internal.connection;
 
 import com.datastax.driver.core.Cluster;
+import com.datastax.driver.core.ProtocolOptions;
 import com.datastax.driver.core.ProtocolVersion;
 import com.datastax.driver.core.Session;
 import org.apache.commons.lang3.StringUtils;
@@ -66,7 +67,8 @@ public class CassandraConnectionBuilder {
         }
 
         if (advancedConnectionParameters.getCompression() != null) {
-            clusterBuilder.withCompression(advancedConnectionParameters.getCompression());
+            ProtocolOptions.Compression compression = ProtocolOptions.Compression.valueOf(advancedConnectionParameters.getCompression().name());
+            clusterBuilder.withCompression(compression);
         }
 
         if (advancedConnectionParameters.isSsl()) {

@@ -3,7 +3,7 @@
  */
 package org.mule.modules.cassandradb.internal.connection;
 
-import com.datastax.driver.core.ProtocolOptions;
+import org.mule.modules.cassandradb.api.ProtocolCompression;
 import org.mule.modules.cassandradb.api.ProtocolVersion;
 
 // FIXME: This class is not necessary, the connection building process should be part of the connection provier.
@@ -11,10 +11,10 @@ public class AdvancedConnectionParameters {
     private ProtocolVersion protocolVersion;
     private String clusterName;
     private Integer maxSchemaAgreementWaitSeconds;
-    private ProtocolOptions.Compression compression;
+    private ProtocolCompression compression;
     private boolean ssl;
 
-    public AdvancedConnectionParameters(ProtocolVersion protocolVersion, String clusterName, int maxSchemaAgreementWaitSeconds, ProtocolOptions.Compression compression,
+    public AdvancedConnectionParameters(ProtocolVersion protocolVersion, String clusterName, int maxSchemaAgreementWaitSeconds, ProtocolCompression compression,
                                         boolean ssl) {
         this.protocolVersion = protocolVersion;
         this.clusterName = clusterName;
@@ -35,7 +35,7 @@ public class AdvancedConnectionParameters {
         return maxSchemaAgreementWaitSeconds;
     }
 
-    public ProtocolOptions.Compression getCompression() {
+    public ProtocolCompression getCompression() {
         return compression;
     }
 
