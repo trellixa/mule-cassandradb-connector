@@ -414,10 +414,9 @@ public class CassandraOperations extends ConnectorOperations<CassandraConfig, Ca
                            @MetadataKeyId(CassandraOnlyWithFiltersMetadataResolver.class) String table,
                            @Optional String keyspaceName,
                            @Content @TypeResolver(CassandraOnlyWithFiltersMetadataResolver.class) Map<String, Object> payload) {
-        newExecutionBuilder(config, connection).execute(CassandraService::delete)
+        newExecutionBuilder(config, connection).execute(CassandraService::deleteRow)
                 .withParam(keyspaceName)
                 .withParam(table)
-                .withParam(null) // FIXME: Remove hardcoded null.
                 .withParam((Map) payload.get(WHERE)); // FIXME: Why are we getting the WHERE key?.
     }
 

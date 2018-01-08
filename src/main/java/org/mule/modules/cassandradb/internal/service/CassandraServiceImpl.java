@@ -200,6 +200,11 @@ public class CassandraServiceImpl extends DefaultConnectorService<CassandraConfi
         getCassandraSession().execute(deleteObject);
     }
 
+    @Override
+    public void deleteRow(String keySpace, String table, Map<String, Object> whereClause) {
+        delete(keySpace, table, null, whereClause);
+    }
+
     private void validateParams(String query, List<Object> params) throws QueryErrorException {
         int expectedParams = StringUtils.countMatches(query, PARAM_HOLDER);
         int parameterSize = (params == null) ? 0 : params.size();

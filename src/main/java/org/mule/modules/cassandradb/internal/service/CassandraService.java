@@ -40,4 +40,6 @@ public interface CassandraService extends ConnectorService {
     List<Map<String, Object>> select(String query, List<Object> params);
 
     void delete(String keySpace, String table, List<String> entity, Map<String, Object> whereClause);
+
+    void deleteRow(String keySpace, String table, Map<String, Object> whereClause);
 }
