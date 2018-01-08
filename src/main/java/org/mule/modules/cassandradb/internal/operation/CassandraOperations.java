@@ -182,12 +182,11 @@ public class CassandraOperations extends ConnectorOperations<CassandraConfig, Ca
      * @param input operation input containing the keyspace name and the replication details
      * @return true if the operation succeeded, false otherwise
      */
-    // FIXME: Return type not required. If we fail, an exception should be thrown.
-    public boolean createKeyspace(@Config CassandraConfig config,
+    public void createKeyspace(@Config CassandraConfig config,
                                   @Connection CassandraConnection connection,
                                   @Content CreateKeyspaceInput input) {
         logger.debug("Creating keyspace {}", input);
-        return newExecutionBuilder(config, connection).execute(CassandraService::createKeyspace).withParam(input);
+        newExecutionBuilder(config, connection).execute(CassandraService::createKeyspace).withParam(input);
     }
 
     /**
@@ -195,13 +194,11 @@ public class CassandraOperations extends ConnectorOperations<CassandraConfig, Ca
      * @param keyspaceName the name of the keyspace to be dropped
      * @return true if the operation succeeded, false otherwise
      */
-    // FIXME: Return type not required. If we fail, an exception should be thrown.
-    public boolean dropKeyspace(@Config CassandraConfig config,
+    public void dropKeyspace(@Config CassandraConfig config,
                                 @Connection CassandraConnection connection,
                                 String keyspaceName) {
-        // FIXME: Replace if block as above.
         logger.debug("Dropping keyspace {}", keyspaceName);
-        return newExecutionBuilder(config, connection).execute(CassandraService::dropKeyspace).withParam(keyspaceName);
+        newExecutionBuilder(config, connection).execute(CassandraService::dropKeyspace).withParam(keyspaceName);
     }
 
 
@@ -211,12 +208,11 @@ public class CassandraOperations extends ConnectorOperations<CassandraConfig, Ca
      * @param createTableInput operation createTableInput describing the table name, the keyspace name and the list of columns
      * @return true if the operation succeeded, false otherwise
      */
-    // FIXME: Return type not required. If we fail, an exception should be thrown.
-    public boolean createTable(@Config CassandraConfig config,
+    public void createTable(@Config CassandraConfig config,
                                @Connection CassandraConnection connection,
                                @Content CreateTableInput createTableInput) {
         logger.debug("Creating table {}", createTableInput);
-        return newExecutionBuilder(config, connection).execute(CassandraService::createTable).withParam(createTableInput);
+        newExecutionBuilder(config, connection).execute(CassandraService::createTable).withParam(createTableInput);
     }
 
     /**
@@ -225,13 +221,12 @@ public class CassandraOperations extends ConnectorOperations<CassandraConfig, Ca
      * @param keyspaceName (optional) the keyspace which contains the table to be dropped
      * @return true if the operation succeeded, false otherwise
      */
-    // FIXME: Return type not required. If we fail, an exception should be thrown.
-    public boolean dropTable(@Config CassandraConfig config,
+    public void dropTable(@Config CassandraConfig config,
                              @Connection CassandraConnection connection,
                              String tableName,
                              @Optional String keyspaceName) {
         logger.debug("Dropping table {}", tableName);
-        return newExecutionBuilder(config, connection).execute(CassandraService::dropTable)
+        newExecutionBuilder(config, connection).execute(CassandraService::dropTable)
                 .withParam(tableName)
                 .withParam(keyspaceName);
     }
@@ -243,14 +238,13 @@ public class CassandraOperations extends ConnectorOperations<CassandraConfig, Ca
      * @param alterColumnInput POJO defining the name of the new column and its DataType
      * @return true if the operation succeeded or false if not
      */
-    // FIXME: Return type not required. If we fail, an exception should be thrown.
-    public boolean addNewColumn(@Config CassandraConfig config,
+    public void addNewColumn(@Config CassandraConfig config,
                                 @Connection CassandraConnection connection,
                                 String table,
                                 @Optional String keyspaceName,
                                 @Content AlterColumnInput alterColumnInput) {
         logger.debug("Adding new column {}", alterColumnInput);
-        return newExecutionBuilder(config, connection).execute(CassandraService::addNewColumn)
+        newExecutionBuilder(config, connection).execute(CassandraService::addNewColumn)
                 .withParam(table)
                 .withParam(keyspaceName)
                 .withParam(alterColumnInput.getColumn())
@@ -265,13 +259,12 @@ public class CassandraOperations extends ConnectorOperations<CassandraConfig, Ca
      * @param columnName the name of the column to be removed
      * @return true if the operation succeeded or false if not
      */
-    // FIXME: Return type not required. If we fail, an exception should be thrown.
-    public boolean dropColumn(@Config CassandraConfig config,
+    public void dropColumn(@Config CassandraConfig config,
                               @Connection CassandraConnection connection,
                               String table,
                               @Optional String keyspaceName,
                               @Content String columnName) {
-        return newExecutionBuilder(config, connection).execute(CassandraService::dropColumn)
+        newExecutionBuilder(config, connection).execute(CassandraService::dropColumn)
                 .withParam(table)
                 .withParam(keyspaceName)
                 .withParam(columnName);
@@ -285,14 +278,13 @@ public class CassandraOperations extends ConnectorOperations<CassandraConfig, Ca
      * @param newColumnName the new value for the name of the column
      * @return true if the operation succeeded or false if not
      */
-    // FIXME: Return type not required. If we fail, an exception should be thrown.
-    public boolean renameColumn(@Config CassandraConfig config,
+    public void renameColumn(@Config CassandraConfig config,
                                 @Connection CassandraConnection connection,
                                 String table,
                                 @Optional String keyspaceName,
                                 @Content String oldColumnName,
                                 String newColumnName) {
-        return newExecutionBuilder(config, connection).execute(CassandraService::renameColumn)
+        newExecutionBuilder(config, connection).execute(CassandraService::renameColumn)
                 .withParam(table)
                 .withParam(keyspaceName)
                 .withParam(oldColumnName)
@@ -306,13 +298,12 @@ public class CassandraOperations extends ConnectorOperations<CassandraConfig, Ca
      * @param alterColumnInput POJO defining the name of the column to be changed and the new DataType
      * @return true if the operation succeeded or false if not
      */
-    // FIXME: Return type not required. If we fail, an exception should be thrown.
-    public boolean changeColumnType(@Config CassandraConfig config,
+    public void changeColumnType(@Config CassandraConfig config,
                                     @Connection CassandraConnection connection,
                                     String table,
                                     @Optional String keyspaceName,
                                     @Content AlterColumnInput alterColumnInput){
-        return newExecutionBuilder(config, connection).execute(CassandraService::changeColumnType)
+        newExecutionBuilder(config, connection).execute(CassandraService::changeColumnType)
                 .withParam(table)
                 .withParam(keyspaceName)
                 .withParam(alterColumnInput);
@@ -354,7 +345,6 @@ public class CassandraOperations extends ConnectorOperations<CassandraConfig, Ca
      * @param keyspaceName (optional) the keyspace which contains the table to be dropped
      * @param entityToUpdate the entity to be updated
      */
-    @SuppressWarnings("unchecked")  // FIXME: Remove /unchecked/
     public void update(@Config CassandraConfig config,
                        @Connection CassandraConnection connection,
                        @MetadataKeyId(CassandraWithFiltersMetadataCategory.class) String table,

@@ -6,6 +6,7 @@ import com.datastax.driver.core.PreparedStatement;
 import com.datastax.driver.core.ResultSet;
 import com.datastax.driver.core.Row;
 import com.datastax.driver.core.Session;
+import com.datastax.driver.core.Statement;
 import com.datastax.driver.core.querybuilder.Delete;
 import com.datastax.driver.core.querybuilder.Insert;
 import com.datastax.driver.core.querybuilder.QueryBuilder;
@@ -19,6 +20,7 @@ import org.mule.modules.cassandradb.api.CreateKeyspaceInput;
 import org.mule.modules.cassandradb.api.CreateTableInput;
 import org.mule.modules.cassandradb.internal.config.CassandraConfig;
 import org.mule.modules.cassandradb.internal.connection.CassandraConnection;
+import org.mule.modules.cassandradb.internal.exception.OperationNotAppliedException;
 import org.mule.modules.cassandradb.internal.exception.QueryErrorException;
 import org.mule.modules.cassandradb.internal.util.builders.HelperStatements;
 import static java.util.stream.Collectors.toList;
@@ -40,55 +42,57 @@ public class CassandraServiceImpl extends DefaultConnectorService<CassandraConfi
     }
 
     @Override
-    public boolean createKeyspace(CreateKeyspaceInput input) {
-        String queryString = HelperStatements.createKeyspaceStatement(input).getQueryString();
-        return getCassandraSession().execute(queryString).wasApplied();
+    public void createKeyspace(CreateKeyspaceInput input) {
+        SchemaStatement statement = HelperStatements.createKeyspaceStatement(input);
+        executeCommandAndThrowExceptionIfFails(statement);
     }
 
     @Override
-    public boolean dropKeyspace(String keyspaceName) {
-        String queryString = HelperStatements.dropKeyspaceStatement(keyspaceName).getQueryString();
-        return getCassandraSession().execute(queryString).wasApplied();
+    public void dropKeyspace(String keyspaceName) {
+        SchemaStatement statement = HelperStatements.dropKeyspaceStatement(keyspaceName);
+        executeCommandAndThrowExceptionIfFails(statement);
     }
 
     @Override
-    public boolean createTable(CreateTableInput input) {
+    public void createTable(CreateTableInput input) {
         String keyspace = getKeyspaceNameToUse(input.getKeyspaceName());
-        String queryString = HelperStatements.createTable(keyspace, input).getQueryString();
-        return getCassandraSession().execute(queryString).wasApplied();
+        SchemaStatement statement = HelperStatements.createTable(keyspace, input);
+        executeCommandAndThrowExceptionIfFails(statement);
     }
 
     @Override
-    public boolean dropTable(String tableName, String keyspaceName) {
+    public void dropTable(String tableName, String keyspaceName) {
         String keyspace = getKeyspaceNameToUse(keyspaceName);
-        return getCassandraSession().execute(HelperStatements.dropTable(tableName, keyspace)).wasApplied();
+        SchemaStatement statement = HelperStatements.dropTable(tableName, keyspace);
+        executeCommandAndThrowExceptionIfFails(statement);
+
     }
 
     @Override
-    public boolean addNewColumn(String tableName, String keyspaceName, String columnName, DataType columnType) {
+    public void addNewColumn(String tableName, String keyspaceName, String columnName, DataType columnType) {
         String keyspace = getKeyspaceNameToUse(keyspaceName);
         SchemaStatement statement = HelperStatements.addNewColumn(tableName, keyspace, columnName, columnType);
-        return getCassandraSession().execute(statement).wasApplied();
+        executeCommandAndThrowExceptionIfFails(statement);
     }
 
     @Override
-    public boolean dropColumn(String tableName, String keyspaceName, String column) {
+    public void dropColumn(String tableName, String keyspaceName, String column) {
         String keyspace = getKeyspaceNameToUse(keyspaceName);
         SchemaStatement statement = HelperStatements.dropColumn(tableName, keyspace, column);
-        return getCassandraSession().execute(statement).wasApplied();
+        executeCommandAndThrowExceptionIfFails(statement);
     }
 
     @Override
-    public boolean renameColumn(String tableName, String keyspaceName, String oldColumnName, String newColumnName) {
+    public void renameColumn(String tableName, String keyspaceName, String oldColumnName, String newColumnName) {
         String keyspace = getKeyspaceNameToUse(keyspaceName);
         SchemaStatement statement = HelperStatements.renameColumn(tableName, keyspace, oldColumnName, newColumnName);
-        return getCassandraSession().execute(statement).wasApplied();
+        executeCommandAndThrowExceptionIfFails(statement);
     }
 
-    public boolean changeColumnType(String tableName, String keyspaceName, AlterColumnInput input) {
+    public void changeColumnType(String tableName, String keyspaceName, AlterColumnInput input) {
         String keyspace = getKeyspaceNameToUse(keyspaceName);
         SchemaStatement statement = HelperStatements.changeColumnType(tableName, keyspace, input);
-        return getCassandraSession().execute(statement).wasApplied();
+        executeCommandAndThrowExceptionIfFails(statement);
     }
 
     @Override
@@ -203,6 +207,13 @@ public class CassandraServiceImpl extends DefaultConnectorService<CassandraConfi
     @Override
     public void deleteRow(String keySpace, String table, Map<String, Object> whereClause) {
         delete(keySpace, table, null, whereClause);
+    }
+
+    private void executeCommandAndThrowExceptionIfFails(Statement command) {
+        boolean wasApplied = getCassandraSession().execute(command).wasApplied();
+        if (!wasApplied) {
+            throw new OperationNotAppliedException("Operation was not applied");
+        }
     }
 
     private void validateParams(String query, List<Object> params) throws QueryErrorException {

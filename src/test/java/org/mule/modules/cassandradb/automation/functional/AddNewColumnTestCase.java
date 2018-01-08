@@ -15,7 +15,6 @@ import org.mule.modules.cassandradb.internal.exception.CassandraError;
 import org.mule.tck.junit4.matcher.ErrorTypeMatcher;
 
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 import static org.mule.modules.cassandradb.api.ColumnType.TEXT;
 import static org.mule.modules.cassandradb.automation.util.TestDataBuilder.TABLE_NAME_1;
 import static org.mule.modules.cassandradb.automation.util.TestDataBuilder.VALID_COLUMN_1;
@@ -41,7 +40,7 @@ public class AddNewColumnTestCase extends AbstractTestCases {
     @Test
     public void testAddNewColumnOfPrimitiveTypeWithSuccess() throws Exception {
         AlterColumnInput alterColumnInput = getAlterColumnInput(DataType.text().toString() + System.currentTimeMillis(), TEXT);
-        assertTrue(addNewColumn(TABLE_NAME_1, getKeyspaceFromProperties(), alterColumnInput));
+        addNewColumn(TABLE_NAME_1, getKeyspaceFromProperties(), alterColumnInput);
 
         Thread.sleep(SLEEP_DURATION);
         TableMetadata tableMetadata = fetchTableMetadata(getKeyspaceFromProperties(), TABLE_NAME_1);
@@ -55,8 +54,8 @@ public class AddNewColumnTestCase extends AbstractTestCases {
         addNewColumnExpException(TABLE_NAME_1, getKeyspaceFromProperties(), alterColumnInput, QUERY_VALIDATION);
     }
 
-    boolean addNewColumn(String tableName, String keyspaceName, AlterColumnInput alterColumnInput) throws Exception {
-        return (boolean) flowRunner("addColumn-flow")
+    void addNewColumn(String tableName, String keyspaceName, AlterColumnInput alterColumnInput) throws Exception {
+        flowRunner("addColumn-flow")
                 .withPayload(alterColumnInput)
                 .withVariable("tableName", tableName)
                 .withVariable("keyspaceName", keyspaceName)

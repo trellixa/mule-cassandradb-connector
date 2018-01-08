@@ -39,7 +39,7 @@ public class CreateKeyspaceTestCase extends AbstractTestCases {
     public void testCreateKeyspaceWithDefaultReplicationStrategyWithSuccess() throws Exception {
         CreateKeyspaceInput createKeyspaceInput = new CreateKeyspaceInput();
         createKeyspaceInput.setKeyspaceName(TestDataBuilder.KEYSPACE_NAME_1);
-        assertTrue(createKeyspace(createKeyspaceInput));
+        createKeyspace(createKeyspaceInput);
 
         Thread.sleep(SLEEP_DURATION);
         verifyResponse(createKeyspaceInput);
@@ -55,7 +55,7 @@ public class CreateKeyspaceTestCase extends AbstractTestCases {
         createKeyspaceInput.setFirstDataCenter(firstDataCenter);
         createKeyspaceInput.setReplicationStrategyClass(NetworkTopologyStrategy);
 
-        assertTrue(createKeyspace(createKeyspaceInput));
+        createKeyspace(createKeyspaceInput);
 
         Thread.sleep(SLEEP_DURATION);
         verifyResponse(createKeyspaceInput);
@@ -90,8 +90,8 @@ public class CreateKeyspaceTestCase extends AbstractTestCases {
         }
     }
 
-    boolean createKeyspace(final CreateKeyspaceInput keyspaceInput) throws Exception {
-        return (boolean) flowRunner("createKeyspace-flow")
+    void createKeyspace(final CreateKeyspaceInput keyspaceInput) throws Exception {
+        flowRunner("createKeyspace-flow" )
                 .withPayload(keyspaceInput)
                 .run()
                 .getMessage()

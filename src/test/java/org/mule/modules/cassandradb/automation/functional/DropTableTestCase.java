@@ -9,7 +9,6 @@ import org.mule.modules.cassandradb.automation.util.TestDataBuilder;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
 import static org.mule.modules.cassandradb.automation.util.TestDataBuilder.TABLE_NAME_1;
 import static org.mule.modules.cassandradb.automation.util.TestDataBuilder.TABLE_NAME_2;
 import static org.mule.modules.cassandradb.automation.util.TestDataBuilder.getBasicCreateTableInput;
@@ -25,8 +24,7 @@ public class DropTableTestCase extends AbstractTestCases {
         getCassandraService().createTable(basicCreateTableInput);
         assertNotNull(fetchTableMetadata(keyspace, tableName));
 
-        boolean result = dropTable(keyspace, tableName);
-        assertTrue(result);
+        dropTable(keyspace, tableName);
 
         assertNull(fetchTableMetadata(keyspace, tableName));
     }
@@ -39,14 +37,13 @@ public class DropTableTestCase extends AbstractTestCases {
         getCassandraService().createTable(basicCreateTableInput);
         assertNotNull(fetchTableMetadata(keyspace, tableName));
 
-        boolean result = dropTable(keyspace, tableName);
-        assertTrue(result);
+        dropTable(keyspace, tableName);
 
         assertNull(fetchTableMetadata(keyspace, tableName));
     }
 
-    boolean dropTable(String keyspaceName, String tableName) throws Exception {
-        return (boolean) flowRunner("dropTable-flow")
+    void dropTable(String keyspaceName, String tableName) throws Exception {
+        flowRunner("dropTable-flow")
                 .withVariable("tableName", tableName)
                 .withVariable("keyspaceName", keyspaceName)
                 .run()

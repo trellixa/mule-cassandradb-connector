@@ -6,7 +6,6 @@ package org.mule.modules.cassandradb.api;
 /**
  * Cassandra supported replica placement strategies
  */
-// FIXME: Enums should not have any kind of logic, they should only contain their values.
 public enum ReplicationStrategy {
 
     /**

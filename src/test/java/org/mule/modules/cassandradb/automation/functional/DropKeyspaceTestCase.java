@@ -9,7 +9,6 @@ import org.mule.modules.cassandradb.api.DataCenter;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
 import static org.mule.modules.cassandradb.api.ReplicationStrategy.NetworkTopologyStrategy;
 import static org.mule.modules.cassandradb.automation.util.TestDataBuilder.DATA_CENTER_NAME;
 import static org.mule.modules.cassandradb.automation.util.TestDataBuilder.KEYSPACE_NAME_1;
@@ -26,7 +25,7 @@ public class DropKeyspaceTestCase extends AbstractTestCases {
 
         assertNotNull(getKeyspaceMetadata(keyspaceName));
 
-        assertTrue(dropKeyspace(keyspaceName));
+        dropKeyspace(keyspaceName);
 
         assertNull(getKeyspaceMetadata(keyspaceName));
     }
@@ -45,13 +44,13 @@ public class DropKeyspaceTestCase extends AbstractTestCases {
 
         assertNotNull(getKeyspaceMetadata(keyspaceName));
 
-        assertTrue(dropKeyspace(keyspaceName));
+        dropKeyspace(keyspaceName);
 
         assertNull(getKeyspaceMetadata(keyspaceName));
     }
 
-    boolean dropKeyspace(String keyspaceName) throws Exception {
-        return (boolean) flowRunner("deleteKeyspace-flow")
+    void dropKeyspace(String keyspaceName) throws Exception {
+        flowRunner("deleteKeyspace-flow")
                 .withVariable("keyspaceName", keyspaceName)
                 .run()
                 .getMessage()
