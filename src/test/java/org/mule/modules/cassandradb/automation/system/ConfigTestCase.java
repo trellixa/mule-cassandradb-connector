@@ -7,10 +7,10 @@ import com.datastax.driver.core.ProtocolOptions;
 import org.junit.Test;
 import org.mule.modules.cassandradb.automation.functional.AbstractTestCases;
 import org.mule.modules.cassandradb.automation.util.CassandraProperties;
-import org.mule.modules.cassandradb.internal.connection.AdvancedConnectionParameters;
+import org.mule.modules.cassandradb.internal.connection.BasicAuthConnectionProvider;
 import org.mule.modules.cassandradb.internal.connection.CassandraConnection;
-import org.mule.modules.cassandradb.internal.connection.ConnectionParameters;
 import org.mule.modules.cassandradb.internal.exception.CassandraException;
+import org.mule.runtime.api.connection.ConnectionException;
 
 import static org.mule.modules.cassandradb.api.ProtocolVersion.V3;
 import static org.mule.modules.cassandradb.automation.util.TestDataBuilder.CLUSTER_NAME;
@@ -24,47 +24,62 @@ public class ConfigTestCase {
 
     @Test
     public void shouldConnect_Using_BasicParams() throws Exception {
-        ConnectionParameters connectionParameters = new ConnectionParameters(cassProperties.getHost(), cassProperties.getPort(), null, null, null, null);
-        CassandraConnection cassClient = CassandraConnection.build(connectionParameters);
+        BasicAuthConnectionProvider basicAuthConnectionProvider = new BasicAuthConnectionProvider();
+        basicAuthConnectionProvider.setHost(cassProperties.getHost());
+        basicAuthConnectionProvider.setPort(cassProperties.getPort());
+        basicAuthConnectionProvider.setMaxSchemaAgreementWaitSeconds(0);
+        CassandraConnection cassClient = basicAuthConnectionProvider.connect();
         assert cassClient != null;
     }
 
     @Test
     public void shouldConnect_Using_AdvancedParams() throws Exception {
-        AdvancedConnectionParameters advancedParams = new AdvancedConnectionParameters(V3, CLUSTER_NAME, MAX_WAIT, ProtocolOptions.Compression.NONE, false);
         cassProperties = AbstractTestCases.getCassandraProperties();
-        ConnectionParameters connectionParameters = new ConnectionParameters(cassProperties.getHost(), cassProperties.getPort(), null, null, null, advancedParams);
-        CassandraConnection cassClient = CassandraConnection.build(connectionParameters);
+        BasicAuthConnectionProvider basicAuthConnectionProvider = new BasicAuthConnectionProvider();
+        basicAuthConnectionProvider.setHost(cassProperties.getHost());
+        basicAuthConnectionProvider.setPort(cassProperties.getPort());
+        basicAuthConnectionProvider.setProtocolVersion(V3);
+        basicAuthConnectionProvider.setClusterName(CLUSTER_NAME);
+        basicAuthConnectionProvider.setMaxSchemaAgreementWaitSeconds(MAX_WAIT);
+        basicAuthConnectionProvider.setCompression(ProtocolOptions.Compression.NONE);
+        CassandraConnection cassClient = basicAuthConnectionProvider.connect();
         assert cassClient != null;
     }
 
     @Test(expected = CassandraException.class)
-    public void shouldNotConnect_Using_InvalidHost() {
-        AdvancedConnectionParameters advancedParams = new AdvancedConnectionParameters(V3, CLUSTER_NAME, MAX_WAIT, ProtocolOptions.Compression.NONE, false);
+    public void shouldNotConnect_Using_InvalidHost() throws ConnectionException {
         cassProperties = AbstractTestCases.getCassandraProperties();
-        ConnectionParameters connectionParameters = new ConnectionParameters(INVALID_HOST, cassProperties.getPort(), null, null, null, advancedParams);
-        CassandraConnection.build(connectionParameters);
+        BasicAuthConnectionProvider basicAuthConnectionProvider = new BasicAuthConnectionProvider();
+        basicAuthConnectionProvider.setHost(INVALID_HOST);
+        basicAuthConnectionProvider.setPort(cassProperties.getPort());
+        basicAuthConnectionProvider.setProtocolVersion(V3);
+        basicAuthConnectionProvider.setClusterName(CLUSTER_NAME);
+        basicAuthConnectionProvider.setMaxSchemaAgreementWaitSeconds(MAX_WAIT);
+        basicAuthConnectionProvider.setCompression(ProtocolOptions.Compression.NONE);
+        basicAuthConnectionProvider.connect();
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void shouldNotConnect_Using_NoHost() {
-        AdvancedConnectionParameters advancedParams = new AdvancedConnectionParameters(V3, CLUSTER_NAME, MAX_WAIT, ProtocolOptions.Compression.NONE, false);
-        ConnectionParameters connectionParameters = new ConnectionParameters(null, cassProperties.getPort(), null, null, null, advancedParams);
-        CassandraConnection.build(connectionParameters);
+    public void shouldNotConnect_Using_NoHost() throws ConnectionException {
+        BasicAuthConnectionProvider basicAuthConnectionProvider = new BasicAuthConnectionProvider();
+        basicAuthConnectionProvider.setPort(cassProperties.getPort());
+        basicAuthConnectionProvider.connect();
     }
 
     @Test(expected = CassandraException.class)
-    public void shouldNotConnect_Using_InvalidPort() {
-        AdvancedConnectionParameters advancedParams = new AdvancedConnectionParameters(V3, CLUSTER_NAME, MAX_WAIT, ProtocolOptions.Compression.NONE, false);
-        ConnectionParameters connectionParameters = new ConnectionParameters(cassProperties.getHost(), generateInvalidPort(cassProperties.getPort()), null, null, null, advancedParams);
-        CassandraConnection.build(connectionParameters);
+    public void shouldNotConnect_Using_InvalidPort() throws ConnectionException {
+        BasicAuthConnectionProvider basicAuthConnectionProvider = new BasicAuthConnectionProvider();
+        basicAuthConnectionProvider.setHost(cassProperties.getHost());
+        basicAuthConnectionProvider.setPort(generateInvalidPort(cassProperties.getPort()));
+        basicAuthConnectionProvider.setMaxSchemaAgreementWaitSeconds(0);
+        basicAuthConnectionProvider.connect();
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void shouldNotConnect_Using_NoPort() {
-        AdvancedConnectionParameters advancedParams = new AdvancedConnectionParameters(V3, CLUSTER_NAME, MAX_WAIT, ProtocolOptions.Compression.NONE, false);
-        ConnectionParameters connectionParameters = new ConnectionParameters(cassProperties.getHost(), null, null, null, null, advancedParams);
-        CassandraConnection.build(connectionParameters);
+    public void shouldNotConnect_Using_NoPort() throws ConnectionException {
+        BasicAuthConnectionProvider basicAuthConnectionProvider = new BasicAuthConnectionProvider();
+        basicAuthConnectionProvider.setHost(cassProperties.getHost());
+        basicAuthConnectionProvider.connect();
     }
 
     private String generateInvalidPort(String port) {

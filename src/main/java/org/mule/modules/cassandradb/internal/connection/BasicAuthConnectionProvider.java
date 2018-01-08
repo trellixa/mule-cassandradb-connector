@@ -1,7 +1,13 @@
 package org.mule.modules.cassandradb.internal.connection;
 
+
+import com.datastax.driver.core.Cluster;
+import com.datastax.driver.core.ProtocolOptions;
+import com.datastax.driver.core.Session;
+import org.apache.commons.lang3.StringUtils;
 import org.mule.connectors.commons.template.connection.ConnectorConnectionProvider;
 import org.mule.modules.cassandradb.api.ProtocolVersion;
+import org.mule.modules.cassandradb.internal.exception.CassandraException;
 import org.mule.runtime.api.connection.CachedConnectionProvider;
 import org.mule.runtime.api.connection.ConnectionException;
 import org.mule.runtime.extension.api.annotation.param.Optional;
@@ -9,9 +15,12 @@ import org.mule.runtime.extension.api.annotation.param.Parameter;
 import org.mule.runtime.extension.api.annotation.param.display.DisplayName;
 import org.mule.runtime.extension.api.annotation.param.display.Password;
 import org.mule.runtime.extension.api.annotation.param.display.Placement;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class BasicAuthConnectionProvider extends ConnectorConnectionProvider<CassandraConnection> implements CachedConnectionProvider<CassandraConnection> {
+
+    private static final Logger logger = LoggerFactory.getLogger(BasicAuthConnectionProvider.class);
 
     /**
      * Host name or IP address
@@ -93,8 +102,62 @@ public class BasicAuthConnectionProvider extends ConnectorConnectionProvider<Cas
 
     @Override
     public CassandraConnection connect() throws ConnectionException {
-        return CassandraConnection.build(new ConnectionParameters(host, port, username,
-                password, keyspace, new AdvancedConnectionParameters(protocolVersion, clusterName, maxSchemaAgreementWaitSeconds, compression, sslEnabled)));
+        validateBasicParams(host, port);
+
+        Cluster.Builder clusterBuilder;
+        try {
+            clusterBuilder = Cluster.builder().addContactPoint(host).withPort(Integer.parseInt(port));
+        } catch (IllegalArgumentException connEx) {
+            logger.error("Error while connecting to Cassandra database!", connEx);
+            throw new CassandraException(connEx.getMessage());
+        }
+
+        if (StringUtils.isNotEmpty(username) && StringUtils.isNotEmpty(password)) {
+            clusterBuilder.withCredentials(username, password);
+        }
+
+        if (StringUtils.isNotEmpty(clusterName)) {
+            clusterBuilder.withClusterName(clusterName);
+        }
+
+        if (maxSchemaAgreementWaitSeconds != null && maxSchemaAgreementWaitSeconds > 0) {
+            clusterBuilder.withMaxSchemaAgreementWaitSeconds(maxSchemaAgreementWaitSeconds);
+        }
+
+        if (protocolVersion != null) {
+            com.datastax.driver.core.ProtocolVersion cassandraProtocolVersion = com.datastax.driver.core.ProtocolVersion.valueOf(protocolVersion.name());
+            clusterBuilder.withProtocolVersion(cassandraProtocolVersion);
+        }
+
+        if (compression != null) {
+            ProtocolOptions.Compression cassandraCompression = ProtocolOptions.Compression.valueOf(compression.name());
+            clusterBuilder.withCompression(cassandraCompression);
+        }
+
+        if (sslEnabled) {
+            clusterBuilder.withSSL();
+        }
+
+        Cluster cluster = clusterBuilder.build();
+        Session session;
+
+        try {
+            logger.info("Connecting to Cassandra Database: {} , port: {} with clusterName: {} , protocol version {} and compression type {} ",
+                    host, port, clusterName, protocolVersion, compression);
+            session = StringUtils.isNotEmpty(keyspace) ? cluster.connect(keyspace) : cluster.connect();
+            logger.info("Connected to Cassandra Cluster: {} !", session.getCluster().getClusterName());
+        } catch (Exception cassandraException) {
+            logger.error("Error while connecting to Cassandra database!", cassandraException);
+            throw new CassandraException(cassandraException.getMessage());
+        }
+
+        return new CassandraConnection(cluster, session);
+    }
+
+    private static void validateBasicParams(String host,String port) {
+        if (StringUtils.isBlank(host) || StringUtils.isBlank(port)) {
+            throw new IllegalArgumentException("Unable to connect! Missing HOST or PORT parameter!");
+        }
     }
 
     public String getHost() {
@@ -161,11 +224,11 @@ public class BasicAuthConnectionProvider extends ConnectorConnectionProvider<Cas
         this.maxSchemaAgreementWaitSeconds = maxSchemaAgreementWaitSeconds;
     }
 
-    public ProtocolCompression getCompression() {
+    public ProtocolOptions.Compression getCompression() {
         return compression;
     }
 
-    public void setCompression(ProtocolCompression compression) {
+    public void setCompression(ProtocolOptions.Compression compression) {
         this.compression = compression;
     }
 
@@ -177,3 +240,4 @@ public class BasicAuthConnectionProvider extends ConnectorConnectionProvider<Cas
         this.sslEnabled = sslEnabled;
     }
 }
+

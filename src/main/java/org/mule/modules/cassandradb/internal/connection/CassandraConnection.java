@@ -24,18 +24,6 @@ public final class CassandraConnection implements ConnectorConnection {
         this.cassandraSession = session;
     }
 
-    /**
-     * Connect to Cassandra Cluster specified by provided host IP
-     * address and port number.
-     *
-     * @param connectionParameters the connection parameters
-     * @return CassandraConnection created
-     * @throws CassandraException if any error occurs when trying to connect
-     */
-    public static CassandraConnection build(ConnectionParameters connectionParameters) throws CassandraException {
-        return CassandraConnectionBuilder.build(connectionParameters);
-    }
-
     private void closeCluster() {
         if (cluster != null) {
             cluster.close();
