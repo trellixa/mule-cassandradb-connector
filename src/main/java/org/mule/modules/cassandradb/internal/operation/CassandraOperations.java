@@ -248,8 +248,7 @@ public class CassandraOperations extends ConnectorOperations<CassandraConfig, Ca
                 .withParam(table)
                 .withParam(keyspaceName)
                 .withParam(alterColumnInput.getColumn())
-                .withParam(DataTypeResolver.resolve(alterColumnInput.getType()));
-        // FIXME: Replace last line with '.withParam(alterColumnInput.getType(), DataTypeResolver::resolve);'
+                .withParam(alterColumnInput.getType(), DataTypeResolver::resolve);
     }
 
     /**
