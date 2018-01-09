@@ -1,8 +1,5 @@
 package org.mule.modules.cassandradb.automation.functional;
 
-
-import com.datastax.driver.core.KeyspaceMetadata;
-import com.datastax.driver.core.TableMetadata;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -99,13 +96,13 @@ public abstract class AbstractTestCases extends MuleArtifactFunctionalTestCase {
         return cassandraConnection;
     }
 
-    public KeyspaceMetadata getKeyspaceMetadata(String keyspaceName) {
-        return cassandraMetadata.getKeyspaceMetadata(keyspaceName);
-    }
-
-    public TableMetadata fetchTableMetadata(String keyspaceName, String tableName) {
-        return cassandraMetadata.getTableMetadata(keyspaceName, tableName);
-    }
+//    public KeyspaceMetadata getKeyspaceMetadata(String keyspaceName) {
+//        return cassandraMetadata.getKeyspaceMetadata(keyspaceName);
+//    }
+//
+//    public TableMetadata fetchTableMetadata(String keyspaceName, String tableName) {
+//        return cassandraMetadata.getTableMetadata(keyspaceName, tableName);
+//    }
 
     public CassandraMetadata getCassandraMetadata() {
         return cassandraMetadata;

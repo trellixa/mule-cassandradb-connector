@@ -6,6 +6,7 @@ import com.datastax.driver.core.ProtocolOptions;
 import com.datastax.driver.core.Session;
 import org.apache.commons.lang3.StringUtils;
 import org.mule.connectors.commons.template.connection.ConnectorConnectionProvider;
+import org.mule.modules.cassandradb.api.ProtocolCompression;
 import org.mule.modules.cassandradb.api.ProtocolVersion;
 import org.mule.modules.cassandradb.internal.exception.CassandraException;
 import org.mule.runtime.api.connection.CachedConnectionProvider;
@@ -89,8 +90,7 @@ public class BasicAuthConnectionProvider extends ConnectorConnectionProvider<Cas
     @Parameter
     @Optional
     @Placement(tab = "Advanced Settings")
-    // FIXME: ProtocolOptions.Compression should not be part of the config interface.
-    private ProtocolOptions.Compression compression;
+    private ProtocolCompression compression;
 
     /**
      * Enables the use of SSL for the cluster.
@@ -224,11 +224,11 @@ public class BasicAuthConnectionProvider extends ConnectorConnectionProvider<Cas
         this.maxSchemaAgreementWaitSeconds = maxSchemaAgreementWaitSeconds;
     }
 
-    public ProtocolOptions.Compression getCompression() {
+    public ProtocolCompression getCompression() {
         return compression;
     }
 
-    public void setCompression(ProtocolOptions.Compression compression) {
+    public void setCompression(ProtocolCompression compression) {
         this.compression = compression;
     }
 
