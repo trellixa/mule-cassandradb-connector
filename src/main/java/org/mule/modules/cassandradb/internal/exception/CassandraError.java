@@ -50,6 +50,7 @@ public enum CassandraError implements ErrorTypeDefinition<CassandraError> {
 
     CassandraException(ANY),
     QUERY_ERROR(CassandraException),
+    OPERATION_NOT_APPLIED(CassandraException),
 
     CONNECTIVITY(MuleErrors.CONNECTIVITY),
     UNKNOWN(CONNECTIVITY);

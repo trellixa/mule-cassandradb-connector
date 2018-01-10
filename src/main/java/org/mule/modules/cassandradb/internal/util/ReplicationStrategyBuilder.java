@@ -7,43 +7,34 @@ import org.apache.commons.lang3.StringUtils;
 import org.mule.modules.cassandradb.api.CreateKeyspaceInput;
 import org.mule.modules.cassandradb.api.ReplicationStrategy;
 
-import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.Map;
+
+import static org.mule.modules.cassandradb.api.ReplicationStrategy.SimpleStrategy;
 
 /**
  * Cassandra supported replica placement strategies
  */
 public class ReplicationStrategyBuilder {
 
-    public static ReplicationStrategy lookup(String inputToMatch) {
-        return Arrays.stream(ReplicationStrategy.values())
-                .filter(enumItem -> enumItem.getStrategyClass().equalsIgnoreCase(inputToMatch))
-                .findFirst()
-                .orElse(null);
-    }
-
     //based on http://docs.datastax.com/en/cql/3.1/cql/cql_reference/create_keyspace_r.html rules
     public static Map<String, Object> buildReplicationStrategy(CreateKeyspaceInput input) {
-        LinkedHashMap<String, Object> replicationStrategyProps = new LinkedHashMap<String, Object>();
+        LinkedHashMap<String, Object> replicationStrategyProps = new LinkedHashMap<>();
 
         //set the strategy class only if exists in the input && a valid one is provided
-        if (StringUtils.isNotBlank(input.getReplicationStrategyClass())) {
-            ReplicationStrategy strategy = ReplicationStrategyBuilder.lookup(input.getReplicationStrategyClass());
+        if (input.getReplicationStrategyClass() != null) {
             //setting 'replication_factor' || 'first_data_center' || 'next data center' is pointless if no class is provided
-            if (strategy != null) {
-                addStrategyProps(input, replicationStrategyProps, strategy);
-            }
+            addStrategyProps(input, replicationStrategyProps);
         } else {
             return buildDefaultReplicationStrategy();
         }
         return replicationStrategyProps;
     }
 
-    private static void addStrategyProps(CreateKeyspaceInput input, LinkedHashMap<String, Object> replicationStrategyProps, ReplicationStrategy strategy) {
-        replicationStrategyProps.put(Constants.CLASS, input.getReplicationStrategyClass());
+    private static void addStrategyProps(CreateKeyspaceInput input, LinkedHashMap<String, Object> replicationStrategyProps) {
+        replicationStrategyProps.put(Constants.CLASS, input.getReplicationStrategyClass().name());
         //'replication_factor' required if class is SimpleStrategy; otherwise, not used
-        if (strategy.equals(ReplicationStrategy.SIMPLE)) {
+        if (input.getReplicationStrategyClass().equals(SimpleStrategy)) {
             replicationStrategyProps.put(Constants.REPLICATION_FACTOR, input.getReplicationFactor());
         }
         if (input.getFirstDataCenter() != null) {
@@ -58,9 +49,9 @@ public class ReplicationStrategyBuilder {
         }
     }
 
-    public static Map<String, Object> buildDefaultReplicationStrategy() {
+    private static Map<String, Object> buildDefaultReplicationStrategy() {
         LinkedHashMap<String, Object> replicationStrategyMap = new LinkedHashMap<String, Object>();
-        replicationStrategyMap.put(Constants.CLASS, ReplicationStrategy.SIMPLE.getStrategyClass());
+        replicationStrategyMap.put(Constants.CLASS, SimpleStrategy.name());
         replicationStrategyMap.put(Constants.REPLICATION_FACTOR, Constants.DEFAULT_REPLICATION_FACTOR);
         return replicationStrategyMap;
     }

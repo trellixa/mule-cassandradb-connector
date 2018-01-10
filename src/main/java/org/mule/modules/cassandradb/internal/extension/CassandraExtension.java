@@ -7,7 +7,6 @@ package org.mule.modules.cassandradb.internal.extension;
 
 import org.mule.modules.cassandradb.internal.config.CassandraConfig;
 import org.mule.modules.cassandradb.internal.exception.CassandraError;
-import org.mule.runtime.api.meta.Category;
 import org.mule.runtime.extension.api.annotation.Configurations;
 import org.mule.runtime.extension.api.annotation.Extension;
 import org.mule.runtime.extension.api.annotation.error.ErrorTypes;

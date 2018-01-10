@@ -11,12 +11,6 @@ public class DataCenter {
     public DataCenter(){
     }
 
-    // FIXME: Remove this constructor.
-    public DataCenter(String name, Integer value){
-        this.name = name;
-        this.value = value;
-    }
-
     public String getName() {
         return name;
     }
@@ -31,14 +25,5 @@ public class DataCenter {
 
     public void setValue(Integer value) {
         this.value = value;
-    }
-
-    // FIXME: Remove toString method.
-    @Override
-    public String toString() {
-        return "DataCenter{" +
-                "name='" + name + '\'' +
-                ", value=" + value +
-                '}';
     }
 }

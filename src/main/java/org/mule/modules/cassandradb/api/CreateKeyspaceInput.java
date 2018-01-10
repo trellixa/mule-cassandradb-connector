@@ -8,7 +8,7 @@ public class CreateKeyspaceInput {
 
     private String keyspaceName;
 
-    private String replicationStrategyClass;
+    private ReplicationStrategy replicationStrategyClass;
 
     private Integer replicationFactor;
     private DataCenter firstDataCenter;
@@ -22,11 +22,11 @@ public class CreateKeyspaceInput {
         this.keyspaceName = keyspaceName;
     }
 
-    public String getReplicationStrategyClass() {
+    public ReplicationStrategy getReplicationStrategyClass() {
         return replicationStrategyClass;
     }
 
-    public void setReplicationStrategyClass(String replicationStrategyClass) {
+    public void setReplicationStrategyClass(ReplicationStrategy replicationStrategyClass) {
         this.replicationStrategyClass = replicationStrategyClass;
     }
 
@@ -52,17 +52,5 @@ public class CreateKeyspaceInput {
 
     public void setNextDataCenter(DataCenter nextDataCenter) {
         this.nextDataCenter = nextDataCenter;
-    }
-
-    // FIXME: Remove toString method.
-    @Override
-    public String toString() {
-        return "CreateKeyspaceInput{" +
-                "keyspaceName='" + keyspaceName + '\'' +
-                ", replicationStrategyClass='" + replicationStrategyClass + '\'' +
-                ", replicationFactor=" + replicationFactor +
-                ", firstDataCenter=" + firstDataCenter +
-                ", nextDataCenter=" + nextDataCenter +
-                '}';
     }
 }

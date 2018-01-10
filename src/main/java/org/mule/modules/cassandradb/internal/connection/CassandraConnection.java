@@ -5,13 +5,9 @@ package org.mule.modules.cassandradb.internal.connection;
 
 import com.datastax.driver.core.Cluster;
 import com.datastax.driver.core.Session;
-import org.apache.commons.lang3.StringUtils;
 
 import org.mule.modules.cassandradb.internal.exception.CassandraException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.mule.connectors.commons.template.connection.ConnectorConnection;
-
 
 public final class CassandraConnection implements ConnectorConnection {
     /**
@@ -26,18 +22,6 @@ public final class CassandraConnection implements ConnectorConnection {
     public CassandraConnection(Cluster cluster, Session session) {
         this.cluster = cluster;
         this.cassandraSession = session;
-    }
-
-    /**
-     * Connect to Cassandra Cluster specified by provided host IP
-     * address and port number.
-     *
-     * @param connectionParameters the connection parameters
-     * @return CassandraConnection created
-     * @throws CassandraException if any error occurs when trying to connect
-     */
-    public static CassandraConnection build(ConnectionParameters connectionParameters) throws CassandraException {
-        return CassandraConnectionBuilder.build(connectionParameters);
     }
 
     private void closeCluster() {

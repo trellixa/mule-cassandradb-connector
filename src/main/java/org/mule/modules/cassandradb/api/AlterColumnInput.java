@@ -24,13 +24,4 @@ public class AlterColumnInput {
     public void setType(ColumnType type) {
         this.type = type;
     }
-
-    // FIXME: Remove toString method.
-    @Override
-    public String toString() {
-        return "AlterColumnInput{" +
-                "column='" + column + '\'' +
-                ", type=" + type +
-                '}';
-    }
 }

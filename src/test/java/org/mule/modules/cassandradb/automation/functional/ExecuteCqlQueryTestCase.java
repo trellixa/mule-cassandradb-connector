@@ -49,7 +49,9 @@ public class ExecuteCqlQueryTestCase extends AbstractTestCases {
         List<Object> params = new ArrayList<Object>();
         params.add("value1");
         String whereClause = " WHERE " + DUMMY_PARTITION_KEY + " = ?";
-        CQLQueryInput query = new CQLQueryInput(QUERY_PREFIX + TABLE_NAME_2 + whereClause, params);
+        CQLQueryInput query = new CQLQueryInput();
+        query.setCqlQuery(QUERY_PREFIX + TABLE_NAME_2 + whereClause);
+        query.setParameters(params);
 
         List<Map<String, Object>> queryResult = executeCQLQuery(query);
         assertNotNull(queryResult.get(0));
@@ -57,7 +59,9 @@ public class ExecuteCqlQueryTestCase extends AbstractTestCases {
 
     @Test
     public void shouldExecute_NonParametrizedQuery() throws Exception {
-        CQLQueryInput query = new CQLQueryInput(QUERY_PREFIX + TABLE_NAME_2, new ArrayList<>());
+        CQLQueryInput query = new CQLQueryInput();
+        query.setCqlQuery(QUERY_PREFIX + TABLE_NAME_2);
+        query.setParameters(new ArrayList<>());
         List<Map<String, Object>> queryResult = executeCQLQuery(query);
         assertNotNull(queryResult.get(0));
     }
@@ -66,7 +70,8 @@ public class ExecuteCqlQueryTestCase extends AbstractTestCases {
     public void shouldThrowException_When_InsufficientAmountOfBindVariables() throws Exception {
         //Select * from dummy_table_name_2 WHERE dummy_partition_key = ?
         String whereClause = " WHERE " + DUMMY_PARTITION_KEY + " = ?";
-        CQLQueryInput query = new CQLQueryInput(QUERY_PREFIX + TABLE_NAME_2 + whereClause, null);
+        CQLQueryInput query = new CQLQueryInput();
+        query.setCqlQuery(QUERY_PREFIX + TABLE_NAME_2 + whereClause);
 
         executeCQLQueryExpException(query, QUERY_VALIDATION);
     }
@@ -76,7 +81,9 @@ public class ExecuteCqlQueryTestCase extends AbstractTestCases {
         //Select * from dummy_table_name_2
         List<Object> params = new ArrayList<Object>();
         params.add("value1");
-        CQLQueryInput query = new CQLQueryInput(QUERY_PREFIX + TABLE_NAME_2, params);
+        CQLQueryInput query = new CQLQueryInput();
+        query.setCqlQuery(QUERY_PREFIX + TABLE_NAME_2);
+        query.setParameters(params);
 
         executeCQLQueryExpException(query, UNKNOWN);
     }

@@ -1,7 +1,6 @@
 package org.mule.modules.cassandradb.internal.service;
 
 import com.datastax.driver.core.DataType;
-import com.datastax.driver.core.TableMetadata;
 import org.mule.connectors.commons.template.service.ConnectorService;
 import org.mule.modules.cassandradb.api.AlterColumnInput;
 import org.mule.modules.cassandradb.api.CreateKeyspaceInput;
@@ -13,21 +12,21 @@ import java.util.Map;
 
 public interface CassandraService extends ConnectorService {
 
-    boolean createKeyspace(@Content CreateKeyspaceInput input);
+    void createKeyspace(@Content CreateKeyspaceInput input);
 
-    boolean dropKeyspace(@Content String keyspaceName);
+    void dropKeyspace(@Content String keyspaceName);
 
-    boolean createTable(@Content CreateTableInput input);
+    void createTable(@Content CreateTableInput input);
 
-    boolean dropTable(String tableName, String keyspaceName);
+    void dropTable(String tableName, String keyspaceName);
 
-    boolean addNewColumn(String tableName, String keyspaceName, String column, DataType dataType);
+    void addNewColumn(String tableName, String keyspaceName, String column, DataType dataType);
 
-    boolean dropColumn(String tableName, String keyspaceName, String column);
+    void dropColumn(String tableName, String keyspaceName, String column);
 
-    boolean renameColumn(String tableName, String keyspaceName, String oldColumnName, String newColumnName);
+    void renameColumn(String tableName, String keyspaceName, String oldColumnName, String newColumnName);
 
-    boolean changeColumnType(String tableName, String keyspaceName, AlterColumnInput alterColumnInput);
+    void changeColumnType(String tableName, String keyspaceName, AlterColumnInput alterColumnInput);
 
     List<String> getTableNamesFromKeyspace(String keyspaceName);
 
@@ -40,4 +39,6 @@ public interface CassandraService extends ConnectorService {
     List<Map<String, Object>> select(String query, List<Object> params);
 
     void delete(String keySpace, String table, List<String> entity, Map<String, Object> whereClause);
+
+    void deleteRow(String keySpace, String table, Map<String, Object> whereClause);
 }

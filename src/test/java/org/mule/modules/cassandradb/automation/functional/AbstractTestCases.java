@@ -1,8 +1,5 @@
 package org.mule.modules.cassandradb.automation.functional;
 
-
-import com.datastax.driver.core.KeyspaceMetadata;
-import com.datastax.driver.core.TableMetadata;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -12,12 +9,13 @@ import org.mule.modules.cassandradb.api.CreateKeyspaceInput;
 import org.mule.modules.cassandradb.automation.util.CassandraProperties;
 import org.mule.modules.cassandradb.automation.util.PropertiesLoaderUtil;
 import org.mule.modules.cassandradb.internal.config.CassandraConfig;
+import org.mule.modules.cassandradb.internal.connection.BasicAuthConnectionProvider;
 import org.mule.modules.cassandradb.internal.connection.CassandraConnection;
-import org.mule.modules.cassandradb.internal.connection.ConnectionParameters;
 import org.mule.modules.cassandradb.internal.exception.CassandraError;
 import org.mule.modules.cassandradb.internal.metadata.CassandraMetadata;
 import org.mule.modules.cassandradb.internal.service.CassandraService;
 import org.mule.modules.cassandradb.internal.service.CassandraServiceImpl;
+import org.mule.runtime.api.connection.ConnectionException;
 import org.mule.tck.junit4.rule.SystemProperty;
 import org.mule.tck.util.TestConnectivityUtils;
 import org.mule.test.runner.ArtifactClassLoaderRunnerConfig;
@@ -28,7 +26,8 @@ import java.io.IOException;
         exportPluginClasses = {
                 CassandraError.class, CassandraService.class,
                 CassandraConnection.class, CassandraProperties.class,
-                CassandraConfig.class, CQLQueryInput.class, CassandraMetadata.class
+                CassandraConfig.class, CQLQueryInput.class, CassandraMetadata.class,
+                BasicAuthConnectionProvider.class
         }
 )
 public abstract class AbstractTestCases extends MuleArtifactFunctionalTestCase {
@@ -52,19 +51,20 @@ public abstract class AbstractTestCases extends MuleArtifactFunctionalTestCase {
     @Override
     protected String[] getConfigFiles() {
         return new String[] {
-            FLOW_CONFIG_LOCATION
+                FLOW_CONFIG_LOCATION
         };
     }
 
     @Before
-    public void initialSetup() {
+    public void initialSetup() throws ConnectionException {
         cassandraProperties = getCassandraProperties();
-        ConnectionParameters connectionParameters = new ConnectionParameters(cassandraProperties.getHost(), cassandraProperties.getPort(), null, null, null, null);
-        cassandraConnection = CassandraConnection.build(connectionParameters);
+        BasicAuthConnectionProvider basicAuthConnectionProvider = new BasicAuthConnectionProvider();
+        basicAuthConnectionProvider.setHost(cassandraProperties.getHost());
+        basicAuthConnectionProvider.setPort(cassandraProperties.getPort());
+        CassandraConnection cassandraConnection = basicAuthConnectionProvider.connect();
         cassandraMetadata = new CassandraMetadata(cassandraConnection);
         cassandraService = new CassandraServiceImpl(new CassandraConfig(), cassandraConnection);
         assert cassandraConnection != null;
-        assert cassandraService != null;
         //setup db env
         CreateKeyspaceInput keyspaceInput = new CreateKeyspaceInput();
         keyspaceInput.setKeyspaceName(cassandraProperties.getKeyspace());
@@ -96,13 +96,13 @@ public abstract class AbstractTestCases extends MuleArtifactFunctionalTestCase {
         return cassandraConnection;
     }
 
-    public KeyspaceMetadata getKeyspaceMetadata(String keyspaceName) {
-        return cassandraMetadata.getKeyspaceMetadata(keyspaceName);
-    }
-
-    public TableMetadata fetchTableMetadata(String keyspaceName, String tableName) {
-        return cassandraMetadata.getTableMetadata(keyspaceName, tableName);
-    }
+//    public KeyspaceMetadata getKeyspaceMetadata(String keyspaceName) {
+//        return cassandraMetadata.getKeyspaceMetadata(keyspaceName);
+//    }
+//
+//    public TableMetadata fetchTableMetadata(String keyspaceName, String tableName) {
+//        return cassandraMetadata.getTableMetadata(keyspaceName, tableName);
+//    }
 
     public CassandraMetadata getCassandraMetadata() {
         return cassandraMetadata;
@@ -112,3 +112,4 @@ public abstract class AbstractTestCases extends MuleArtifactFunctionalTestCase {
         return getCassandraProperties().getKeyspace();
     }
 }
+

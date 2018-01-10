@@ -9,8 +9,7 @@ public class CreateTableInput {
 
     private String tableName;
     private String keyspaceName;
-    // FIXME: Attribute should be private.
-    List<ColumnInput> columns;
+    private List<ColumnInput> columns;
 
     public String getTableName() {
         return tableName;
@@ -34,15 +33,5 @@ public class CreateTableInput {
 
     public void setColumns(List<ColumnInput> columns) {
         this.columns = columns;
-    }
-
-    // FIXME: Remove toString method.
-    @Override
-    public String toString() {
-        return "CreateTableInput{" +
-                "tableName='" + tableName + '\'' +
-                ", keyspaceName='" + keyspaceName + '\'' +
-                ", columns=" + columns +
-                '}';
     }
 }

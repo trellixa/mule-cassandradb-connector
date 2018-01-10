@@ -6,7 +6,6 @@ package org.mule.modules.cassandradb.api;
 /**
  * Cassandra supported replica placement strategies
  */
-// FIXME: Enums should not have any kind of logic, they should only contain their values.
 public enum ReplicationStrategy {
 
     /**
@@ -18,8 +17,7 @@ public enum ReplicationStrategy {
      * <p>Supports a single strategy option 'replication_factor' that
      * specifies the replication factor for the cluster.</p>
      */
-    // FIXME: Remove the String constant.
-    SIMPLE("SimpleStrategy"),
+    SimpleStrategy,
     /**
      * <p>With NetworkTopologyStrategy, for each datacenter, you can specify
      * how many replicas you want on a per-keyspace basis. Replicas are
@@ -30,16 +28,5 @@ public enum ReplicationStrategy {
      * sum of all per datacenter values. Note that the datacenter names
      * must match those used in conf/cassandra-topology.properties.</p>
      */
-    // FIXME: Remove the String constant.
-    NETWORK_TOPOLOGY("NetworkTopologyStrategy");
-
-    private final String strategy;
-
-    ReplicationStrategy(String strategy) {
-        this.strategy = strategy;
-    }
-
-    public String getStrategyClass() {
-        return this.strategy;
-    }
+    NetworkTopologyStrategy;
 }

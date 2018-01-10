@@ -165,8 +165,8 @@ public class ChangeColumnTypeTestCase extends AbstractTestCases {
         changeColumnTypeExpException(TABLE_NAME_1, getKeyspaceFromProperties(), getAlterColumnInput(columnName, ColumnType.INT));
     }
 
-    boolean changeColumnType(String tableName, String keyspaceName, AlterColumnInput input) throws Exception {
-        return (boolean) flowRunner("changeColumnType-flow")
+    void changeColumnType(String tableName, String keyspaceName, AlterColumnInput input) throws Exception {
+        flowRunner("changeColumnType-flow")
                 .withPayload(input)
                 .withVariable("tableName", tableName)
                 .withVariable("keyspaceName", keyspaceName)
