@@ -18,11 +18,8 @@ import org.mule.modules.cassandradb.api.CreateKeyspaceInput;
 import org.mule.modules.cassandradb.api.CreateTableInput;
 import org.mule.modules.cassandradb.internal.config.CassandraConfig;
 import org.mule.modules.cassandradb.internal.connection.CassandraConnection;
-<<<<<<< HEAD
-import org.mule.modules.cassandradb.internal.exception.OperationNotAppliedException;
-=======
 import org.mule.modules.cassandradb.internal.exception.CassandraException;
->>>>>>> CT-79-resolve-fixme
+import org.mule.modules.cassandradb.internal.exception.OperationNotAppliedException;
 import org.mule.modules.cassandradb.internal.exception.QueryErrorException;
 import org.mule.modules.cassandradb.internal.util.builders.HelperStatements;
 
@@ -42,6 +39,7 @@ import static org.mule.modules.cassandradb.internal.util.Constants.WHERE;
 import static org.mule.modules.cassandradb.internal.util.builders.HelperStatements.createKeyspaceStatement;
 import static org.mule.modules.cassandradb.internal.util.builders.HelperStatements.dropKeyspaceStatement;
 
+
 public class CassandraServiceImpl extends DefaultConnectorService<CassandraConfig, CassandraConnection> implements CassandraService{
 
     public CassandraServiceImpl(CassandraConfig config, CassandraConnection connection) {
@@ -50,88 +48,41 @@ public class CassandraServiceImpl extends DefaultConnectorService<CassandraConfi
 
     @Override
     public void createKeyspace(CreateKeyspaceInput input) {
-<<<<<<< HEAD
-        SchemaStatement statement = HelperStatements.createKeyspaceStatement(input);
-        executeCommandAndThrowExceptionIfFails(statement);
-=======
         validateOutput(getCassandraSession().execute(createKeyspaceStatement(input).getQueryString()).wasApplied());
->>>>>>> CT-79-resolve-fixme
     }
 
     @Override
     public void dropKeyspace(String keyspaceName) {
-<<<<<<< HEAD
-        SchemaStatement statement = HelperStatements.dropKeyspaceStatement(keyspaceName);
-        executeCommandAndThrowExceptionIfFails(statement);
-=======
         validateOutput(getCassandraSession().execute(dropKeyspaceStatement(keyspaceName).getQueryString()).wasApplied());
->>>>>>> CT-79-resolve-fixme
     }
 
     @Override
     public void createTable(CreateTableInput input) {
-<<<<<<< HEAD
-        String keyspace = getKeyspaceNameToUse(input.getKeyspaceName());
-        SchemaStatement statement = HelperStatements.createTable(keyspace, input);
-        executeCommandAndThrowExceptionIfFails(statement);
-=======
         validateOutput(getCassandraSession().execute(HelperStatements.createTable(getKeyspaceNameToUse(input.getKeyspaceName()), input).getQueryString()).wasApplied());
->>>>>>> CT-79-resolve-fixme
     }
 
     @Override
     public void dropTable(String tableName, String keyspaceName) {
-<<<<<<< HEAD
-        String keyspace = getKeyspaceNameToUse(keyspaceName);
-        SchemaStatement statement = HelperStatements.dropTable(tableName, keyspace);
-        executeCommandAndThrowExceptionIfFails(statement);
-
-=======
         validateOutput(getCassandraSession().execute(HelperStatements.dropTable(tableName, getKeyspaceNameToUse(keyspaceName))).wasApplied());
->>>>>>> CT-79-resolve-fixme
     }
 
     @Override
     public void addNewColumn(String tableName, String keyspaceName, String columnName, DataType columnType) {
-<<<<<<< HEAD
-        String keyspace = getKeyspaceNameToUse(keyspaceName);
-        SchemaStatement statement = HelperStatements.addNewColumn(tableName, keyspace, columnName, columnType);
-        executeCommandAndThrowExceptionIfFails(statement);
-=======
         validateOutput(getCassandraSession().execute(HelperStatements.addNewColumn(tableName, getKeyspaceNameToUse(keyspaceName), columnName, columnType)).wasApplied());
->>>>>>> CT-79-resolve-fixme
     }
 
     @Override
     public void dropColumn(String tableName, String keyspaceName, String column) {
-<<<<<<< HEAD
-        String keyspace = getKeyspaceNameToUse(keyspaceName);
-        SchemaStatement statement = HelperStatements.dropColumn(tableName, keyspace, column);
-        executeCommandAndThrowExceptionIfFails(statement);
-=======
         validateOutput(getCassandraSession().execute(HelperStatements.dropColumn(tableName, getKeyspaceNameToUse(keyspaceName), column)).wasApplied());
->>>>>>> CT-79-resolve-fixme
     }
 
     @Override
     public void renameColumn(String tableName, String keyspaceName, String oldColumnName, String newColumnName) {
-<<<<<<< HEAD
-        String keyspace = getKeyspaceNameToUse(keyspaceName);
-        SchemaStatement statement = HelperStatements.renameColumn(tableName, keyspace, oldColumnName, newColumnName);
-        executeCommandAndThrowExceptionIfFails(statement);
-    }
-
-    public void changeColumnType(String tableName, String keyspaceName, AlterColumnInput input) {
-        String keyspace = getKeyspaceNameToUse(keyspaceName);
-        SchemaStatement statement = HelperStatements.changeColumnType(tableName, keyspace, input);
-        executeCommandAndThrowExceptionIfFails(statement);
-=======
         validateOutput(getCassandraSession().execute(HelperStatements.renameColumn(tableName, getKeyspaceNameToUse(keyspaceName), oldColumnName, newColumnName)).wasApplied());
     }
 
     public void changeColumnType(String tableName, String keyspaceName, AlterColumnInput input) {
         validateOutput(getCassandraSession().execute(HelperStatements.changeColumnType(tableName, getKeyspaceNameToUse(keyspaceName), input)).wasApplied());
->>>>>>> CT-79-resolve-fixme
     }
 
     @Override
