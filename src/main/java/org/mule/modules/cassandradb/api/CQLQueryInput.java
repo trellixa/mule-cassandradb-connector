@@ -8,7 +8,6 @@ import java.util.List;
 public class CQLQueryInput {
 
     private String cqlQuery;
-    // FIXME: List of objects?
     private List<Object> parameters;
 
     public String getCqlQuery() {

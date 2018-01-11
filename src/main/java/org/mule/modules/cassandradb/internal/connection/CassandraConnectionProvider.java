@@ -1,8 +1,13 @@
 package org.mule.modules.cassandradb.internal.connection;
 
+import com.datastax.driver.core.Cluster;
+import com.datastax.driver.core.Cluster.Builder;
+import com.datastax.driver.core.ProtocolOptions;
+import com.datastax.driver.core.Session;
 import org.mule.connectors.commons.template.connection.ConnectorConnectionProvider;
 import org.mule.modules.cassandradb.api.ProtocolCompression;
 import org.mule.modules.cassandradb.api.ProtocolVersion;
+import org.mule.modules.cassandradb.internal.exception.CassandraException;
 import org.mule.runtime.api.connection.CachedConnectionProvider;
 import org.mule.runtime.api.connection.ConnectionException;
 import org.mule.runtime.extension.api.annotation.param.Optional;
@@ -10,9 +15,15 @@ import org.mule.runtime.extension.api.annotation.param.Parameter;
 import org.mule.runtime.extension.api.annotation.param.display.DisplayName;
 import org.mule.runtime.extension.api.annotation.param.display.Password;
 import org.mule.runtime.extension.api.annotation.param.display.Placement;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import static com.datastax.driver.core.Cluster.builder;
+import static com.datastax.driver.core.ProtocolVersion.valueOf;
+import static org.apache.commons.lang3.StringUtils.isBlank;
+import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 
-public class BasicAuthConnectionProvider extends ConnectorConnectionProvider<CassandraConnection> implements CachedConnectionProvider<CassandraConnection> {
+public class CassandraConnectionProvider extends ConnectorConnectionProvider<CassandraConnection> implements CachedConnectionProvider<CassandraConnection> {
 
     /**
      * Host name or IP address
@@ -91,10 +102,45 @@ public class BasicAuthConnectionProvider extends ConnectorConnectionProvider<Cas
     @DisplayName("SSL")
     private boolean sslEnabled;
 
+    private static final Logger logger = LoggerFactory.getLogger(CassandraConnectionProvider.class);
+
     @Override
     public CassandraConnection connect() throws ConnectionException {
-        return CassandraConnection.build(new ConnectionParameters(host, port, username,
-                password, keyspace, new AdvancedConnectionParameters(protocolVersion, clusterName, maxSchemaAgreementWaitSeconds, compression, sslEnabled)));
+        Builder clusterBuilder;
+        validateAttribute(host);
+        validateAttribute(port);
+        try {
+            clusterBuilder = builder().addContactPoint(host).withPort(Integer.parseInt(port));
+        } catch (IllegalArgumentException connEx) {
+            logger.error("Error while connecting to Cassandra database!", connEx);
+            throw new CassandraException(connEx.getMessage());
+        }
+        clusterBuilder = isNotEmpty(username)&&isNotEmpty(password)? clusterBuilder.withCredentials(username, password): clusterBuilder;
+        clusterBuilder = isNotEmpty(clusterName)? clusterBuilder.withClusterName(clusterName): clusterBuilder;
+        clusterBuilder = maxSchemaAgreementWaitSeconds > 0 ?  clusterBuilder.withMaxSchemaAgreementWaitSeconds(maxSchemaAgreementWaitSeconds): clusterBuilder;
+        clusterBuilder = protocolVersion != null ? clusterBuilder.withProtocolVersion(valueOf(protocolVersion.name())) : clusterBuilder;
+        clusterBuilder = compression != null ? clusterBuilder.withCompression(ProtocolOptions.Compression.valueOf(compression.name())) : clusterBuilder;
+        clusterBuilder = sslEnabled? clusterBuilder.withSSL(): clusterBuilder;
+        Cluster cluster = clusterBuilder.build();
+        Session session = null;
+
+        try {
+            logger.info("Connecting to Cassandra Database: {} , port: {} with clusterName: {} , protocol version {} and compression type {} ", host, port, clusterName != null ? clusterName : null, protocolVersion != null ? protocolVersion : null, compression != null ? compression : null);
+            session = isNotEmpty(keyspace) ? cluster.connect(keyspace): cluster.connect();
+            logger.info("Connected to Cassandra Cluster: {} !", session.getCluster().getClusterName());
+        } catch (Exception cassandraException) {
+            logger.error("Error while connecting to Cassandra database!", cassandraException);
+            throw new CassandraException(cassandraException.getMessage());
+        }
+        return new CassandraConnection(cluster, session);
+    }
+
+    private boolean validateAttribute(String attr){
+        if(!isBlank(attr)){
+            return true;
+        } else {
+            throw new IllegalArgumentException("Invalid parameter");
+        }
     }
 
     public String getHost() {
