@@ -109,8 +109,11 @@ import static org.mule.modules.cassandradb.internal.exception.CassandraError.UNS
 import static org.mule.modules.cassandradb.internal.exception.CassandraError.UNSUPPORTED_PROTOCOL_VERSION;
 import static org.mule.modules.cassandradb.internal.exception.CassandraError.WRITE_FAILURE;
 import static org.mule.modules.cassandradb.internal.exception.CassandraError.WRITE_TIMEOUT;
+<<<<<<< HEAD
 import static org.mule.modules.cassandradb.internal.util.Constants.COLUMNS;
 import static org.mule.modules.cassandradb.internal.util.Constants.WHERE;
+=======
+>>>>>>> CT-79-resolve-fixme
 
 
 @Throws(CassandraErrorTypeProvider.class)
@@ -122,6 +125,7 @@ public class CassandraOperations extends ConnectorOperations<CassandraConfig, Ca
         super(CassandraServiceImpl::new);
     }
 
+<<<<<<< HEAD
     @Override
     protected ExecutionBuilder<CassandraService> newExecutionBuilder(CassandraConfig config, CassandraConnection connection) {
         return super.newExecutionBuilder(config, connection)
@@ -177,6 +181,8 @@ public class CassandraOperations extends ConnectorOperations<CassandraConfig, Ca
         });
     }
 
+=======
+>>>>>>> CT-79-resolve-fixme
     /**
      * Creates a new keyspace
      * @param input operation input containing the keyspace name and the replication details
@@ -196,7 +202,11 @@ public class CassandraOperations extends ConnectorOperations<CassandraConfig, Ca
      */
     public void dropKeyspace(@Config CassandraConfig config,
                                 @Connection CassandraConnection connection,
+<<<<<<< HEAD
                                 String keyspaceName) {
+=======
+                                @Content String keyspaceName) {
+>>>>>>> CT-79-resolve-fixme
         logger.debug("Dropping keyspace {}", keyspaceName);
         newExecutionBuilder(config, connection).execute(CassandraService::dropKeyspace).withParam(keyspaceName);
     }
@@ -223,12 +233,16 @@ public class CassandraOperations extends ConnectorOperations<CassandraConfig, Ca
      */
     public void dropTable(@Config CassandraConfig config,
                              @Connection CassandraConnection connection,
-                             String tableName,
+                             @Content String tableName,
                              @Optional String keyspaceName) {
         logger.debug("Dropping table {}", tableName);
+<<<<<<< HEAD
         newExecutionBuilder(config, connection).execute(CassandraService::dropTable)
                 .withParam(tableName)
                 .withParam(keyspaceName);
+=======
+        newExecutionBuilder(config, connection).execute(CassandraService::dropTable).withParam(tableName).withParam(keyspaceName);
+>>>>>>> CT-79-resolve-fixme
     }
 
     /**
@@ -324,18 +338,18 @@ public class CassandraOperations extends ConnectorOperations<CassandraConfig, Ca
      * Executes the insert entity operation
      * @param table the table name in which the entity will be inserted
      * @param keyspaceName (optional) the keyspace which contains the table to be used
-     * @param entity the entity to be inserted
+     * @param entityToInsert the entity to be inserted
      */
     public void insert(@Config CassandraConfig config,
                        @Connection CassandraConnection connection,
                        @MetadataKeyId(CassandraMetadataResolver.class) String table,
                        @Optional String keyspaceName,
-                       @Content @TypeResolver(CassandraMetadataResolver.class) Map<String, Object> entity) {
-        logger.debug("Inserting entity {} into the {} table ", entity, table);
+                       @Content @TypeResolver(CassandraMetadataResolver.class) Map<String, Object> entityToInsert) {
+        logger.debug("Inserting entity {} into the {} table ", entityToInsert, table);
         newExecutionBuilder(config, connection).execute(CassandraService::insert)
                 .withParam(keyspaceName)
                 .withParam(table)
-                .withParam(entity);
+                .withParam(entityToInsert);
     }
 
     /**
@@ -354,8 +368,7 @@ public class CassandraOperations extends ConnectorOperations<CassandraConfig, Ca
         newExecutionBuilder(config, connection).execute(CassandraService::update)
                 .withParam(keyspaceName)
                 .withParam(table)
-                .withParam((Map) entityToUpdate.get(COLUMNS))  // FIXME: Why have a single parameter for this? we should have it separated as a new parameter.
-                .withParam((Map) entityToUpdate.get(WHERE)); // FIXME: Why have a single parameter for this? we should have it separated as a new parameter.
+                .withParam(entityToUpdate);
     }
 
     /**
@@ -384,7 +397,7 @@ public class CassandraOperations extends ConnectorOperations<CassandraConfig, Ca
     @Query(translator = DefaultDsqlQueryTranslator.class, entityResolver = CassandraMetadataResolver.class, nativeOutputResolver = CassandraMetadataResolver.class)
     public List<Map<String, Object>>  select(@Config CassandraConfig config,
                                              @Connection CassandraConnection connection,
-                                             @MetadataKeyId(CassandraMetadataResolver.class) final String query,
+                                             @Content @MetadataKeyId(CassandraMetadataResolver.class) final String query,
                                              @Optional List<Object> parameters)  {
         logger.debug("Executing select query: {} with the parameters: {}", query, parameters);
         return newExecutionBuilder(config, connection).execute(CassandraService::select)
@@ -396,34 +409,102 @@ public class CassandraOperations extends ConnectorOperations<CassandraConfig, Ca
      * Deletes an entire record
      * @param table the name of the table
      * @param keyspaceName (optional) the keyspace which contains the table to be used
-     * @param payload operation input: where clause for the delete operation
+     * @param whereClause operation input: where clause for the delete operation
      */
+    //FIXME: metadata for where clause
     public void deleteRows(@Config CassandraConfig config,
                            @Connection CassandraConnection connection,
                            @MetadataKeyId(CassandraOnlyWithFiltersMetadataResolver.class) String table,
                            @Optional String keyspaceName,
+<<<<<<< HEAD
                            @Content @TypeResolver(CassandraOnlyWithFiltersMetadataResolver.class) Map<String, Object> payload) {
         newExecutionBuilder(config, connection).execute(CassandraService::deleteRow)
                 .withParam(keyspaceName)
                 .withParam(table)
                 .withParam((Map) payload.get(WHERE)); // FIXME: Why are we getting the WHERE key?.
+=======
+                           @Content Map<String, Object> whereClause) {
+        newExecutionBuilder(config, connection).execute(CassandraService::deleteWithoutEntity)
+                .withParam(keyspaceName)
+                .withParam(table)
+                .withParam(whereClause);
+>>>>>>> CT-79-resolve-fixme
     }
 
     /**
      * Deletes values from an object specified by the where clause
      * @param table the name of the table
      * @param keyspaceName (optional) the keyspace which contains the table to be used
-     * @param payload operation input: columns to be deleted and where clause for the delete operation
+     * @param entities operation input: columns to be deleted
+     * @param whereClause: where clause for the delete operation
      */
+    //FIXME: metadata for entity clause
+    //FIXME: metadata for where clause
     public void deleteColumnsValue(@Config CassandraConfig config,
                                    @Connection CassandraConnection connection,
                                    @MetadataKeyId(CassandraWithFiltersMetadataCategory.class) String table,
                                    @Optional String keyspaceName,
-                                   @Content @TypeResolver(CassandraWithFiltersMetadataCategory.class) Map<String, Object> payload) {
+                                   List<String> entities,
+                                   @Content Map<String, Object> whereClause) {
         newExecutionBuilder(config, connection).execute(CassandraService::delete)
                 .withParam(keyspaceName)
                 .withParam(table)
-                .withParam((List) payload.get(COLUMNS)) // FIXME: Why have a single parameter for this? we should have it separated as a new parameter.
-                .withParam((Map) payload.get(WHERE)); // FIXME: Why have a single parameter for this? we should have it separated as a new parameter.
+                .withParam(entities)
+                .withParam(whereClause);
+    }
+
+    @Override
+    protected ExecutionBuilder<CassandraService> newExecutionBuilder(CassandraConfig config, CassandraConnection connection) {
+        return super.newExecutionBuilder(config, connection)
+                .withExceptionHandler(handle(Exception.class, UNKNOWN))
+                .withExceptionHandler(handle(AlreadyExistsException.class, ALREADY_EXISTS))
+                .withExceptionHandler(handle(AuthenticationException.class, AUTHENTICATION))
+                .withExceptionHandler(handle(BootstrappingException.class, BOOTSTRAPPING))
+                .withExceptionHandler(handle(BusyConnectionException.class, BUSY_CONNECTION))
+                .withExceptionHandler(handle(BusyPoolException.class, BUSY_POOL))
+                .withExceptionHandler(handle(CodecNotFoundException.class, CODEC_NOT_FOUND))
+                .withExceptionHandler(handle(ConnectionException.class, CONNECTION))
+                .withExceptionHandler(handle(DriverInternalError.class, DRIVER_INTERNAL_ERROR))
+                .withExceptionHandler(handle(FrameTooLongException.class, FRAME_TOO_LONG))
+                .withExceptionHandler(handle(FunctionExecutionException.class, FUNCTION_EXECUTION))
+                .withExceptionHandler(handle(InvalidConfigurationInQueryException.class, INVALID_CONFIGURATION_IN_QUERY))
+                .withExceptionHandler(handle(InvalidQueryException.class, INVALID_QUERY))
+                .withExceptionHandler(handle(InvalidTypeException.class, INVALID_TYPE))
+                .withExceptionHandler(handle(NoHostAvailableException.class, NO_HOST_AVAILABLE))
+                .withExceptionHandler(handle(OperationTimedOutException.class, OPERATION_TIMED_OUT))
+                .withExceptionHandler(handle(OverloadedException.class, OVERLOADED))
+                .withExceptionHandler(handle(PagingStateException.class, PAGING_STATE))
+                .withExceptionHandler(handle(ProtocolError.class, PROTOCOL_ERROR))
+                .withExceptionHandler(handle(QueryConsistencyException.class, QUERY_CONSISTENCY))
+                .withExceptionHandler(handle(QueryExecutionException.class, QUERY_EXECUTION))
+                .withExceptionHandler(handle(QueryValidationException.class, QUERY_VALIDATION))
+                .withExceptionHandler(handle(ReadFailureException.class, READ_FAILURE))
+                .withExceptionHandler(handle(ReadTimeoutException.class, READ_TIMEOUT))
+                .withExceptionHandler(handle(ServerError.class, SERVERE_RROR))
+                .withExceptionHandler(handle(SyntaxError.class, SYNTAX_ERROR))
+                .withExceptionHandler(handle(TraceRetrievalException.class, TRACE_RETRIEVAL))
+                .withExceptionHandler(handle(TransportException.class, TRANSPORT))
+                .withExceptionHandler(handle(TruncateException.class, TRUNCATE))
+                .withExceptionHandler(handle(UnauthorizedException.class, UNAUTHORIZED))
+                .withExceptionHandler(handle(UnavailableException.class, UNAVAILABLE))
+                .withExceptionHandler(handle(UnpreparedException.class, UNPREPARED))
+                .withExceptionHandler(handle(UnresolvedUserTypeException.class, UNRESOLVED_USER_TYPE))
+                .withExceptionHandler(handle(UnsupportedFeatureException.class, UNSUPPORTED_FEATURE))
+                .withExceptionHandler(handle(UnsupportedProtocolVersionException.class, UNSUPPORTED_PROTOCOL_VERSION))
+                .withExceptionHandler(handle(WriteFailureException.class, WRITE_FAILURE))
+                .withExceptionHandler(handle(WriteTimeoutException.class, WRITE_TIMEOUT))
+                .withExceptionHandler(handleCassandraException());
+    }
+
+    private <T extends Throwable> DefinedExceptionHandler<T> handle(Class<T> exceptionClass, CassandraError errorCode) {
+        return new DefinedExceptionHandler<>(exceptionClass, exception -> {
+            throw new ModuleException(errorCode, exception);
+        });
+    }
+
+    private DefinedExceptionHandler<CassandraException> handleCassandraException() {
+        return new DefinedExceptionHandler<>(CassandraException.class, exception -> {
+            throw new ModuleException(exception.getErrorCode(), exception);
+        });
     }
 }

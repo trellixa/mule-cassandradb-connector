@@ -5,7 +5,6 @@ package org.mule.modules.cassandradb.internal.util;
 
 import org.apache.commons.lang3.StringUtils;
 import org.mule.modules.cassandradb.api.CreateKeyspaceInput;
-import org.mule.modules.cassandradb.api.ReplicationStrategy;
 
 import java.util.LinkedHashMap;
 import java.util.Map;

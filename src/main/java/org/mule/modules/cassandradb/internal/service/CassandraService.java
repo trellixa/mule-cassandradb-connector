@@ -32,11 +32,13 @@ public interface CassandraService extends ConnectorService {
 
     void insert(String keyspaceName, String table, Map<String, Object> entity);
 
-    void update(String keySpace, String table, Map<String, Object> entity, Map<String, Object> whereClause);
+    void update(String keySpace, String table, Map<String, Object> entityToUpdate);
 
     List<Map<String, Object>> executeCQLQuery(String cqlQuery, List<Object> params);
 
     List<Map<String, Object>> select(String query, List<Object> params);
+
+    public void deleteWithoutEntity(String keySpace, String table, Map<String, Object> whereClause);
 
     void delete(String keySpace, String table, List<String> entity, Map<String, Object> whereClause);
 

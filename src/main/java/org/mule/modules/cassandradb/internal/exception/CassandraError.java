@@ -31,6 +31,7 @@ public enum CassandraError implements ErrorTypeDefinition<CassandraError> {
     QUERY_CONSISTENCY(CassandraExecution),
     QUERY_EXECUTION(CassandraExecution),
     QUERY_VALIDATION(CassandraExecution),
+    OPERATION_FAILED(CassandraExecution),
     READ_FAILURE(CassandraExecution),
     READ_TIMEOUT(CassandraExecution),
     SERVERE_RROR(CassandraExecution),

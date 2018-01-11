@@ -5,9 +5,8 @@ package org.mule.modules.cassandradb.internal.connection;
 
 import com.datastax.driver.core.Cluster;
 import com.datastax.driver.core.Session;
-
-import org.mule.modules.cassandradb.internal.exception.CassandraException;
 import org.mule.connectors.commons.template.connection.ConnectorConnection;
+import org.mule.modules.cassandradb.internal.exception.CassandraException;
 
 public final class CassandraConnection implements ConnectorConnection {
     /**

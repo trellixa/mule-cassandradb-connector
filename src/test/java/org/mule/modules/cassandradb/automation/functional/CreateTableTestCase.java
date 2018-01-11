@@ -4,48 +4,38 @@
 package org.mule.modules.cassandradb.automation.functional;
 
 
-import com.datastax.driver.core.TableMetadata;
 import org.junit.After;
 import org.junit.Test;
-import org.mule.modules.cassandradb.api.CreateTableInput;
 
-import static org.junit.Assert.assertNotNull;
-import static org.mule.modules.cassandradb.automation.util.TestDataBuilder.TABLE_NAME_1;
-import static org.mule.modules.cassandradb.automation.util.TestDataBuilder.TABLE_NAME_2;
-import static org.mule.modules.cassandradb.automation.util.TestDataBuilder.getBasicCreateTableInput;
-import static org.mule.modules.cassandradb.automation.util.TestDataBuilder.getColumns;
-import static org.mule.modules.cassandradb.automation.util.TestDataBuilder.getCompositePrimaryKey;
+import static org.junit.Assert.fail;
+import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.TABLE_NAME_1;
+import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.TABLE_NAME_2;
+import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getBasicCreateTableInput;
+import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getColumns;
+import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getCompositePrimaryKey;
 
 public class CreateTableTestCase extends AbstractTestCases {
-
     @After
-    public void tearDown() {
-        getCassandraService().dropTable(TABLE_NAME_1, getKeyspaceFromProperties());
-        getCassandraService().dropTable(TABLE_NAME_2, getKeyspaceFromProperties());
+    public void tearDown() throws Exception {
+        dropTable(TABLE_NAME_1, testKeyspace);
+        dropTable(TABLE_NAME_2, testKeyspace);
     }
 
     @Test
-    public void testCreateTableWithSuccess() throws Exception {
-        CreateTableInput basicCreateTableInput = getBasicCreateTableInput(getColumns(), getKeyspaceFromProperties(), TABLE_NAME_1);
-        createTable(basicCreateTableInput);
-
-//        Thread.sleep(SLEEP_DURATION);
-//        TableMetadata tableMetadata = fetchTableMetadata(getKeyspaceFromProperties(), TABLE_NAME_1);
-//        assertNotNull(tableMetadata);
+    public void testCreateTableWithSuccess() {
+        try{
+            createTable(getBasicCreateTableInput(getColumns(), testKeyspace, TABLE_NAME_1));
+        } catch (Exception e){
+            fail();
+        }
     }
 
     @Test
-    public void testCreateTableWithCompositePKWithSuccess() throws Exception {
-        CreateTableInput basicCreateTableInput = getBasicCreateTableInput(getCompositePrimaryKey(), getKeyspaceFromProperties(), TABLE_NAME_2);
-        createTable(basicCreateTableInput);
-    }
-
-    void createTable(CreateTableInput basicCreateTableInput) throws Exception {
-        flowRunner("createTable-flow")
-                .withPayload(basicCreateTableInput)
-                .run()
-                .getMessage()
-                .getPayload()
-                .getValue();
+    public void testCreateTableWithCompositePKWithSuccess() {
+        try{
+            createTable(getBasicCreateTableInput(getCompositePrimaryKey(), testKeyspace, TABLE_NAME_2));
+        } catch (Exception e){
+            fail();
+        }
     }
 }

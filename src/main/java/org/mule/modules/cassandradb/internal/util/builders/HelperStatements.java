@@ -8,7 +8,6 @@ import com.datastax.driver.core.schemabuilder.Create;
 import com.datastax.driver.core.schemabuilder.CreateKeyspace;
 import com.datastax.driver.core.schemabuilder.SchemaBuilder;
 import com.datastax.driver.core.schemabuilder.SchemaStatement;
-
 import org.mule.modules.cassandradb.api.AlterColumnInput;
 import org.mule.modules.cassandradb.api.ColumnInput;
 import org.mule.modules.cassandradb.api.CreateKeyspaceInput;
@@ -18,7 +17,6 @@ import org.mule.modules.cassandradb.internal.exception.QueryErrorException;
 import org.mule.modules.cassandradb.internal.util.DataTypeResolver;
 import org.mule.modules.cassandradb.internal.util.ReplicationStrategyBuilder;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 

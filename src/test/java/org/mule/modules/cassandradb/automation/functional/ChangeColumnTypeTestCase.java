@@ -3,184 +3,59 @@
  */
 package org.mule.modules.cassandradb.automation.functional;
 
-import com.datastax.driver.core.DataType;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
-import org.mule.modules.cassandradb.api.AlterColumnInput;
+import org.junit.runners.Parameterized;
 import org.mule.modules.cassandradb.api.ColumnType;
-import org.mule.tck.junit4.matcher.ErrorTypeMatcher;
+import org.mule.test.runner.RunnerDelegateTo;
 
-import static org.mule.modules.cassandradb.automation.util.TestDataBuilder.COLUMN;
-import static org.mule.modules.cassandradb.automation.util.TestDataBuilder.TABLE_NAME_1;
-import static org.mule.modules.cassandradb.automation.util.TestDataBuilder.getAlterColumnInput;
-import static org.mule.modules.cassandradb.automation.util.TestDataBuilder.getBasicCreateTableInput;
-import static org.mule.modules.cassandradb.automation.util.TestDataBuilder.getPrimaryKey;
-import static org.mule.modules.cassandradb.internal.exception.CassandraError.QUERY_VALIDATION;
+import java.util.List;
 
-@Ignore
+import static org.hamcrest.CoreMatchers.endsWith;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.TABLE_NAME_1;
+import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getAlterColumnInput;
+import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getBasicCreateTableInput;
+import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getPrimaryKey;
+import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getRandomColumnName;
+import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getTestTypes;
+
+@RunnerDelegateTo(Parameterized.class)
 public class ChangeColumnTypeTestCase extends AbstractTestCases {
+
 
     @Before
     public void setup() throws Exception {
-        getCassandraService().createTable(getBasicCreateTableInput(getPrimaryKey(), getKeyspaceFromProperties(), TABLE_NAME_1));
+        createTable(getBasicCreateTableInput(getPrimaryKey(), testKeyspace, TABLE_NAME_1));
     }
 
     @After
-    public void tearDown()  {
-        getCassandraService().dropTable(TABLE_NAME_1, getKeyspaceFromProperties());
+    public void tearDown() throws Exception {
+        dropTable(TABLE_NAME_1, testKeyspace);
+    }
+
+    @Parameterized.Parameters(name = "{0} to {1}")
+    public static List<ColumnType[]> data() {
+        return getTestTypes();
+    }
+
+    private ColumnType initialType;
+    private ColumnType typeToChange;
+
+    public ChangeColumnTypeTestCase(ColumnType initialType, ColumnType typeToChange){
+        this.initialType = initialType;
+        this.typeToChange = typeToChange;
     }
 
     @Test
-    public void testChangeTypeFromBlobToText() throws Exception {
-        String columnName = COLUMN + DataType.blob().toString() + DataType.text().toString();
-        getCassandraService().addNewColumn(TABLE_NAME_1, getKeyspaceFromProperties(), columnName, DataType.blob());
-        changeColumnTypeExpException(TABLE_NAME_1, getKeyspaceFromProperties(), getAlterColumnInput(columnName, ColumnType.TEXT));
-    }
-
-    @Test
-    public void testChangeTypeFromBlobToAscii() throws Exception {
-        String columnName = COLUMN + DataType.blob().toString() + DataType.ascii().toString();
-        getCassandraService().addNewColumn(TABLE_NAME_1, getKeyspaceFromProperties(), columnName, DataType.blob());
-        changeColumnTypeExpException(TABLE_NAME_1, getKeyspaceFromProperties(), getAlterColumnInput(columnName, ColumnType.ASCII));
-    }
-
-    @Test
-    public void testChangeTypeFromBlobToBigint() throws Exception {
-        String columnName = COLUMN + DataType.blob().toString() + DataType.bigint().toString();
-        getCassandraService().addNewColumn(TABLE_NAME_1, getKeyspaceFromProperties(), columnName, DataType.blob());
-        changeColumnTypeExpException(TABLE_NAME_1, getKeyspaceFromProperties(), getAlterColumnInput(columnName, ColumnType.BIGINT));
-    }
-
-    @Test
-    public void testChangeTypeFromBlobToInt() throws Exception {
-        String columnName = COLUMN + DataType.blob().toString() + DataType.cint().toString();
-        getCassandraService().addNewColumn(TABLE_NAME_1, getKeyspaceFromProperties(), columnName, DataType.blob());
-        changeColumnTypeExpException(TABLE_NAME_1, getKeyspaceFromProperties(), getAlterColumnInput(columnName, ColumnType.INT));
-    }
-
-    @Test
-    public void testChangeTypeFromBlobToTimestamp() throws Exception {
-        String columnName = COLUMN + DataType.blob().toString() + DataType.timestamp().toString();
-        getCassandraService().addNewColumn(TABLE_NAME_1, getKeyspaceFromProperties(), columnName, DataType.blob());
-        changeColumnTypeExpException(TABLE_NAME_1, getKeyspaceFromProperties(), getAlterColumnInput(columnName, ColumnType.TIMESTAMP));
-    }
-
-    @Test
-    public void testChangeTypeFromBlobToTimeuuid() throws Exception {
-        String columnName = COLUMN + DataType.blob().toString() + DataType.timeuuid().toString();
-        getCassandraService().addNewColumn(TABLE_NAME_1, getKeyspaceFromProperties(), columnName, DataType.blob());
-        changeColumnTypeExpException(TABLE_NAME_1, getKeyspaceFromProperties(), getAlterColumnInput(columnName, ColumnType.TIMEUUID));
-    }
-
-    @Test
-    public void testChangeTypeFromBlobToVarchar() throws Exception {
-        String columnName = COLUMN + DataType.blob().toString() + DataType.varchar().toString();
-        getCassandraService().addNewColumn(TABLE_NAME_1, getKeyspaceFromProperties(), columnName, DataType.blob());
-        changeColumnTypeExpException(TABLE_NAME_1, getKeyspaceFromProperties(), getAlterColumnInput(columnName, ColumnType.VARCHAR));
-    }
-
-    @Test
-    public void testChangeTypeFromTextToInt() throws Exception {
-        String columnName = COLUMN + DataType.text().toString() + DataType.cint().toString();
-        getCassandraService().addNewColumn(TABLE_NAME_1, getKeyspaceFromProperties(), columnName, DataType.text());
-        changeColumnTypeExpException(TABLE_NAME_1, getKeyspaceFromProperties(), getAlterColumnInput(columnName, ColumnType.INT));
-    }
-
-    @Test
-    public void testChangeTypeFromTextToTimestamp() throws Exception {
-        String columnName = COLUMN + DataType.text().toString() + DataType.timestamp().toString();
-        getCassandraService().addNewColumn(TABLE_NAME_1, getKeyspaceFromProperties(), columnName, DataType.text());
-        changeColumnTypeExpException(TABLE_NAME_1, getKeyspaceFromProperties(), getAlterColumnInput(columnName, ColumnType.TIMESTAMP));
-    }
-
-    @Test
-    public void testChangeTypeFromTextToTimeuuid() throws Exception {
-        String columnName = COLUMN + DataType.text().toString() + DataType.timeuuid().toString();
-        getCassandraService().addNewColumn(TABLE_NAME_1, getKeyspaceFromProperties(), columnName, DataType.text());
-        changeColumnTypeExpException(TABLE_NAME_1, getKeyspaceFromProperties(), getAlterColumnInput(columnName, ColumnType.TIMEUUID));
-    }
-
-    @Test
-    public void testChangeTypeFromTextToBigint() throws Exception {
-        String columnName = COLUMN + DataType.text().toString() + DataType.bigint().toString();
-        getCassandraService().addNewColumn(TABLE_NAME_1, getKeyspaceFromProperties(), columnName, DataType.text());
-        changeColumnTypeExpException(TABLE_NAME_1, getKeyspaceFromProperties(), getAlterColumnInput(columnName, ColumnType.BIGINT));
-    }
-
-    @Test
-    public void testChangeTypeFromTextToVarint() throws Exception {
-        String columnName = COLUMN + DataType.text().toString() + DataType.varint().toString();
-        getCassandraService().addNewColumn(TABLE_NAME_1, getKeyspaceFromProperties(), columnName, DataType.text());
-        changeColumnTypeExpException(TABLE_NAME_1, getKeyspaceFromProperties(), getAlterColumnInput(columnName, ColumnType.VARINT));
-    }
-
-    @Test
-    public void testChangeTypeFromTextToUuid() throws Exception {
-        String columnName = COLUMN + DataType.text().toString() + DataType.uuid().toString();
-        getCassandraService().addNewColumn(TABLE_NAME_1, getKeyspaceFromProperties(), columnName, DataType.text());
-        changeColumnTypeExpException(TABLE_NAME_1, getKeyspaceFromProperties(), getAlterColumnInput(columnName, ColumnType.UUID));
-    }
-
-    @Test
-    public void testChangeTypeFromVarcharToInt() throws Exception {
-        String columnName = COLUMN + DataType.varchar().toString() + DataType.cint().toString();
-        getCassandraService().addNewColumn(TABLE_NAME_1, getKeyspaceFromProperties(), columnName, DataType.varchar());
-        changeColumnTypeExpException(TABLE_NAME_1, getKeyspaceFromProperties(), getAlterColumnInput(columnName, ColumnType.INT));
-    }
-
-    @Test
-    public void testChangeTypeFromVarcharToTimestamp() throws Exception {
-        String columnName = COLUMN + DataType.varchar().toString() + DataType.timestamp().toString();
-        getCassandraService().addNewColumn(TABLE_NAME_1, getKeyspaceFromProperties(), columnName, DataType.varchar());
-        changeColumnTypeExpException(TABLE_NAME_1, getKeyspaceFromProperties(), getAlterColumnInput(columnName, ColumnType.TIMESTAMP));
-    }
-
-    @Test
-    public void testChangeTypeFromVarcharToAscii() throws Exception {
-        String columnName = COLUMN + DataType.varchar().toString() + DataType.ascii().toString();
-        getCassandraService().addNewColumn(TABLE_NAME_1, getKeyspaceFromProperties(), columnName, DataType.varchar());
-        changeColumnTypeExpException(TABLE_NAME_1, getKeyspaceFromProperties(), getAlterColumnInput(columnName, ColumnType.ASCII));
-    }
-
-    @Test
-    public void testChangeTypeFromTimestampToAscii() throws Exception {
-        String columnName = COLUMN + DataType.timestamp().toString() + DataType.ascii().toString();
-        getCassandraService().addNewColumn(TABLE_NAME_1, getKeyspaceFromProperties(), columnName, DataType.timestamp());
-        changeColumnTypeExpException(TABLE_NAME_1, getKeyspaceFromProperties(), getAlterColumnInput(columnName, ColumnType.ASCII));
-    }
-
-    @Test
-    public void testChangeTypeFromTimestampToText() throws Exception {
-        String columnName = COLUMN + DataType.timestamp().toString() + DataType.text().toString();
-        getCassandraService().addNewColumn(TABLE_NAME_1, getKeyspaceFromProperties(), columnName, DataType.timestamp());
-        changeColumnTypeExpException(TABLE_NAME_1, getKeyspaceFromProperties(), getAlterColumnInput(columnName, ColumnType.TEXT));
-    }
-
-    @Test
-    public void testChangeTypeFromTimestampToInt() throws Exception {
-        String columnName = COLUMN + DataType.timestamp().toString() + DataType.cint().toString();
-        getCassandraService().addNewColumn(TABLE_NAME_1, getKeyspaceFromProperties(), columnName, DataType.timestamp());
-        changeColumnTypeExpException(TABLE_NAME_1, getKeyspaceFromProperties(), getAlterColumnInput(columnName, ColumnType.INT));
-    }
-
-    void changeColumnType(String tableName, String keyspaceName, AlterColumnInput input) throws Exception {
-        flowRunner("changeColumnType-flow")
-                .withPayload(input)
-                .withVariable("tableName", tableName)
-                .withVariable("keyspaceName", keyspaceName)
-                .run()
-                .getMessage()
-                .getPayload()
-                .getValue();
-    }
-
-    void changeColumnTypeExpException(String tableName, String keyspaceName, AlterColumnInput input) throws Exception {
-        flowRunner("changeColumnType-flow")
-                .withPayload(input)
-                .withVariable("tableName", tableName)
-                .withVariable("keyspaceName", keyspaceName)
-                .runExpectingException(ErrorTypeMatcher.errorType(QUERY_VALIDATION));
+    public void testChangeTypeToAnIncompatibleType() throws Exception {
+        try{
+            String columnName = getRandomColumnName();
+            addNewColumn(TABLE_NAME_1, testKeyspace, getAlterColumnInput(columnName, initialType));
+            changeColumnType(TABLE_NAME_1, testKeyspace, getAlterColumnInput(columnName, typeToChange));
+        } catch(Exception e){
+            assertThat(e.getMessage(), endsWith("types are incompatible."));
+        }
     }
 }

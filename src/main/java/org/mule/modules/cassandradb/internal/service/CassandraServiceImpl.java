@@ -11,8 +11,6 @@ import com.datastax.driver.core.querybuilder.Delete;
 import com.datastax.driver.core.querybuilder.Insert;
 import com.datastax.driver.core.querybuilder.QueryBuilder;
 import com.datastax.driver.core.querybuilder.Update;
-import com.datastax.driver.core.schemabuilder.SchemaStatement;
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.mule.connectors.commons.template.service.DefaultConnectorService;
 import org.mule.modules.cassandradb.api.AlterColumnInput;
@@ -20,10 +18,13 @@ import org.mule.modules.cassandradb.api.CreateKeyspaceInput;
 import org.mule.modules.cassandradb.api.CreateTableInput;
 import org.mule.modules.cassandradb.internal.config.CassandraConfig;
 import org.mule.modules.cassandradb.internal.connection.CassandraConnection;
+<<<<<<< HEAD
 import org.mule.modules.cassandradb.internal.exception.OperationNotAppliedException;
+=======
+import org.mule.modules.cassandradb.internal.exception.CassandraException;
+>>>>>>> CT-79-resolve-fixme
 import org.mule.modules.cassandradb.internal.exception.QueryErrorException;
 import org.mule.modules.cassandradb.internal.util.builders.HelperStatements;
-import static java.util.stream.Collectors.toList;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -31,9 +32,15 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import static java.util.stream.Collectors.toList;
+import static org.apache.commons.collections.CollectionUtils.isEmpty;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
+import static org.mule.modules.cassandradb.internal.util.Constants.COLUMNS;
 import static org.mule.modules.cassandradb.internal.util.Constants.PARAM_HOLDER;
 import static org.mule.modules.cassandradb.internal.util.Constants.SELECT;
+import static org.mule.modules.cassandradb.internal.util.Constants.WHERE;
+import static org.mule.modules.cassandradb.internal.util.builders.HelperStatements.createKeyspaceStatement;
+import static org.mule.modules.cassandradb.internal.util.builders.HelperStatements.dropKeyspaceStatement;
 
 public class CassandraServiceImpl extends DefaultConnectorService<CassandraConfig, CassandraConnection> implements CassandraService{
 
@@ -43,47 +50,72 @@ public class CassandraServiceImpl extends DefaultConnectorService<CassandraConfi
 
     @Override
     public void createKeyspace(CreateKeyspaceInput input) {
+<<<<<<< HEAD
         SchemaStatement statement = HelperStatements.createKeyspaceStatement(input);
         executeCommandAndThrowExceptionIfFails(statement);
+=======
+        validateOutput(getCassandraSession().execute(createKeyspaceStatement(input).getQueryString()).wasApplied());
+>>>>>>> CT-79-resolve-fixme
     }
 
     @Override
     public void dropKeyspace(String keyspaceName) {
+<<<<<<< HEAD
         SchemaStatement statement = HelperStatements.dropKeyspaceStatement(keyspaceName);
         executeCommandAndThrowExceptionIfFails(statement);
+=======
+        validateOutput(getCassandraSession().execute(dropKeyspaceStatement(keyspaceName).getQueryString()).wasApplied());
+>>>>>>> CT-79-resolve-fixme
     }
 
     @Override
     public void createTable(CreateTableInput input) {
+<<<<<<< HEAD
         String keyspace = getKeyspaceNameToUse(input.getKeyspaceName());
         SchemaStatement statement = HelperStatements.createTable(keyspace, input);
         executeCommandAndThrowExceptionIfFails(statement);
+=======
+        validateOutput(getCassandraSession().execute(HelperStatements.createTable(getKeyspaceNameToUse(input.getKeyspaceName()), input).getQueryString()).wasApplied());
+>>>>>>> CT-79-resolve-fixme
     }
 
     @Override
     public void dropTable(String tableName, String keyspaceName) {
+<<<<<<< HEAD
         String keyspace = getKeyspaceNameToUse(keyspaceName);
         SchemaStatement statement = HelperStatements.dropTable(tableName, keyspace);
         executeCommandAndThrowExceptionIfFails(statement);
 
+=======
+        validateOutput(getCassandraSession().execute(HelperStatements.dropTable(tableName, getKeyspaceNameToUse(keyspaceName))).wasApplied());
+>>>>>>> CT-79-resolve-fixme
     }
 
     @Override
     public void addNewColumn(String tableName, String keyspaceName, String columnName, DataType columnType) {
+<<<<<<< HEAD
         String keyspace = getKeyspaceNameToUse(keyspaceName);
         SchemaStatement statement = HelperStatements.addNewColumn(tableName, keyspace, columnName, columnType);
         executeCommandAndThrowExceptionIfFails(statement);
+=======
+        validateOutput(getCassandraSession().execute(HelperStatements.addNewColumn(tableName, getKeyspaceNameToUse(keyspaceName), columnName, columnType)).wasApplied());
+>>>>>>> CT-79-resolve-fixme
     }
 
     @Override
     public void dropColumn(String tableName, String keyspaceName, String column) {
+<<<<<<< HEAD
         String keyspace = getKeyspaceNameToUse(keyspaceName);
         SchemaStatement statement = HelperStatements.dropColumn(tableName, keyspace, column);
         executeCommandAndThrowExceptionIfFails(statement);
+=======
+        validateOutput(getCassandraSession().execute(HelperStatements.dropColumn(tableName, getKeyspaceNameToUse(keyspaceName), column)).wasApplied());
+>>>>>>> CT-79-resolve-fixme
     }
 
     @Override
     public void renameColumn(String tableName, String keyspaceName, String oldColumnName, String newColumnName) {
+<<<<<<< HEAD
         String keyspace = getKeyspaceNameToUse(keyspaceName);
         SchemaStatement statement = HelperStatements.renameColumn(tableName, keyspace, oldColumnName, newColumnName);
         executeCommandAndThrowExceptionIfFails(statement);
@@ -93,6 +125,13 @@ public class CassandraServiceImpl extends DefaultConnectorService<CassandraConfi
         String keyspace = getKeyspaceNameToUse(keyspaceName);
         SchemaStatement statement = HelperStatements.changeColumnType(tableName, keyspace, input);
         executeCommandAndThrowExceptionIfFails(statement);
+=======
+        validateOutput(getCassandraSession().execute(HelperStatements.renameColumn(tableName, getKeyspaceNameToUse(keyspaceName), oldColumnName, newColumnName)).wasApplied());
+    }
+
+    public void changeColumnType(String tableName, String keyspaceName, AlterColumnInput input) {
+        validateOutput(getCassandraSession().execute(HelperStatements.changeColumnType(tableName, getKeyspaceNameToUse(keyspaceName), input)).wasApplied());
+>>>>>>> CT-79-resolve-fixme
     }
 
     @Override
@@ -126,7 +165,10 @@ public class CassandraServiceImpl extends DefaultConnectorService<CassandraConfi
     }
 
     @Override
-    public void update(String keySpace, String table, Map<String, Object> entity, Map<String, Object> whereClause) {
+    public void update(String keySpace, String table, Map<String, Object> entityToUpdate) {
+        Map<String,Object> entity = Map.class.cast(entityToUpdate.get(COLUMNS));
+        Map<String,Object> whereClause = Map.class.cast(entityToUpdate.get(WHERE));
+
         if (entity == null || whereClause == null) {
             throw new QueryErrorException("Mismatched input. SET and WHERE clause must not be null.");
         }
@@ -152,7 +194,7 @@ public class CassandraServiceImpl extends DefaultConnectorService<CassandraConfi
         ResultSet result = null;
 
         if (isNotBlank(cqlQuery)) {
-            if (!CollectionUtils.isEmpty(params)) {
+            if (!isEmpty(params)) {
                 result = executePreparedStatement(cqlQuery, params);
             } else {
                 result = getCassandraSession().execute(cqlQuery);
@@ -168,13 +210,18 @@ public class CassandraServiceImpl extends DefaultConnectorService<CassandraConfi
 
         ResultSet result;
 
-        if (!CollectionUtils.isEmpty(params)) {
+        if (!isEmpty(params)) {
             result = executePreparedStatement(query, params);
         } else {
             result = getCassandraSession().execute(query);
         }
 
         return getResponseFromResultSet(result);
+    }
+
+    @Override
+    public void deleteWithoutEntity(String keySpace, String table, Map<String, Object> whereClause) {
+        delete(keySpace, table, null, whereClause);
     }
 
     @Override
@@ -249,6 +296,12 @@ public class CassandraServiceImpl extends DefaultConnectorService<CassandraConfi
         }
 
         return responseList;
+    }
+
+    private void validateOutput(boolean result){
+        if(!result){
+            throw new CassandraException("Operation failed");
+        }
     }
 
     private static Map<String, Object> mapProperties(Row row){

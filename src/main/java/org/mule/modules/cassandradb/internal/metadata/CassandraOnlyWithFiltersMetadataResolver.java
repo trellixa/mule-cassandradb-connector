@@ -1,17 +1,12 @@
 package org.mule.modules.cassandradb.internal.metadata;
 
 import org.mule.metadata.api.model.MetadataType;
-import org.mule.modules.cassandradb.internal.config.CassandraConfig;
-import org.mule.modules.cassandradb.internal.connection.CassandraConnection;
 import org.mule.runtime.api.connection.ConnectionException;
 import org.mule.runtime.api.metadata.MetadataContext;
 import org.mule.runtime.api.metadata.MetadataKey;
 import org.mule.runtime.api.metadata.MetadataResolvingException;
 import org.mule.runtime.api.metadata.resolving.InputTypeResolver;
-import org.mule.runtime.api.metadata.resolving.OutputTypeResolver;
-import org.mule.runtime.api.metadata.resolving.QueryEntityResolver;
 import org.mule.runtime.api.metadata.resolving.TypeKeysResolver;
-import org.mule.runtime.extension.api.annotation.metadata.TypeResolver;
 
 import java.util.Set;
 
