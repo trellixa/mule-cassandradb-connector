@@ -135,6 +135,11 @@ public class CassandraConnectionProvider extends ConnectorConnectionProvider<Cas
         return new CassandraConnection(cluster, session);
     }
 
+    @Override
+    public void disconnect(CassandraConnection connection){
+        connection.disconnect();
+    }
+
     private boolean validateAttribute(String attr){
         if(!isBlank(attr)){
             return true;
