@@ -1,0 +1,361 @@
+= Cassandra Connector
+:keywords: anypoint studio, connector, endpoint, cassandra
+:imagesdir: ./_images
+
+https://www.mulesoft.com/legal/versioning-back-support-policy#anypoint-connectors[_Select_]
+
+== Overview
+The Cassandra connector was implemented using the DataStax Java Driver for Apache Cassandra 3.1. The connector exposes multiple operations that are described in the javadoc. Some of these operations accept some custom POJOs as input parameters, which are needed for the DataSense functionality.
+The Cassandra operations are : createKeyspace, dropKeyspace, createTable, dropTable, addNewColumn, dropColumn, renameColumn, changeColumnType, getTableNamesFromKeyspace, update, executeCQLQuery, select, deleteRows and deleteColumnsValue.
+
+== Prerequisites
+
+This document assumes that you are familiar with Mule, Anypoint Connectors, Anypoint Studio, Mule concepts, elements in a Mule flow, and Global Elements.
+
+You need login credentials to test your connection to your target resource.
+
+For hardware and software requirements and compatibility
+information, see the Connector Release Notes.
+
+To use this connector with Maven, view the pom.xml dependency information in
+the Dependency Snippets in Anypoint Exchange.
+
+== What's New in this Connector
+
+. Support for Mule4 has been added.
+
+= To Configure Cassandra Authentication
+
+The Cassandra connector configuration needs to match the Cassandra configuration with regard to Basic Authentication. By default, accessing the Cassandra database does not require credentials. You need to configure Cassandra to enable authentication. After enabling authentication, you can start cqlsh from the Cassandra installation home directory as shown in this example that uses default credentials cassandra/cassandra:
+
+----
+bin/cqlsh localhost -u cassandra -p cassandra
+Connected to Test Cluster at localhost:9042.
+[cqlsh 5.0.1 | Cassandra 3.10 | CQL spec 3.4.4 | Native protocol v4]
+Use HELP for help.
+----
+
+. After installing Cassandra, open `conf\cassandra.yaml` for editing.
+. Optionally, change the value of AllowAllAuthenticator to PasswordAuthenticator.
+. Restart Cassandra.
+. In a separate terminal tab, check that Cassandra is running:
++
+`bin/nodetool status`
+
+== To Connect in Design Center
+
+. In Design Center, click Set Up > Upload, browse for and select the driver for this connector on your file system, and upload it. Alternatively, search for and select a driver that is already uploaded.
+. Click a trigger. You can create a global element by selecting this connector as they trigger.
+If a global element is not needed, you can use an HTTP Listener or Scheduler trigger.
++
+image::trigger.png[Trigger options]
++
+. To create an HTTP global element for the connector, set these fields:
++
+image::httpListener.png[Http Listener configuration]
++
+.. Protocol: Protocol selected for the http endpoint, it can be http or https (secure).
+.. Host: IP address where our Mule Application will listen requests.
+.. Port: Port address where our Mule Application will listen requests.
+.. Base Path: path where our Mule Application will listen requests.
+. Select the plus sign to add a component.
++
+image::plusSign.png[add connector]
++
+. Select the connector as a component.
+. Select the operation.
++
+image::OperationsDesign.png[connector operations]
++
+. Configure the Global element for the connector
++
+image::configDesign.png[connector config]
++
+[%header%autowidth.spread]
+|===
+|Field |Description
+|*Host* | Enter a host name, or IP address, of a Cassandra node.
+|*Port* | Enter a port number. The default port is 9042.
+|*Keyspace* | Enter the Cassandra keyspace. A keyspace groups column families.
+|*Username* | Enter a Cassandra user name if you enabled PasswordAuthenticator in the Cassandra yaml. If AllowAllAuthenticator is enabled, leave this value blank.
+|*Password* | Enter the password if you enabled PasswordAuthenticator; otherwise, leave this value blank.
+|===
+
+. Optionally configure a connection to a Cassandra Cluster
++
+image::cassandraCluster.png[connector cluster]
++
+[%header%autowidth.spread]
+|===
+|Field |Description
+|*Cluster name* |  The Cassandra cluster name.
+|*Protocol version* | The version of the native protocol supported by the driver.
+|*Max schema agreement wait seconds* | the maximum time to wait for schema agreement before returning from a DDL query.
+|*Compression* | the compression to use for the transport.
+|*SSL* | enable or disable the use of SSL for the cluster.
+|===
+
+== Connect in Anypoint Studio 7
+
+You can use this connector in Anypoint Studio by adding it as a dependency in your Mule application.
+
+=== Install Connector in Studio
+
+. Open your Mule project in Anypoint Studio.
+. Add the connector as a dependency in the pom.xml file:
+[source, linenums]
+----
+<dependency>
+  <groupId>org.mule.connectors</groupId>
+  <artifactId>mule-module-cassandradb</artifactId>
+  <version>3.0.0-SNAPSHOT</version>
+  <classifier>mule-plugin</classifier>
+</dependency>
+----
+
+=== Configure in Studio
+
+. Drag and drop the connector to the Studio Canvas.
+. Configure the Global element for the connector
++
+image::configStudio.png[config connector]
++
+[%header%autowidth.spread]
+|===
+|Field |Description
+|*Host* | Enter a host name, or IP address, of a Cassandra node.
+|*Port* | Enter a port number. The default port is 9042.
+|*Keyspace* | Enter the Cassandra keyspace. A keyspace groups column families.
+|*Username* | Enter a Cassandra user name if you enabled PasswordAuthenticator in the Cassandra yaml. If AllowAllAuthenticator is enabled, leave this value blank.
+|*Password* | Enter the password if you enabled PasswordAuthenticator; otherwise, leave this value blank.
+|===
+
+. Optionally configure a connection to a Cassandra Cluster
++
+image::advancedSettingsStudio.png[config connector]
++
+[%header%autowidth.spread]
+|===
+|Field |Description
+|*Cluster name* |  The Cassandra cluster name.
+|*Protocol version* | The version of the native protocol supported by the driver.
+|*Max schema agreement wait seconds* | the maximum time to wait for schema agreement before returning from a DDL query.
+|*Compression* | the compression to use for the transport.
+|*SSL* | enable or disable the use of SSL for the cluster.
+|===
+
+== Use Case: Studio
+
+=== Create a Keyspace
+
+image::case-studio-keyspace.png[case-studio-1]
+
+. Create a new *Mule Project* in Anypoint Studio and fill in the Cassandra *credentials* in `src/main/resources/mule-app.properties`.
++
+[source,code,linenums]
+----
+config.host=<HOST>
+config.port=<PORT>
+config.keyspace=<KEY_SPACE>
+config.username=<USERNAME>
+config.password=<PASSWORD>
+----
++
+. Drag an *HTTP* connector onto the canvas and leave the default values for Host and Port and set the path to `/test/createKeyspace`.
++
+.Drag a Transform Message component from the Mule palette to the right (process) side of the flow, select the component, and set the output payload. For example:
++
+[source,code,linenums]
+----
+%dw 2.0
+output application/java
+---
+{
+  "keyspaceName": payload.keyspaceName,
+  "replicationFactor": payload.replicationFactor,
+  "replicationStrategyClass": payload.replicationStrategyClass
+} as Object {
+  class : "org.mule.modules.cassandradb.api.CreateKeyspaceInput"
+}
+----
+. Drag an *Cassandra* component Create Keyspace onto the canvas.
++
+[%header%autowidth.spread]
+|===
+|Field |Description
+|*Host* | Enter a host name, or IP address, of a Cassandra node.
+|*Port* | Enter a port number. The default port is 9042.
+|*Keyspace* | Enter the Cassandra keyspace. A keyspace groups column families.
+|*Username* | Enter a Cassandra user name if you enabled PasswordAuthenticator in the Cassandra yaml. If AllowAllAuthenticator is enabled, leave this value blank.
+|*Password* | Enter the password if you enabled PasswordAuthenticator; otherwise, leave this value blank.
+|===
++
+NOTE: Click the *Test Connection* option to confirm that Mule can connect with the Cassandra instance. If the client is successful, click OK to save the configuration. Otherwise, review or correct any invalid parameters and test again.
++
+. Run the app. In a browser, use the following URL to enter query parameter for the keyspace name (ks_name), replication factor (rf), and replication strategy class (rs_class):
++
+`http://localhost:8081/simple?ks_name=simple_keyspace&rf=3&rs_class=SimpleStrategy`
+
+=== Create a Cassandra Table
+
+image::case-studio-table.png[case-studio-2]
+
+. Create a new *Mule Project* in Anypoint Studio and fill in the Cassandra *credentials* in `src/main/resources/mule-app.properties`.
++
+[source,code,linenums]
+----
+config.host=<HOST>
+config.port=<PORT>
+config.keyspace=<KEY_SPACE>
+config.username=<USERNAME>
+config.password=<PASSWORD>
+----
++
+. Drag an *HTTP* connector onto the canvas and leave the default values for Host and Port and set the path to `/test/createTable`.
++
+.Drag a Transform Message component from the Mule palette to the right (process) side of the flow, select the component, and set the output payload. For example:
++
+[source,code,linenums]
+----
+%dw 2.0
+output application/java
+---
+{
+  "columns": payload.columns,
+  "tableName": payload.tableName,
+  "keyspaceName": payload.keyspaceName
+} as Object {
+  class : "org.mule.modules.cassandradb.api.CreateTableInput"
+}
+----
+. Drag an *Cassandra* component Create Table onto the canvas.
++
+[%header%autowidth.spread]
+|===
+|Field |Description
+|*Host* | Enter a host name, or IP address, of a Cassandra node.
+|*Port* | Enter a port number. The default port is 9042.
+|*Keyspace* | Enter the Cassandra keyspace. A keyspace groups column families.
+|*Username* | Enter a Cassandra user name if you enabled PasswordAuthenticator in the Cassandra yaml. If AllowAllAuthenticator is enabled, leave this value blank.
+|*Password* | Enter the password if you enabled PasswordAuthenticator; otherwise, leave this value blank.
+|===
++
+NOTE: Click the *Test Connection* option to confirm that Mule can connect with the Cassandra instance. If the client is successful, click OK to save the configuration. Otherwise, review or correct any invalid parameters and test again.
++
+
+. Run the Mule app. In Postman, select POST. Select Body > Raw, select the JSON (application/json) MIME type, and enter the following table description using uppercase for data types.
++
+[source,code,linenums]
+{
+  "tableName": "users",
+  "keyspaceName": "Excelsior",
+  "columns":
+  [
+    {
+      "name": "id",
+      "type": "INT",
+      "primaryKey": "true"
+    },
+    {
+      "name": "username",
+      "type": "TEXT",
+      "primaryKey": "true"
+    },
+    {
+      "name": "name",
+      "type": "TEXT",
+      "primaryKey": "false"
+    },
+    {
+      "name": "email",
+      "type": "TEXT",
+      "primaryKey": "false"
+    }
+  ]
+}
+
+. In Postman, click Send, and look for Status: 200 OK.
+
+== Use Case: XML
+
+
+[source,code]
+----
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:cassandra-db="http://www.mulesoft.org/schema/mule/cassandra-db" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+  xmlns:http="http://www.mulesoft.org/schema/mule/http"
+  xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/cassandra-db http://www.mulesoft.org/schema/mule/cassandra-db/current/mule-cassandra-db.xsd">
+
+  <configuration-properties file="mule-app.properties" />
+  <http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="7b4310b7-4a49-4b37-8649-9247ae910399" >
+    <http:listener-connection host="0.0.0.0" port="8081" />
+  </http:listener-config>
+  <cassandra-db:config name="CassandraDB_Config" doc:name="CassandraDB Config" doc:id="1ab180db-597d-455a-99fb-e006842cd052" >
+    <cassandra-db:connection host="${config.host}" port="${config.port}" keyspace="${config.keyspace}" username="${config.username}" password="${config.password}"/>
+	</cassandra-db:config>
+  <flow name="HTMLForm" doc:id="a280ad5c-cc81-4c18-9162-fbd591d0633d" >
+    <http:listener doc:name="Listener" doc:id="1cdaf89f-e4a0-42fc-b26e-80c1cc197e0b" config-ref="HTTP_Listener_config" path="/"/>
+    <parse-template doc:name="Parse Template" doc:id="b4ecf9fd-25a1-4f7f-85f4-a6b4ad6751ae" location="form.html"/>
+  </flow>
+  <flow name="CreateKeyspace" doc:id="2e31a47c-833b-4b47-843f-4bdde52e9eb8" >
+    <http:listener doc:name="Listener" doc:id="497366a7-84b2-4858-b013-bdef061a9063" config-ref="HTTP_Listener_config" path="/createKeyspace"/>
+    <ee:transform doc:name="Transform Message" doc:id="9bc038d9-c6d8-47a1-860a-2ef1834bfe89" >
+      <ee:message >
+        <ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+{
+  "keyspaceName": payload.keyspaceName,
+  "replicationFactor": payload.replicationFactor,
+  "replicationStrategyClass": payload.replicationStrategyClass
+} as Object {
+  class : "org.mule.modules.cassandradb.api.CreateKeyspaceInput"
+}]]></ee:set-payload>
+      </ee:message>
+    </ee:transform>
+    <cassandra-db:create-keyspace doc:name="Create keyspace" doc:id="c56d35c1-712c-4ded-972e-21e16b1a6d5c" config-ref="CassandraDB_Config"/>
+    <ee:transform doc:name="Transform Message" doc:id="b7f5e699-5851-4ab0-a743-875725e20227" >
+      <ee:message >
+        <ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+      </ee:message>
+    </ee:transform>
+  </flow>
+  <flow name="CreateTable" doc:id="f64b4241-8c65-4492-b6b1-fc734b32d9a8">
+    <http:listener doc:name="Listener" doc:id="59a815db-dd9b-46c8-8386-2fd5be0652ce" config-ref="HTTP_Listener_config" path="/createTable" />
+    <ee:transform doc:name="Transform Message" doc:id="4678b73e-1e99-4f14-8764-34ad9cb52380">
+      <ee:message>
+        <ee:set-payload><![CDATA[%dw 2.0
+output application/java
+---
+{
+  "columns": payload.columns,
+  "tableName": payload.tableName,
+  "keyspaceName": payload.keyspaceName
+} as Object {
+  class : "org.mule.modules.cassandradb.api.CreateTableInput"
+}]]></ee:set-payload>
+      </ee:message>
+    </ee:transform>
+    <cassandra-db:create-table doc:name="Create table" doc:id="a19661ae-76c6-4551-af8d-f6ec8b613b45" config-ref="CassandraDB_Config" />
+    <ee:transform doc:name="Transform Message" doc:id="6f5afc7b-9084-4a0f-9a26-f51ad51a9239">
+      <ee:message>
+        <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+      </ee:message>
+    </ee:transform>
+  </flow>
+</mule>
+----
+
+== See Also
+
+* Access the link:/release-notes/cassandra-connector-release-notes[Cassandra Connector Release Notes].

@@ -41,6 +41,32 @@
         <!--</dependency>-->
     </dependencies>
 
+    <profiles>
+        <profile>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <id>exchange-devx-deployer</id>
+            <properties>
+                <deployment.url>
+                    https://maven.devx.anypoint.mulesoft.com/api/v1/organizations/${exchange.organization.id}/maven
+                </deployment.url>
+            </properties>
+            <distributionManagement>
+                <repository>
+                    <id>exchange-devx</id>
+                    <name>MuleSoft Exchange DevX Environment</name>
+                    <url>${deployment.url}</url>
+                </repository>
+                <snapshotRepository>
+                    <id>exchange-devx</id>
+                    <name>MuleSoft Exchange DevX Environment</name>
+                    <url>${deployment.url}</url>
+                </snapshotRepository>
+            </distributionManagement>
+        </profile>
+    </profiles>
+
     <scm>
         <connection>
             scm:git:git://github.com:mulesoft/CassandraDB-connector.git
