@@ -10,7 +10,9 @@ Cassandra connector is available on Mule 4.0.
 [%header%autowidth]
 |===
 |Application/Service |Version
-|Mule Runtime |4.0.0
+|Cassandra database or cluster | 1.2 or later
+|CQL spec | 3.x
+|Mule Runtime | 4.0
 |===
 
 
