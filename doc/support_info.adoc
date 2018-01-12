@@ -129,10 +129,7 @@ By setting logging level to "DEBUG" for [small]#org.mule.modules.cassandradb# ev
 
 == Entry points
 
-On the connector class CassandraDBConnector.java you will find the processor you’d like to debug (@Processor). The name of the processor is defined by friendlyName decorator parameter, or if the parameter is absent, by the name of the method,
-for example, in [small]#org.mule.modules.cassandradb.CassandraDBConnector.java#
-
-"Insert" processor is implemented by the "insert" method which is decorated by @Processor.
+On the connector class CassandraOperations.java you will find the operations you’d like to debug. The name of the operation is defined by friendlyName decorator parameter, or if the parameter is absent, by the name of the method,
 
 == Logging from platform side
 
