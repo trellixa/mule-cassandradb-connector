@@ -40,6 +40,7 @@ import static org.mule.modules.cassandradb.api.ColumnType.VARINT;
 
 public class TestDataBuilder {
 
+    public final static String KEYSPACE_DUMMY = "dummy_keyspace";
     public final static String KEYSPACE_NAME_1 = "keyspaceName1";
     public final static String  KEYSPACE_NAME_2 = "keyspaceName2";
     public final static String KEYSPACE_NAME_3 = "keyspaceName3";

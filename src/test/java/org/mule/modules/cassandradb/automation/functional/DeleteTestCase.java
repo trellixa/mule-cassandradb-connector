@@ -7,20 +7,14 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.List;
-import java.util.Map;
-
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
-import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.COLUMNS;
 import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.TABLE_NAME_1;
-import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.WHERE;
 import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getBasicCreateTableInput;
 import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getColumns;
 import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getInvalidEntityForDelete;
 import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getInvalidWhereClause;
-import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getPayloadColumnsAndFilters;
 import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getValidColumnsListForDelete;
 import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getValidEntity;
 import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getValidWhereClauseWithEq;
@@ -42,8 +36,7 @@ public class DeleteTestCase extends AbstractTestCases {
     public void testDeleteColumnUsingEqWithSuccess() throws Exception {
         try{
             insert(testKeyspace, TABLE_NAME_1, getValidEntity());
-            Map<String,Object> payload = getPayloadColumnsAndFilters(getValidColumnsListForDelete(), getValidWhereClauseWithEq());
-            deleteColumnsValue(TABLE_NAME_1, null, List.class.cast(payload.get(COLUMNS)), Map.class.cast(payload.get(WHERE)));
+            deleteColumnsValue(TABLE_NAME_1, testKeyspace, getValidColumnsListForDelete(), getValidWhereClauseWithEq());
         } catch (Exception e){
             fail();
         }
@@ -53,7 +46,7 @@ public class DeleteTestCase extends AbstractTestCases {
     public void testDeleteRowUsingEqWithSuccess() throws Exception {
         try{
             insert(testKeyspace, TABLE_NAME_1, getValidEntity());
-            deleteRows(TABLE_NAME_1, null, getValidWhereClauseWithEq());
+            deleteRows(TABLE_NAME_1, testKeyspace, getValidWhereClauseWithEq());
         } catch (Exception e){
             fail();
         }
@@ -63,8 +56,7 @@ public class DeleteTestCase extends AbstractTestCases {
     public void testDeleteColumnUsingINWithSuccess() {
         try{
             insert(testKeyspace, TABLE_NAME_1, getValidEntity());
-            Map<String, Object> payload = getPayloadColumnsAndFilters(getValidColumnsListForDelete(), getValidWhereClauseWithIN());
-            deleteColumnsValue(TABLE_NAME_1, null, List.class.cast(payload.get(COLUMNS)), Map.class.cast(payload.get(WHERE)));
+            deleteColumnsValue(TABLE_NAME_1, testKeyspace, getValidColumnsListForDelete(), getValidWhereClauseWithIN());
         } catch (Exception e){
             fail();
         }
@@ -74,8 +66,7 @@ public class DeleteTestCase extends AbstractTestCases {
     public void testDeleteRowUsingINWithSuccess() {
         try{
             insert(testKeyspace, TABLE_NAME_1, getValidEntity());
-            Map<String, Object> payload = getPayloadColumnsAndFilters(null, getValidWhereClauseWithIN());
-            deleteRows(TABLE_NAME_1, null, Map.class.cast(payload.get(WHERE)));
+            deleteRows(TABLE_NAME_1, testKeyspace, getValidWhereClauseWithIN());
         } catch (Exception e){
             fail();
         }
@@ -85,8 +76,7 @@ public class DeleteTestCase extends AbstractTestCases {
     public void testDeleteWithInvalidInput() {
         try{
             insert(testKeyspace, TABLE_NAME_1, getValidEntity());
-            Map<String, Object> payload = getPayloadColumnsAndFilters(getInvalidEntityForDelete(), getValidWhereClauseWithEq());
-            deleteColumnsValue(TABLE_NAME_1, null, List.class.cast(payload.get(COLUMNS)), Map.class.cast(payload.get(WHERE)));
+            deleteColumnsValue(TABLE_NAME_1, testKeyspace, getInvalidEntityForDelete(), getValidWhereClauseWithEq());
         } catch( Exception e){
             assertThat(e.getMessage(), is("Unknown identifier invalid_column."));
         }
@@ -96,8 +86,7 @@ public class DeleteTestCase extends AbstractTestCases {
     public void testDeleteWithInvalidWhereClause() throws Exception {
         try{
             insert(testKeyspace, TABLE_NAME_1, getValidEntity());
-            Map<String, Object> payload = getPayloadColumnsAndFilters(getValidColumnsListForDelete(), getInvalidWhereClause());
-            deleteColumnsValue(TABLE_NAME_1, null, List.class.cast(payload.get(COLUMNS)), Map.class.cast(payload.get(WHERE)));
+            deleteColumnsValue(TABLE_NAME_1, testKeyspace, getValidColumnsListForDelete(), getInvalidWhereClause());
         } catch (Exception e){
             assertThat(e.getMessage(), is("Some partition key parts are missing: dummy_partitionkey."));
         }

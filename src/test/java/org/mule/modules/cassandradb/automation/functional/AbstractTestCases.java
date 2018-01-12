@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.KEYSPACE_DUMMY;
 import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getAutomationCredentialsProperties;
 import static org.mule.tck.junit4.matcher.ErrorTypeMatcher.errorType;
 
@@ -44,14 +45,14 @@ public abstract class AbstractTestCases extends MuleArtifactFunctionalTestCase {
     @Before
     public void initialSetup() throws Exception {
         cassandraProperties  = getAutomationCredentialsProperties();
-        testKeyspace = cassandraProperties.getProperty("config.keyspace");
+        testKeyspace = KEYSPACE_DUMMY;
         CreateKeyspaceInput keyspaceInput = new CreateKeyspaceInput();
         keyspaceInput.setKeyspaceName(testKeyspace);
         createKeyspace(keyspaceInput);
     }
 
     @After
-    public void tearDown() throws Exception {
+    public void finalTearDown() throws Exception {
         dropKeyspace(testKeyspace);
     }
 
