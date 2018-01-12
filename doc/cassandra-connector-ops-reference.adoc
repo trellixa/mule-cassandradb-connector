@@ -18,13 +18,13 @@ The POJO has the following fields:
 ** The data type for the new column
 
 ----
-%dw 1.0
-%output application/java
+%dw 2.0
+output application/java
 ---
 {
     "column": payload.column,
     "type": payload.type
-} as :object {
+} as Object {
     class : "com.mulesoft.mule.cassandradb.metadata.AlterColumnInput"
 }
 ----
@@ -38,11 +38,11 @@ This operation changes the data type of a column to another valid and compatible
 [frame=none]
 |===
 | *Change From* | *Change To*
-| ascii, bigint, boolean, decimal, double, float, inet, int, timestamp, timeuuid, uuid, varchar, varint | blob 
-| int | varint 
-| text | varchar 
-| timeuuid | uuid 
-| varchar | text 
+| ascii, bigint, boolean, decimal, double, float, inet, int, timestamp, timeuuid, uuid, varchar, varint | blob
+| int | varint
+| text | varchar
+| timeuuid | uuid
+| varchar | text
 |===
 
 *Valid Type Changes for Clustering Columns*
@@ -58,7 +58,7 @@ This operation changes the data type of a column to another valid and compatible
 Input for this operation is:
 
 * Parameter: a table name
-* Optional keyspace name 
+* Optional keyspace name
 * Payload: an AlterColumnInput POJO
 +
 The POJO in the payload has fields for the following things:
@@ -67,20 +67,20 @@ The POJO in the payload has fields for the following things:
 ** The new DataType for that column
 
 ----
-%dw 1.0
-%output application/java
+%dw 2.0
+output application/java
 ---
 {
     "column": payload.column,
     "type": payload.type
-} as :object {
+} as Object {
     class : "com.mulesoft.mule.cassandradb.metadata.AlterColumnInput"
 }
 ----
 
 == Create Keyspace
 
-This operation accepts a custom pojo CreateKeyspaceInput as input. 
+This operation accepts a custom pojo CreateKeyspaceInput as input.
 
 Input for this operation using SimpleStrategy is:
 
@@ -93,14 +93,14 @@ Pass the parameters using a Transform Message component to transform the payload
 *SimpleStrategy DataWeave Code Example*
 
 ----
-%dw 1.0
-%output application/java
+%dw 2.0
+output application/java
 ---
 {
     "keyspaceName": payload.keyspaceName,
     "replicationFactor": payload.replicationFactor,
     "replicationStrategyClass": payload.replicationStrategyClass
-} as :object {
+} as Object {
     class : "com.mulesoft.mule.cassandradb.metadata.CreateKeyspaceInput"
 }
 ----
@@ -114,8 +114,8 @@ Input for the parameters using NetworkTopologyStrategy is:
 *NetworkTopologyStrategy DataWeave Code Example*
 
 ----
-%dw 1.0
-%output application/java
+%dw 2.0
+output application/java
 ---
 {
   firstDataCenter: {
@@ -132,13 +132,13 @@ Input for the parameters using NetworkTopologyStrategy is:
   },
   keyspaceName: payload.keyspaceName,
   replicationStrategyClass: payload.replicationStrategyClass
-} as :object {
+} as Object {
     class : "com.mulesoft.mule.cassandradb.metadata.CreateKeyspaceInput"
 }
 ----
 
 
-== Create Table 
+== Create Table
 
 This operation accepts a custom POJO CreateTableInput as input.
 
@@ -149,14 +149,14 @@ Input for this operation is:
 * Optional keyspace name
 
 ----
-%dw 1.0
-%output application/java
+%dw 2.0
+output application/java
 ---
 {
     "columns": payload.columns,
     "tableName": payload.tableName,
     "keyspaceName": payload.keyspaceName
-} as :object {
+} as Object {
     class : "com.mulesoft.mule.cassandradb.metadata.CreateTableInput"
 }
 ----
@@ -180,8 +180,8 @@ You can store collections in specific columns in Cassandra. In this operation, y
 The payload passed to the processor has the following structure:
 
 ----
-%dw 1.0
-%output application/java
+%dw 2.0
+output application/java
 ---
 {
     "columns":payload.columns,
@@ -257,7 +257,7 @@ Input for this operation is:
 * Optional keyspace name
 * Payload: a column name
 
-== Drop Keyspace 
+== Drop Keyspace
 
 This operation accepts a String parameter representing the keyspace name.
 
@@ -272,9 +272,9 @@ Input for this operation is:
 
 Input for this operation is:
 
-* A custom pojo (CQLQueryInput) 
+* A custom pojo (CQLQueryInput)
 +
-A string representing the query. The query can be parametrized or not. 
+A string representing the query. The query can be parametrized or not.
 * An optional list of parameters to pass to the parametrized query.
 
 === Execute CQL Query Examples
@@ -282,14 +282,14 @@ A string representing the query. The query can be parametrized or not.
 *Transform Message Payload*
 
 ----
-%dw 1.0
-%output application/java
+dw 1.0
+output application/java
 ---
 {
     "cqlQuery": payload.cqlQuery,
     "parameters": payload.parameters
 }
-as :object {
+as Object {
     class : "com.mulesoft.mule.cassandradb.metadata.CQLQueryInput"
 }
 ----
@@ -321,8 +321,8 @@ Input for this operation is:
 *Transform Message Payload*
 
 ----
-%dw 1.0
-%output application/java
+%dw 2.0
+output application/java
 ---
 {
     "id": payload.id,
@@ -354,7 +354,7 @@ Parameters for this operation are:
 Input for this operation is:
 
 * A string representing the query
-* An optional list of type Object representing the parameters for the query. 
+* An optional list of type Object representing the parameters for the query.
 
 You can build a query using a query builder.
 
