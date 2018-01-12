@@ -24,7 +24,7 @@ the Dependency Snippets in Anypoint Exchange.
 
 . Support for Mule4 has been added.
 
-= To Configure Cassandra Authentication
+== To Configure Cassandra Authentication
 
 The Cassandra connector configuration needs to match the Cassandra configuration with regard to Basic Authentication. By default, accessing the Cassandra database does not require credentials. You need to configure Cassandra to enable authentication. After enabling authentication, you can start cqlsh from the Cassandra installation home directory as shown in this example that uses default credentials cassandra/cassandra:
 
@@ -54,10 +54,15 @@ image::trigger.png[Trigger options]
 +
 image::httpListener.png[Http Listener configuration]
 +
-.. Protocol: Protocol selected for the http endpoint, it can be http or https (secure).
-.. Host: IP address where our Mule Application will listen requests.
-.. Port: Port address where our Mule Application will listen requests.
-.. Base Path: path where our Mule Application will listen requests.
+[%header%autowidth.spread]
+|===
+|Field |Description
+|*Protocol* | Protocol selected for the http endpoint, it can be http or https (secure).
+|* Host*| IP address where our Mule Application will listen requests.
+|*Port*| Port address where our Mule Application will listen requests.
+|*Base Path*| path where our Mule Application will listen requests.
+|===
+
 . Select the plus sign to add a component.
 +
 image::plusSign.png[add connector]
@@ -67,6 +72,71 @@ image::plusSign.png[add connector]
 +
 image::OperationsDesign.png[connector operations]
 +
+[%header%autowidth.spread]
+|===
+|Operation |Description
+|*Add New Column* a|Input for this operation is:
+
+* Parameter: a table name
+* Optional keyspace name
+* Payload: an AlterColumnInput POJO
++
+The POJO has the following fields:
++
+** Name of the column to be created
+** The data type for the new column
+
+|*Change Column Type* a|  Input for this operation is:
+
+* Parameter: a table name
+* Optional keyspace name
+* Payload: an AlterColumnInput POJO
+|*Create Keyspace* a| Input for this operation using SimpleStrategy is:
+
+* Keyspace name
+* Replication factor
+* Replication Strategy Class
+
+|*Create Table* a| Input for this operation is:
+
+* Column names
+* Table names
+* Optional keyspace name
+
+|*Delete Columns Value* a| Input for this operation is:
+
+* Parameter: a table name as a parameter
+* Optional keyspace name
+* Payload: a `Map<String, Object>` having two records with the keys `where` and `columns`
+|*Delete Rows* a| Input for this operation is:
+
+* Parameter: a table name
+* Optional keyspace name
+* Payload a `Map<String, Object>` with one record having the key `where` and a value `Map<String, Object>` containing the WHERE clause.
+|*Drop Keyspace* | This operation accepts a String parameter representing the keyspace name.
+|*Drop Table* a| Input for this operation is:
+
+* A table name
+* The keyspace that contains the table
+|*Execute CQL Query Examples* a| Transform Message Payload.
+|*Get Table Names from Keyspace* | Input for this operation is:
+
+* Parameter: a table name as a parameter
+* Payload: a `Map<String, Object>` representing the entity to be inserted into the table.
+* Optional keyspace name
+|*Insert Examples* | Transform Message Payload.
+|*Rename column* a| Parameters for this operation are:
+
+* A table name
+* The old column name
+* The new column name
+|*Update* a| Input for this operation is:
+
+* Parameter: a table name
+* Optional keyspace name
+* Payload: `Map<String, Object>` with two records having the keys `where` and `columns`.
+|===
+
 . Configure the Global element for the connector
 +
 image::configDesign.png[connector config]
@@ -115,7 +185,73 @@ You can use this connector in Anypoint Studio by adding it as a dependency in yo
 
 === Configure in Studio
 
-. Drag and drop the connector to the Studio Canvas.
+. Drag and drop the operation connector to the Studio Canvas.
++
+[%header%autowidth.spread]
+|===
+|Operation |Description
+|*Add New Column* a|Input for this operation is:
+
+* Parameter: a table name
+* Optional keyspace name
+* Payload: an AlterColumnInput POJO
++
+The POJO has the following fields:
++
+** Name of the column to be created
+** The data type for the new column
+
+|*Change Column Type* a|  Input for this operation is:
+
+* Parameter: a table name
+* Optional keyspace name
+* Payload: an AlterColumnInput POJO
+|*Create Keyspace* a| Input for this operation using SimpleStrategy is:
+
+* Keyspace name
+* Replication factor
+* Replication Strategy Class
+
+|*Create Table* a| Input for this operation is:
+
+* Column names
+* Table names
+* Optional keyspace name
+
+|*Delete Columns Value* a| Input for this operation is:
+
+* Parameter: a table name as a parameter
+* Optional keyspace name
+* Payload: a `Map<String, Object>` having two records with the keys `where` and `columns`
+|*Delete Rows* a| Input for this operation is:
+
+* Parameter: a table name
+* Optional keyspace name
+* Payload a `Map<String, Object>` with one record having the key `where` and a value `Map<String, Object>` containing the WHERE clause.
+|*Drop Keyspace* | This operation accepts a String parameter representing the keyspace name.
+|*Drop Table* a| Input for this operation is:
+
+* A table name
+* The keyspace that contains the table
+|*Execute CQL Query Examples* a| Transform Message Payload.
+|*Get Table Names from Keyspace* | Input for this operation is:
+
+* Parameter: a table name as a parameter
+* Payload: a `Map<String, Object>` representing the entity to be inserted into the table.
+* Optional keyspace name
+|*Insert Examples* | Transform Message Payload.
+|*Rename column* a| Parameters for this operation are:
+
+* A table name
+* The old column name
+* The new column name
+|*Update* a| Input for this operation is:
+
+* Parameter: a table name
+* Optional keyspace name
+* Payload: `Map<String, Object>` with two records having the keys `where` and `columns`.
+|===
+
 . Configure the Global element for the connector
 +
 image::configStudio.png[config connector]
@@ -139,9 +275,9 @@ image::advancedSettingsStudio.png[config connector]
 |Field |Description
 |*Cluster name* |  The Cassandra cluster name.
 |*Protocol version* | The version of the native protocol supported by the driver.
-|*Max schema agreement wait seconds* | the maximum time to wait for schema agreement before returning from a DDL query.
-|*Compression* | the compression to use for the transport.
-|*SSL* | enable or disable the use of SSL for the cluster.
+|*Max schema agreement wait seconds* | The maximum time to wait for schema agreement before returning from a DDL query.
+|*Compression* |The compression to use for the transport.
+|*SSL* | Enable or disable the use of SSL for the cluster.
 |===
 
 == Use Case: Studio

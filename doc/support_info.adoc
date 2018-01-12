@@ -137,14 +137,14 @@ Given the fact that our mapping of the Data Type for primitives is using upperca
 +
 Example:
 [source]
-%dw 1.0
-%output application/java
+%dw 2.0
+output application/java
 ---
 {
 	"keyspaceName": payload.keyspaceName,
 	"replicationFactor": payload.replicationFactor,
 	"replicationStrategyClass": payload.replicationStrategyClass
-} as :object {
+} as Object {
 	class : "org.mule.modules.cassandradb.metadata.CreateKeyspaceInput"
 }
 
@@ -154,14 +154,14 @@ Example:
 +
 Example:
 [source]
-%dw 1.0
-%output application/java
+%dw 2.0
+output application/java
 ---
 {
 	"columns": payload.columns,
 	"tableName": payload.tableName,
 	"keyspaceName": payload.keyspaceName
-} as :object {
+} as Object {
 	class : "org.mule.modules.cassandradb.metadata.CreateTableInput"
 }
 +
@@ -175,14 +175,14 @@ In the example above the keyspaceName parameter is optional. If not provided the
 +
 Example:
 [source]
-%dw 1.0
-%output application/java
+%dw 2.0
+output application/java
 ---
 {
 	"cqlQuery": payload.cqlQuery,
 	"parameters": payload.parameters
 }
-as :object {
+as Object {
 	class : "org.mule.modules.cassandradb.metadata.CQLQueryInput"
 }
 +
@@ -204,8 +204,8 @@ Example:
 [source]
 tableName: users
 payload:
-%dw 1.0
-%output application/java
+%dw 2.0
+output application/java
 ---
 {
 	"id": payload.id,
@@ -257,8 +257,8 @@ Cassandra allows collections to be stored in specific columns. This operation al
 +
 The payload passed to the processor has the following structure:
 [source]
-%dw 1.0
-%output application/java
+%dw 2.0
+output application/java
 ---
 {
 	"columns":payload.columns,
@@ -318,13 +318,13 @@ The POJO that is given as payload to the processor has 2 fields, one specifying 
 +
 Example:
 [source]
-%dw 1.0
-%output application/java
+%dw 2.0
+output application/java
 ---
 {
 	"column": payload.column,
 	"type": payload.type
-} as :object {
+} as Object {
 	class : "org.mule.modules.cassandradb.metadata.AlterColumnInput"
 }
 +
@@ -338,13 +338,13 @@ The POJO that is passed as payload to the processor has 2 fields, one specifying
 +
 Example:
 [source]
-%dw 1.0
-%output application/java
+%dw 2.0
+output application/java
 ---
 {
 	"column": payload.column,
 	"type": payload.type
-} as :object {
+} as Object {
 	class : "org.mule.modules.cassandradb.metadata.AlterColumnInput"
 }
 
