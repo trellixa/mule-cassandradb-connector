@@ -3,6 +3,7 @@ package org.mule.modules.cassandradb.automation.functional;
 import org.json.JSONObject;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mule.runtime.api.component.location.Location;
 import org.mule.runtime.api.meta.model.operation.OperationModel;
@@ -34,6 +35,7 @@ import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder
 import static org.mule.runtime.api.component.location.Location.builder;
 import static org.mule.runtime.api.metadata.MetadataKeyBuilder.newKey;
 
+@Ignore
 public class MetadataTestCase extends AbstractTestCases{
 
     public static final String FAIL_MESSAGE = "No assertions file was found for metadata key =  '%s'. It was created in the file %s. Please move it into src/test/resources/datasense/%s and re-run the test.";
