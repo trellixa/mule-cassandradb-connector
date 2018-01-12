@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.mule.connectors</groupId>
     <artifactId>mule-module-cassandradb</artifactId>
-    <version>3.0.0</version>
+    <version>3.0.1-SNAPSHOT</version>
     <packaging>mule-extension</packaging>
     <name>Mule CassandraDB Connector</name>
 
@@ -73,6 +73,6 @@
             scm:git:git@github.com:mulesoft/CassandraDB-connector.git
         </developerConnection>
         <url>http://github.com/mulesoft/CassandraDB-connector</url>
-      <tag>mule-module-cassandradb-3.0.0</tag>
+      <tag>HEAD</tag>
   </scm>
 </project>
