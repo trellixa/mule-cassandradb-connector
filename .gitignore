@@ -3,6 +3,8 @@
 .project
 target
 .DS_Store
+*.pem
 bin/
 .idea/
 *.iml
+src/test/resources/automation-credentials.properties

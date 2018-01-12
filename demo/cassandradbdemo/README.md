@@ -6,13 +6,15 @@ Mule Studio demo for Apache Cassandra connector.
 Prerequisites
 ---------------
 
-A running instance of Apache Cassandra with a Keyspace already created.
+* Anypoint Studio 7 with Mule ESB 4.0 Runtime.
+* Mule Cassandra Connector v3.0.0.
+* A running instance of Apache Cassandra with a Keyspace already created.
 
 How to Run Sample
 -----------------
 
 1. Import the project folder demo in Studio.
-2. Update the Apache Cassandra connection parameters in /src/main/app/mule-app.properties.
+2. Update the Apache Cassandra connection parameters in /src/main/resources/mule-app.properties.
 3. From the 'Global Elements' tab, open the CassandraDB: Username/Password Connection.
 4. Click on 'Test Connection' to make sure the connection works correctly.
 5. Run the application.

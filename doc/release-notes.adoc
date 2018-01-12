@@ -1,19 +1,36 @@
 = Cassandra Connector Release Notes
 :keywords: cassandra
 
-May 30, 2017
+The Anypoint Cassandra connector provides the capability to connect a Mule app to a Cassandra database or cluster. The MuleSoft support category for the Cassandra connector is link:/mule-user-guide/v/3.8/anypoint-connectors#connector-categories[Select].
 
-The Anypoint Cassandra connector provides the capability to connect a Mule app to a Cassandra database or cluster. The MuleSoft support category for the Cassandra connector is link:/mule-user-guide/v/3.8/anypoint-connectors#connector-categories[Select]. 
+=== Cassandra Connector 3.0.0-SNAPSHOT - Unreleased
 
-== Compatibility
+Cassandra connector is available on Mule 4.0.
+
+[%header%autowidth]
+|===
+|Application/Service |Version
+|Cassandra database or cluster | 1.2 or later
+|CQL spec | 3.x
+|Mule Runtime | 4.0
+|===
+
+
+=== Cassandra Connector 2.1.0-SNAPSHOT - May 30, 2017
+
+==== Compatibility
 
 The Cassandra connector was implemented using the DataStax Java Driver for Apache Cassandra 3.1. The connector is compatible with the following software:
 
-* Cassandra database or cluster 1.2 or later
-* CQL spec 3.x
-* Anypoint Studio 6.x and Mule Runtime 3.6 or later, or Mule Runtime only
+[%header%autowidth]
+|===
+|Application/Service |Version
+|Cassandra database or cluster | 1.2 or later
+|CQL spec | 3.x
+|Mule Runtime | 3.6 or later
+|===
 
-== Key Features
+==== Key Features
 
 The Cassandra connector supports the following capabilities:
 
@@ -23,10 +40,10 @@ The Cassandra connector supports the following capabilities:
 +
 [frame=none]
 |===
-| Add new column | Delete columns value | Drop table | Select 
-| Change column type | Delete rows | Drop keyspace | Update 
-| Create keyspace | Drop Column  | Rename column |  
-| Create table | Get table names from keyspace | Insert |  
+| Add new column | Delete columns value | Drop table | Select
+| Change column type | Delete rows | Drop keyspace | Update
+| Create keyspace | Drop Column  | Rename column |
+| Create table | Get table names from keyspace | Insert |
 |===
 +
 * Configuring Cassandra cluster operations, such as compression and SSL
@@ -36,10 +53,6 @@ The Cassandra connector supports the following capabilities:
 ** set
 ** tuple
 
-== Known Issues
+==== Known Issues
 
 The capability to change the data type of a column using the CQL alter table query was removed from Cassandra 3.0.11 and later; consequently, the Cassandra connector Change Column Type operation does not work if you connect to a Cassandra database that does not support this capability.
-
-
-
-

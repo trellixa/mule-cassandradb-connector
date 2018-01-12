@@ -332,7 +332,7 @@
 
             $.ajax({
                 type: 'POST',
-                url: '/removeColumn',
+                url: '/dropColumn',
                 data: JSON.stringify(payload),
                 contentType: 'application/json',
                 success: function(data) {
@@ -823,7 +823,7 @@
         <div class="panel panel-default">
             <div class="panel-heading">
                 <h2 class="panel-title form-signin-heading">
-                    <a data-toggle="collapse" data-parent="#accordion" href="#removeColumnFormDiv">Alter Table - Remove column</a>
+                    <a data-toggle="collapse" data-parent="#accordion" href="#removeColumnFormDiv">Alter Table - Drop column</a>
                 </h2>
             </div>
             <div id="removeColumnFormDiv" class="panel-collapse collapse">
