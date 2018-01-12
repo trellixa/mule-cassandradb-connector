@@ -65,6 +65,16 @@ public class TestDataBuilder {
     public static final String deleteRowsFlowName = "deleteRows-flow";
     public static final String updateFlowName = "update-flow";
     public static final String DELETE_QUERY = "SELECT * FROM %s.%s";
+    public static final String QUERY_PREFIX = "SELECT * FROM ";
+    public static final String VALID_PARAMETERIZED_QUERY =
+            "SELECT " + VALID_COLUMN_2 +
+                    " FROM " + KEYSPACE_DUMMY +"."+ TABLE_NAME_1 +
+                    " WHERE " + TestDataBuilder.DUMMY_PARTITION_KEY + " IN (?, ?)";
+    public static final String VALID_DSQL_QUERY = "dsql:" +
+            "SELECT " + VALID_COLUMN_2 +
+            " FROM " + KEYSPACE_DUMMY +"."+ TABLE_NAME_1;
+
+    public static final String UPDATED_VALUE = "updatedValue";
 
     static {
         cassandraCategoryMetadataTestKeys.add(TABLE_NAME_2);

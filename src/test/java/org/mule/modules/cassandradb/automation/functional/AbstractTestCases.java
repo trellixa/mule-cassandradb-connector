@@ -185,7 +185,7 @@ public abstract class AbstractTestCases extends MuleArtifactFunctionalTestCase {
     }
 
     protected List<Map<String,Object>> select(final String query, List<Object> parameters) throws Exception {
-        return (List) flowRunner("insert-flow")
+        return (List) flowRunner("select-flow")
                 .withPayload(query)
                 .withVariable("parameters", parameters)
                 .run()
