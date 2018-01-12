@@ -337,7 +337,6 @@ public class CassandraOperations extends ConnectorOperations<CassandraConfig, Ca
      * @param keyspaceName (optional) the keyspace which contains the table to be used
      * @param whereClause operation input: where clause for the delete operation
      */
-    //FIXME: metadata for where clause
     public void deleteRows(@Config CassandraConfig config,
                            @Connection CassandraConnection connection,
                            @MetadataKeyId(CassandraOnlyWithFiltersMetadataResolver.class) String table,
@@ -356,8 +355,6 @@ public class CassandraOperations extends ConnectorOperations<CassandraConfig, Ca
      * @param entities operation input: columns to be deleted
      * @param whereClause: where clause for the delete operation
      */
-    //FIXME: metadata for entity clause
-    //FIXME: metadata for where clause
     public void deleteColumnsValue(@Config CassandraConfig config,
                                    @Connection CassandraConnection connection,
                                    @MetadataKeyId(CassandraWithFiltersMetadataCategory.class) String table,

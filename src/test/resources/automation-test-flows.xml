@@ -78,19 +78,25 @@ http://www.mulesoft.org/schema/mule/cassandra-db http://www.mulesoft.org/schema/
         </cassandra-db:drop-column>
     </flow>
 
-    <!--<flow name="renameColumn-flow" >-->
-        <!--<cassandra-db:rename-column config-ref="Cassandra_Config" table="#[vars.tableName]" keyspaceName="#[vars.keyspaceName]" newColumnName="#[vars.newColumnName]"/>-->
-    <!--</flow>-->
+    <flow name="renameColumn-flow" >
+        <cassandra-db:rename-column config-ref="Cassandra_Config" table="#[vars.tableName]" keyspaceName="#[vars.keyspaceName]" newColumnName="#[vars.newColumnName]">
+            <cassandra-db:old-column-name>#[dw:payload]</cassandra-db:old-column-name>
+        </cassandra-db:rename-column>
+    </flow>
 
-    <!--<flow name="getTableNamesFromKeyspace-flow" >-->
-        <!--<cassandra-db:get-table-names-from-keyspace config-ref="Cassandra_Config" keyspaceName="#[vars.keyspaceName]"/>-->
-    <!--</flow>-->
+    <flow name="getTableNamesFromKeyspace-flow" >
+        <cassandra-db:get-table-names-from-keyspace config-ref="Cassandra_Config" keyspaceName="#[vars.keyspaceName]"/>
+    </flow>
 
-    <!--<flow name="update-flow" >-->
-        <!--<cassandra-db:update config-ref="Cassandra_Config" keyspaceName="#[vars.keyspaceName]" table="#[vars.tableName]"/>-->
-    <!--</flow>-->
+    <flow name="update-flow" >
+        <cassandra-db:update config-ref="Cassandra_Config" keyspaceName="#[vars.keyspaceName]" table="#[vars.tableName]">
+            <cassandra-db:entity-to-update>#[dw:payload]</cassandra-db:entity-to-update>
+        </cassandra-db:update>
+    </flow>
 
-    <!--<flow name="executeCQLQuery-flow" >-->
-        <!--<cassandra-db:execute-cql-query config-ref="Cassandra_Config" />-->
-    <!--</flow>-->
+    <flow name="executeCQLQuery-flow" >
+        <cassandra-db:execute-cql-query config-ref="Cassandra_Config">
+            <cassandra-db:cql-input>#[dw:payload]</cassandra-db:cql-input>
+        </cassandra-db:execute-cql-query>
+    </flow>
 </mule>

@@ -13,11 +13,6 @@ public class Constants {
     public static final String COLUMNS = "columns";
     public static final String WHERE = "where";
 
-    //configuration
-    public final static String CASS_HOST = "config.host";
-    public final static String CASS_PORT = "config.port";
-    public final static String KEYSPACE_NAME = "config.keyspace";
-
     //query specific constants
     public static final String PARAM_HOLDER = "?";
     public static final String SELECT = "SELECT";

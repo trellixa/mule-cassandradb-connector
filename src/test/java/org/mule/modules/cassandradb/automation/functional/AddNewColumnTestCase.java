@@ -44,7 +44,7 @@ public class AddNewColumnTestCase extends AbstractTestCases {
         try{
             addNewColumn(TABLE_NAME_1, testKeyspace, getAlterColumnInput(VALID_COLUMN_1, TEXT));
         } catch (Exception e){
-            assertThat(e.getMessage(), startsWith("An exception occurred while converting from TEXT."));
+            assertThat(e.getMessage(), startsWith("Invalid column name dummy_column_1 because it conflicts with an existing column."));
         }
     }
 }
