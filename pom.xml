@@ -13,7 +13,7 @@
     <parent>
         <groupId>com.mulesoft.connectors</groupId>
         <artifactId>mule-connectivity-parent</artifactId>
-        <version>1.0.0</version>
+        <version>1.0.1</version>
     </parent>
 
     <dependencies>
@@ -40,6 +40,32 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+
+    <profiles>
+        <profile>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <id>exchange-devx-deployer</id>
+            <properties>
+                <deployment.url>
+                    https://maven.devx.anypoint.mulesoft.com/api/v1/organizations/${exchange.organization.id}/maven
+                </deployment.url>
+            </properties>
+            <distributionManagement>
+                <repository>
+                    <id>exchange-devx</id>
+                    <name>MuleSoft Exchange DevX Environment</name>
+                    <url>${deployment.url}</url>
+                </repository>
+                <snapshotRepository>
+                    <id>exchange-devx</id>
+                    <name>MuleSoft Exchange DevX Environment</name>
+                    <url>${deployment.url}</url>
+                </snapshotRepository>
+            </distributionManagement>
+        </profile>
+    </profiles>
 
     <scm>
         <connection>

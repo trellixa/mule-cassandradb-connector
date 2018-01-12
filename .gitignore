@@ -7,3 +7,4 @@ target
 bin/
 .idea/
 *.iml
+src/test/resources/automation-credentials.properties

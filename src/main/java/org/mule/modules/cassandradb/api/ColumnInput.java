@@ -32,13 +32,4 @@ public class ColumnInput {
     public void setType(ColumnType type) {
         this.type = type;
     }
-
-    @Override
-    public String toString() {
-        return "ColumnInput{" +
-                "name='" + name + '\'' +
-                ", type=" + type +
-                ", isPrimaryKey=" + primaryKey +
-                '}';
-    }
 }

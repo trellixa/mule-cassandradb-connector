@@ -20,26 +20,13 @@ See: <<Documentation Links>>
 == Developers
 
 === Development Team Leader
-* mailto:dan.pece@mulesoft.com[Dan Pece]
-* slack-user: @dan.pece
+* mailto:martin.paoloni@mulesoft.com[Martin Paoloni]
+* slack-user: @martin.paoloni
 
 === Development Team
 * Main developer:
-** mailto:dragos.boghitoiu@mulesoft.com[Dragos Boghitoiu]
-** slack-user: @dragos.boghitoiu
-* Developer:
-** mailto:bogdan.ilies@mulesoft.com[Bogdan Ilies]
-** slack-user: @bogdan.ilies
-* Developer:
-** mailto:alexandru.atomei@mulesoft.com[Alex Atomei]
-** slack-user: @alexandru.atomei
-* Developer:
-** mailto:emil.grigore@mulesoft.com[Emil Grigore]
-** slack-user: @emil.grigore
-* Developer:
-** mailto:cosmin.campian@mulesoft.com[Cosmin Campian]
-** slack-user: @cosmin.campian
-
+** mailto:ezequiel.sandoval@mulesoft.com[Ezequiel Sandoval]
+** slack-user: @ezequiel.sandoval
 
 == Engineering Manager
 
@@ -129,229 +116,6 @@ Given the fact that our mapping of the Data Type for primitives is using upperca
   type: upper $.type
  }
 
-=== Processors
-
-**Note**: When the processors that accept the keyspace name as an optional parameter are missing this param, will use the keyspace specified in the connection config for the operation. If in the config there is no keyspace specified and also the user does not specify a keyspace as an operation param, the operation will fail.
-
-. **Create Keyspace** operation accepts a custom pojo CreateKeyspaceInput as input so the user must pass the parameters accordingly. The easiest way to do this is to use a Transform Message in order to transform the payload to a Java object.
-+
-Example:
-[source]
-%dw 1.0
-%output application/java
----
-{
-	"keyspaceName": payload.keyspaceName,
-	"replicationFactor": payload.replicationFactor,
-	"replicationStrategyClass": payload.replicationStrategyClass
-} as :object {
-	class : "org.mule.modules.cassandradb.metadata.CreateKeyspaceInput"
-}
-
-. **Drop Keyspace** operation accepts a String parameter representing the keyspace name.
-
-. **Create Table** operation accepts a custom pojo CreateTableInput as input so the user must pass the parameters accordingly.
-+
-Example:
-[source]
-%dw 1.0
-%output application/java
----
-{
-	"columns": payload.columns,
-	"tableName": payload.tableName,
-	"keyspaceName": payload.keyspaceName
-} as :object {
-	class : "org.mule.modules.cassandradb.metadata.CreateTableInput"
-}
-+
-In the example above the keyspaceName parameter is optional. If not provided the table will be created into the keyspace that the user used to log in(if specified).
-
-. **Drop Table** accepts 2 string parameters representing the table name and the keyspace that contains that specific table.
-
-. **Get Table Names From Keyspace** operation has a String parameter specifying the keyspace name for the operation. The processor returns a List containing all the tables in the specified keyspace.
-
-. **Execute CQL Query** operation accepts a custom pojo(CQLQueryInput) as input. The input consists of a String representing the query(that can be parametrized or not) and a list of parameters that will be passed to the parametrized query if that is the case.
-+
-Example:
-[source]
-%dw 1.0
-%output application/java
----
-{
-	"cqlQuery": payload.cqlQuery,
-	"parameters": payload.parameters
-}
-as :object {
-	class : "org.mule.modules.cassandradb.metadata.CQLQueryInput"
-}
-+
-Example of a HTTP request to the <execute-cql-query> processor:
-[source]
-{
-"cqlQuery":"SELECT * FROM users WHERE id IN (?,?)",
-"parameters":
-	[2,3]
-}
-
-. **Select** operation accepts a String representing the query and an optional list of Object representing the parameters for the query. This operation also offers a query builder:
-+
-image:query_builder.png[Config]
-
-. **Insert** operation accepts the table name as a required parameter, the keyspace name as an optional parameter and as payload a Map<String, Object> representing the entity to be inserted into the table.
-+
-Example:
-[source]
-tableName: users
-payload:
-%dw 1.0
-%output application/java
----
-{
-	"id": payload.id,
-	"name": payload.name,
-	"other_property": payload.other_property
-}
-+
-Example of HTTP request for the **Insert** operation:
-[source]
-{
-	"id":3,
-	"name":"entity_name",
-	"other_property":other_property_value
-}
-
-. **Update** operation accepts the table name as a required parameter, the keyspace name as an optional parameter and as payload a Map<String, Object> with 2 records with the keys **where** and **columns**.
-+
-.. **where** Map<String, Object> representing the clause that will specify the primary keys of the objects to be updated
-+
-Example:
-[source]
-"where":
-      {
-        "id": 1,
-        "name": "bestseller1"
-      }
-
-.. **columns** Map<String, Object> representing pairs containing the column name and the value to be set for that column
-+
-Example:
-[source]
-"columns":
-    {
-    "name": "test value"
-    }
-+
-If a Transform Message component is used to set the payload for this operation this component will present to the user the details needed to set the payload.
-+
-image:update_datasense.png[Config]
-+
-In the image above: The user can select which **columns** to update and specify the **where** clause. The columns section contains all the columns of the table selected for the operation whereas in the where section only the columns that are pare of the "primary key" are displayed as only these can be specified in the where clause.
-
-. **Delete Columns Value** operation accepts the table name as a required parameter, the keyspace name as an optional parameter and as payload a Map<String, Object> with 2 records with the keys **where** and **columns**.
-+
-As for the **Update** operation, the **where** record represents the clause that will specify the primary keys of the objects to be updated. The **columns** record represents a List<String> containing the column names to be cleared.
-After invoking this operation when fetching the entities that were updated, the values for the columns specified in the **Delete Columns Value** operations will be null.
-+
-Cassandra allows collections to be stored in specific columns. This operation allows the user to delete specific values from those collections and without deleting the whole collection.
-+
-The payload passed to the processor has the following structure:
-[source]
-%dw 1.0
-%output application/java
----
-{
-	"columns":payload.columns,
-	"where":payload.where
-}
-+
-An HTTP request for deleting an element from a **list** would look like this:
-[source]
-{
-    "where":
-      {
-        "id": [1]
-      },
-      "columns": ["top_places[0]"]
-}
-+
-An HTTP request for deleting an element from a **map** would look like this:
-[source]
-{
-    "where":
-      {
-        "id": [1,2]
-      },
-      "columns": ["mapColumnName['keyName']"]
-}
-
-. **Delete Rows** operation accepts the table name as a required parameter, the keyspace name as an optional parameter and as payload a Map<String, Object> with 1 record with the key **where**
-+
-As the value for the key **where** we have a map (Map<String, Object>) containing the where clause.
-+
-If the table we want to delete the row from has a partition key composed of multiple columns the map specified by the **where** will contain the column names as keys and the column values as values. This means only one row can be deleted at a time.
-+
-Example:
-[source]
-{
-    "where":
-      {
-        "id": 2,
-        "name": "name_to_delete"
-      }
-}
-+
-If the table we want to delete the row from has a partition key composed of a single column the map specified by the **where** will contain a single entry with the column name as the key and a list of values as the value. This means multiple rows can be deleted at once.
-+
-Example:
-[source]
-{
-    "where":
-      {
-        "id": [2,3]
-      }
-}
-
-. **Change column type** operation, is used to change the type of a column and accepts the table name as a required parameter, the keyspace name as an optional parameter and an AlterColumnInput POJO as payload.
-+
-The POJO that is given as payload to the processor has 2 fields, one specifying the column name and one specifying th new DataType for that column.
-+
-Example:
-[source]
-%dw 1.0
-%output application/java
----
-{
-	"column": payload.column,
-	"type": payload.type
-} as :object {
-	class : "org.mule.modules.cassandradb.metadata.AlterColumnInput"
-}
-+
-**Note**: A column type can be changed only to another valid and compatible type. To check types compatibility in Cassandra visit this http://docs.datastax.com/en/cql/3.1/cql/cql_reference/cql_data_types_c.html#concept_ds_wbk_zdt_xj__cql_data_type_compatibility[page]
-+
-**Note**: Starting with version 3.0.11 of Cassandra, Alter Type(Change column type) is not allowed anymore. Link to the cassandra issue https://issues.apache.org/jira/browse/CASSANDRA-12443[here]
-
-. **Add new column** operation, is used to add a new column and accepts the table name as a required parameter, the keyspace name as an optional parameter and an AlterColumnInput POJO as payload.
-+
-The POJO that is passed as payload to the processor has 2 fields, one specifying the name of the column to be created and one specifying the DataType for the new column
-+
-Example:
-[source]
-%dw 1.0
-%output application/java
----
-{
-	"column": payload.column,
-	"type": payload.type
-} as :object {
-	class : "org.mule.modules.cassandradb.metadata.AlterColumnInput"
-}
-
-. **Drop column** processor accepts the table name as a required parameter, the keyspace name as an optional parameter and the column name as payload.
-
-. **Rename column** operation accepts 4 parameters: the table name, the keyspace name(optional), the old column name and the new column name.
-
 == Troubleshooting
 === Logging level
 
@@ -365,10 +129,7 @@ By setting logging level to "DEBUG" for [small]#org.mule.modules.cassandradb# ev
 
 == Entry points
 
-On the connector class CassandraDBConnector.java you will find the processor you’d like to debug (@Processor). The name of the processor is defined by friendlyName decorator parameter, or if the parameter is absent, by the name of the method,
-for example, in [small]#org.mule.modules.cassandradb.CassandraDBConnector.java#
-
-"Insert" processor is implemented by the "insert" method which is decorated by @Processor.
+On the connector class CassandraOperations.java you will find the operations you’d like to debug. The name of the operation is defined by friendlyName decorator parameter, or if the parameter is absent, by the name of the method,
 
 == Logging from platform side
 
@@ -388,8 +149,8 @@ Go to the location of the Apache Cassandra installation folder and in the LOGS d
 
 == Documentation for the connector
 
-* [Cassandra User Manual]
-* [Cassandra ApiDocs]
+* Cassandra User Manual
+* Cassandra ApiDocs
 
 == Github project
 
@@ -398,9 +159,3 @@ Go to the location of the Apache Cassandra installation folder and in the LOGS d
 == Example github project
 
 * https://github.com/mulesoft/cassandra-connector/tree/develop/demo:[GitHub demo folder]
-
-
-== Aditional information
-//information you may require to better understand the connector
-== Known Issues
-// known limitations of the connector. This could extend the information of our release notes.

@@ -9,7 +9,7 @@ public class CreateTableInput {
 
     private String tableName;
     private String keyspaceName;
-    List<ColumnInput> columns;
+    private List<ColumnInput> columns;
 
     public String getTableName() {
         return tableName;
@@ -33,14 +33,5 @@ public class CreateTableInput {
 
     public void setColumns(List<ColumnInput> columns) {
         this.columns = columns;
-    }
-
-    @Override
-    public String toString() {
-        return "CreateTableInput{" +
-                "tableName='" + tableName + '\'' +
-                ", keyspaceName='" + keyspaceName + '\'' +
-                ", columns=" + columns +
-                '}';
     }
 }

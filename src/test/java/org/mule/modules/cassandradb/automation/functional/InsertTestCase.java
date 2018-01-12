@@ -3,96 +3,45 @@
  */
 package org.mule.modules.cassandradb.automation.functional;
 
-import com.datastax.driver.core.DataType;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.mule.modules.cassandradb.api.CreateTableInput;
-import org.mule.modules.cassandradb.automation.util.TestDataBuilder;
-import org.mule.modules.cassandradb.internal.exception.CassandraError;
-
-import java.util.List;
-import java.util.Map;
 
 import static java.lang.String.format;
+import static java.lang.Thread.sleep;
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
-import static org.mule.modules.cassandradb.automation.util.TestDataBuilder.TABLE_NAME_1;
-import static org.mule.modules.cassandradb.automation.util.TestDataBuilder.VALID_LIST_COLUMN;
-import static org.mule.modules.cassandradb.automation.util.TestDataBuilder.VALID_MAP_COLUMN;
-import static org.mule.modules.cassandradb.automation.util.TestDataBuilder.VALID_SET_COLUMN;
-import static org.mule.modules.cassandradb.automation.util.TestDataBuilder.getColumns;
-import static org.mule.modules.cassandradb.automation.util.TestDataBuilder.getInvalidEntity;
-import static org.mule.modules.cassandradb.automation.util.TestDataBuilder.getValidEntityWithList;
-import static org.mule.modules.cassandradb.automation.util.TestDataBuilder.getValidEntityWithMap;
-import static org.mule.modules.cassandradb.automation.util.TestDataBuilder.getValidEntityWithSet;
-import static org.mule.modules.cassandradb.internal.exception.CassandraError.QUERY_VALIDATION;
-import static org.mule.tck.junit4.matcher.ErrorTypeMatcher.errorType;
+import static org.junit.Assert.assertThat;
+import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.TABLE_NAME_1;
+import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getBasicCreateTableInput;
+import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getColumns;
+import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getInvalidEntity;
 
 public class InsertTestCase extends AbstractTestCases {
 
     @Before
     public void setup() throws Exception {
-        CreateTableInput basicCreateTableInput = TestDataBuilder.getBasicCreateTableInput(getColumns(), getKeyspaceFromProperties(), TABLE_NAME_1);
-        getCassandraService().createTable(basicCreateTableInput);
+        createTable(getBasicCreateTableInput(getColumns(), testKeyspace, TABLE_NAME_1));
     }
 
     @After
-    public void tearDown()  {
-        getCassandraService().dropTable(TABLE_NAME_1, getKeyspaceFromProperties());
+    public void tearDown() throws Exception {
+        dropTable(testKeyspace, TABLE_NAME_1);
     }
 
     @Test
     public void testInsertWithSuccess() throws Exception {
-        insert(TABLE_NAME_1, null, TestDataBuilder.getValidEntity());
-
-        Thread.sleep(SLEEP_DURATION);
-        String query = format("SELECT * FROM %s.%s", getKeyspaceFromProperties(), TABLE_NAME_1);
-        List<Map<String, Object>> select = getCassandraService().select(query, null);
-        assertEquals(1, select.size());
-    }
-
-    @Test
-    public void testInsertInListColumnWithSuccess() throws Exception {
-        getCassandraService().addNewColumn(TABLE_NAME_1, getKeyspaceFromProperties(), VALID_LIST_COLUMN, DataType.list(DataType.text()));
-
-        insert(TABLE_NAME_1, null, getValidEntityWithList());
-    }
-
-    @Test
-    public void testInsertInMapColumnWithSuccess() throws Exception {
-        getCassandraService().addNewColumn(TABLE_NAME_1, getKeyspaceFromProperties(), VALID_MAP_COLUMN, DataType.map(DataType.text(), DataType.text()));
-
-        insert(TABLE_NAME_1, null, getValidEntityWithMap());
-    }
-
-    @Test
-    public void testInsertISetColumnWithSuccess() throws Exception {
-        getCassandraService().addNewColumn(TABLE_NAME_1, getKeyspaceFromProperties(), VALID_SET_COLUMN, DataType.set(DataType.text()));
-
-        insert(TABLE_NAME_1, null, getValidEntityWithSet());
+        insert(testKeyspace, TABLE_NAME_1, TestDataBuilder.getValidEntity());
+        sleep(SLEEP_DURATION);
+        assertEquals(1, select(format("SELECT * FROM %s.%s", testKeyspace, TABLE_NAME_1), null).size());
     }
 
     @Test
     public void testInsertWithInvalidInput() throws Exception {
-        insertExpError(TABLE_NAME_1, null, getInvalidEntity(), QUERY_VALIDATION);
-    }
-
-    void insert(String tableName, String keyspaceName, Map<String, Object> entity) throws Exception {
-        flowRunner("insert-flow")
-                .withPayload(entity)
-                .withVariable("tableName", tableName)
-                .withVariable("keyspaceName", keyspaceName)
-                .run()
-                .getMessage()
-                .getPayload()
-                .getValue();
-    }
-
-    void insertExpError(String tableName, String keyspaceName, Map<String, Object> entity, CassandraError error) throws Exception {
-        flowRunner("insert-flow")
-                .withPayload(entity)
-                .withVariable("tableName", tableName)
-                .withVariable("keyspaceName", keyspaceName)
-                .runExpectingException(errorType(error));
+        try{
+            insert(testKeyspace, TABLE_NAME_1, getInvalidEntity());
+        } catch (Exception e){
+            assertThat(e.getMessage(), is("Unknown identifier invalid_column."));
+        }
     }
 }

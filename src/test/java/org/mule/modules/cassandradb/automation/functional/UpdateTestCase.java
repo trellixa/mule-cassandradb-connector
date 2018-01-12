@@ -7,84 +7,70 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mule.modules.cassandradb.api.CreateTableInput;
-import org.mule.modules.cassandradb.automation.util.TestDataBuilder;
-import org.mule.modules.cassandradb.internal.exception.CassandraError;
-
-import java.util.Map;
 
 import static java.lang.String.format;
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
-import static org.mule.modules.cassandradb.automation.util.TestDataBuilder.TABLE_NAME_1;
-import static org.mule.modules.cassandradb.automation.util.TestDataBuilder.VALID_COLUMN_2;
-import static org.mule.modules.cassandradb.automation.util.TestDataBuilder.getBasicCreateTableInput;
-import static org.mule.modules.cassandradb.automation.util.TestDataBuilder.getColumns;
-import static org.mule.modules.cassandradb.automation.util.TestDataBuilder.getInvalidEntity;
-import static org.mule.modules.cassandradb.automation.util.TestDataBuilder.getInvalidWhereClause;
-import static org.mule.modules.cassandradb.automation.util.TestDataBuilder.getPayloadColumnsAndFilters;
-import static org.mule.modules.cassandradb.automation.util.TestDataBuilder.getValidEntity;
-import static org.mule.modules.cassandradb.automation.util.TestDataBuilder.getValidEntityForUpdate;
-import static org.mule.modules.cassandradb.automation.util.TestDataBuilder.getValidWhereClauseWithEq;
-import static org.mule.modules.cassandradb.internal.exception.CassandraError.QUERY_VALIDATION;
-import static org.mule.tck.junit4.matcher.ErrorTypeMatcher.errorType;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.fail;
+import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.TABLE_NAME_1;
+import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.UPDATED_VALUE;
+import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.VALID_COLUMN_2;
+import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getBasicCreateTableInput;
+import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getColumns;
+import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getInvalidEntity;
+import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getInvalidWhereClause;
+import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getPayloadColumnsAndFilters;
+import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getValidEntity;
+import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getValidEntityForUpdate;
+import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getValidWhereClauseWithEq;
+import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getValidWhereClauseWithIN;
 
 public class UpdateTestCase extends AbstractTestCases {
 
     @Before
     public void setup() throws Exception {
-        CreateTableInput basicCreateTableInput = getBasicCreateTableInput(getColumns(), getKeyspaceFromProperties(), TABLE_NAME_1);
-        getCassandraService().createTable(basicCreateTableInput);
-        getCassandraService().insert(getKeyspaceFromProperties(), TABLE_NAME_1, getValidEntity());
+        CreateTableInput basicCreateTableInput = getBasicCreateTableInput(getColumns(), testKeyspace, TABLE_NAME_1);
+        createTable(basicCreateTableInput);
+        insert(testKeyspace, TABLE_NAME_1, getValidEntity());
     }
 
     @After
-    public void tearDown() {
-        getCassandraService().dropTable(TABLE_NAME_1, getKeyspaceFromProperties());
+    public void tearDown() throws Exception {
+        dropTable(TABLE_NAME_1, testKeyspace);
     }
 
     @Test
     public void testUpdateUsingEqWithSuccess() throws Exception {
-        String updatedValue = "updatedValue";
-        update(TABLE_NAME_1, null, getPayloadColumnsAndFilters(getValidEntityForUpdate(updatedValue), getValidWhereClauseWithEq()));
-
+        update(TABLE_NAME_1, testKeyspace, getPayloadColumnsAndFilters(getValidEntityForUpdate(UPDATED_VALUE), getValidWhereClauseWithEq()));
         Thread.sleep(SLEEP_DURATION);
-        String query = format("SELECT * FROM %s.%s", getKeyspaceFromProperties(), TABLE_NAME_1);
-        String newValue = (String) getCassandraService().select(query, null).get(0).get(VALID_COLUMN_2);
-        assertEquals(newValue, updatedValue);
+        assertEquals(select(format("SELECT * FROM %s.%s", testKeyspace, TABLE_NAME_1), null).get(0).get(VALID_COLUMN_2), UPDATED_VALUE);
     }
 
     @Test
     public void testUpdateUsingInWithSuccess() throws Exception {
-        update(TABLE_NAME_1, null, getPayloadColumnsAndFilters(getValidEntityForUpdate("newValue"),
-                TestDataBuilder.getValidWhereClauseWithIN()));
+        try{
+            update(TABLE_NAME_1, testKeyspace, getPayloadColumnsAndFilters(getValidEntityForUpdate("newValue"), getValidWhereClauseWithIN()));
+        } catch (Exception e){
+            fail();
+        }
     }
 
     @Test
     public void testUpdateWithInvalidInput() throws Exception {
-        Map<String, Object> payloadColumnsAndFilters = getPayloadColumnsAndFilters(getInvalidEntity(), getValidWhereClauseWithEq());
-        updateExpException(TABLE_NAME_1, null, payloadColumnsAndFilters, QUERY_VALIDATION);
+        try{
+            update(TABLE_NAME_1, testKeyspace, getPayloadColumnsAndFilters(getInvalidEntity(), getValidWhereClauseWithEq()));
+        } catch (Exception e){
+            assertThat(e.getMessage(), is("Unknown identifier invalid_column."));
+        }
     }
 
     @Test
     public void testUpdateWithInvalidWhereClause() throws Exception {
-        updateExpException(TABLE_NAME_1, null, getPayloadColumnsAndFilters(getInvalidEntity(), getInvalidWhereClause()), QUERY_VALIDATION);
-    }
-
-    protected void update(String tableName, String keyspaceName, Map<String, Object> entityToUpdate) throws Exception {
-        flowRunner("update-flow")
-                .withPayload(entityToUpdate)
-                .withVariable("tableName", tableName)
-                .withVariable("keyspaceName", keyspaceName)
-                .run()
-                .getMessage()
-                .getPayload()
-                .getValue();
-    }
-
-    protected void updateExpException(String tableName, String keyspaceName, Map<String, Object> entityToUpdate, CassandraError error) throws Exception {
-        flowRunner("update-flow")
-                .withPayload(entityToUpdate)
-                .withVariable("tableName", tableName)
-                .withVariable("keyspaceName", keyspaceName)
-                .runExpectingException(errorType(error));
+        try{
+            update(TABLE_NAME_1, testKeyspace, getPayloadColumnsAndFilters(getValidEntity(), getInvalidWhereClause()));
+        } catch (Exception e){
+            assertThat(e.getMessage(), is("PRIMARY KEY part dummy_partitionkey found in SET part."));
+        }
     }
 }

@@ -3,8 +3,8 @@ package org.mule.modules.cassandradb.automation.functional;
 import org.json.JSONObject;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
-import org.mule.modules.cassandradb.automation.util.TestDataBuilder;
 import org.mule.runtime.api.component.location.Location;
 import org.mule.runtime.api.meta.model.operation.OperationModel;
 import org.mule.runtime.api.metadata.MetadataKey;
@@ -25,15 +25,17 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.fail;
-import static org.mule.modules.cassandradb.automation.util.TestDataBuilder.TABLE_NAME_2;
-import static org.mule.modules.cassandradb.automation.util.TestDataBuilder.deleteRowsFlowName;
-import static org.mule.modules.cassandradb.automation.util.TestDataBuilder.getMetadataColumns;
-import static org.mule.modules.cassandradb.automation.util.TestDataBuilder.insertFlowName;
-import static org.mule.modules.cassandradb.automation.util.TestDataBuilder.metadataKeyName;
-import static org.mule.modules.cassandradb.automation.util.TestDataBuilder.updateFlowName;
+import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.TABLE_NAME_2;
+import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.deleteRowsFlowName;
+import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getBasicCreateTableInput;
+import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getMetadataColumns;
+import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.insertFlowName;
+import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.metadataKeyName;
+import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.updateFlowName;
 import static org.mule.runtime.api.component.location.Location.builder;
 import static org.mule.runtime.api.metadata.MetadataKeyBuilder.newKey;
 
+@Ignore
 public class MetadataTestCase extends AbstractTestCases{
 
     public static final String FAIL_MESSAGE = "No assertions file was found for metadata key =  '%s'. It was created in the file %s. Please move it into src/test/resources/datasense/%s and re-run the test.";
@@ -43,9 +45,10 @@ public class MetadataTestCase extends AbstractTestCases{
     @Inject
     protected MetadataService metadataService;
     private MetadataKey metadataKey = newKey(metadataKeyName).withDisplayName(metadataKeyName).build();
+
     @Before
-    public void setUpMetadata() throws InterruptedException {
-        getCassandraService().createTable(TestDataBuilder.getBasicCreateTableInput(getMetadataColumns(), getCassandraProperties().getKeyspace(), TABLE_NAME_2));
+    public void setUpMetadata() throws Exception {
+        createTable(getBasicCreateTableInput(getMetadataColumns(), testKeyspace, TABLE_NAME_2));
         //required delay to make sure the setup is ok
         sleep(5000);
     }
@@ -76,12 +79,12 @@ public class MetadataTestCase extends AbstractTestCases{
 
     @Test
     public void testCassandraMetadataResolverInputMetadata() throws Exception {
-        testInputMetadata(insertFlowName, "entity");
+        testInputMetadata(insertFlowName, "entityToInsert");
     }
 
     @Test
     public void testCassandraOnlyWithFiltersInputMetadata() throws Exception {
-        testInputMetadata(deleteRowsFlowName, "payload");
+        testInputMetadata(deleteRowsFlowName, "whereClause");
     }
 
     @Test
@@ -90,8 +93,8 @@ public class MetadataTestCase extends AbstractTestCases{
     }
 
     @After
-    public void tearDownMetadata(){
-        getCassandraService().dropTable(TABLE_NAME_2, getCassandraProperties().getKeyspace());
+    public void tearDownMetadata() throws Exception {
+        dropTable(testKeyspace, TABLE_NAME_2);
     }
 
     public String getMetadataCategory() {

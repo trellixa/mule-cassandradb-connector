@@ -3,44 +3,45 @@
  */
 package org.mule.modules.cassandradb.automation.functional;
 
-import com.datastax.driver.core.DataType;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mule.modules.cassandradb.api.CQLQueryInput;
+import org.mule.modules.cassandradb.api.ColumnType;
 import org.mule.modules.cassandradb.api.CreateTableInput;
-import org.mule.modules.cassandradb.automation.util.TestDataBuilder;
-import org.mule.modules.cassandradb.internal.exception.CassandraError;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertNotNull;
-import static org.mule.modules.cassandradb.automation.util.TestDataBuilder.DUMMY_PARTITION_KEY;
-import static org.mule.modules.cassandradb.automation.util.TestDataBuilder.TABLE_NAME_2;
-import static org.mule.modules.cassandradb.automation.util.TestDataBuilder.VALID_COLUMN_2;
-import static org.mule.modules.cassandradb.automation.util.TestDataBuilder.getPrimaryKey;
-import static org.mule.modules.cassandradb.automation.util.TestDataBuilder.getValidEntity;
-import static org.mule.modules.cassandradb.internal.exception.CassandraError.QUERY_VALIDATION;
-import static org.mule.modules.cassandradb.internal.exception.CassandraError.UNKNOWN;
-import static org.mule.tck.junit4.matcher.ErrorTypeMatcher.errorType;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.fail;
+import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.DUMMY_PARTITION_KEY;
+import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.QUERY_PREFIX;
+import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.TABLE_NAME_2;
+import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.VALID_COLUMN_2;
+import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getAlterColumnInput;
+import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getPrimaryKey;
+import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getValidEntity;
 
 public class ExecuteCqlQueryTestCase extends AbstractTestCases {
 
-    private static String QUERY_PREFIX = "SELECT * FROM ";
-
     @Before
     public void setup() throws Exception {
-        CreateTableInput basicCreateTableInput = TestDataBuilder.getBasicCreateTableInput(getPrimaryKey(), getKeyspaceFromProperties(), TABLE_NAME_2);
-        getCassandraService().createTable(basicCreateTableInput);
-        getCassandraService().addNewColumn(TABLE_NAME_2, getKeyspaceFromProperties(), VALID_COLUMN_2, DataType.ascii());
-        getCassandraService().insert(getKeyspaceFromProperties(), TABLE_NAME_2, getValidEntity());
+        try{
+            CreateTableInput basicCreateTableInput = TestDataBuilder.getBasicCreateTableInput(getPrimaryKey(), testKeyspace, TABLE_NAME_2);
+            createTable(basicCreateTableInput);
+            addNewColumn(TABLE_NAME_2, testKeyspace, getAlterColumnInput(VALID_COLUMN_2, ColumnType.TEXT));
+            insert(testKeyspace, TABLE_NAME_2, getValidEntity());
+        } catch (Exception e){
+            fail();
+        }
     }
 
     @After
-    public void tearDown()  {
-        getCassandraService().dropTable(TABLE_NAME_2, getKeyspaceFromProperties());
+    public void tearDown() throws Exception {
+        dropTable(TABLE_NAME_2, testKeyspace);
     }
 
     @Test
@@ -49,50 +50,45 @@ public class ExecuteCqlQueryTestCase extends AbstractTestCases {
         List<Object> params = new ArrayList<Object>();
         params.add("value1");
         String whereClause = " WHERE " + DUMMY_PARTITION_KEY + " = ?";
-        CQLQueryInput query = new CQLQueryInput(QUERY_PREFIX + TABLE_NAME_2 + whereClause, params);
-
-        List<Map<String, Object>> queryResult = executeCQLQuery(query);
-        assertNotNull(queryResult.get(0));
+        CQLQueryInput query = new CQLQueryInput();
+        query.setCqlQuery(QUERY_PREFIX + testKeyspace + "." + TABLE_NAME_2 + whereClause);
+        query.setParameters(params);
+        assertNotNull(executeCQLQuery(query).get(0));
     }
 
     @Test
     public void shouldExecute_NonParametrizedQuery() throws Exception {
-        CQLQueryInput query = new CQLQueryInput(QUERY_PREFIX + TABLE_NAME_2, new ArrayList<>());
-        List<Map<String, Object>> queryResult = executeCQLQuery(query);
-        assertNotNull(queryResult.get(0));
+        CQLQueryInput query = new CQLQueryInput();
+        query.setCqlQuery(QUERY_PREFIX + testKeyspace + "." + TABLE_NAME_2);
+        query.setParameters(new ArrayList<>());
+        assertNotNull(executeCQLQuery(query).get(0));
     }
 
     @Test
-    public void shouldThrowException_When_InsufficientAmountOfBindVariables() throws Exception {
+    public void shouldThrowException_When_InsufficientAmountOfBindVariables() {
         //Select * from dummy_table_name_2 WHERE dummy_partition_key = ?
-        String whereClause = " WHERE " + DUMMY_PARTITION_KEY + " = ?";
-        CQLQueryInput query = new CQLQueryInput(QUERY_PREFIX + TABLE_NAME_2 + whereClause, null);
-
-        executeCQLQueryExpException(query, QUERY_VALIDATION);
+        try{
+            String whereClause = " WHERE " + DUMMY_PARTITION_KEY + " = ?";
+            CQLQueryInput query = new CQLQueryInput();
+            query.setCqlQuery(QUERY_PREFIX + TABLE_NAME_2 + whereClause);
+            executeCQLQuery(query);
+        } catch (Exception e){
+            assertThat(e.getMessage(), is("unconfigured table dummy_table_name_2."));
+        }
     }
 
     @Test
-    public void shouldThrowException_When_InsufficientAmountOfParameters() throws Exception {
+    public void shouldThrowException_When_InsufficientAmountOfParameters() {
         //Select * from dummy_table_name_2
-        List<Object> params = new ArrayList<Object>();
-        params.add("value1");
-        CQLQueryInput query = new CQLQueryInput(QUERY_PREFIX + TABLE_NAME_2, params);
-
-        executeCQLQueryExpException(query, UNKNOWN);
-    }
-
-    protected List<Map<String, Object>> executeCQLQuery(CQLQueryInput query) throws Exception {
-        return (List<Map<String, Object>>) flowRunner("executeCQLQuery-flow")
-                .withPayload(query)
-                .run()
-                .getMessage()
-                .getPayload()
-                .getValue();
-    }
-
-    protected void executeCQLQueryExpException(CQLQueryInput query, CassandraError error) throws Exception {
-        flowRunner("executeCQLQuery-flow")
-                .withPayload(query)
-                .runExpectingException(errorType(error));
+        try{
+            List<Object> params = new ArrayList<Object>();
+            params.add("value1");
+            CQLQueryInput query = new CQLQueryInput();
+            query.setCqlQuery(QUERY_PREFIX + TABLE_NAME_2);
+            query.setParameters(params);
+            executeCQLQuery(query);
+        } catch (Exception e){
+            assertThat(e.getMessage(), is("unconfigured table dummy_table_name_2."));
+        }
     }
 }

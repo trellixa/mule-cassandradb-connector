@@ -11,11 +11,6 @@ public class DataCenter {
     public DataCenter(){
     }
 
-    public DataCenter(String name, Integer value){
-        this.name = name;
-        this.value = value;
-    }
-
     public String getName() {
         return name;
     }
@@ -30,13 +25,5 @@ public class DataCenter {
 
     public void setValue(Integer value) {
         this.value = value;
-    }
-
-    @Override
-    public String toString() {
-        return "DataCenter{" +
-                "name='" + name + '\'' +
-                ", value=" + value +
-                '}';
     }
 }

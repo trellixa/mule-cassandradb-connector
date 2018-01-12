@@ -3,74 +3,48 @@
  */
 package org.mule.modules.cassandradb.automation.functional;
 
-import com.datastax.driver.core.ColumnMetadata;
-import com.datastax.driver.core.DataType;
-import com.datastax.driver.core.TableMetadata;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.mule.modules.cassandradb.api.AlterColumnInput;
-import org.mule.modules.cassandradb.api.CreateTableInput;
-import org.mule.modules.cassandradb.internal.exception.CassandraError;
-import org.mule.tck.junit4.matcher.ErrorTypeMatcher;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.hamcrest.CoreMatchers.startsWith;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.fail;
 import static org.mule.modules.cassandradb.api.ColumnType.TEXT;
-import static org.mule.modules.cassandradb.automation.util.TestDataBuilder.TABLE_NAME_1;
-import static org.mule.modules.cassandradb.automation.util.TestDataBuilder.VALID_COLUMN_1;
-import static org.mule.modules.cassandradb.automation.util.TestDataBuilder.getAlterColumnInput;
-import static org.mule.modules.cassandradb.automation.util.TestDataBuilder.getBasicCreateTableInput;
-import static org.mule.modules.cassandradb.automation.util.TestDataBuilder.getColumns;
-import static org.mule.modules.cassandradb.internal.exception.CassandraError.QUERY_VALIDATION;
-
+import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.TABLE_NAME_1;
+import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.VALID_COLUMN_1;
+import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getAlterColumnInput;
+import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getBasicCreateTableInput;
+import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getColumns;
+import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getRandomColumnName;
 
 public class AddNewColumnTestCase extends AbstractTestCases {
 
     @Before
-    public void setup() {
-        CreateTableInput basicCreateTableInput = getBasicCreateTableInput(getColumns(), getKeyspaceFromProperties(), TABLE_NAME_1);
-        getCassandraService().createTable(basicCreateTableInput);
+    public void setup() throws Exception {
+        createTable(getBasicCreateTableInput(getColumns(), testKeyspace, TABLE_NAME_1));
     }
 
     @After
-    public void tearDown() {
-        getCassandraService().dropTable(TABLE_NAME_1, getKeyspaceFromProperties());
+    public void tearDown() throws Exception {
+        dropTable(TABLE_NAME_1, testKeyspace);
     }
 
     @Test
-    public void testAddNewColumnOfPrimitiveTypeWithSuccess() throws Exception {
-        AlterColumnInput alterColumnInput = getAlterColumnInput(DataType.text().toString() + System.currentTimeMillis(), TEXT);
-        assertTrue(addNewColumn(TABLE_NAME_1, getKeyspaceFromProperties(), alterColumnInput));
-
-        Thread.sleep(SLEEP_DURATION);
-        TableMetadata tableMetadata = fetchTableMetadata(getKeyspaceFromProperties(), TABLE_NAME_1);
-        ColumnMetadata column = tableMetadata.getColumn(alterColumnInput.getColumn());
-        assertNotNull(column);
+    public void testAddNewColumnOfPrimitiveTypeWithSuccess() {
+        try {
+            addNewColumn(TABLE_NAME_1, testKeyspace, getAlterColumnInput(getRandomColumnName(), TEXT));
+        } catch (Exception e) {
+            fail();
+        }
     }
 
     @Test
-    public void testAddNewColumnWithSameName() throws Exception {
-        AlterColumnInput alterColumnInput = getAlterColumnInput(VALID_COLUMN_1, TEXT);
-        addNewColumnExpException(TABLE_NAME_1, getKeyspaceFromProperties(), alterColumnInput, QUERY_VALIDATION);
-    }
-
-    boolean addNewColumn(String tableName, String keyspaceName, AlterColumnInput alterColumnInput) throws Exception {
-        return (boolean) flowRunner("addColumn-flow")
-                .withPayload(alterColumnInput)
-                .withVariable("tableName", tableName)
-                .withVariable("keyspaceName", keyspaceName)
-                .run()
-                .getMessage()
-                .getPayload()
-                .getValue();
-    }
-
-    void addNewColumnExpException(String tableName, String keyspaceName, AlterColumnInput alterColumnInput, CassandraError error) throws Exception {
-        flowRunner("addColumn-flow")
-                .withPayload(alterColumnInput)
-                .withVariable("tableName", tableName)
-                .withVariable("keyspaceName", keyspaceName)
-                .runExpectingException(ErrorTypeMatcher.errorType(error));
+    public void testAddNewColumnWithSameName() {
+        try{
+            addNewColumn(TABLE_NAME_1, testKeyspace, getAlterColumnInput(VALID_COLUMN_1, TEXT));
+        } catch (Exception e){
+            assertThat(e.getMessage(), startsWith("Invalid column name dummy_column_1 because it conflicts with an existing column."));
+        }
     }
 }

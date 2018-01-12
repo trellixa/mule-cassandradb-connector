@@ -21,7 +21,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import static java.util.stream.Collectors.toSet;
-import static org.apache.commons.collections.CollectionUtils.*;
+import static org.apache.commons.collections.CollectionUtils.isEmpty;
 import static org.mule.metadata.java.api.JavaTypeLoader.JAVA;
 import static org.mule.runtime.api.metadata.MetadataKeyBuilder.newKey;
 

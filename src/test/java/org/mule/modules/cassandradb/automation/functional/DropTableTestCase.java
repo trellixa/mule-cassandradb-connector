@@ -5,53 +5,33 @@ package org.mule.modules.cassandradb.automation.functional;
 
 import org.junit.Test;
 import org.mule.modules.cassandradb.api.CreateTableInput;
-import org.mule.modules.cassandradb.automation.util.TestDataBuilder;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.mule.modules.cassandradb.automation.util.TestDataBuilder.TABLE_NAME_1;
-import static org.mule.modules.cassandradb.automation.util.TestDataBuilder.TABLE_NAME_2;
-import static org.mule.modules.cassandradb.automation.util.TestDataBuilder.getBasicCreateTableInput;
-import static org.mule.modules.cassandradb.automation.util.TestDataBuilder.getCompositePrimaryKey;
+import static org.junit.Assert.fail;
+import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.TABLE_NAME_1;
+import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.TABLE_NAME_2;
+import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getBasicCreateTableInput;
+import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getCompositePrimaryKey;
 
 public class DropTableTestCase extends AbstractTestCases {
 
     @Test
     public void testDropTable() throws Exception {
-        String tableName = TABLE_NAME_1;
-        String keyspace = getKeyspaceFromProperties();
-        CreateTableInput basicCreateTableInput = getBasicCreateTableInput(TestDataBuilder.getColumns(), keyspace, tableName);
-        getCassandraService().createTable(basicCreateTableInput);
-        assertNotNull(fetchTableMetadata(keyspace, tableName));
-
-        boolean result = dropTable(keyspace, tableName);
-        assertTrue(result);
-
-        assertNull(fetchTableMetadata(keyspace, tableName));
+        try{
+            createTable(getBasicCreateTableInput(TestDataBuilder.getColumns(), testKeyspace, TABLE_NAME_1));
+            dropTable(testKeyspace, TABLE_NAME_1);
+        } catch (Exception e){
+            fail();
+        }
     }
 
     @Test
     public void testDropTableWithCompositePK() throws Exception {
-        String tableName = TABLE_NAME_2;
-        String keyspace = getKeyspaceFromProperties();
-        CreateTableInput basicCreateTableInput = getBasicCreateTableInput(getCompositePrimaryKey(), keyspace, tableName);
-        getCassandraService().createTable(basicCreateTableInput);
-        assertNotNull(fetchTableMetadata(keyspace, tableName));
-
-        boolean result = dropTable(keyspace, tableName);
-        assertTrue(result);
-
-        assertNull(fetchTableMetadata(keyspace, tableName));
-    }
-
-    boolean dropTable(String keyspaceName, String tableName) throws Exception {
-        return (boolean) flowRunner("dropTable-flow")
-                .withVariable("tableName", tableName)
-                .withVariable("keyspaceName", keyspaceName)
-                .run()
-                .getMessage()
-                .getPayload()
-                .getValue();
+        try{
+            CreateTableInput basicCreateTableInput = getBasicCreateTableInput(getCompositePrimaryKey(), testKeyspace, TABLE_NAME_2);
+            createTable(basicCreateTableInput);
+            dropTable(testKeyspace, TABLE_NAME_2);
+        } catch (Exception e){
+            fail();
+        }
     }
 }

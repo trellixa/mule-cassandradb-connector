@@ -24,12 +24,4 @@ public class AlterColumnInput {
     public void setType(ColumnType type) {
         this.type = type;
     }
-
-    @Override
-    public String toString() {
-        return "AlterColumnInput{" +
-                "column='" + column + '\'' +
-                ", type=" + type +
-                '}';
-    }
 }

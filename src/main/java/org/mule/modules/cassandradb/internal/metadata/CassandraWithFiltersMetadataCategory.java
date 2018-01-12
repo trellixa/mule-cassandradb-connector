@@ -1,8 +1,6 @@
 package org.mule.modules.cassandradb.internal.metadata;
 
 import org.mule.metadata.api.model.MetadataType;
-import org.mule.modules.cassandradb.internal.config.CassandraConfig;
-import org.mule.modules.cassandradb.internal.connection.CassandraConnection;
 import org.mule.runtime.api.connection.ConnectionException;
 import org.mule.runtime.api.metadata.MetadataContext;
 import org.mule.runtime.api.metadata.MetadataKey;

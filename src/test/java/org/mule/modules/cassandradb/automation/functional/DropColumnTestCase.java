@@ -3,73 +3,49 @@
  */
 package org.mule.modules.cassandradb.automation.functional;
 
-import com.datastax.driver.core.ColumnMetadata;
-import com.datastax.driver.core.TableMetadata;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.mule.modules.cassandradb.api.CreateTableInput;
-import org.mule.modules.cassandradb.internal.exception.CassandraError;
-import org.mule.tck.junit4.matcher.ErrorTypeMatcher;
 
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.mule.modules.cassandradb.automation.util.TestDataBuilder.COLUMN;
-import static org.mule.modules.cassandradb.automation.util.TestDataBuilder.TABLE_NAME_1;
-import static org.mule.modules.cassandradb.automation.util.TestDataBuilder.VALID_COLUMN_1;
-import static org.mule.modules.cassandradb.automation.util.TestDataBuilder.VALID_COLUMN_2;
-import static org.mule.modules.cassandradb.automation.util.TestDataBuilder.getBasicCreateTableInput;
-import static org.mule.modules.cassandradb.automation.util.TestDataBuilder.getColumns;
-import static org.mule.modules.cassandradb.internal.exception.CassandraError.QUERY_VALIDATION;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.fail;
+import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.COLUMN;
+import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.TABLE_NAME_1;
+import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.VALID_COLUMN_1;
+import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.VALID_COLUMN_2;
+import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getBasicCreateTableInput;
+import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getColumns;
 
 
 public class DropColumnTestCase extends AbstractTestCases {
 
     @Before
     public void setup() throws Exception {
-        CreateTableInput basicCreateTableInput = getBasicCreateTableInput(getColumns(), getKeyspaceFromProperties(), TABLE_NAME_1);
-        getCassandraService().createTable(basicCreateTableInput);
+        createTable(getBasicCreateTableInput(getColumns(), testKeyspace, TABLE_NAME_1));
     }
 
     @After
-    public void tearDown() {
-        getCassandraService().dropTable(TABLE_NAME_1, getKeyspaceFromProperties());
+    public void tearDown() throws Exception {
+        dropTable(TABLE_NAME_1, testKeyspace);
     }
 
     @Test
     public void testRemoveColumnWithSuccess() throws Exception {
-        assertTrue(dropColumn(TABLE_NAME_1, getKeyspaceFromProperties(), VALID_COLUMN_1));
-        assertTrue(dropColumn(TABLE_NAME_1, getKeyspaceFromProperties(), VALID_COLUMN_2));
-
-        Thread.sleep(SLEEP_DURATION);
-        TableMetadata tableMetadata = fetchTableMetadata(getKeyspaceFromProperties(), TABLE_NAME_1);
-        ColumnMetadata column = tableMetadata.getColumn(VALID_COLUMN_1);
-        assertNull(column);
-        ColumnMetadata column2 = tableMetadata.getColumn(VALID_COLUMN_2);
-        assertNull(column2);
+        try{
+            dropColumn(TABLE_NAME_1, testKeyspace, VALID_COLUMN_1);
+            dropColumn(TABLE_NAME_1, testKeyspace, VALID_COLUMN_2);
+        } catch (Exception e){
+            fail();
+        }
     }
 
     @Test
     public void testRemoveColumnWithInvalidName() throws Exception {
-        dropColumnExpException(TABLE_NAME_1, getKeyspaceFromProperties(), COLUMN, QUERY_VALIDATION );
-    }
-
-    boolean dropColumn(String tableName, String keyspaceName, String column) throws Exception {
-        return (boolean) flowRunner("dropColumn-flow")
-                .withPayload(column)
-                .withVariable("tableName", tableName)
-                .withVariable("keyspaceName", keyspaceName)
-                .run()
-                .getMessage()
-                .getPayload()
-                .getValue();
-    }
-
-    void dropColumnExpException(String tableName, String keyspaceName, String column, CassandraError error) throws Exception {
-        flowRunner("dropColumn-flow")
-                .withPayload(column)
-                .withVariable("tableName", tableName)
-                .withVariable("keyspaceName", keyspaceName)
-                .runExpectingException(ErrorTypeMatcher.errorType(error));
+        try{
+            dropColumn(TABLE_NAME_1, testKeyspace, COLUMN);
+        } catch (Exception e){
+            assertThat(e.getMessage(), is("Column column was not found in table dummy_table_name_1."));
+        }
     }
 }
