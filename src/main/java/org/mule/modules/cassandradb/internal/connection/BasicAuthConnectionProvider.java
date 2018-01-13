@@ -53,7 +53,6 @@ public class BasicAuthConnectionProvider extends ConnectorConnectionProvider<Cas
     private String clusterName;
 
     /**
-     * @param username
      * the username to use for authentication.
      */
     @Parameter
