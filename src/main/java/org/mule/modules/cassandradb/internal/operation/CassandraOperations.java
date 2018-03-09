@@ -121,24 +121,28 @@ public class CassandraOperations extends ConnectorOperations<CassandraConfig, Ca
 
     /**
      * Creates a new keyspace
-     * @param input operation input containing the keyspace name and the replication details
-     * @return true if the operation succeeded, false otherwise
+     *
+     * @param config     The configuration of the connector.
+     * @param connection The connection to CassandraDB.
+     * @param input      operation input containing the keyspace name and the replication details
      */
     public void createKeyspace(@Config CassandraConfig config,
-                                  @Connection CassandraConnection connection,
-                                  @Content CreateKeyspaceInput input) {
+                               @Connection CassandraConnection connection,
+                               @Content CreateKeyspaceInput input) {
         logger.debug("Creating keyspace {}", input);
         newExecutionBuilder(config, connection).execute(CassandraService::createKeyspace).withParam(input);
     }
 
     /**
      * Drops the entire keyspace
+     *
+     * @param config     The configuration of the connector.
+     * @param connection The connection to CassandraDB.
      * @param keyspaceName the name of the keyspace to be dropped
-     * @return true if the operation succeeded, false otherwise
      */
     public void dropKeyspace(@Config CassandraConfig config,
-                                @Connection CassandraConnection connection,
-                                @Content String keyspaceName) {
+                             @Connection CassandraConnection connection,
+                             @Content String keyspaceName) {
         logger.debug("Dropping keyspace {}", keyspaceName);
         newExecutionBuilder(config, connection).execute(CassandraService::dropKeyspace).withParam(keyspaceName);
     }
@@ -147,42 +151,47 @@ public class CassandraOperations extends ConnectorOperations<CassandraConfig, Ca
     /**
      * Creates a table(column family) in a specific keyspace; If no keyspace is specified the keyspace used for login will be used
      *
+     * @param config     The configuration of the connector.
+     * @param connection The connection to CassandraDB.
      * @param createTableInput operation createTableInput describing the table name, the keyspace name and the list of columns
-     * @return true if the operation succeeded, false otherwise
      */
     public void createTable(@Config CassandraConfig config,
-                               @Connection CassandraConnection connection,
-                               @Content CreateTableInput createTableInput) {
+                            @Connection CassandraConnection connection,
+                            @Content CreateTableInput createTableInput) {
         logger.debug("Creating table {}", createTableInput);
         newExecutionBuilder(config, connection).execute(CassandraService::createTable).withParam(createTableInput);
     }
 
     /**
      * Drops an entire table form the specified keyspace or from the keyspace used for login if none is specified as an operation parameter
-     * @param tableName the name of the table to be dropped
+     *
+     * @param config     The configuration of the connector.
+     * @param connection The connection to CassandraDB.
+     * @param tableName    the name of the table to be dropped
      * @param keyspaceName (optional) the keyspace which contains the table to be dropped
-     * @return true if the operation succeeded, false otherwise
      */
     public void dropTable(@Config CassandraConfig config,
-                             @Connection CassandraConnection connection,
-                             @Content String tableName,
-                             @Optional String keyspaceName) {
+                          @Connection CassandraConnection connection,
+                          @Content String tableName,
+                          @Optional String keyspaceName) {
         logger.debug("Dropping table {}", tableName);
         newExecutionBuilder(config, connection).execute(CassandraService::dropTable).withParam(tableName).withParam(keyspaceName);
     }
 
     /**
      * Adds a new column
-     * @param table the name of the table to be used for the operation
-     * @param keyspaceName (optional) the keyspace which contains the table to be used
+     *
+     * @param config     The configuration of the connector.
+     * @param connection The connection to CassandraDB.
+     * @param table            the name of the table to be used for the operation
+     * @param keyspaceName     (optional) the keyspace which contains the table to be used
      * @param alterColumnInput POJO defining the name of the new column and its DataType
-     * @return true if the operation succeeded or false if not
      */
     public void addNewColumn(@Config CassandraConfig config,
-                                @Connection CassandraConnection connection,
-                                String table,
-                                @Optional String keyspaceName,
-                                @Content AlterColumnInput alterColumnInput) {
+                             @Connection CassandraConnection connection,
+                             String table,
+                             @Optional String keyspaceName,
+                             @Content AlterColumnInput alterColumnInput) {
         logger.debug("Adding new column {}", alterColumnInput);
         newExecutionBuilder(config, connection).execute(CassandraService::addNewColumn)
                 .withParam(table)
@@ -193,16 +202,18 @@ public class CassandraOperations extends ConnectorOperations<CassandraConfig, Ca
 
     /**
      * Removes a column
-     * @param table the name of the table to be used for the operation
+     *
+     * @param config     The configuration of the connector.
+     * @param connection The connection to CassandraDB.
+     * @param table        the name of the table to be used for the operation
      * @param keyspaceName (optional) the keyspace which contains the table to be used
-     * @param columnName the name of the column to be removed
-     * @return true if the operation succeeded or false if not
+     * @param columnName   the name of the column to be removed
      */
     public void dropColumn(@Config CassandraConfig config,
-                              @Connection CassandraConnection connection,
-                              String table,
-                              @Optional String keyspaceName,
-                              @Content String columnName) {
+                           @Connection CassandraConnection connection,
+                           String table,
+                           @Optional String keyspaceName,
+                           @Content String columnName) {
         newExecutionBuilder(config, connection).execute(CassandraService::dropColumn)
                 .withParam(table)
                 .withParam(keyspaceName)
@@ -211,18 +222,20 @@ public class CassandraOperations extends ConnectorOperations<CassandraConfig, Ca
 
     /**
      * Renames a column
-     * @param table the name of the table to be used for the operation
-     * @param keyspaceName (optional) the keyspace which contains the table to be used
+     *
+     * @param config     The configuration of the connector.
+     * @param connection The connection to CassandraDB.
+     * @param table         the name of the table to be used for the operation
+     * @param keyspaceName  (optional) the keyspace which contains the table to be used
      * @param oldColumnName the name of the column to be changed
      * @param newColumnName the new value for the name of the column
-     * @return true if the operation succeeded or false if not
      */
     public void renameColumn(@Config CassandraConfig config,
-                                @Connection CassandraConnection connection,
-                                String table,
-                                @Optional String keyspaceName,
-                                @Content String oldColumnName,
-                                String newColumnName) {
+                             @Connection CassandraConnection connection,
+                             String table,
+                             @Optional String keyspaceName,
+                             @Content String oldColumnName,
+                             String newColumnName) {
         newExecutionBuilder(config, connection).execute(CassandraService::renameColumn)
                 .withParam(table)
                 .withParam(keyspaceName)
@@ -232,16 +245,18 @@ public class CassandraOperations extends ConnectorOperations<CassandraConfig, Ca
 
     /**
      * Changes the type of a column - check compatibility here: <a href="http://docs.datastax.com/en/cql/3.1/cql/cql_reference/cql_data_types_c.html#concept_ds_wbk_zdt_xj__cql_data_type_compatibility">CQL type compatibility</a>
-     * @param table the name of the table to be used for the operation
-     * @param keyspaceName (optional) the keyspace which contains the table to be used
+     *
+     * @param config     The configuration of the connector.
+     * @param connection The connection to CassandraDB.
+     * @param table            the name of the table to be used for the operation
+     * @param keyspaceName     (optional) the keyspace which contains the table to be used
      * @param alterColumnInput POJO defining the name of the column to be changed and the new DataType
-     * @return true if the operation succeeded or false if not
      */
     public void changeColumnType(@Config CassandraConfig config,
-                                    @Connection CassandraConnection connection,
-                                    String table,
-                                    @Optional String keyspaceName,
-                                    @Content AlterColumnInput alterColumnInput){
+                                 @Connection CassandraConnection connection,
+                                 String table,
+                                 @Optional String keyspaceName,
+                                 @Content AlterColumnInput alterColumnInput) {
         newExecutionBuilder(config, connection).execute(CassandraService::changeColumnType)
                 .withParam(table)
                 .withParam(keyspaceName)
@@ -250,6 +265,9 @@ public class CassandraOperations extends ConnectorOperations<CassandraConfig, Ca
 
     /**
      * Returns all the table names from the specified keyspace
+     *
+     * @param config     The configuration of the connector.
+     * @param connection The connection to CassandraDB.
      * @param keyspaceName the name of the keyspace to be used on the operation
      * @return a list of table names
      */
@@ -262,8 +280,11 @@ public class CassandraOperations extends ConnectorOperations<CassandraConfig, Ca
 
     /**
      * Executes the insert entity operation
-     * @param table the table name in which the entity will be inserted
-     * @param keyspaceName (optional) the keyspace which contains the table to be used
+     *
+     * @param config     The configuration of the connector.
+     * @param connection The connection to CassandraDB.
+     * @param table          the table name in which the entity will be inserted
+     * @param keyspaceName   (optional) the keyspace which contains the table to be used
      * @param entityToInsert the entity to be inserted
      */
     public void insert(@Config CassandraConfig config,
@@ -280,8 +301,11 @@ public class CassandraOperations extends ConnectorOperations<CassandraConfig, Ca
 
     /**
      * Executes the update entity operation
-     * @param table the table name in which the entity will be updated
-     * @param keyspaceName (optional) the keyspace which contains the table to be dropped
+     *
+     * @param config     The configuration of the connector.
+     * @param connection The connection to CassandraDB.
+     * @param table          the table name in which the entity will be updated
+     * @param keyspaceName   (optional) the keyspace which contains the table to be dropped
      * @param entityToUpdate the entity to be updated
      */
     public void update(@Config CassandraConfig config,
@@ -300,6 +324,8 @@ public class CassandraOperations extends ConnectorOperations<CassandraConfig, Ca
     /**
      * Executes the raw input query provided
      *
+     * @param config     The configuration of the connector.
+     * @param connection The connection to CassandraDB.
      * @param cqlInput CQLQueryInput describing the parametrized query to be executed along with the parameters
      * @return the result of the query execution
      */
@@ -316,15 +342,18 @@ public class CassandraOperations extends ConnectorOperations<CassandraConfig, Ca
 
     /**
      * Executes a select query
-     * @param query  the query to be executed
+     *
+     * @param config     The configuration of the connector.
+     * @param connection The connection to CassandraDB.
+     * @param query      the query to be executed
      * @param parameters the query parameters
      * @return list of entities returned by the select query
      */
     @Query(translator = DefaultDsqlQueryTranslator.class, entityResolver = CassandraMetadataResolver.class, nativeOutputResolver = CassandraMetadataResolver.class)
-    public List<Map<String, Object>>  select(@Config CassandraConfig config,
-                                             @Connection CassandraConnection connection,
-                                             @Content @MetadataKeyId(CassandraMetadataResolver.class) final String query,
-                                             @Optional List<Object> parameters)  {
+    public List<Map<String, Object>> select(@Config CassandraConfig config,
+                                            @Connection CassandraConnection connection,
+                                            @Content @MetadataKeyId(CassandraMetadataResolver.class) final String query,
+                                            @Optional List<Object> parameters) {
         logger.debug("Executing select query: {} with the parameters: {}", query, parameters);
         return newExecutionBuilder(config, connection).execute(CassandraService::select)
                 .withParam(query)
@@ -333,9 +362,12 @@ public class CassandraOperations extends ConnectorOperations<CassandraConfig, Ca
 
     /**
      * Deletes an entire record
-     * @param table the name of the table
+     *
+     * @param config     The configuration of the connector.
+     * @param connection The connection to CassandraDB.
+     * @param table        the name of the table
      * @param keyspaceName (optional) the keyspace which contains the table to be used
-     * @param whereClause operation input: where clause for the delete operation
+     * @param whereClause  operation input: where clause for the delete operation
      */
     public void deleteRows(@Config CassandraConfig config,
                            @Connection CassandraConnection connection,
@@ -350,9 +382,12 @@ public class CassandraOperations extends ConnectorOperations<CassandraConfig, Ca
 
     /**
      * Deletes values from an object specified by the where clause
-     * @param table the name of the table
+     *
+     * @param config     The configuration of the connector.
+     * @param connection The connection to CassandraDB.
+     * @param table        the name of the table
      * @param keyspaceName (optional) the keyspace which contains the table to be used
-     * @param entities operation input: columns to be deleted
+     * @param entities     operation input: columns to be deleted
      * @param whereClause: where clause for the delete operation
      */
     public void deleteColumnsValue(@Config CassandraConfig config,
