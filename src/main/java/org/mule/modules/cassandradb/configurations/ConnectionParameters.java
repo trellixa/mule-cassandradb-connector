@@ -24,8 +24,8 @@ public class ConnectionParameters {
         this.advancedConnectionParameters = advancedConnectionParameters;
     }
 
-    public String getHost() {
-        return host;
+    public String[] getHost() {
+        return host.split(",");
     }
 
     public void setHost(String host) {
