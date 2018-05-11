@@ -45,9 +45,16 @@ public final class CassandraClient {
      */
     public static CassandraClient buildCassandraClient(ConnectionParameters connectionParameters) throws org.mule.api.ConnectionException {
         validateBasicParams(connectionParameters);
-        Cluster.Builder clusterBuilder;
+
+        Cluster.Builder clusterBuilder = Cluster.builder();
+
+        CassandraClient client = new CassandraClient();
+
         try {
-            clusterBuilder = Cluster.builder().addContactPoint(connectionParameters.getHost()).withPort(Integer.parseInt(connectionParameters.getPort()));
+            for (String host : connectionParameters.getHost()) {
+                clusterBuilder.addContactPoint(host.trim()).withPort(Integer.parseInt(connectionParameters.getPort()));
+            }
+
         } catch (IllegalArgumentException connEx) {
             logger.error("Error while connecting to Cassandra database!", connEx);
             throw new org.mule.api.ConnectionException(ConnectionExceptionCode.CANNOT_REACH, null, connEx.getMessage());
@@ -61,7 +68,6 @@ public final class CassandraClient {
             addAdvancedConnectionParameters(clusterBuilder, connectionParameters.getAdvancedConnectionParameters());
         }
 
-        CassandraClient client = new CassandraClient();
         client.cluster = clusterBuilder.build();
 
         try {
@@ -186,7 +192,7 @@ public final class CassandraClient {
      * Fetches table metadata using DataStax java driver, based on the keyspace provided
      *
      * @param keyspaceUsed the Keyspace to fetch from
-     * @param tableName the Table from keyspace
+     * @param tableName    the Table from keyspace
      * @return the table metadata as returned by the driver.
      */
     public TableMetadata fetchTableMetadata(final String keyspaceUsed, final String tableName) {
@@ -262,11 +268,11 @@ public final class CassandraClient {
      * - remove one or more columns from one or more rows in a table;
      * - remove the entire row (one or more);
      * - if column_name refers to a collection (a list or map), the parameter in parentheses indicates the term in the collection
-     *    to be deleted
-     * 
-     * @param keySpace Keyspace to delete from
-     * @param table Table to delete from
-     * @param entity Entity to be removed
+     * to be deleted
+     *
+     * @param keySpace    Keyspace to delete from
+     * @param table       Table to delete from
+     * @param entity      Entity to be removed
      * @param whereClause WHERE clause condition
      * @throws CassandraDBException if something goes wrong
      */
@@ -405,8 +411,10 @@ public final class CassandraClient {
     }
 
     private static void validateBasicParams(ConnectionParameters parameters) {
-        if (StringUtils.isBlank(parameters.getHost()) || StringUtils.isBlank(parameters.getPort())) {
-            throw new IllegalArgumentException("Unable to connect! Missing HOST or PORT parameter!");
+        for (String host : parameters.getHost()) {
+            if (StringUtils.isBlank(host) || StringUtils.isBlank(parameters.getPort())) {
+                throw new IllegalArgumentException("Unable to connect! Missing HOST or PORT parameter!");
+            }
         }
     }
 }
