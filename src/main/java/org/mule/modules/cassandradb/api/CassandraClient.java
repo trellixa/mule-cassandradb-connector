@@ -11,6 +11,7 @@ import org.mule.modules.cassandradb.metadata.AlterColumnInput;
 import org.mule.modules.cassandradb.metadata.CreateKeyspaceInput;
 import org.mule.modules.cassandradb.metadata.CreateTableInput;
 import org.mule.modules.cassandradb.utils.CassandraDBException;
+import org.mule.modules.cassandradb.utils.ConnectionUtil;
 import org.mule.modules.cassandradb.utils.Constants;
 import org.mule.modules.cassandradb.utils.builders.HelperStatements;
 
@@ -51,8 +52,16 @@ public final class CassandraClient {
         CassandraClient client = new CassandraClient();
 
         try {
-            for (String host : connectionParameters.getHost()) {
-                clusterBuilder.addContactPoint(host.trim()).withPort(Integer.parseInt(connectionParameters.getPort()));
+            Map<String,String> nodes = ConnectionUtil.getAddress(connectionParameters.getNodes());
+
+            Set<String> hosts = nodes.keySet();
+            Set<String> ports = new HashSet<>(nodes.values());
+
+            Iterator<String> iterator = hosts.iterator();
+            Iterator<String> iterator2 = ports.iterator();
+
+            while (iterator.hasNext()){
+                clusterBuilder.addContactPoint(iterator.next()).withPort(Integer.parseInt(iterator2.next()));
             }
 
         } catch (IllegalArgumentException connEx) {
@@ -72,8 +81,7 @@ public final class CassandraClient {
 
         try {
             logger.info("Connecting to Cassandra Database: {} , port: {} with clusterName: {} , protocol version {} and compression type {} ",
-                    connectionParameters.getHost(),
-                    connectionParameters.getPort(),
+                    connectionParameters.getNodes(),
                     connectionParameters.getAdvancedConnectionParameters() != null ? connectionParameters.getAdvancedConnectionParameters().getClusterName() : null,
                     connectionParameters.getAdvancedConnectionParameters() != null ? connectionParameters.getAdvancedConnectionParameters().getProtocolVersion() : null,
                     connectionParameters.getAdvancedConnectionParameters() != null ? connectionParameters.getAdvancedConnectionParameters().getCompression() : null);
@@ -411,10 +419,9 @@ public final class CassandraClient {
     }
 
     private static void validateBasicParams(ConnectionParameters parameters) {
-        for (String host : parameters.getHost()) {
-            if (StringUtils.isBlank(host) || StringUtils.isBlank(parameters.getPort())) {
+         if (StringUtils.isBlank(parameters.getNodes())) {
                 throw new IllegalArgumentException("Unable to connect! Missing HOST or PORT parameter!");
             }
-        }
+
     }
 }

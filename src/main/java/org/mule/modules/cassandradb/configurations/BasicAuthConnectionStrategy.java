@@ -37,6 +37,14 @@ public class BasicAuthConnectionStrategy {
     @Configurable
     @Default("9042")
     private String port;
+    /**
+     * Cassandra cluster nodes(ip or host address and port separated by comma. E.g: host1:port1, host2:port2). If the port is not specified,
+     * the default 9042 will be used.
+     * When you specify this parameter, the host and port from general settings will be ignored.
+     */
+    @Configurable
+    @org.mule.api.annotations.param.Optional
+    private String clusterNodes;
 
     /**
      * Cassandra keyspace
@@ -88,6 +96,14 @@ public class BasicAuthConnectionStrategy {
     @FriendlyName("SSL")
     private boolean sslEnabled;
 
+    public String getClusterNodes() {
+        return clusterNodes;
+    }
+
+    public void setClusterNodes(String clusterNodes) {
+        this.clusterNodes = clusterNodes;
+    }
+
     /**
      * Cassandra client
      * session to be used to execute queries
@@ -105,7 +121,7 @@ public class BasicAuthConnectionStrategy {
     @TestConnectivity
     public void connect(@ConnectionKey @Optional final String username,
                         @Password @Optional final String password) throws ConnectionException {
-        cassandraClient = CassandraClient.buildCassandraClient(new ConnectionParameters(host, port, username, password, keyspace,
+        cassandraClient = CassandraClient.buildCassandraClient(new ConnectionParameters(clusterNodes, username, password, keyspace,
                 new AdvancedConnectionParameters(protocolVersion, clusterName, maxSchemaAgreementWaitSeconds, compression, sslEnabled)));
     }
 

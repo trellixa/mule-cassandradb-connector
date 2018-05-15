@@ -5,32 +5,21 @@ package org.mule.modules.cassandradb.utils;
 
 public class CassandraConfig {
 
-    private String host;
-
-    private String port;
+    private String nodes;
 
     private String keyspace;
 
-    public CassandraConfig(String host, String port, String keyspace) {
-        this.host = host;
-        this.port = port;
+    public CassandraConfig(String nodes, String keyspace) {
+        this.nodes = nodes;
         this.keyspace = keyspace;
     }
 
-    public String getHost() {
-        return host;
+    public String getNodes() {
+        return nodes;
     }
 
-    public void setHost(String host) {
-        this.host = host;
-    }
-
-    public String getPort() {
-        return port;
-    }
-
-    public void setPort(String port) {
-        this.port = port;
+    public void setNodes(String nodes) {
+        this.nodes = nodes;
     }
 
     public String getKeyspace() {
