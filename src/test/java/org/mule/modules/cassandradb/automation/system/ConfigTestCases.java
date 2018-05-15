@@ -3,6 +3,7 @@
  */
 package org.mule.modules.cassandradb.automation.system;
 
+import org.junit.Ignore;
 import org.mule.api.ConnectionException;
 import org.mule.modules.cassandradb.automation.util.PropertiesLoaderUtil;
 import org.junit.Test;
@@ -17,9 +18,7 @@ import org.mule.modules.cassandradb.utils.CassandraConfig;
 import org.mule.tools.devkit.ctf.exceptions.ConfigurationLoadingFailedException;
 
 public class ConfigTestCases  {
-
-    private static String INVALID_HOST = "INVALID_HOST";
-
+    
     private static CassandraConfig cassConfig;
 
     public static CassandraConfig getClientConfig() throws ConfigurationLoadingFailedException {
@@ -39,55 +38,14 @@ public class ConfigTestCases  {
         assert cassClient != null;
     }
 
-   // @Test
+    @Test
     public void shouldConnect_Using_AdvancedParams() throws Exception {
         //given
         AdvancedConnectionParameters advancedParams = new AdvancedConnectionParameters(ProtocolVersion.V3, TestsConstants.CLUSTER_NAME, TestsConstants.MAX_WAIT, ProtocolOptions.Compression.NONE, false);
         cassConfig = getClientConfig();
         //when
-       // CassandraClient cassClient = CassandraClient.buildCassandraClient(new ConnectionParameters(cassConfig.getHost(), cassConfig.getPort(), null, null, null, advancedParams));
+        CassandraClient cassClient = CassandraClient.buildCassandraClient(new ConnectionParameters(cassConfig.getNodes(), null, null, null, advancedParams));
         //then
-      //  assert cassClient != null;
-    }
-
-   // @Test(expected = ConnectionException.class)
-    public void shouldNotConnect_Using_InvalidHost() throws ConnectionException, ConfigurationLoadingFailedException {
-        //given
-        AdvancedConnectionParameters advancedParams = new AdvancedConnectionParameters(ProtocolVersion.V3, TestsConstants.CLUSTER_NAME, TestsConstants.MAX_WAIT, ProtocolOptions.Compression.NONE, false);
-        cassConfig = getClientConfig();
-        //when
-        //CassandraClient.buildCassandraClient(new ConnectionParameters(INVALID_HOST, cassConfig.getPort(), null, null, null, advancedParams));
-    }
-
-   // @Test(expected = IllegalArgumentException.class)
-    public void shouldNotConnect_Using_NoHost() throws ConnectionException, ConfigurationLoadingFailedException {
-        //given
-        AdvancedConnectionParameters advancedParams = new AdvancedConnectionParameters(ProtocolVersion.V3, TestsConstants.CLUSTER_NAME, TestsConstants.MAX_WAIT, ProtocolOptions.Compression.NONE, false);
-        cassConfig = getClientConfig();
-        //when
-       // CassandraClient.buildCassandraClient(new ConnectionParameters(null, cassConfig.getPort(), null, null, null, advancedParams));
-    }
-
-    //@Test(expected = ConnectionException.class)
-    public void shouldNotConnect_Using_InvalidPort() throws ConnectionException, ConfigurationLoadingFailedException {
-        //given
-        AdvancedConnectionParameters advancedParams = new AdvancedConnectionParameters(ProtocolVersion.V3, TestsConstants.CLUSTER_NAME, TestsConstants.MAX_WAIT, ProtocolOptions.Compression.NONE, false);
-        cassConfig = getClientConfig();
-        //when
-   //     CassandraClient.buildCassandraClient(new ConnectionParameters(cassConfig.getHost(), generateInvalidPort(cassConfig.getPort()), null, null, null, advancedParams));
-    }
-
-   // @Test(expected = IllegalArgumentException.class)
-    public void shouldNotConnect_Using_NoPort() throws ConnectionException, ConfigurationLoadingFailedException {
-        //given
-        AdvancedConnectionParameters advancedParams = new AdvancedConnectionParameters(ProtocolVersion.V3, TestsConstants.CLUSTER_NAME, TestsConstants.MAX_WAIT, ProtocolOptions.Compression.NONE, false);
-        cassConfig = getClientConfig();
-        //when
-      //  CassandraClient.buildCassandraClient(new ConnectionParameters(cassConfig.getHost(), null, null, null, null, advancedParams));
-    }
-
-    private String generateInvalidPort(String port) {
-        Integer intPort = Integer.parseInt(port) - 1;
-        return String.valueOf(intPort);
+        assert cassClient != null;
     }
 }

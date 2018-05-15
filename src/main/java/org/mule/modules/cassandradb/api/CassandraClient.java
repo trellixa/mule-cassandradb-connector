@@ -55,7 +55,7 @@ public final class CassandraClient {
             Map<String,String> nodes = ConnectionUtil.getAddress(connectionParameters.getNodes());
 
             Set<String> hosts = nodes.keySet();
-            Set<String> ports = new HashSet<>(nodes.values());
+            List<String> ports = new ArrayList<>(nodes.values());
 
             Iterator<String> iterator = hosts.iterator();
             Iterator<String> iterator2 = ports.iterator();
