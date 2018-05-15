@@ -18,7 +18,7 @@ import org.mule.modules.cassandradb.utils.CassandraConfig;
 import org.mule.tools.devkit.ctf.exceptions.ConfigurationLoadingFailedException;
 
 public class ConfigTestCases  {
-    
+
     private static CassandraConfig cassConfig;
 
     public static CassandraConfig getClientConfig() throws ConfigurationLoadingFailedException {
