@@ -29,6 +29,7 @@ public class BasicAuthConnectionStrategy {
      */
     @Configurable
     @Default("localhost")
+    @Placement(order = 1)
     private String host;
 
     /**
@@ -36,6 +37,7 @@ public class BasicAuthConnectionStrategy {
      */
     @Configurable
     @Default("9042")
+    @Placement(order = 2)
     private String port;
     /**
      * Cassandra cluster nodes(ip or host address and port separated by comma. E.g: host1:port1, host2:port2). If the port is not specified,
@@ -43,6 +45,7 @@ public class BasicAuthConnectionStrategy {
      * When you specify this parameter, the host and port from general settings will be ignored.
      */
     @Configurable
+    @Placement(order = 3)
     @org.mule.api.annotations.param.Optional
     private String clusterNodes;
 
@@ -50,6 +53,7 @@ public class BasicAuthConnectionStrategy {
      * Cassandra keyspace
      */
     @Configurable
+    @Placement(order = 4)
     @org.mule.api.annotations.param.Optional
     @Default("")
     private String keyspace;
