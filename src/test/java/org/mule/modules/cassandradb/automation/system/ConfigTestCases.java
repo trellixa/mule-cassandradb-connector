@@ -3,23 +3,23 @@
  */
 package org.mule.modules.cassandradb.automation.system;
 
-import org.junit.Ignore;
-import org.mule.api.ConnectionException;
-import org.mule.modules.cassandradb.automation.util.PropertiesLoaderUtil;
-import org.junit.Test;
-
 import com.datastax.driver.core.ProtocolOptions;
 import com.datastax.driver.core.ProtocolVersion;
+import org.junit.Test;
+import org.mule.api.ConnectionException;
 import org.mule.modules.cassandradb.api.CassandraClient;
+import org.mule.modules.cassandradb.automation.util.PropertiesLoaderUtil;
+import org.mule.modules.cassandradb.automation.util.TestsConstants;
 import org.mule.modules.cassandradb.configurations.AdvancedConnectionParameters;
 import org.mule.modules.cassandradb.configurations.ConnectionParameters;
-import org.mule.modules.cassandradb.automation.util.TestsConstants;
 import org.mule.modules.cassandradb.utils.CassandraConfig;
 import org.mule.tools.devkit.ctf.exceptions.ConfigurationLoadingFailedException;
 
 public class ConfigTestCases  {
 
     private static CassandraConfig cassConfig;
+
+    private static String INVALID_HOST = "INVALID_HOST";
 
     public static CassandraConfig getClientConfig() throws ConfigurationLoadingFailedException {
         //load required properties
@@ -51,5 +51,44 @@ public class ConfigTestCases  {
         assert cassClient != null;
     }
 
+    @Test(expected = ConnectionException.class)
+    public void shouldNotConnect_Using_InvalidHost() throws ConnectionException, ConfigurationLoadingFailedException {
+        //given
+        AdvancedConnectionParameters advancedParams = new AdvancedConnectionParameters(ProtocolVersion.V3, TestsConstants.CLUSTER_NAME, null, TestsConstants.MAX_WAIT, ProtocolOptions.Compression.NONE, false);
+        cassConfig = getClientConfig();
+        //when
+        CassandraClient.buildCassandraClient(new ConnectionParameters(INVALID_HOST, cassConfig.getPort(), null, null, null, advancedParams));
+    }
 
+    @Test(expected = ConnectionException.class)
+    public void shouldNotConnect_Using_NoHost() throws ConnectionException, ConfigurationLoadingFailedException {
+        //given
+        AdvancedConnectionParameters advancedParams = new AdvancedConnectionParameters(ProtocolVersion.V3, TestsConstants.CLUSTER_NAME, null, TestsConstants.MAX_WAIT, ProtocolOptions.Compression.NONE, false);
+        cassConfig = getClientConfig();
+        //when
+        CassandraClient.buildCassandraClient(new ConnectionParameters(null, cassConfig.getPort(), null, null, null, advancedParams));
+    }
+
+    @Test(expected = ConnectionException.class)
+    public void shouldNotConnect_Using_InvalidPort() throws ConnectionException, ConfigurationLoadingFailedException {
+        //given
+        AdvancedConnectionParameters advancedParams = new AdvancedConnectionParameters(ProtocolVersion.V3, TestsConstants.CLUSTER_NAME, null, TestsConstants.MAX_WAIT, ProtocolOptions.Compression.NONE, false);
+        cassConfig = getClientConfig();
+        //when
+        CassandraClient.buildCassandraClient(new ConnectionParameters(cassConfig.getHost(), generateInvalidPort(cassConfig.getPort()), null, null, null, advancedParams));
+    }
+
+    @Test(expected = org.mule.api.ConnectionException.class)
+    public void shouldNotConnect_Using_NoPort() throws ConnectionException, ConfigurationLoadingFailedException {
+        //given
+        AdvancedConnectionParameters advancedParams = new AdvancedConnectionParameters(ProtocolVersion.V3, TestsConstants.CLUSTER_NAME, null, TestsConstants.MAX_WAIT, ProtocolOptions.Compression.NONE, false);
+        cassConfig = getClientConfig();
+        //when
+        CassandraClient.buildCassandraClient(new ConnectionParameters(cassConfig.getHost(), null, null, null, null, advancedParams));
+    }
+
+    private String generateInvalidPort(String port) {
+        Integer intPort = Integer.parseInt(port) - 1;
+        return String.valueOf(intPort);
+    }
 }
