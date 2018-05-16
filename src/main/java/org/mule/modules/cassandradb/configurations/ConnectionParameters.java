@@ -4,28 +4,37 @@
 package org.mule.modules.cassandradb.configurations;
 
 public class ConnectionParameters {
-
-    private String nodes;
+    private String host;
+    private String port;
     private String username;
     private String password;
     /*keyspace to retrieve cluster session for*/
     private String keyspace;
     private AdvancedConnectionParameters advancedConnectionParameters;
 
-    public ConnectionParameters(String nodes, String username, String password, String keyspace, AdvancedConnectionParameters advancedConnectionParameters) {
-        this.nodes = nodes;
+    public ConnectionParameters(String host, String port, String username, String password, String keyspace, AdvancedConnectionParameters advancedConnectionParameters) {
+        this.host = host;
+        this.port = port;
         this.username = username;
         this.password = password;
         this.keyspace = keyspace;
         this.advancedConnectionParameters = advancedConnectionParameters;
     }
 
-    public String getNodes() {
-        return nodes;
+    public String getHost() {
+        return host;
     }
 
-    public void setNodes(String nodes) {
-        this.nodes = nodes;
+    public void setHost(String host) {
+        this.host = host;
+    }
+
+    public String getPort() {
+        return port;
+    }
+
+    public void setPort(String port) {
+        this.port = port;
     }
 
     public String getUsername() {

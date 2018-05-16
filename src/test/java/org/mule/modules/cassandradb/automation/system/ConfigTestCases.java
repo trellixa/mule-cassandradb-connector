@@ -33,7 +33,7 @@ public class ConfigTestCases  {
         //given
         cassConfig = getClientConfig();
         //when
-        CassandraClient cassClient = CassandraClient.buildCassandraClient(new ConnectionParameters(cassConfig.getNodes(), null, null, null, null));
+        CassandraClient cassClient = CassandraClient.buildCassandraClient(new ConnectionParameters(cassConfig.getHost(), cassConfig.getPort(),null, null, null, null));
         //then
         assert cassClient != null;
     }
@@ -41,11 +41,15 @@ public class ConfigTestCases  {
     @Test
     public void shouldConnect_Using_AdvancedParams() throws Exception {
         //given
-        AdvancedConnectionParameters advancedParams = new AdvancedConnectionParameters(ProtocolVersion.V3, TestsConstants.CLUSTER_NAME, TestsConstants.MAX_WAIT, ProtocolOptions.Compression.NONE, false);
         cassConfig = getClientConfig();
+
+        AdvancedConnectionParameters advancedParams = new AdvancedConnectionParameters(ProtocolVersion.V3, TestsConstants.CLUSTER_NAME, cassConfig.getNodes(), TestsConstants.MAX_WAIT, ProtocolOptions.Compression.NONE, false);
+
         //when
-        CassandraClient cassClient = CassandraClient.buildCassandraClient(new ConnectionParameters(cassConfig.getNodes(), null, null, null, advancedParams));
+        CassandraClient cassClient = CassandraClient.buildCassandraClient(new ConnectionParameters(null, null, null,  null, null, advancedParams));
         //then
         assert cassClient != null;
     }
+
+
 }

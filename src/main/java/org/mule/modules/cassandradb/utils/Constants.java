@@ -16,6 +16,8 @@ public class Constants {
 
     //configuration
     public final static String CASS_NODES = "config.clusterNodes";
+    public static final String CASS_HOST = "config.host";
+    public static final String CASS_PORT = "config.port";
 
     public final static String KEYSPACE_NAME = "config.keyspace";
 

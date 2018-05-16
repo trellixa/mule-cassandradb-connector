@@ -34,7 +34,7 @@ public abstract class CassandraAbstractMetaDataTestCases extends AbstractMetaDat
     public static void initialSetup() throws ConfigurationLoadingFailedException, ConnectionException, CassandraDBException, InterruptedException {
         cassConfig = getClientConfig();
         //get instance of cass client based on the configs
-        cassClient = CassandraClient.buildCassandraClient(new ConnectionParameters(cassConfig.getNodes(), null, null, null, null));
+        cassClient = CassandraClient.buildCassandraClient(new ConnectionParameters(cassConfig.getHost(), cassConfig.getPort(), null, null, null, null));
         assert cassClient != null;
         //setup db env
         CreateKeyspaceInput keyspaceInput = new CreateKeyspaceInput();

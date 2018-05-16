@@ -45,30 +45,39 @@ public final class CassandraClient {
      * @throws org.mule.api.ConnectionException if any error occurs when trying to connect
      */
     public static CassandraClient buildCassandraClient(ConnectionParameters connectionParameters) throws org.mule.api.ConnectionException {
-        validateBasicParams(connectionParameters);
 
         Cluster.Builder clusterBuilder = Cluster.builder();
 
         CassandraClient client = new CassandraClient();
-
-        try {
-            Map<String,String> nodes = ConnectionUtil.getAddress(connectionParameters.getNodes());
-
-            Set<String> hosts = nodes.keySet();
-            List<String> ports = new ArrayList<>(nodes.values());
-
-            Iterator<String> iterator = hosts.iterator();
-            Iterator<String> iterator2 = ports.iterator();
-
-            while (iterator.hasNext()){
-                clusterBuilder.addContactPoint(iterator.next()).withPort(Integer.parseInt(iterator2.next()));
+        if((!Objects.equals(connectionParameters.getPort(), null)) && (!Objects.equals(connectionParameters.getHost(), null)) ){
+            validateBasicParams(connectionParameters);
+            try {
+                clusterBuilder.addContactPoint(connectionParameters.getHost()).withPort(Integer.parseInt(connectionParameters.getPort()));
+            } catch (IllegalArgumentException connEx) {
+                logger.error("Error while connecting to Cassandra database!", connEx);
+                throw new org.mule.api.ConnectionException(ConnectionExceptionCode.CANNOT_REACH, null, connEx.getMessage());
             }
-
-        } catch (IllegalArgumentException connEx) {
-            logger.error("Error while connecting to Cassandra database!", connEx);
-            throw new org.mule.api.ConnectionException(ConnectionExceptionCode.CANNOT_REACH, null, connEx.getMessage());
         }
+        else {
+            try {
+                validateAdvancedParams(connectionParameters);
+                Map<String, String> nodes = ConnectionUtil.getAddress(connectionParameters.getAdvancedConnectionParameters().getClusterNodes());
 
+                Set<String> hosts = nodes.keySet();
+                List<String> ports = new ArrayList<>(nodes.values());
+
+                Iterator<String> iterator = hosts.iterator();
+                Iterator<String> iterator2 = ports.iterator();
+
+                while (iterator.hasNext()) {
+                    clusterBuilder.addContactPoint(iterator.next()).withPort(Integer.parseInt(iterator2.next()));
+                }
+
+            } catch (IllegalArgumentException connEx) {
+                logger.error("Error while connecting to Cassandra database!", connEx);
+                throw new org.mule.api.ConnectionException(ConnectionExceptionCode.CANNOT_REACH, null, connEx.getMessage());
+            }
+        }
         if (StringUtils.isNotEmpty(connectionParameters.getUsername()) && StringUtils.isNotEmpty(connectionParameters.getPassword())) {
             clusterBuilder.withCredentials(connectionParameters.getUsername(), connectionParameters.getPassword());
         }
@@ -81,7 +90,8 @@ public final class CassandraClient {
 
         try {
             logger.info("Connecting to Cassandra Database: {} , port: {} with clusterName: {} , protocol version {} and compression type {} ",
-                    connectionParameters.getNodes(),
+                    connectionParameters.getHost(),
+                    connectionParameters.getPort(),
                     connectionParameters.getAdvancedConnectionParameters() != null ? connectionParameters.getAdvancedConnectionParameters().getClusterName() : null,
                     connectionParameters.getAdvancedConnectionParameters() != null ? connectionParameters.getAdvancedConnectionParameters().getProtocolVersion() : null,
                     connectionParameters.getAdvancedConnectionParameters() != null ? connectionParameters.getAdvancedConnectionParameters().getCompression() : null);
@@ -418,10 +428,15 @@ public final class CassandraClient {
         }
     }
 
-    private static void validateBasicParams(ConnectionParameters parameters) {
-         if (StringUtils.isBlank(parameters.getNodes())) {
-                throw new IllegalArgumentException("Unable to connect! Missing HOST or PORT parameter!");
-            }
+    private static void validateAdvancedParams(ConnectionParameters parameters) {
+        if (StringUtils.isBlank(parameters.getAdvancedConnectionParameters().getClusterNodes())) {
+            throw new IllegalArgumentException("Unable to connect! You must specify at least a node!");
+        }
+    }
 
+    private static void validateBasicParams(ConnectionParameters parameters) {
+        if (StringUtils.isBlank(parameters.getHost()) || StringUtils.isBlank(parameters.getPort())) {
+            throw new IllegalArgumentException("Unable to connect! Missing HOST or PORT parameter!");
+        }
     }
 }
