@@ -28,16 +28,16 @@ public class BasicAuthConnectionStrategy {
      * Host name or IP address
      */
     @Configurable
-    @Default("localhost")
     @Placement(order = 1)
+    @Default("")
     private String host;
 
     /**
-     * Port (default is 9042)
+     * Port
      */
     @Configurable
-    @Default("9042")
     @Placement(order = 2)
+    @Default("")
     private String port;
 
 

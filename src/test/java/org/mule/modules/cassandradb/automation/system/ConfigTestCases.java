@@ -60,7 +60,7 @@ public class ConfigTestCases  {
         CassandraClient.buildCassandraClient(new ConnectionParameters(INVALID_HOST, cassConfig.getPort(), null, null, null, advancedParams));
     }
 
-    @Test(expected = ConnectionException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void shouldNotConnect_Using_NoHost() throws ConnectionException, ConfigurationLoadingFailedException {
         //given
         AdvancedConnectionParameters advancedParams = new AdvancedConnectionParameters(ProtocolVersion.V3, TestsConstants.CLUSTER_NAME, null, TestsConstants.MAX_WAIT, ProtocolOptions.Compression.NONE, false);
@@ -78,7 +78,7 @@ public class ConfigTestCases  {
         CassandraClient.buildCassandraClient(new ConnectionParameters(cassConfig.getHost(), generateInvalidPort(cassConfig.getPort()), null, null, null, advancedParams));
     }
 
-    @Test(expected = org.mule.api.ConnectionException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void shouldNotConnect_Using_NoPort() throws ConnectionException, ConfigurationLoadingFailedException {
         //given
         AdvancedConnectionParameters advancedParams = new AdvancedConnectionParameters(ProtocolVersion.V3, TestsConstants.CLUSTER_NAME, null, TestsConstants.MAX_WAIT, ProtocolOptions.Compression.NONE, false);
