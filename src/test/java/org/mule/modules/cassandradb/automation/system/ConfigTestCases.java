@@ -51,7 +51,7 @@ public class ConfigTestCases  {
         assert cassClient != null;
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = ConnectionException.class)
     public void shouldNotConnect_Using_InvalidHost() throws ConnectionException, ConfigurationLoadingFailedException {
         //given
         AdvancedConnectionParameters advancedParams = new AdvancedConnectionParameters(ProtocolVersion.V3, TestsConstants.CLUSTER_NAME, null, TestsConstants.MAX_WAIT, ProtocolOptions.Compression.NONE, false);
@@ -60,7 +60,7 @@ public class ConfigTestCases  {
         CassandraClient.buildCassandraClient(new ConnectionParameters(INVALID_HOST, cassConfig.getPort(), null, null, null, advancedParams));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = ConnectionException.class)
     public void shouldNotConnect_Using_NoHost() throws ConnectionException, ConfigurationLoadingFailedException {
         //given
         AdvancedConnectionParameters advancedParams = new AdvancedConnectionParameters(ProtocolVersion.V3, TestsConstants.CLUSTER_NAME, null, TestsConstants.MAX_WAIT, ProtocolOptions.Compression.NONE, false);
@@ -69,7 +69,7 @@ public class ConfigTestCases  {
         CassandraClient.buildCassandraClient(new ConnectionParameters(null, cassConfig.getPort(), null, null, null, advancedParams));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = ConnectionException.class)
     public void shouldNotConnect_Using_InvalidPort() throws ConnectionException, ConfigurationLoadingFailedException {
         //given
         AdvancedConnectionParameters advancedParams = new AdvancedConnectionParameters(ProtocolVersion.V3, TestsConstants.CLUSTER_NAME, null, TestsConstants.MAX_WAIT, ProtocolOptions.Compression.NONE, false);
@@ -78,7 +78,7 @@ public class ConfigTestCases  {
         CassandraClient.buildCassandraClient(new ConnectionParameters(cassConfig.getHost(), generateInvalidPort(cassConfig.getPort()), null, null, null, advancedParams));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = ConnectionException.class)
     public void shouldNotConnect_Using_NoPort() throws ConnectionException, ConfigurationLoadingFailedException {
         //given
         AdvancedConnectionParameters advancedParams = new AdvancedConnectionParameters(ProtocolVersion.V3, TestsConstants.CLUSTER_NAME, null, TestsConstants.MAX_WAIT, ProtocolOptions.Compression.NONE, false);
