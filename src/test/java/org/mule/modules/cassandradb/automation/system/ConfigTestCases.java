@@ -51,7 +51,7 @@ public class ConfigTestCases  {
         assert cassClient != null;
     }
 
-    @Test(expected = ConnectionException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void shouldNotConnect_Using_InvalidHost() throws ConnectionException, ConfigurationLoadingFailedException {
         //given
         AdvancedConnectionParameters advancedParams = new AdvancedConnectionParameters(ProtocolVersion.V3, TestsConstants.CLUSTER_NAME, null, TestsConstants.MAX_WAIT, ProtocolOptions.Compression.NONE, false);
@@ -69,7 +69,7 @@ public class ConfigTestCases  {
         CassandraClient.buildCassandraClient(new ConnectionParameters(null, cassConfig.getPort(), null, null, null, advancedParams));
     }
 
-    @Test(expected = ConnectionException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void shouldNotConnect_Using_InvalidPort() throws ConnectionException, ConfigurationLoadingFailedException {
         //given
         AdvancedConnectionParameters advancedParams = new AdvancedConnectionParameters(ProtocolVersion.V3, TestsConstants.CLUSTER_NAME, null, TestsConstants.MAX_WAIT, ProtocolOptions.Compression.NONE, false);
