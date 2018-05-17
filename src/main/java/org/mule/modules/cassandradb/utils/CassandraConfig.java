@@ -9,19 +9,19 @@ public class CassandraConfig {
 
     private String port;
 
-    private String nodes;
+    private String clusterNodes;
 
     private String keyspace;
 
-    public CassandraConfig(String host, String port, String nodes, String keyspace) {
+    public CassandraConfig(String host, String port, String clusterNodes, String keyspace) {
         this.host = host;
         this.port = port;
-        this.nodes = nodes;
+        this.clusterNodes = clusterNodes;
         this.keyspace = keyspace;
     }
 
     public String getNodes() {
-        return nodes;
+        return clusterNodes;
     }
 
     public String getHost() {
@@ -40,8 +40,8 @@ public class CassandraConfig {
         this.port = port;
     }
 
-    public void setNodes(String nodes) {
-        this.nodes = nodes;
+    public void setNodes(String clusterNodes) {
+        this.clusterNodes= clusterNodes;
     }
 
     public String getKeyspace() {

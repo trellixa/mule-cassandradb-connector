@@ -51,6 +51,41 @@ public class ConfigTestCases  {
         assert cassClient != null;
     }
 
+    @Test
+    public void shouldConnectUsingBothBasicAndAdvancedParams() throws Exception {
+        //given
+        cassConfig = getClientConfig();
+
+        AdvancedConnectionParameters advancedParams = new AdvancedConnectionParameters(ProtocolVersion.V3, TestsConstants.CLUSTER_NAME, cassConfig.getNodes(), TestsConstants.MAX_WAIT, ProtocolOptions.Compression.NONE, false);
+
+        //when
+        CassandraClient cassClient = CassandraClient.buildCassandraClient(new ConnectionParameters(cassConfig.getHost(), cassConfig.getPort(), null,  null, null, advancedParams));
+        //then
+        assert cassClient != null;
+    }
+    @Test
+    public void shouldConnectUsingAdvancedParamsWithNoPort() throws Exception {
+        //given
+
+        AdvancedConnectionParameters advancedParams = new AdvancedConnectionParameters(ProtocolVersion.V3, TestsConstants.CLUSTER_NAME, "127.0.0.1", TestsConstants.MAX_WAIT, ProtocolOptions.Compression.NONE, false);
+
+        //when
+        CassandraClient cassClient = CassandraClient.buildCassandraClient(new ConnectionParameters(null, null, null,  null, null, advancedParams));
+        //then
+        assert cassClient != null;
+    }
+
+    @Test(expected = ConnectionException.class)
+    public void shouldConnectUsingAdvancedParamsWithNoHost() throws Exception {
+        //given
+
+        AdvancedConnectionParameters advancedParams = new AdvancedConnectionParameters(ProtocolVersion.V3, TestsConstants.CLUSTER_NAME, "9042", TestsConstants.MAX_WAIT, ProtocolOptions.Compression.NONE, false);
+
+        //when
+        CassandraClient cassClient = CassandraClient.buildCassandraClient(new ConnectionParameters(null, null, null,  null, null, advancedParams));
+        //then
+        assert cassClient != null;
+    }
     @Test(expected = ConnectionException.class)
     public void shouldNotConnect_Using_InvalidHost() throws ConnectionException, ConfigurationLoadingFailedException {
         //given

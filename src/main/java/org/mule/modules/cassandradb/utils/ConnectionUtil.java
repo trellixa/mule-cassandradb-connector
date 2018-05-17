@@ -4,10 +4,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ConnectionUtil {
-    public static Map<String,String> getAddress(String nodes){
+    private static final String CASSANDRA_NODE_DEFAULT_PORT = "9042";
+
+    public static Map<String,String> parseClusterNodesString(String clusterNodesString){
         Map<String,String> addresses = new HashMap<>();
 
-        String[] parts = nodes.split(",");
+        String[] parts = clusterNodesString.split(",");
 
         for(String part : parts) {
             if(part.contains(":")){
@@ -17,7 +19,7 @@ public class ConnectionUtil {
             }
 
             else {
-                addresses.put(part.trim(),"9042");
+                addresses.put(part.trim(),CASSANDRA_NODE_DEFAULT_PORT);
             }
         }
 
