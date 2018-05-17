@@ -99,7 +99,7 @@ public final class CassandraClient {
             throw new org.mule.api.ConnectionException(ConnectionExceptionCode.CANNOT_REACH, null, connEx.getMessage());
         }
        }
-       
+
     private static void withCredentials(ConnectionParameters connectionParameters, Cluster.Builder clusterBuilder) {
         if (StringUtils.isNotEmpty(connectionParameters.getUsername()) && StringUtils.isNotEmpty(connectionParameters.getPassword())) {
             clusterBuilder.withCredentials(connectionParameters.getUsername(), connectionParameters.getPassword());
