@@ -20,7 +20,7 @@ public class CassandraConfig {
         this.keyspace = keyspace;
     }
 
-    public String getNodes() {
+    public String getClusterNodes() {
         return clusterNodes;
     }
 
