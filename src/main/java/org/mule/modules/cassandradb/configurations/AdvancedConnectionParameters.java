@@ -10,17 +10,27 @@ public class AdvancedConnectionParameters {
 
     private ProtocolVersion protocolVersion;
     private String clusterName;
+    private String clusterNodes;
     private int maxSchemaAgreementWaitSeconds;
     private ProtocolOptions.Compression compression;
     private boolean ssl;
 
-    public AdvancedConnectionParameters(ProtocolVersion protocolVersion, String clusterName, int maxSchemaAgreementWaitSeconds, ProtocolOptions.Compression compression,
+    public AdvancedConnectionParameters(ProtocolVersion protocolVersion, String clusterName, String clusterNodes, int maxSchemaAgreementWaitSeconds, ProtocolOptions.Compression compression,
             boolean ssl) {
         this.protocolVersion = protocolVersion;
         this.clusterName = clusterName;
+        this.clusterNodes = clusterNodes;
         this.maxSchemaAgreementWaitSeconds = maxSchemaAgreementWaitSeconds;
         this.compression = compression;
         this.ssl = ssl;
+    }
+
+    public String getClusterNodes() {
+        return clusterNodes;
+    }
+
+    public void setClusterNodes(String clusterNodes) {
+        this.clusterNodes = clusterNodes;
     }
 
     public ProtocolVersion getProtocolVersion() {

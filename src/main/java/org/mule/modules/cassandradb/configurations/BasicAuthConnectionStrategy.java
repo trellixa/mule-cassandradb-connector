@@ -28,20 +28,24 @@ public class BasicAuthConnectionStrategy {
      * Host name or IP address
      */
     @Configurable
-    @Default("localhost")
+    @Placement(order = 1)
+    @Default("")
     private String host;
 
     /**
-     * Port (default is 9042)
+     * Port
      */
     @Configurable
-    @Default("9042")
+    @Placement(order = 2)
+    @Default("")
     private String port;
+
 
     /**
      * Cassandra keyspace
      */
     @Configurable
+    @Placement(order = 3)
     @org.mule.api.annotations.param.Optional
     @Default("")
     private String keyspace;
@@ -54,6 +58,15 @@ public class BasicAuthConnectionStrategy {
     @Placement(group = "Advanced Settings")
     private String clusterName;
 
+    /**
+     * Cassandra cluster nodes(ip or host address and port separated by comma. E.g: host1:port1, host2:port2). If the port is not specified,
+     * the default 9042 will be used.
+     * When you specify this parameter, the host and port from general settings will be ignored.
+     */
+    @Configurable
+    @org.mule.api.annotations.param.Optional
+    @Placement(group = "Advanced Settings")
+    private String clusterNodes;
     /**
      * Version of the native protocol supported by the driver.
      */
@@ -88,6 +101,14 @@ public class BasicAuthConnectionStrategy {
     @FriendlyName("SSL")
     private boolean sslEnabled;
 
+    public String getClusterNodes() {
+        return clusterNodes;
+    }
+
+    public void setClusterNodes(String clusterNodes) {
+        this.clusterNodes = clusterNodes;
+    }
+
     /**
      * Cassandra client
      * session to be used to execute queries
@@ -106,7 +127,7 @@ public class BasicAuthConnectionStrategy {
     public void connect(@ConnectionKey @Optional final String username,
                         @Password @Optional final String password) throws ConnectionException {
         cassandraClient = CassandraClient.buildCassandraClient(new ConnectionParameters(host, port, username, password, keyspace,
-                new AdvancedConnectionParameters(protocolVersion, clusterName, maxSchemaAgreementWaitSeconds, compression, sslEnabled)));
+                new AdvancedConnectionParameters(protocolVersion, clusterName, clusterNodes, maxSchemaAgreementWaitSeconds, compression, sslEnabled)));
     }
 
     /**

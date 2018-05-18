@@ -3,8 +3,12 @@
  */
 package org.mule.modules.cassandradb.automation.functional.processors;
 
+import com.datastax.driver.core.ProtocolOptions;
+import com.datastax.driver.core.ProtocolVersion;
 import org.mule.modules.cassandradb.api.CassandraClient;
 import org.mule.modules.cassandradb.automation.util.PropertiesLoaderUtil;
+import org.mule.modules.cassandradb.automation.util.TestsConstants;
+import org.mule.modules.cassandradb.configurations.AdvancedConnectionParameters;
 import org.mule.modules.cassandradb.configurations.ConnectionParameters;
 import org.mule.modules.cassandradb.metadata.CreateKeyspaceInput;
 import org.mule.modules.cassandradb.utils.CassandraConfig;
@@ -23,12 +27,16 @@ public abstract class CassandraAbstractTestCases extends AbstractTestCase<Cassan
 
     protected static CassandraClient cassClient;
     protected static CassandraConfig cassConfig;
+    protected static AdvancedConnectionParameters advancedConnectionParameters;
 
     @BeforeClass
     public static void initialSetup() throws ConfigurationLoadingFailedException, ConnectionException {
         cassConfig = getClientConfig();
+
+        advancedConnectionParameters = new AdvancedConnectionParameters(ProtocolVersion.V3, TestsConstants.CLUSTER_NAME, cassConfig.getClusterNodes(), TestsConstants.MAX_WAIT, ProtocolOptions.Compression.NONE, false);
+
         //get instance of cass client based on the configs
-        cassClient = CassandraClient.buildCassandraClient(new ConnectionParameters(cassConfig.getHost(), cassConfig.getPort(), null, null, null, null));
+        cassClient = CassandraClient.buildCassandraClient(new ConnectionParameters(cassConfig.getHost(), cassConfig.getPort(), null, null, null, advancedConnectionParameters));
         assert cassClient != null;
         //setup db env
         CreateKeyspaceInput keyspaceInput = new CreateKeyspaceInput();

@@ -3,24 +3,23 @@
  */
 package org.mule.modules.cassandradb.automation.system;
 
-import org.mule.api.ConnectionException;
-import org.mule.modules.cassandradb.automation.util.PropertiesLoaderUtil;
-import org.junit.Test;
-
 import com.datastax.driver.core.ProtocolOptions;
 import com.datastax.driver.core.ProtocolVersion;
+import org.junit.Test;
+import org.mule.api.ConnectionException;
 import org.mule.modules.cassandradb.api.CassandraClient;
+import org.mule.modules.cassandradb.automation.util.PropertiesLoaderUtil;
+import org.mule.modules.cassandradb.automation.util.TestsConstants;
 import org.mule.modules.cassandradb.configurations.AdvancedConnectionParameters;
 import org.mule.modules.cassandradb.configurations.ConnectionParameters;
-import org.mule.modules.cassandradb.automation.util.TestsConstants;
 import org.mule.modules.cassandradb.utils.CassandraConfig;
 import org.mule.tools.devkit.ctf.exceptions.ConfigurationLoadingFailedException;
 
 public class ConfigTestCases  {
 
-    private static String INVALID_HOST = "INVALID_HOST";
-
     private static CassandraConfig cassConfig;
+
+    private static String INVALID_HOST = "INVALID_HOST";
 
     public static CassandraConfig getClientConfig() throws ConfigurationLoadingFailedException {
         //load required properties
@@ -33,8 +32,9 @@ public class ConfigTestCases  {
     public void shouldConnect_Using_BasicParams() throws Exception {
         //given
         cassConfig = getClientConfig();
+        AdvancedConnectionParameters advancedParams = new AdvancedConnectionParameters(ProtocolVersion.V3, TestsConstants.CLUSTER_NAME, null, TestsConstants.MAX_WAIT, ProtocolOptions.Compression.NONE, false);
         //when
-        CassandraClient cassClient = CassandraClient.buildCassandraClient(new ConnectionParameters(cassConfig.getHost(), cassConfig.getPort(), null, null, null, null));
+        CassandraClient cassClient = CassandraClient.buildCassandraClient(new ConnectionParameters(cassConfig.getHost(), cassConfig.getPort(),null, null, null, advancedParams));
         //then
         assert cassClient != null;
     }
@@ -42,18 +42,55 @@ public class ConfigTestCases  {
     @Test
     public void shouldConnect_Using_AdvancedParams() throws Exception {
         //given
-        AdvancedConnectionParameters advancedParams = new AdvancedConnectionParameters(ProtocolVersion.V3, TestsConstants.CLUSTER_NAME, TestsConstants.MAX_WAIT, ProtocolOptions.Compression.NONE, false);
         cassConfig = getClientConfig();
+
+        AdvancedConnectionParameters advancedParams = new AdvancedConnectionParameters(ProtocolVersion.V3, TestsConstants.CLUSTER_NAME, cassConfig.getClusterNodes(), TestsConstants.MAX_WAIT, ProtocolOptions.Compression.NONE, false);
+
         //when
-        CassandraClient cassClient = CassandraClient.buildCassandraClient(new ConnectionParameters(cassConfig.getHost(), cassConfig.getPort(), null, null, null, advancedParams));
+        CassandraClient cassClient = CassandraClient.buildCassandraClient(new ConnectionParameters(null, null, null,  null, null, advancedParams));
+        //then
+        assert cassClient != null;
+    }
+
+    @Test
+    public void shouldConnectUsingBothBasicAndAdvancedParams() throws Exception {
+        //given
+        cassConfig = getClientConfig();
+
+        AdvancedConnectionParameters advancedParams = new AdvancedConnectionParameters(ProtocolVersion.V3, TestsConstants.CLUSTER_NAME, cassConfig.getClusterNodes(), TestsConstants.MAX_WAIT, ProtocolOptions.Compression.NONE, false);
+
+        //when
+        CassandraClient cassClient = CassandraClient.buildCassandraClient(new ConnectionParameters(cassConfig.getHost(), cassConfig.getPort(), null,  null, null, advancedParams));
+        //then
+        assert cassClient != null;
+    }
+    @Test
+    public void shouldConnectUsingAdvancedParamsWithNoPort() throws Exception {
+        //given
+
+        AdvancedConnectionParameters advancedParams = new AdvancedConnectionParameters(ProtocolVersion.V3, TestsConstants.CLUSTER_NAME, "127.0.0.1", TestsConstants.MAX_WAIT, ProtocolOptions.Compression.NONE, false);
+
+        //when
+        CassandraClient cassClient = CassandraClient.buildCassandraClient(new ConnectionParameters(null, null, null,  null, null, advancedParams));
         //then
         assert cassClient != null;
     }
 
     @Test(expected = ConnectionException.class)
+    public void shouldConnectUsingAdvancedParamsWithNoHost() throws Exception {
+        //given
+
+        AdvancedConnectionParameters advancedParams = new AdvancedConnectionParameters(ProtocolVersion.V3, TestsConstants.CLUSTER_NAME, "9042", TestsConstants.MAX_WAIT, ProtocolOptions.Compression.NONE, false);
+
+        //when
+        CassandraClient cassClient = CassandraClient.buildCassandraClient(new ConnectionParameters(null, null, null,  null, null, advancedParams));
+        //then
+        assert cassClient != null;
+    }
+    @Test(expected = ConnectionException.class)
     public void shouldNotConnect_Using_InvalidHost() throws ConnectionException, ConfigurationLoadingFailedException {
         //given
-        AdvancedConnectionParameters advancedParams = new AdvancedConnectionParameters(ProtocolVersion.V3, TestsConstants.CLUSTER_NAME, TestsConstants.MAX_WAIT, ProtocolOptions.Compression.NONE, false);
+        AdvancedConnectionParameters advancedParams = new AdvancedConnectionParameters(ProtocolVersion.V3, TestsConstants.CLUSTER_NAME, null, TestsConstants.MAX_WAIT, ProtocolOptions.Compression.NONE, false);
         cassConfig = getClientConfig();
         //when
         CassandraClient.buildCassandraClient(new ConnectionParameters(INVALID_HOST, cassConfig.getPort(), null, null, null, advancedParams));
@@ -62,7 +99,7 @@ public class ConfigTestCases  {
     @Test(expected = IllegalArgumentException.class)
     public void shouldNotConnect_Using_NoHost() throws ConnectionException, ConfigurationLoadingFailedException {
         //given
-        AdvancedConnectionParameters advancedParams = new AdvancedConnectionParameters(ProtocolVersion.V3, TestsConstants.CLUSTER_NAME, TestsConstants.MAX_WAIT, ProtocolOptions.Compression.NONE, false);
+        AdvancedConnectionParameters advancedParams = new AdvancedConnectionParameters(ProtocolVersion.V3, TestsConstants.CLUSTER_NAME, null, TestsConstants.MAX_WAIT, ProtocolOptions.Compression.NONE, false);
         cassConfig = getClientConfig();
         //when
         CassandraClient.buildCassandraClient(new ConnectionParameters(null, cassConfig.getPort(), null, null, null, advancedParams));
@@ -71,7 +108,7 @@ public class ConfigTestCases  {
     @Test(expected = ConnectionException.class)
     public void shouldNotConnect_Using_InvalidPort() throws ConnectionException, ConfigurationLoadingFailedException {
         //given
-        AdvancedConnectionParameters advancedParams = new AdvancedConnectionParameters(ProtocolVersion.V3, TestsConstants.CLUSTER_NAME, TestsConstants.MAX_WAIT, ProtocolOptions.Compression.NONE, false);
+        AdvancedConnectionParameters advancedParams = new AdvancedConnectionParameters(ProtocolVersion.V3, TestsConstants.CLUSTER_NAME, null, TestsConstants.MAX_WAIT, ProtocolOptions.Compression.NONE, false);
         cassConfig = getClientConfig();
         //when
         CassandraClient.buildCassandraClient(new ConnectionParameters(cassConfig.getHost(), generateInvalidPort(cassConfig.getPort()), null, null, null, advancedParams));
@@ -80,7 +117,7 @@ public class ConfigTestCases  {
     @Test(expected = IllegalArgumentException.class)
     public void shouldNotConnect_Using_NoPort() throws ConnectionException, ConfigurationLoadingFailedException {
         //given
-        AdvancedConnectionParameters advancedParams = new AdvancedConnectionParameters(ProtocolVersion.V3, TestsConstants.CLUSTER_NAME, TestsConstants.MAX_WAIT, ProtocolOptions.Compression.NONE, false);
+        AdvancedConnectionParameters advancedParams = new AdvancedConnectionParameters(ProtocolVersion.V3, TestsConstants.CLUSTER_NAME, null, TestsConstants.MAX_WAIT, ProtocolOptions.Compression.NONE, false);
         cassConfig = getClientConfig();
         //when
         CassandraClient.buildCassandraClient(new ConnectionParameters(cassConfig.getHost(), null, null, null, null, advancedParams));

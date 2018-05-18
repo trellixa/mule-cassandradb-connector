@@ -4,10 +4,7 @@
 package org.mule.modules.cassandradb.configurations;
 
 public class ConnectionParameters {
-
-    /*Cluster host IP address.*/
     private String host;
-    /*Port of cluster host.*/
     private String port;
     private String username;
     private String password;
