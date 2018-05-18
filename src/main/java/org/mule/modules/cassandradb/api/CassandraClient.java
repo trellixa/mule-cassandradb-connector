@@ -51,16 +51,14 @@ public final class CassandraClient {
 
         CassandraClient client = new CassandraClient();
 
-        if(connectionParameters.getAdvancedConnectionParameters() != null) {
-
-            if (connectionParameters.getAdvancedConnectionParameters().getClusterNodes() != null) {
+        if (connectionParameters.getAdvancedConnectionParameters().getClusterNodes() != null) {
 
                 connectWithAdvancedParams(connectionParameters, clusterBuilder);
 
             } else {
                 connectWithBasicParams(connectionParameters, clusterBuilder);
             }
-        }
+
 
         withCredentials(connectionParameters, clusterBuilder);
 
