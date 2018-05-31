@@ -68,7 +68,7 @@ public class ConfigTestCases  {
     public void shouldConnectUsingAdvancedParamsWithNoPort() throws Exception {
         //given
 
-        AdvancedConnectionParameters advancedParams = new AdvancedConnectionParameters(ProtocolVersion.V3, TestsConstants.CLUSTER_NAME, "127.0.0.1", TestsConstants.MAX_WAIT, ProtocolOptions.Compression.NONE, false);
+        AdvancedConnectionParameters advancedParams = new AdvancedConnectionParameters(ProtocolVersion.V3, TestsConstants.CLUSTER_NAME, cassConfig.getClusterNodes(), TestsConstants.MAX_WAIT, ProtocolOptions.Compression.NONE, false);
 
         //when
         CassandraClient cassClient = CassandraClient.buildCassandraClient(new ConnectionParameters(null, null, null,  null, null, advancedParams));
