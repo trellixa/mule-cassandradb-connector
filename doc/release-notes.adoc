@@ -9,6 +9,7 @@ The Anypoint Cassandra connector provides the capability to connect a Mule app t
 
 == 2.1.0
 *June 2018*
+
 This version supports Cassandra cluster setting. Users can provide a comma separate Cassandra server inforatmion (127.0.0.1:9160,127.0.0.2:9160).
 
 == 2.0.0
