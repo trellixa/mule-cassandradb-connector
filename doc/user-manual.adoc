@@ -1,0 +1,15 @@
+= Cassandra Connector User Manual
+
+link:/cassandra-connector-install-conf-task[To Install and Configure the Cassandra Connector]
+
+link:/cassandra-connector-conf-task[To Configure Cassandra Authentication]
+
+link:/cassandra-connector-create-keyspace-task[To Create a Keyspace]
+
+link:/cassandra-connector-create-table-task[To Create a Cassandra Table]
+
+link:/cassandra-connector-datatypes[Cassandra Connector Data Types Reference]
+
+link:/cassandra-connector-ops-reference[Cassandra Connector Operations Reference]
+
+link:/release-notes[Cassandra Connector Release Notes]
