@@ -24,7 +24,7 @@ import org.mule.tools.devkit.ctf.platform.PlatformManager;
         DeleteTestCases.class,
         ChangeColumnTypeTestCases.class,
         AddNewColumnTestCases.class,
-        RemoveColumnTestCases.class,
+        DropColumnTestCases.class,
         RenameColumnTestCases.class,
         CreateKeyspaceTestCases.class,
         DropKeyspaceTestCases.class,
@@ -34,7 +34,7 @@ import org.mule.tools.devkit.ctf.platform.PlatformManager;
         CassandraMetadataCategoryTestCases.class,
         CassandraOnlyWithFiltersMetadataCategoryTestCases.class,
         CassandraWithFiltersMetadataCategoryTestCases.class,
-        ExecuteCqlQueryTestCases.class
+        ExecuteCQLQueryTestCases.class
 })
 public class FunctionalTestSuite {
 
