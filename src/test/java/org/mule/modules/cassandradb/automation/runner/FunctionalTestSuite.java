@@ -32,10 +32,10 @@ import org.mule.tools.devkit.ctf.platform.PlatformManager;
         CreateTableTestCases.class,
         DropTableTestCases.class,
         GetTableNamesFromKeyspaceTestCases.class,
-        ExecuteCQLQueryTestCases.class,
         CassandraCategoryMetaDataTestCases.class,
         CassandraOnlyWithFiltersCategoryMetaDataTestCases.class,
-        CassandraWithFiltersCategoryMetaDataTestCases.class
+        CassandraWithFiltersCategoryMetaDataTestCases.class,
+        ExecuteCQLQueryTestCases.class
 })
 public class FunctionalTestSuite {
 

@@ -15,7 +15,8 @@ public class PropertiesLoaderUtil {
     public static CassandraConfig resolveCassandraConnectionProps() throws ConfigurationLoadingFailedException {
         Properties cassandraConnProps;
         cassandraConnProps = ConfigurationUtils.getAutomationCredentialsProperties();
-        return new CassandraConfig(cassandraConnProps.getProperty(Constants.CASS_HOST), cassandraConnProps.getProperty(Constants.CASS_PORT),
+        return new CassandraConfig(cassandraConnProps.getProperty(Constants.CASS_HOST),cassandraConnProps.getProperty(Constants.CASS_PORT),
+                cassandraConnProps.getProperty(Constants.CASS_NODES),
                 cassandraConnProps.getProperty(Constants.KEYSPACE_NAME));
     }
 }
