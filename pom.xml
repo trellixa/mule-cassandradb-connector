@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.mule.modules</groupId>
     <artifactId>mule-module-cassandradb</artifactId>
     <version>2.1.0</version>
     <packaging>mule-module</packaging>
     <name>Mule CassandraDB Connector</name>
-
+  
     <parent>
         <groupId>org.mule.tools.devkit</groupId>
         <artifactId>mule-devkit-parent</artifactId>
@@ -169,12 +168,12 @@
 
     <scm>
         <connection>
-            scm:git:git://github.com:mulesoft/CassandraDB-connector.git
+            scm:git:git://github.com:mulesoft/cassandra-connector.git
         </connection>
         <developerConnection>
-            scm:git:git@github.com:mulesoft/CassandraDB-connector.git
+            scm:git:git@github.com:mulesoft/cassandra-connector.git
         </developerConnection>
-        <url>http://github.com/mulesoft/CassandraDB-connector</url>
+        <url>http://github.com/mulesoft/cassandra-connector</url>
     </scm>
 
 </project>
