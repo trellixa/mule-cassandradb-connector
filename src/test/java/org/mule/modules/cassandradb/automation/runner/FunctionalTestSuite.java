@@ -3,9 +3,9 @@
  */
 package org.mule.modules.cassandradb.automation.runner;
 
-import org.mule.modules.cassandradb.automation.functional.metadata.CassandraMetadataCategoryTestCases;
-import org.mule.modules.cassandradb.automation.functional.metadata.CassandraOnlyWithFiltersMetadataCategoryTestCases;
-import org.mule.modules.cassandradb.automation.functional.metadata.CassandraWithFiltersMetadataCategoryTestCases;
+import org.mule.modules.cassandradb.automation.functional.metadata.CassandraCategoryMetadataTestCases;
+import org.mule.modules.cassandradb.automation.functional.metadata.CassandraOnlyWithFiltersCategoryMetadataTestCases;
+import org.mule.modules.cassandradb.automation.functional.metadata.CassandraWithFiltersCategoryMetadataTestCases;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.experimental.categories.Categories;
@@ -31,9 +31,9 @@ import org.mule.tools.devkit.ctf.platform.PlatformManager;
         CreateTableTestCases.class,
         DropTableTestCases.class,
         GetTableNamesFromKeyspaceTestCases.class,
-        CassandraMetadataCategoryTestCases.class,
-        CassandraOnlyWithFiltersMetadataCategoryTestCases.class,
-        CassandraWithFiltersMetadataCategoryTestCases.class,
+        CassandraCategoryMetadataTestCases.class,
+        CassandraOnlyWithFiltersCategoryMetadataTestCases.class,
+        CassandraWithFiltersCategoryMetadataTestCases.class,
         ExecuteCQLQueryTestCases.class
 })
 public class FunctionalTestSuite {
