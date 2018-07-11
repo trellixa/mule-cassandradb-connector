@@ -22,9 +22,7 @@ import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder
 import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getRandomColumnName;
 import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getTestTypes;
 
-//This test is ignore because since Cassandra v3.0.10 the alter table is not allowed
-//https://issues.apache.org/jira/browse/CASSANDRA-12443
-@Ignore
+@Ignore("The 'alter table' operation is not allowed since Cassandra v3.0.10")
 @RunnerDelegateTo(Parameterized.class)
 public class ChangeColumnTypeTestCase extends AbstractTestCases {
 
