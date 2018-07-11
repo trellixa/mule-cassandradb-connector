@@ -10,6 +10,7 @@ import org.junit.Test;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
+import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.INVALID_COLUMN_MESSAGE_ERROR;
 import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.TABLE_NAME_1;
 import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getBasicCreateTableInput;
 import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getColumns;
@@ -78,7 +79,7 @@ public class DeleteTestCase extends AbstractTestCases {
             insert(testKeyspace, TABLE_NAME_1, getValidEntity());
             deleteColumnsValue(TABLE_NAME_1, testKeyspace, getInvalidEntityForDelete(), getValidWhereClauseWithEq());
         } catch( Exception e){
-            assertThat(e.getMessage(), is("Unknown identifier invalid_column."));
+            assertThat(e.getMessage(), is(INVALID_COLUMN_MESSAGE_ERROR));
         }
     }
 
