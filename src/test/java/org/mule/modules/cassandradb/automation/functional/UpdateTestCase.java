@@ -13,6 +13,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
+import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.INVALID_COLUMN_MESSAGE_ERROR;
 import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.TABLE_NAME_1;
 import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.UPDATED_VALUE;
 import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.VALID_COLUMN_2;
@@ -61,7 +62,7 @@ public class UpdateTestCase extends AbstractTestCases {
         try{
             update(TABLE_NAME_1, testKeyspace, getPayloadColumnsAndFilters(getInvalidEntity(), getValidWhereClauseWithEq()));
         } catch (Exception e){
-            assertThat(e.getMessage(), is("Unknown identifier invalid_column."));
+            assertThat(e.getMessage(), is(INVALID_COLUMN_MESSAGE_ERROR));
         }
     }
 
