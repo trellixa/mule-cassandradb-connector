@@ -5,6 +5,7 @@ package org.mule.modules.cassandradb.automation.functional;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runners.Parameterized;
 import org.mule.modules.cassandradb.api.ColumnType;
@@ -21,6 +22,7 @@ import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder
 import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getRandomColumnName;
 import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getTestTypes;
 
+@Ignore("The 'alter table' operation is not allowed since Cassandra v3.0.10")
 @RunnerDelegateTo(Parameterized.class)
 public class ChangeColumnTypeTestCase extends AbstractTestCases {
 
