@@ -12,6 +12,7 @@ import static java.lang.Thread.sleep;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
+import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.INVALID_COLUMN_MESSAGE_ERROR;
 import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.TABLE_NAME_1;
 import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getBasicCreateTableInput;
 import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getColumns;
@@ -41,7 +42,7 @@ public class InsertTestCase extends AbstractTestCases {
         try{
             insert(testKeyspace, TABLE_NAME_1, getInvalidEntity());
         } catch (Exception e){
-            assertThat(e.getMessage(), is("Unknown identifier invalid_column."));
+            assertThat(e.getMessage(), is(INVALID_COLUMN_MESSAGE_ERROR));
         }
     }
 }

@@ -70,10 +70,10 @@ public class ExecuteCqlQueryTestCase extends AbstractTestCases {
         try{
             String whereClause = " WHERE " + DUMMY_PARTITION_KEY + " = ?";
             CQLQueryInput query = new CQLQueryInput();
-            query.setCqlQuery(QUERY_PREFIX + TABLE_NAME_2 + whereClause);
+            query.setCqlQuery(QUERY_PREFIX + testKeyspace + "." + TABLE_NAME_2 + whereClause);
             executeCQLQuery(query);
         } catch (Exception e){
-            assertThat(e.getMessage(), is("unconfigured table dummy_table_name_2."));
+            assertThat(e.getMessage(), is("Invalid amount of bind variables."));
         }
     }
 
@@ -84,11 +84,11 @@ public class ExecuteCqlQueryTestCase extends AbstractTestCases {
             List<Object> params = new ArrayList<Object>();
             params.add("value1");
             CQLQueryInput query = new CQLQueryInput();
-            query.setCqlQuery(QUERY_PREFIX + TABLE_NAME_2);
+            query.setCqlQuery(QUERY_PREFIX + testKeyspace + "." + TABLE_NAME_2);
             query.setParameters(params);
             executeCQLQuery(query);
         } catch (Exception e){
-            assertThat(e.getMessage(), is("unconfigured table dummy_table_name_2."));
+            assertThat(e.getMessage(), is("Prepared statement has only 0 variables, 1 values provided."));
         }
     }
 }
