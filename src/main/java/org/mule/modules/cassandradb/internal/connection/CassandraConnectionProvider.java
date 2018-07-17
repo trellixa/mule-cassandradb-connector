@@ -4,10 +4,12 @@ import com.datastax.driver.core.Cluster;
 import com.datastax.driver.core.Cluster.Builder;
 import com.datastax.driver.core.ProtocolOptions;
 import com.datastax.driver.core.Session;
+import org.apache.commons.lang3.StringUtils;
 import org.mule.connectors.commons.template.connection.ConnectorConnectionProvider;
 import org.mule.modules.cassandradb.api.ProtocolCompression;
 import org.mule.modules.cassandradb.api.ProtocolVersion;
 import org.mule.modules.cassandradb.internal.exception.CassandraException;
+import org.mule.modules.cassandradb.internal.util.ConnectionUtil;
 import org.mule.runtime.api.connection.CachedConnectionProvider;
 import org.mule.runtime.api.connection.ConnectionException;
 import org.mule.runtime.extension.api.annotation.param.Optional;
@@ -17,6 +19,9 @@ import org.mule.runtime.extension.api.annotation.param.display.Password;
 import org.mule.runtime.extension.api.annotation.param.display.Placement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Map;
+import java.util.Objects;
 
 import static com.datastax.driver.core.Cluster.builder;
 import static com.datastax.driver.core.ProtocolVersion.valueOf;
@@ -29,14 +34,14 @@ public class CassandraConnectionProvider extends ConnectorConnectionProvider<Cas
      * Host name or IP address
      */
     @Parameter
-    @Optional(defaultValue = "localhost")
+    @Optional(defaultValue = "")
     private String host;
 
     /**
-     * Port (default is 9042)
+     * Port
      */
     @Parameter
-    @Optional(defaultValue = "9042")
+    @Optional(defaultValue = "")
     private String port;
 
     /**
@@ -53,6 +58,16 @@ public class CassandraConnectionProvider extends ConnectorConnectionProvider<Cas
     @Optional
     @Placement(tab = "Advanced Settings")
     private String clusterName;
+
+    /**
+     * Cassandra cluster nodes(ip or host address and port separated by comma. E.g: host1:port1, host2:port2). If the port is not specified,
+     * the default 9042 will be used.
+     * When you specify this parameter, the host and port from general settings will be ignored.
+     */
+    @Parameter
+    @Optional
+    @Placement(tab = "Advanced Settings")
+    private String clusterNodes;
 
     /**
      * the username to use for authentication.
@@ -105,22 +120,32 @@ public class CassandraConnectionProvider extends ConnectorConnectionProvider<Cas
 
     @Override
     public CassandraConnection connect() throws ConnectionException {
-        Builder clusterBuilder;
-        validateAttribute(host);
-        validateAttribute(port);
-        try {
-            clusterBuilder = builder().addContactPoint(host).withPort(Integer.parseInt(port));
-        } catch (IllegalArgumentException connEx) {
-            logger.error("Error while connecting to Cassandra database!", connEx);
-            throw new CassandraException(connEx.getMessage());
+        Cluster.Builder clusterBuilder = Cluster.builder();
+
+        if (clusterNodes != null) {
+
+            connectWithAdvancedParams(clusterBuilder);
+
+        } else {
+
+            connectWithBasicParams(clusterBuilder);
+
         }
-        clusterBuilder = isNotEmpty(username)&&isNotEmpty(password)? clusterBuilder.withCredentials(username, password): clusterBuilder;
-        clusterBuilder = isNotEmpty(clusterName)? clusterBuilder.withClusterName(clusterName): clusterBuilder;
-        clusterBuilder = maxSchemaAgreementWaitSeconds > 0 ?  clusterBuilder.withMaxSchemaAgreementWaitSeconds(maxSchemaAgreementWaitSeconds): clusterBuilder;
-        clusterBuilder = protocolVersion != null ? clusterBuilder.withProtocolVersion(valueOf(protocolVersion.name())) : clusterBuilder;
-        clusterBuilder = compression != null ? clusterBuilder.withCompression(ProtocolOptions.Compression.valueOf(compression.name())) : clusterBuilder;
-        clusterBuilder = sslEnabled? clusterBuilder.withSSL(): clusterBuilder;
+
+        withCredentials(clusterBuilder);
+
+        withClusterName(clusterBuilder);
+
+        withMaxSchemaAgreementWaitSeconds(clusterBuilder);
+
+        withProtocolVersion(clusterBuilder);
+
+        withCompression(clusterBuilder);
+
+        withSSL(clusterBuilder);
+
         Cluster cluster = clusterBuilder.build();
+
         Session session = null;
 
         try {
@@ -144,6 +169,66 @@ public class CassandraConnectionProvider extends ConnectorConnectionProvider<Cas
             return true;
         } else {
             throw new IllegalArgumentException("Invalid parameter");
+        }
+    }
+
+    private void connectWithBasicParams(Cluster.Builder clusterBuilder) throws ConnectionException {
+        try {
+            validateAttribute(host);
+            validateAttribute(port);
+            clusterBuilder.addContactPoint(host).withPort(Integer.parseInt(port));
+        } catch (IllegalArgumentException connEx) {
+            logger.error("Error while connecting to Cassandra database!", connEx);
+            throw new CassandraException(connEx.getMessage());
+        }
+    }
+
+    private void connectWithAdvancedParams(Cluster.Builder clusterBuilder) {
+        try {
+            Map<String, String> nodes = ConnectionUtil.parseClusterNodesString(clusterNodes);
+
+            for (Map.Entry<String, String> entry : nodes.entrySet()) {
+                clusterBuilder.addContactPoint(entry.getKey()).withPort(Integer.parseInt(entry.getValue()));
+            }
+        } catch (IllegalArgumentException connEx) {
+            logger.error("Error while connecting to Cassandra database!", connEx);
+            throw new CassandraException(connEx.getMessage());
+        }
+    }
+
+    private void withCredentials(Cluster.Builder clusterBuilder) {
+        if (isNotEmpty(username) && isNotEmpty(password)) {
+            clusterBuilder.withCredentials(username, password);
+        }
+    }
+
+    private void withClusterName(Cluster.Builder clusterBuilder){
+        if (isNotEmpty(clusterName)) {
+            clusterBuilder.withClusterName(clusterName);
+        }
+    }
+
+    private void withMaxSchemaAgreementWaitSeconds(Cluster.Builder clusBuilder){
+        if (maxSchemaAgreementWaitSeconds > 0){
+            clusBuilder.withMaxSchemaAgreementWaitSeconds(maxSchemaAgreementWaitSeconds);
+        }
+    }
+
+    private void withProtocolVersion(Cluster.Builder clusterBuilder){
+        if(protocolVersion != null) {
+            clusterBuilder.withProtocolVersion(valueOf(protocolVersion.name()));
+        }
+    }
+
+    private void withCompression(Cluster.Builder clusterBuilder){
+        if (compression != null){
+            clusterBuilder.withCompression(ProtocolOptions.Compression.valueOf(compression.name()));
+        }
+    }
+
+    private void withSSL(Cluster.Builder clusterBuilder){
+        if(sslEnabled){
+            clusterBuilder.withSSL();
         }
     }
 
@@ -185,6 +270,14 @@ public class CassandraConnectionProvider extends ConnectorConnectionProvider<Cas
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getClusterNodes() {
+        return clusterNodes;
+    }
+
+    public void setClusterNodes(String clusterNodes) {
+        this.clusterNodes = clusterNodes;
     }
 
     public String getPassword() {
