@@ -9,15 +9,29 @@ http://www.mulesoft.org/schema/mule/cassandra-db http://www.mulesoft.org/schema/
     <configuration-properties file="automation-credentials.properties"/>
 
     <cassandra-db:config name="Cassandra_Basic_Config">
-        <cassandra-db:connection host="${config.host}" port="${config.port}" keyspace="${config.keyspace}" />
+        <cassandra-db:connection host="${config.host}" port="${config.port}" keyspace="${config.keyspace}"/>
     </cassandra-db:config>
 
     <cassandra-db:config name="Cassandra_Advanced_Config">
-        <cassandra-db:connection clusterName = "${config.clusterName}" clusterNodes="${config.clusterNodes}" protocolVersion="${config.protocolVersion}" maxSchemaAgreementWaitSeconds="${config.maxSchemaAgreementWaitSeconds}" compression="${config.compression}" />
+        <cassandra-db:connection clusterName="${config.clusterName}" clusterNodes="${config.clusterNodes}"
+                                 protocolVersion="${config.protocolVersion}"
+                                 maxSchemaAgreementWaitSeconds="${config.maxSchemaAgreementWaitSeconds}"
+                                 compression="${config.compression}"/>
     </cassandra-db:config>
 
-    <cassandra-db:config name="Cassandra_Advanced_Wrong_ClusterNodesName_Config">
-        <cassandra-db:connection clusterName = "${config.clusterName}" clusterNodes = "wrongClusterNodes" protocolVersion="${config.protocolVersion}" maxSchemaAgreementWaitSeconds="${config.maxSchemaAgreementWaitSeconds}" compression="${config.compression}" />
+    <cassandra-db:config name="Cassandra_Wrong_ClusterNodesName_Advanced_Config">
+        <cassandra-db:connection clusterName="${config.clusterName}" clusterNodes="wrongClusterNodes"
+                                 protocolVersion="${config.protocolVersion}"
+                                 maxSchemaAgreementWaitSeconds="${config.maxSchemaAgreementWaitSeconds}"
+                                 compression="${config.compression}"/>
+    </cassandra-db:config>
+
+    <cassandra-db:config name="Cassandra_Wrong_Host_Basic_Config">
+        <cassandra-db:connection host="wrongHost" port="${config.port}" keyspace="${config.keyspace}"/>
+    </cassandra-db:config>
+
+    <cassandra-db:config name="Cassandra_Wrong_Port_Basic_Config">
+        <cassandra-db:connection host="${config.host}" port="wrongPort" keyspace="${config.keyspace}"/>
     </cassandra-db:config>
 
     <flow name="createKeyspace-flow">

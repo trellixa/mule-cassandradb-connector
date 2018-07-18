@@ -9,6 +9,8 @@ import org.mule.runtime.api.connectivity.ConnectivityTestingService;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.mule.runtime.api.connection.*;
+
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.*;
 import static org.mule.runtime.api.connectivity.ConnectivityTestingService.*;
@@ -34,11 +36,24 @@ public class ConfigTestCase extends AbstractTestCases {
         assertThat(validationResult.isValid(), is(true));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void connectWithAdvancedParamsWrongClusterNodesNameTest() {
         ConnectionValidationResult validationResult = connectivityTestingService.testConnection(Location.builder()
-                .globalName("Cassandra_Advanced_Wrong_ClusterNodesName_Config").build());
+                .globalName("Cassandra_Wrong_ClusterNodesName_Advanced_Config").build());
+        assertThat(validationResult.getException(), is(instanceOf(ConnectionException.class)));
+    }
 
-        assertThat(validationResult.isValid(), is(true));
+    @Test
+    public void connectWithBasicParamsWrongHostTest() {
+        ConnectionValidationResult validationResult = connectivityTestingService.testConnection(Location.builder()
+                .globalName("Cassandra_Wrong_Host_Basic_Config").build());
+        assertThat(validationResult.getException(), is(instanceOf(ConnectionException.class)));
+    }
+
+    @Test
+    public void connectWithBasicParamsWrongPortTest() {
+        ConnectionValidationResult validationResult = connectivityTestingService.testConnection(Location.builder()
+                .globalName("Cassandra_Wrong_Port_Basic_Config").build());
+        assertThat(validationResult.getException(), is(instanceOf(ConnectionException.class)));
     }
 }
