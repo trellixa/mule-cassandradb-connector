@@ -56,4 +56,18 @@ public class ConfigTestCase extends AbstractTestCases {
                 .globalName("Cassandra_Wrong_Port_Basic_Config").build());
         assertThat(validationResult.getException(), is(instanceOf(ConnectionException.class)));
     }
+
+    @Test
+    public void connectWithBasicParamsWithNoPortTest() {
+        ConnectionValidationResult validationResult = connectivityTestingService.testConnection(Location.builder()
+                .globalName("Cassandra_No_Port_Basic_Config").build());
+        assertThat(validationResult.getException(), is(instanceOf(ConnectionException.class)));
+    }
+
+    @Test
+    public void connectWithBasicParamsWithNoHostTest() {
+        ConnectionValidationResult validationResult = connectivityTestingService.testConnection(Location.builder()
+                .globalName("Cassandra_No_Host_Basic_Config").build());
+        assertThat(validationResult.getException(), is(instanceOf(ConnectionException.class)));
+    }
 }

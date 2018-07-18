@@ -34,6 +34,14 @@ http://www.mulesoft.org/schema/mule/cassandra-db http://www.mulesoft.org/schema/
         <cassandra-db:connection host="${config.host}" port="wrongPort" keyspace="${config.keyspace}"/>
     </cassandra-db:config>
 
+    <cassandra-db:config name="Cassandra_No_Port_Basic_Config">
+        <cassandra-db:connection host="${config.host}" keyspace="${config.keyspace}"/>
+    </cassandra-db:config>
+
+    <cassandra-db:config name="Cassandra_No_Host_Basic_Config">
+        <cassandra-db:connection port="${config.port}" keyspace="${config.keyspace}"/>
+    </cassandra-db:config>
+
     <flow name="createKeyspace-flow">
         <cassandra-db:create-keyspace config-ref="Cassandra_Basic_Config">
             <cassandra-db:input>#[dw:payload]</cassandra-db:input>
