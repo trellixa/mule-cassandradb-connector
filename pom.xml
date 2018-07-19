@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.mulesoft.connectors</groupId>
     <artifactId>mule-mule-cassandradb-connector</artifactId>
-    <version>3.0.1-SNAPSHOT</version>
+    <version>3.1.0</version>
     <packaging>mule-extension</packaging>
     <name>Mule CassandraDB Connector</name>
 
