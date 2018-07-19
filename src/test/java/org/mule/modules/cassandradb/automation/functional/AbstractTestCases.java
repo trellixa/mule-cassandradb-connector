@@ -25,7 +25,7 @@ public abstract class AbstractTestCases extends MuleArtifactFunctionalTestCase {
     @Rule
     public SystemProperty rule2 = TestConnectivityUtils.disableAutomaticTestConnectivity();
 
-    private static final String FLOW_CONFIG_LOCATION = "src/test/resources/automation-test-flows.xml";
+    private static final String FLOW_CONFIG_LOCATION = "src/test/resources/flows/automation-test-flows.xml";
     protected static final int SLEEP_DURATION = 2000;
     Properties cassandraProperties;
     protected String testKeyspace;
