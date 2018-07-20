@@ -184,7 +184,11 @@ output application/java
 }]]></ee:set-payload>
       </ee:message>
     </ee:transform>
-    <cassandra-db:delete-columns-value table="demo_table" doc:name="Delete columns value" doc:id="8ed01b4f-2cd4-4fcf-9d70-f560a6501f8e" config-ref="CassandraDB_Config" keyspaceName="demo_keyspace" entities="test"/>
+    <cassandra-db:delete-columns-value table="demo_table" doc:name="Delete columns value" doc:id="8ed01b4f-2cd4-4fcf-9d70-f560a6501f8e" config-ref="CassandraDB_Config" keyspaceName="demo_keyspace">
+      <cassandra-db:entities >
+        <cassandra-db:entity value="#[payload.entities]" />
+      </cassandra-db:entities>
+    </cassandra-db:delete-columns-value>
     <ee:transform doc:name="Transform Message" doc:id="1f4f7f5d-7cfc-48fc-983c-a74a69576f8c" >
       <ee:message >
         <ee:set-payload ><![CDATA[%dw 2.0
