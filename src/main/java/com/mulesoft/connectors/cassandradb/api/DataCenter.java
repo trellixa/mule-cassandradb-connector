@@ -9,6 +9,7 @@ public class DataCenter {
     private Integer value;
 
     public DataCenter(){
+        //empty constructor
     }
 
     public String getName() {

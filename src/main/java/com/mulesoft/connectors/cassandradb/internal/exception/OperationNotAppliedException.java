@@ -6,6 +6,7 @@ public class OperationNotAppliedException extends CassandraException{
         super(msg);
     }
 
+    @Override
     public CassandraError getErrorCode() {
         return CassandraError.OPERATION_NOT_APPLIED;
     }

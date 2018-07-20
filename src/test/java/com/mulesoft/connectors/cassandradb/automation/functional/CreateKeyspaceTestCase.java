@@ -12,8 +12,8 @@ import com.mulesoft.connectors.cassandradb.api.DataCenter;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
-import static com.mulesoft.connectors.cassandradb.api.ReplicationStrategy.NetworkTopologyStrategy;
-import static com.mulesoft.connectors.cassandradb.api.ReplicationStrategy.SimpleStrategy;
+import static com.mulesoft.connectors.cassandradb.api.ReplicationStrategy.NETWORK_TOPOLOGY_STRATEGY;
+import static com.mulesoft.connectors.cassandradb.api.ReplicationStrategy.SIMPLE_STRATEGY;
 import static com.mulesoft.connectors.cassandradb.automation.functional.TestDataBuilder.DATA_CENTER_NAME;
 
 public class CreateKeyspaceTestCase extends AbstractTestCases {
@@ -48,7 +48,7 @@ public class CreateKeyspaceTestCase extends AbstractTestCases {
             firstDataCenter.setName(DATA_CENTER_NAME);
             firstDataCenter.setValue(1);
             createKeyspaceInput.setFirstDataCenter(firstDataCenter);
-            createKeyspaceInput.setReplicationStrategyClass(NetworkTopologyStrategy);
+            createKeyspaceInput.setReplicationStrategyClass(NETWORK_TOPOLOGY_STRATEGY);
             createKeyspace(createKeyspaceInput);
         } catch (Exception e){
             fail();
@@ -61,7 +61,7 @@ public class CreateKeyspaceTestCase extends AbstractTestCases {
             CreateKeyspaceInput keyspaceInput = new CreateKeyspaceInput();
             keyspaceInput.setKeyspaceName(TestDataBuilder.KEYSPACE_NAME_1);
             keyspaceInput.setReplicationFactor(null);
-            keyspaceInput.setReplicationStrategyClass(SimpleStrategy);
+            keyspaceInput.setReplicationStrategyClass(SIMPLE_STRATEGY);
             createKeyspace(keyspaceInput);
         } catch (Exception e){
             assertThat(e.getMessage(), is("Invalid property value: NULL for property: 'replication_factor'."));

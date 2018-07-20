@@ -113,6 +113,7 @@ public class CassandraConnectionProvider extends ConnectorConnectionProvider<Cas
     private boolean sslEnabled;
 
     private static final Logger logger = LoggerFactory.getLogger(CassandraConnectionProvider.class);
+    public static final String ERROR_MESSAGE = "Error while connecting to Cassandra database!";
 
     @Override
     public CassandraConnection connect() throws ConnectionException {
@@ -149,7 +150,7 @@ public class CassandraConnectionProvider extends ConnectorConnectionProvider<Cas
             session = isNotEmpty(keyspace) ? cluster.connect(keyspace): cluster.connect();
             logger.info("Connected to Cassandra Cluster: {} !", session.getCluster().getClusterName());
         } catch (Exception cassandraException) {
-            logger.error("Error while connecting to Cassandra database!", cassandraException);
+            logger.error(ERROR_MESSAGE, cassandraException);
             throw new CassandraException(cassandraException.getMessage());
         }
         return new CassandraConnection(cluster, session);
@@ -174,7 +175,7 @@ public class CassandraConnectionProvider extends ConnectorConnectionProvider<Cas
             validateAttribute(port);
             clusterBuilder.addContactPoint(host).withPort(Integer.parseInt(port));
         } catch (IllegalArgumentException connEx) {
-            logger.error("Error while connecting to Cassandra database!", connEx);
+            logger.error(ERROR_MESSAGE, connEx);
             throw new CassandraException(connEx.getMessage());
         }
     }
@@ -187,7 +188,7 @@ public class CassandraConnectionProvider extends ConnectorConnectionProvider<Cas
                 clusterBuilder.addContactPoint(entry.getKey()).withPort(Integer.parseInt(entry.getValue()));
             }
         } catch (IllegalArgumentException connEx) {
-            logger.error("Error while connecting to Cassandra database!", connEx);
+            logger.error(ERROR_MESSAGE, connEx);
             throw new CassandraException(connEx.getMessage());
         }
     }

@@ -9,7 +9,7 @@ package com.mulesoft.connectors.cassandradb.api;
 public enum ReplicationStrategy {
 
     /**
-     * <p>SimpleStrategy merely places the first replica at the node whose
+     * <p>SIMPLE_STRATEGY merely places the first replica at the node whose
      * token is closest to the key (as determined by the Partitioner), and
      * additional replicas on subsequent nodes along the ring in increasing
      * Token order.</p>
@@ -17,9 +17,9 @@ public enum ReplicationStrategy {
      * <p>Supports a single strategy option 'replication_factor' that
      * specifies the replication factor for the cluster.</p>
      */
-    SimpleStrategy,
+    SIMPLE_STRATEGY,
     /**
-     * <p>With NetworkTopologyStrategy, for each datacenter, you can specify
+     * <p>With NETWORK_TOPOLOGY_STRATEGY, for each datacenter, you can specify
      * how many replicas you want on a per-keyspace basis. Replicas are
      * placed on different racks within each DC, if possible.</p>
      * 
@@ -28,5 +28,5 @@ public enum ReplicationStrategy {
      * sum of all per datacenter values. Note that the datacenter names
      * must match those used in conf/cassandra-topology.properties.</p>
      */
-    NetworkTopologyStrategy;
+    NETWORK_TOPOLOGY_STRATEGY;
 }
