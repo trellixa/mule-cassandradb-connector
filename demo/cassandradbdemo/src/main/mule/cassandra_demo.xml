@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <mule xmlns:cassandra-db="http://www.mulesoft.org/schema/mule/cassandra-db" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
-  xmlns:http="http://www.mulesoft.org/schema/mule/http"
-  xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+      xmlns:http="http://www.mulesoft.org/schema/mule/http"
+      xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
 http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
 http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
 http://www.mulesoft.org/schema/mule/cassandra-db http://www.mulesoft.org/schema/mule/cassandra-db/current/mule-cassandra-db.xsd">
@@ -11,7 +11,9 @@ http://www.mulesoft.org/schema/mule/cassandra-db http://www.mulesoft.org/schema/
   <http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="7b4310b7-4a49-4b37-8649-9247ae910399" >
     <http:listener-connection host="0.0.0.0" port="8081" />
   </http:listener-config>
-  <cassandra-db:config name="CassandraDB_Config" doc:name="CassandraDB Config" doc:id="1ab180db-597d-455a-99fb-e006842cd052" />
+  <cassandra-db:config name="CassandraDB_Config" doc:name="CassandraDB Config" doc:id="1ab180db-597d-455a-99fb-e006842cd052" >
+    <cassandra-db:connection host="${config.host}" port="${config.port}" keyspace="${config.keyspace}" username="${config.username}" password="${config.password}" clusterName="${config.clusterName}" clusterNodes="${config.clusterNodes}"/>
+  </cassandra-db:config>
   <flow name="HTMLForm" doc:id="a280ad5c-cc81-4c18-9162-fbd591d0633d" >
     <http:listener doc:name="Listener" doc:id="1cdaf89f-e4a0-42fc-b26e-80c1cc197e0b" config-ref="HTTP_Listener_config" path="/"/>
     <parse-template doc:name="Parse Template" doc:id="b4ecf9fd-25a1-4f7f-85f4-a6b4ad6751ae" location="form.html"/>
@@ -182,7 +184,7 @@ output application/java
 }]]></ee:set-payload>
       </ee:message>
     </ee:transform>
-    <cassandra-db:delete-columns-value table="demo_table" doc:name="Delete columns value" doc:id="8ed01b4f-2cd4-4fcf-9d70-f560a6501f8e" config-ref="CassandraDB_Config" keyspaceName="demo_keyspace"/>
+    <cassandra-db:delete-columns-value table="demo_table" doc:name="Delete columns value" doc:id="8ed01b4f-2cd4-4fcf-9d70-f560a6501f8e" config-ref="CassandraDB_Config" keyspaceName="demo_keyspace" entities="test"/>
     <ee:transform doc:name="Transform Message" doc:id="1f4f7f5d-7cfc-48fc-983c-a74a69576f8c" >
       <ee:message >
         <ee:set-payload ><![CDATA[%dw 2.0
@@ -274,7 +276,9 @@ payload]]></ee:set-payload>
   </flow>
   <flow name="DropTable" doc:id="81fa1da3-8a3d-460d-80d7-2499faacf3c3" >
     <http:listener doc:name="Listener" doc:id="51053b82-fa99-456b-bde4-36c87af4b633" config-ref="HTTP_Listener_config" path="/dropTable" />
-    <cassandra-db:drop-table doc:name="Drop table" doc:id="2b814d18-ea46-49ee-a7d5-f5663bdb64e7" config-ref="CassandraDB_Config" tableName="#[payload.tableName]" keyspaceName="#[payload.keyspaceName]"/>
+    <cassandra-db:drop-table doc:name="Drop table" doc:id="2b814d18-ea46-49ee-a7d5-f5663bdb64e7" config-ref="CassandraDB_Config" keyspaceName="#[payload.keyspaceName]">
+      <cassandra-db:table-name ><![CDATA[#[payload.tableName]]]></cassandra-db:table-name>
+    </cassandra-db:drop-table>
     <ee:transform doc:name="Transform Message" doc:id="ef72ee47-8ff0-40cc-8e94-2a33d867cde7" >
       <ee:message >
         <ee:set-payload ><![CDATA[%dw 2.0
@@ -286,7 +290,9 @@ payload]]></ee:set-payload>
   </flow>
   <flow name="DropKeyspace" doc:id="81fa1da3-8a3d-460d-80d7-2499faacf3c3" >
     <http:listener doc:name="Listener" doc:id="51053b82-fa99-456b-bde4-36c87af4b633" config-ref="HTTP_Listener_config" path="/dropKeyspace" />
-    <cassandra-db:drop-keyspace doc:name="Drop keyspace" doc:id="4dd3b152-bef6-474e-ac47-dfa476e8eafc" config-ref="CassandraDB_Config" keyspaceName="#[payload.keyspaceName]"/>
+    <cassandra-db:drop-keyspace doc:name="Drop keyspace" doc:id="4dd3b152-bef6-474e-ac47-dfa476e8eafc" config-ref="CassandraDB_Config">
+      <cassandra-db:keyspace-name ><![CDATA[#[payload.keyspaceName]]]></cassandra-db:keyspace-name>
+    </cassandra-db:drop-keyspace>
     <ee:transform doc:name="Transform Message" doc:id="6b5c7894-5f53-41e5-9ae7-364fdbfc427b" >
       <ee:message >
         <ee:set-payload ><![CDATA[%dw 2.0
