@@ -17,7 +17,7 @@ public enum ReplicationStrategy {
      * <p>Supports a single strategy option 'replication_factor' that
      * specifies the replication factor for the cluster.</p>
      */
-    SIMPLE_STRATEGY,
+    SimpleStrategy,
     /**
      * <p>With NETWORK_TOPOLOGY_STRATEGY, for each datacenter, you can specify
      * how many replicas you want on a per-keyspace basis. Replicas are
@@ -28,5 +28,5 @@ public enum ReplicationStrategy {
      * sum of all per datacenter values. Note that the datacenter names
      * must match those used in conf/cassandra-topology.properties.</p>
      */
-    NETWORK_TOPOLOGY_STRATEGY;
+    NetworkTopologyStrategy;
 }

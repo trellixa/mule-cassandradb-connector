@@ -32,7 +32,7 @@ public class ReplicationStrategyBuilder {
     private static void addStrategyProps(CreateKeyspaceInput input, LinkedHashMap<String, Object> replicationStrategyProps) {
         replicationStrategyProps.put(Constants.CLASS, input.getReplicationStrategyClass().name());
         //'replication_factor' required if class is SIMPLE_STRATEGY; otherwise, not used
-        if (input.getReplicationStrategyClass().equals(ReplicationStrategy.SIMPLE_STRATEGY)) {
+        if (input.getReplicationStrategyClass().equals(ReplicationStrategy.SimpleStrategy)) {
             replicationStrategyProps.put(Constants.REPLICATION_FACTOR, input.getReplicationFactor());
         }
         if (input.getFirstDataCenter() != null) {
@@ -49,7 +49,7 @@ public class ReplicationStrategyBuilder {
 
     private static Map<String, Object> buildDefaultReplicationStrategy() {
         LinkedHashMap<String, Object> replicationStrategyMap = new LinkedHashMap<String, Object>();
-        replicationStrategyMap.put(Constants.CLASS, ReplicationStrategy.SIMPLE_STRATEGY.name());
+        replicationStrategyMap.put(Constants.CLASS, ReplicationStrategy.SimpleStrategy.name());
         replicationStrategyMap.put(Constants.REPLICATION_FACTOR, Constants.DEFAULT_REPLICATION_FACTOR);
         return replicationStrategyMap;
     }

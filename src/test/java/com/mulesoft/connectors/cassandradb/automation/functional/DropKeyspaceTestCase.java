@@ -9,7 +9,7 @@ import com.mulesoft.connectors.cassandradb.api.CreateKeyspaceInput;
 import com.mulesoft.connectors.cassandradb.api.DataCenter;
 
 import static org.junit.Assert.fail;
-import static com.mulesoft.connectors.cassandradb.api.ReplicationStrategy.NETWORK_TOPOLOGY_STRATEGY;
+import static com.mulesoft.connectors.cassandradb.api.ReplicationStrategy.NetworkTopologyStrategy;
 
 public class DropKeyspaceTestCase extends AbstractTestCases {
 
@@ -33,7 +33,7 @@ public class DropKeyspaceTestCase extends AbstractTestCases {
             firstDataCenter.setName(TestDataBuilder.DATA_CENTER_NAME);
             firstDataCenter.setValue(1);
             keyspaceInput.setFirstDataCenter(firstDataCenter);
-            keyspaceInput.setReplicationStrategyClass(NETWORK_TOPOLOGY_STRATEGY);
+            keyspaceInput.setReplicationStrategyClass(NetworkTopologyStrategy);
             createKeyspace(keyspaceInput);
             dropKeyspace(TestDataBuilder.KEYSPACE_NAME_2);
         } catch (Exception e){
