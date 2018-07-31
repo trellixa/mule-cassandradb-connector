@@ -4,15 +4,15 @@
 
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.mulesoft.connectors</groupId>
-    <artifactId>mule-mule-cassandradb-connector</artifactId>
-    <version>3.1.0</version>
+    <artifactId>mule-cassandradb-connector</artifactId>
+    <version>3.1.0-SNAPSHOT</version>
     <packaging>mule-extension</packaging>
     <name>Mule CassandraDB Connector</name>
 
     <parent>
         <groupId>com.mulesoft.connectors</groupId>
         <artifactId>mule-connectivity-parent</artifactId>
-        <version>1.1.0</version>
+        <version>1.2.3</version>
     </parent>
 
     <dependencies>
@@ -72,4 +72,11 @@
         <url>http://github.com/mulesoft/mule-cassandradb-connector</url>
         <tag>HEAD</tag>
     </scm>
+    <repositories>
+        <repository>
+            <id>mule-releases</id>
+            <name>Nexus Public Releases</name>
+            <url>https://repository-master.mulesoft.org/nexus/content/repositories/releases/</url>
+        </repository>
+    </repositories>
 </project>
