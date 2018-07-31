@@ -117,7 +117,7 @@ public class CassandraConnectionProvider extends ConnectorConnectionProvider<Cas
     public CassandraConnection connect() throws ConnectionException {
         try {
             Cluster.Builder clusterBuilder = Cluster.builder();
-            Stream.of(java.util.Optional.ofNullable(clusterNodes).orElse(format("%s:%s", java.util.Optional.ofNullable(host).orElseThrow(IllegalArgumentException::new), port)).split(",")).forEach(part -> {
+            Stream.of(java.util.Optional.ofNullable(clusterNodes).orElseGet(() -> format("%s:%s", java.util.Optional.ofNullable(host).orElseThrow(IllegalArgumentException::new), port)).split(",")).forEach(part -> {
                 String[] pair = part.contains(":") ? part.split(":") : new String[]{part.trim(), CASSANDRA_NODE_DEFAULT_PORT};
                 clusterBuilder.addContactPoint(pair[0].trim()).withPort(Integer.parseInt(pair[1].trim()));
             });

@@ -65,7 +65,7 @@ public class TestDataBuilder {
 
     public static final String UPDATED_VALUE = "updatedValue";
 
-    public static final String INVALID_COLUMN_MESSAGE_ERROR = "Unknown identifier invalid_column.";
+    public static final String INVALID_COLUMN_MESSAGE_ERROR = "Undefined column name invalid_column.";
 
     static {
         cassandraCategoryMetadataTestKeys.add(TABLE_NAME_2);

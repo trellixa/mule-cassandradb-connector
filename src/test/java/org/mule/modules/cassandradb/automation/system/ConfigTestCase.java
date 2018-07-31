@@ -64,7 +64,7 @@ public class ConfigTestCase extends AbstractTestCases {
     public void connectWithBasicParamsWithNoPortTest() {
         ConnectionValidationResult validationResult = connectivityTestingService.testConnection(Location.builder()
                 .globalName("Cassandra_No_Port_Basic_Config").build());
-        assertThat(validationResult.getException(), is(instanceOf(ConnectionException.class)));
+        assertThat(validationResult.isValid(), is(true));
     }
 
     @Test
