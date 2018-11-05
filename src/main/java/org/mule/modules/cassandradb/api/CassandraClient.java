@@ -3,9 +3,23 @@
  */
 package org.mule.modules.cassandradb.api;
 
-import com.datastax.driver.core.*;
-import com.datastax.driver.core.querybuilder.*;
+import com.datastax.driver.core.Cluster;
+import com.datastax.driver.core.DataType;
+import com.datastax.driver.core.KeyspaceMetadata;
+import com.datastax.driver.core.Metadata;
+import com.datastax.driver.core.PreparedStatement;
+import com.datastax.driver.core.ResultSet;
+import com.datastax.driver.core.Row;
+import com.datastax.driver.core.Session;
+import com.datastax.driver.core.TableMetadata;
+import com.datastax.driver.core.querybuilder.Delete;
+import com.datastax.driver.core.querybuilder.Insert;
+import com.datastax.driver.core.querybuilder.QueryBuilder;
+import com.datastax.driver.core.querybuilder.Update;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.mule.api.ConnectionException;
+import org.mule.api.ConnectionExceptionCode;
 import org.mule.modules.cassandradb.configurations.AdvancedConnectionParameters;
 import org.mule.modules.cassandradb.configurations.ConnectionParameters;
 import org.mule.modules.cassandradb.metadata.AlterColumnInput;
@@ -15,14 +29,16 @@ import org.mule.modules.cassandradb.utils.CassandraDBException;
 import org.mule.modules.cassandradb.utils.ConnectionUtil;
 import org.mule.modules.cassandradb.utils.Constants;
 import org.mule.modules.cassandradb.utils.builders.HelperStatements;
-
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.mule.api.ConnectionExceptionCode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 public final class CassandraClient {
 
@@ -51,13 +67,11 @@ public final class CassandraClient {
 
         CassandraClient client = new CassandraClient();
 
-        if (connectionParameters.getAdvancedConnectionParameters().getClusterNodes() != null) {
-
-                connectWithAdvancedParams(connectionParameters, clusterBuilder);
-
-            } else {
-                connectWithBasicParams(connectionParameters, clusterBuilder);
-            }
+        if (StringUtils.isNotBlank(connectionParameters.getAdvancedConnectionParameters().getClusterNodes())) {
+            connectWithAdvancedParams(connectionParameters, clusterBuilder);
+        } else {
+            connectWithBasicParams(connectionParameters, clusterBuilder);
+        }
 
 
         withCredentials(connectionParameters, clusterBuilder);
@@ -71,16 +85,16 @@ public final class CassandraClient {
         return client;
     }
 
-       public static void connectWithBasicParams(ConnectionParameters connectionParameters, Cluster.Builder clusterBuilder) throws ConnectionException {
-           validateBasicParams(connectionParameters);
+    public static void connectWithBasicParams(ConnectionParameters connectionParameters, Cluster.Builder clusterBuilder) throws ConnectionException {
+        validateBasicParams(connectionParameters);
 
-           try {
-               clusterBuilder.addContactPoint(connectionParameters.getHost()).withPort(Integer.parseInt(connectionParameters.getPort()));
-           } catch (IllegalArgumentException connEx) {
-               logger.error("Error while connecting to Cassandra database!", connEx);
-               throw new org.mule.api.ConnectionException(ConnectionExceptionCode.CANNOT_REACH, null, connEx.getMessage());
-           }
-       }
+        try {
+            clusterBuilder.addContactPoint(connectionParameters.getHost()).withPort(Integer.parseInt(connectionParameters.getPort()));
+        } catch (IllegalArgumentException connEx) {
+            logger.error("Error while connecting to Cassandra database!", connEx);
+            throw new org.mule.api.ConnectionException(ConnectionExceptionCode.CANNOT_REACH, null, connEx.getMessage());
+        }
+    }
 
     public static void connectWithAdvancedParams(ConnectionParameters connectionParameters, Cluster.Builder clusterBuilder) throws ConnectionException {
         try {
@@ -96,7 +110,7 @@ public final class CassandraClient {
             logger.error("Error while connecting to Cassandra database!", connEx);
             throw new org.mule.api.ConnectionException(ConnectionExceptionCode.CANNOT_REACH, null, connEx.getMessage());
         }
-       }
+    }
 
     private static void withCredentials(ConnectionParameters connectionParameters, Cluster.Builder clusterBuilder) {
         if (StringUtils.isNotEmpty(connectionParameters.getUsername()) && StringUtils.isNotEmpty(connectionParameters.getPassword())) {
@@ -104,30 +118,30 @@ public final class CassandraClient {
         }
     }
 
-        public static void addAdvancedConnectionParameters(ConnectionParameters connectionParameters, Cluster.Builder clusterBuilder){
-            if (connectionParameters.getAdvancedConnectionParameters() != null) {
-                addAdvancedConnectionParameters(clusterBuilder, connectionParameters.getAdvancedConnectionParameters());
-            }
+    public static void addAdvancedConnectionParameters(ConnectionParameters connectionParameters, Cluster.Builder clusterBuilder) {
+        if (connectionParameters.getAdvancedConnectionParameters() != null) {
+            addAdvancedConnectionParameters(clusterBuilder, connectionParameters.getAdvancedConnectionParameters());
         }
+    }
 
-        private static void connect(ConnectionParameters connectionParameters, CassandraClient client) throws ConnectionException {
-            try {
-                logger.info("Connecting to Cassandra Database: {} , port: {} with clusterName: {} , protocol version {} and compression type {} ",
-                        connectionParameters.getHost(),
-                        connectionParameters.getPort(),
-                        connectionParameters.getAdvancedConnectionParameters() != null ? connectionParameters.getAdvancedConnectionParameters().getClusterName() : null,
-                        connectionParameters.getAdvancedConnectionParameters() != null ? connectionParameters.getAdvancedConnectionParameters().getProtocolVersion() : null,
-                        connectionParameters.getAdvancedConnectionParameters() != null ? connectionParameters.getAdvancedConnectionParameters().getCompression() : null);
+    private static void connect(ConnectionParameters connectionParameters, CassandraClient client) throws ConnectionException {
+        try {
+            logger.info("Connecting to Cassandra Database: {} , port: {} with clusterName: {} , protocol version {} and compression type {} ",
+                    connectionParameters.getHost(),
+                    connectionParameters.getPort(),
+                    connectionParameters.getAdvancedConnectionParameters() != null ? connectionParameters.getAdvancedConnectionParameters().getClusterName() : null,
+                    connectionParameters.getAdvancedConnectionParameters() != null ? connectionParameters.getAdvancedConnectionParameters().getProtocolVersion() : null,
+                    connectionParameters.getAdvancedConnectionParameters() != null ? connectionParameters.getAdvancedConnectionParameters().getCompression() : null);
 
-                client.cassandraSession = StringUtils.isNotEmpty(connectionParameters.getKeyspace()) ? client.cluster.connect(connectionParameters.getKeyspace())
-                        : client.cluster.connect();
+            client.cassandraSession = StringUtils.isNotEmpty(connectionParameters.getKeyspace()) ? client.cluster.connect(connectionParameters.getKeyspace())
+                    : client.cluster.connect();
 
-                logger.info("Connected to Cassandra Cluster: {} !", client.cassandraSession.getCluster().getClusterName());
-            } catch (Exception cassandraException) {
-                logger.error("Error while connecting to Cassandra database!", cassandraException);
-                throw new org.mule.api.ConnectionException(ConnectionExceptionCode.UNKNOWN, null, cassandraException.getMessage());
-            }
+            logger.info("Connected to Cassandra Cluster: {} !", client.cassandraSession.getCluster().getClusterName());
+        } catch (Exception cassandraException) {
+            logger.error("Error while connecting to Cassandra database!", cassandraException);
+            throw new org.mule.api.ConnectionException(ConnectionExceptionCode.UNKNOWN, null, cassandraException.getMessage());
         }
+    }
 
     private static void addAdvancedConnectionParameters(Cluster.Builder clusterBuilder, AdvancedConnectionParameters advancedConnectionParameters) {
         if (StringUtils.isNotEmpty(advancedConnectionParameters.getClusterName())) {
