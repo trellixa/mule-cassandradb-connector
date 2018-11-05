@@ -6,7 +6,7 @@
     <version>2.1.1</version>
     <packaging>mule-module</packaging>
     <name>Mule CassandraDB Connector</name>
-
+  
     <parent>
         <groupId>org.mule.tools.devkit</groupId>
         <artifactId>mule-devkit-parent</artifactId>
@@ -214,10 +214,10 @@
 
     <scm>
         <connection>
-            scm:git:git://github.com:mulesoft/CassandraDB-connector.git
+            scm:git:git://github.com:mulesoft/cassandra-connector.git
         </connection>
         <developerConnection>
-            scm:git:git@github.com:mulesoft/CassandraDB-connector.git
+            scm:git:git@github.com:mulesoft/cassandra-connector.git
         </developerConnection>
         <url>http://github.com/mulesoft/CassandraDB-connector</url>
       <tag>mule-module-cassandradb-2.1.1</tag>

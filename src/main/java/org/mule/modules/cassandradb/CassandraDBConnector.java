@@ -215,7 +215,7 @@ public class CassandraDBConnector {
      */
     @Processor
     @MetaDataScope(CassandraMetadataCategory.class)
-    public List<Map<String, Object>>  select(@Default(PAYLOAD) @Query final String query, @Optional List<Object> parameters) throws CassandraDBException {
+    public List<Map<String, Object>>  select(@Default(PAYLOAD) @Query final String query, @Optional @RefOnly List<Object> parameters) throws CassandraDBException {
         if (logger.isDebugEnabled()) {
             logger.debug("Executing select query: " + query + " with the parameters: " + parameters);
         }
