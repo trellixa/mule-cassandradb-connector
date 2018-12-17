@@ -3,6 +3,7 @@
  */
 package org.mule.modules.cassandradb.automation.system;
 
+import org.junit.Ignore;
 import org.mule.modules.cassandradb.automation.functional.AbstractTestCases;
 import org.junit.Test;
 import org.mule.runtime.api.component.location.Location;
@@ -17,6 +18,7 @@ import org.mule.runtime.api.connection.*;
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.*;
 import static org.mule.runtime.api.connectivity.ConnectivityTestingService.*;
+@Ignore
 
 public class ConfigTestCase extends AbstractTestCases {
     @Inject

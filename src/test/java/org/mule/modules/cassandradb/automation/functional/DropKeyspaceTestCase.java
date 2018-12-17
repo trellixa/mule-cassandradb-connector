@@ -4,12 +4,14 @@
  */
 package org.mule.modules.cassandradb.automation.functional;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mule.modules.cassandradb.api.CreateKeyspaceInput;
 import org.mule.modules.cassandradb.api.DataCenter;
 
 import static org.junit.Assert.fail;
 import static org.mule.modules.cassandradb.api.ReplicationStrategy.NetworkTopologyStrategy;
+@Ignore
 
 public class DropKeyspaceTestCase extends AbstractTestCases {
 

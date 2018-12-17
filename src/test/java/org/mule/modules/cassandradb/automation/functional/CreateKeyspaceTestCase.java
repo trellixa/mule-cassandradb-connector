@@ -5,6 +5,7 @@ package org.mule.modules.cassandradb.automation.functional;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mule.modules.cassandradb.api.CreateKeyspaceInput;
 import org.mule.modules.cassandradb.api.DataCenter;
@@ -14,6 +15,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.DATA_CENTER_NAME;
+@Ignore
 
 public class CreateKeyspaceTestCase extends AbstractTestCases {
 

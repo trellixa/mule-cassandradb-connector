@@ -5,9 +5,11 @@ package org.mule.modules.cassandradb.automation.functional;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.junit.Assert.fail;
+@Ignore
 
 public class RenameColumnTestCase extends AbstractTestCases {
     @Before

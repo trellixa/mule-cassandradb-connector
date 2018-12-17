@@ -5,12 +5,14 @@ package org.mule.modules.cassandradb.automation.functional;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mule.modules.cassandradb.api.ColumnType;
 
 import static org.hamcrest.CoreMatchers.startsWith;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
+@Ignore
 
 public class AddNewColumnTestCase extends AbstractTestCases {
 

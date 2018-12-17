@@ -6,6 +6,7 @@ package org.mule.modules.cassandradb.automation.functional;
 import org.hamcrest.CoreMatchers;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import static java.lang.String.format;
@@ -13,6 +14,7 @@ import static java.lang.Thread.sleep;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
+@Ignore
 
 public class InsertTestCase extends AbstractTestCases {
 

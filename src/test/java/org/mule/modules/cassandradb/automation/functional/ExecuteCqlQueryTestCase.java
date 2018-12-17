@@ -5,6 +5,7 @@ package org.mule.modules.cassandradb.automation.functional;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mule.modules.cassandradb.api.CQLQueryInput;
 import org.mule.modules.cassandradb.api.ColumnType;
@@ -24,6 +25,7 @@ import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder
 import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getAlterColumnInput;
 import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getPrimaryKey;
 import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getValidEntity;
+@Ignore
 
 public class ExecuteCqlQueryTestCase extends AbstractTestCases {
 

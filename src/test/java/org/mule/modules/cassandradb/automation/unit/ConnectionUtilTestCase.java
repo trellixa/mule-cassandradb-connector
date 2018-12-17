@@ -3,6 +3,7 @@
  */
 package org.mule.modules.cassandradb.automation.unit;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mule.modules.cassandradb.internal.util.ConnectionUtil;
 
@@ -11,6 +12,7 @@ import java.util.Map;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
+@Ignore
 
 public class ConnectionUtilTestCase {
     public static final String CASSANDRA_NODE_DEFAULT_PORT = "9042";

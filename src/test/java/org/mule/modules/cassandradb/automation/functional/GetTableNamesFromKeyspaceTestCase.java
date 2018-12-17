@@ -3,6 +3,7 @@
  */
 package org.mule.modules.cassandradb.automation.functional;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mule.modules.cassandradb.api.CreateKeyspaceInput;
 
@@ -10,6 +11,7 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+@Ignore
 
 public class GetTableNamesFromKeyspaceTestCase extends AbstractTestCases {
 

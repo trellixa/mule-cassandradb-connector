@@ -4,10 +4,7 @@
 package org.mule.modules.cassandradb.automation.functional;
 
 import org.hamcrest.CoreMatchers;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
 import org.mule.modules.cassandradb.api.CreateTableInput;
 
 import static java.lang.String.format;
@@ -15,6 +12,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
+@Ignore
 
 public class UpdateTestCase extends AbstractTestCases {
 

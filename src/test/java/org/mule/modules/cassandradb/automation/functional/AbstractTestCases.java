@@ -5,6 +5,7 @@ package org.mule.modules.cassandradb.automation.functional;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.mule.functional.junit4.MuleArtifactFunctionalTestCase;
 import org.mule.modules.cassandradb.api.AlterColumnInput;
@@ -22,6 +23,7 @@ import java.util.Properties;
 import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.KEYSPACE_DUMMY;
 import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getAutomationCredentialsProperties;
 import static org.mule.tck.junit4.matcher.ErrorTypeMatcher.errorType;
+@Ignore
 
 public abstract class AbstractTestCases extends MuleArtifactFunctionalTestCase {
 

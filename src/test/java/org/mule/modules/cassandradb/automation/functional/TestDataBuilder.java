@@ -4,6 +4,7 @@
 package org.mule.modules.cassandradb.automation.functional;
 
 import com.google.common.collect.ImmutableList;
+import org.junit.Ignore;
 import org.mule.modules.cassandradb.api.AlterColumnInput;
 import org.mule.modules.cassandradb.api.ColumnInput;
 import org.mule.modules.cassandradb.api.ColumnType;
@@ -26,6 +27,7 @@ import static java.lang.String.format;
 import static java.lang.System.currentTimeMillis;
 import static java.lang.System.getProperty;
 import static java.util.Optional.ofNullable;
+@Ignore
 
 public class TestDataBuilder {
 

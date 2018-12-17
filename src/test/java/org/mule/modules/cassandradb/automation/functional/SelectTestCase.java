@@ -5,6 +5,7 @@ package org.mule.modules.cassandradb.automation.functional;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mule.modules.cassandradb.api.ColumnType;
 
@@ -14,6 +15,7 @@ import static java.lang.Integer.valueOf;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.junit.Assert.assertThat;
+@Ignore
 
 public class SelectTestCase extends AbstractTestCases {
 

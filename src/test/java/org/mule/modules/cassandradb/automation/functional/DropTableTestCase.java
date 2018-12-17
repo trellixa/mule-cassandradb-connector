@@ -3,6 +3,7 @@
  */
 package org.mule.modules.cassandradb.automation.functional;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mule.modules.cassandradb.api.CreateTableInput;
 
@@ -11,6 +12,7 @@ import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder
 import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.TABLE_NAME_2;
 import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getBasicCreateTableInput;
 import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getCompositePrimaryKey;
+@Ignore
 
 public class DropTableTestCase extends AbstractTestCases {
 
