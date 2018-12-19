@@ -23,7 +23,6 @@ import java.util.Properties;
 import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.KEYSPACE_DUMMY;
 import static org.mule.modules.cassandradb.automation.functional.TestDataBuilder.getAutomationCredentialsProperties;
 import static org.mule.tck.junit4.matcher.ErrorTypeMatcher.errorType;
-@Ignore
 
 public abstract class AbstractTestCases extends MuleArtifactFunctionalTestCase {
 
