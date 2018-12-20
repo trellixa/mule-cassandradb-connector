@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:cassandra-db="http://www.mulesoft.org/schema/mule/cassandra-db"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/cassandra-db http://www.mulesoft.org/schema/mule/cassandra-db/current/mule-cassandra-db.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+	<flow name="createTableFlow" doc:id="07983e69-7702-4673-b3b0-e478ca28dfa8" >
+		<ee:transform doc:name="testData" doc:id="04bdebaa-c470-4947-9d4c-49cc0c33c560" >
+			<ee:message >
+			</ee:message>
+			<ee:variables >
+				<ee:set-variable variableName="testData" ><![CDATA[%dw 2.0
+output application/java
+import * from dw::core::Strings
+var randomChar1=fromCharCode(randomInt(25) + 97)
+var randomChar2=fromCharCode(randomInt(25) + 97)
+var randomChar3=fromCharCode(randomInt(25) + 97)
+var randomChar4=fromCharCode(randomInt(25) + 97)
+var randomChar5=fromCharCode(randomInt(25) + 97)
+fun randomColumnName()=
+	randomChar1 ++ randomChar2 ++ randomChar3 ++ randomChar4 ++ randomChar5
+---
+{
+	name: "DUMMY_PARTITION_KEY",
+	primaryKey: true,
+	"type": "TEXT" as Enum {
+			class: "org.mule.modules.cassandradb.api.ColumnType"
+		},
+	"int": "INT" as Enum {
+			class: "org.mule.modules.cassandradb.api.ColumnType"
+		},
+	keyspaceName: "demo_keyspace",
+	tableName: "dummy_table_name_1",
+	tableName2: "dummy_table_name_2",
+	randomColumn: randomColumnName(),
+	column:"dummy_column_1",
+	column2:"dummy_column_2"
+}]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<ee:transform doc:name="createTableBuild" doc:id="cbb65cc2-3b82-4298-8ef5-8f823bd964fb" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+{
+	columns: [{
+		name: vars.testData.name,
+		primaryKey: vars.testData.primaryKey,
+		"type": vars.testData."type"
+	},{
+		name: vars.testData.column,
+		"type": vars.testData.int
+	},{
+		name: vars.testData.column2,
+		"type": vars.testData."type"
+	}],
+	keyspaceName: vars.testData.keyspaceName,
+	tableName: vars.testData.tableName
+} as Object {
+	class : "org.mule.modules.cassandradb.api.CreateTableInput"
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<cassandra-db:create-table config-ref="Cassandra_Basic_Config">
+        </cassandra-db:create-table>
+
+	</flow>
+	<flow name="createTable2Flow" doc:id="53ca3fee-1d94-405d-b4cd-d924ac91dd7b">
+		<ee:transform doc:name="testData" doc:id="359caedb-717d-41c7-a5e7-3a9ec8c64b65">
+			<ee:message />
+			<ee:variables>
+				<ee:set-variable variableName="testData"><![CDATA[%dw 2.0
+output application/java
+import * from dw::core::Strings
+var randomChar1=fromCharCode(randomInt(25) + 97)
+var randomChar2=fromCharCode(randomInt(25) + 97)
+var randomChar3=fromCharCode(randomInt(25) + 97)
+var randomChar4=fromCharCode(randomInt(25) + 97)
+var randomChar5=fromCharCode(randomInt(25) + 97)
+fun randomColumnName()=
+	randomChar1 ++ randomChar2 ++ randomChar3 ++ randomChar4 ++ randomChar5
+---
+{
+	name: "DUMMY_PARTITION_KEY",
+	primaryKey: true,
+	"type": "TEXT" as Enum {
+			class: "org.mule.modules.cassandradb.api.ColumnType"
+		},
+	"int": "INT" as Enum {
+			class: "org.mule.modules.cassandradb.api.ColumnType"
+		},
+	keyspaceName: "demo_keyspace",
+	tableName: "dummy_table_name_1",
+	tableName2: "dummy_table_name_2",
+	randomColumn: randomColumnName(),
+	column:"dummy_column_1",
+	column2:"dummy_column_2"
+}]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<ee:transform doc:name="createTableBuild" doc:id="b50496c7-7d1e-49c3-9283-96c946013e55">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/java
+---
+{
+	columns: [{
+		name: vars.testData.name,
+		primaryKey: vars.testData.primaryKey,
+		"type": vars.testData."type"
+	},{
+		name: vars.testData.column,
+		"type": vars.testData.int
+	},{
+		name: vars.testData.column2,
+		"type": vars.testData."type"
+	}],
+	keyspaceName: vars.testData.keyspaceName,
+	tableName: vars.testData.tableName2
+} as Object {
+	class : "org.mule.modules.cassandradb.api.CreateTableInput"
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<cassandra-db:create-table doc:name="Create table" doc:id="f5e4a412-8c34-4f30-a07e-802f1f09521d" config-ref="Cassandra_Basic_Config" />
+	</flow>
+	<flow name="cleanKeyspacesFlow" doc:id="7d1e5a41-0360-45da-94ac-b385faf0b357" >
+		<ee:transform doc:name="testData" doc:id="07b5c00c-ac5f-43af-993a-61631c5acbb4">
+			<ee:message />
+			<ee:variables>
+				<ee:set-variable variableName="testData"><![CDATA[%dw 2.0
+output application/java
+---
+{
+	keyspacename1: "keyspaceName1",
+	keyspacename2: "keyspaceName2",
+	keyspacename3: "keyspaceName3",
+	dataCenterName: "datacenter1",
+	simpleStrategy: "SimpleStrategy" as Enum {
+			class: "org.mule.modules.cassandradb.api.ReplicationStrategy"
+		},
+	networkTopologyStrategy: "NetworkTopologyStrategy" as Enum {
+			class: "org.mule.modules.cassandradb.api.ReplicationStrategy"
+		}
+}]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<cassandra-db:drop-keyspace doc:name="Drop keyspace" doc:id="272d1cff-1012-43f9-8ee3-3f22974fa4fa" config-ref="Cassandra_Basic_Config" >
+			<cassandra-db:keyspace-name ><![CDATA[#[vars.testData.keyspacename1]]]></cassandra-db:keyspace-name>
+		</cassandra-db:drop-keyspace>
+		<cassandra-db:drop-keyspace doc:name="Drop keyspace" doc:id="b85eb768-b988-4054-b61c-881dc949a9b9" config-ref="Cassandra_Basic_Config" >
+			<cassandra-db:keyspace-name ><![CDATA[#[vars.testData.keyspacename2]]]></cassandra-db:keyspace-name>
+		</cassandra-db:drop-keyspace>
+		<cassandra-db:drop-keyspace doc:name="Drop keyspace" doc:id="b6afa3cd-3328-47f6-8fb9-d91e2e0f8ad3" config-ref="Cassandra_Basic_Config" >
+			<cassandra-db:keyspace-name ><![CDATA[#[vars.testData.keyspacename3]]]></cassandra-db:keyspace-name>
+		</cassandra-db:drop-keyspace>
+	</flow>
+	<flow name="dropTableFlow" doc:id="397c9a02-5181-4cc5-b0ed-673f794ac8a3" >
+		<cassandra-db:drop-table doc:name="Drop table" doc:id="530700fa-83e2-4431-b8e3-ab16c1f9e5d4" config-ref="Cassandra_Basic_Config" keyspaceName="#[vars.testData.keyspaceName]" >
+			<cassandra-db:table-name ><![CDATA[#[vars.testData.tableName]]]></cassandra-db:table-name>
+		</cassandra-db:drop-table>
+		<cassandra-db:drop-table doc:name="Drop table" doc:id="383a60e7-2255-4b7b-95a8-170f615d5b1e" config-ref="Cassandra_Basic_Config" keyspaceName="#[vars.testData.keyspaceName]" >
+			<cassandra-db:table-name ><![CDATA[#[vars.testData.tableName2]]]></cassandra-db:table-name>
+		</cassandra-db:drop-table>
+	</flow>
+</mule>
