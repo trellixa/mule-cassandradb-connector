@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:cassandra-db="http://www.mulesoft.org/schema/mule/cassandra-db" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd
+http://www.mulesoft.org/schema/mule/cassandra-db http://www.mulesoft.org/schema/mule/cassandra-db/current/mule-cassandra-db.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<munit:config name="GetTableNamesFromKeyspaceTestCase.xml" />
+	<munit:test name="testTableNamesFromLoggedInKeyspace" description="MUnit Test" doc:id="b1137db5-d32b-4ca7-b62a-adc2d56ee83f" >
+		<munit:behavior >
+			<flow-ref doc:name="createTable" doc:id="767148ae-e01d-420a-9629-3e8ff639c78d" name="createTableFlow" />
+			<flow-ref doc:name="createSecondTable" doc:id="729e5192-90ae-487f-8fac-0baba89b9a57" name="createTable2Flow"/>
+		</munit:behavior>
+		<munit:execution >
+			<cassandra-db:get-table-names-from-keyspace doc:name="Get table names from keyspace" doc:id="b0f31cef-2523-4fb5-87bb-eb07c8bb937c" config-ref="Cassandra_Basic_Config" keyspaceName="#[vars.testData.keyspaceName]"/>
+		</munit:execution>
+		<munit:validation>
+			<munit-tools:assert-equals doc:name="tableNamesSizeEqualTo2" doc:id="9414fa9e-6cbd-442f-8d61-bd74276337b9" actual="#[sizeOf(payload)]" expected="#[2]"/>
+			<munit-tools:assert doc:name="hasItem" doc:id="de423dbf-2a4f-4aad-94d4-fdd35be006f5" >
+				<munit-tools:that ><![CDATA[#[import * from dw::test::Asserts 
+ ---
+payload[1] must contain("dummy_table_name_1")]]]></munit-tools:that>
+			</munit-tools:assert>
+			<munit-tools:assert doc:name="hasItem" doc:id="351102fe-d230-49ec-8355-184a31173b12">
+				<munit-tools:that><![CDATA[#[import * from dw::test::Asserts 
+ ---
+payload[0] must contain("dummy_table_name_2")]]]></munit-tools:that>
+			</munit-tools:assert>
+			<flow-ref doc:name="dropTables" doc:id="56b4d762-9220-4499-b41e-8239a4ed4f6a" name="dropTableFlow"/>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="testTableNamesFromCustomInKeyspace" description="MUnit Test" doc:id="21f7ecd2-aee4-4b20-8410-3801ab2031aa" >
+		<munit:behavior >
+			<flow-ref doc:name="createKeyspace" doc:id="4f659890-1c30-4806-89e3-e608d71f2323" name="createKeyspaceFlow"/>
+			<flow-ref doc:name="createTable" doc:id="58d4e745-b1aa-409a-9d88-f3756bd4615b" name="createTableWKeyspaceName3"/>
+			<flow-ref doc:name="createTable" doc:id="56d5c554-221c-436d-a7b4-b0c76e28acd3" name="createTableWKeyspaceName3AndTableName2" />
+		</munit:behavior>
+		<munit:execution >
+			<cassandra-db:get-table-names-from-keyspace doc:name="Get table names from keyspace" doc:id="8d86ab83-c9e3-4096-9651-7b9918ad2252" config-ref="Cassandra_Basic_Config" keyspaceName="#[vars.testData.keyspaceName3]"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-equals doc:name="tableNamesSizeEqualTo2" doc:id="f247cd19-02ce-4206-bf45-deb119a70901" actual="#[sizeOf(payload)]" expected="#[2]" />
+			<munit-tools:assert doc:name="hasItem" doc:id="06773b5a-c7c9-4a57-bd1e-0620bff0324a" >
+				<munit-tools:that ><![CDATA[#[import * from dw::test::Asserts 
+ ---
+payload[0] must contain("dummy_table_name_2")]]]></munit-tools:that>
+			</munit-tools:assert>
+			<munit-tools:assert doc:name="hasItem" doc:id="e2c59a13-273b-4e61-91df-c7a5efc32b18" >
+				<munit-tools:that ><![CDATA[#[import * from dw::test::Asserts 
+ ---
+payload[1] must contain("dummy_table_name_1")]]]></munit-tools:that>
+			</munit-tools:assert>
+			<flow-ref doc:name="dropTables" doc:id="2142caba-7b60-42bb-a0aa-2c43d3597206" name="dropTableFlowDifferentKeyspace"/>
+		</munit:validation>
+	</munit:test>
+
+
+</mule>
