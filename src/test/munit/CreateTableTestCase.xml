@@ -20,53 +20,8 @@ http://www.mulesoft.org/schema/mule/cassandra-db http://www.mulesoft.org/schema/
 		</munit:validation>
 	</munit:test>
 	<munit:test name="testCreateTableWithCompositePKWithSuccess" description="MUnit Test" doc:id="5d7da591-a993-42ea-aeae-beb13a882170">
-		<munit:behavior >
-			<ee:transform doc:name="testData" doc:id="ca134f1b-76f2-4404-8abd-ad6d8f2d1db8">
-				<ee:message />
-				<ee:variables>
-					<ee:set-variable variableName="testData"><![CDATA[%dw 2.0
-output application/java
-import * from dw::core::Strings
-var randomChar1=fromCharCode(randomInt(25) + 97)
-var randomChar2=fromCharCode(randomInt(25) + 97)
-var randomChar3=fromCharCode(randomInt(25) + 97)
-var randomChar4=fromCharCode(randomInt(25) + 97)
-var randomChar5=fromCharCode(randomInt(25) + 97)
-fun randomColumnName()=
-	randomChar1 ++ randomChar2 ++ randomChar3 ++ randomChar4 ++ randomChar5
----
-{
-	name: "DUMMY_PARTITION_KEY",
-	primaryKey: true,
-	"type": "TEXT" as Enum {
-			class: "org.mule.modules.cassandradb.api.ColumnType"
-		},
-	keyspaceName: "demo_keyspace",
-	tableName: "dummy_table_name_1",
-	tableName2: "dummy_table_name_2",
-	randomColumn: randomColumnName(),
-	column:"dummy_column_1"
-}]]></ee:set-variable>
-				</ee:variables>
-			</ee:transform>
-			<ee:transform doc:name="createTableInput" doc:id="e4153bb2-d0ba-4774-bea6-9a0abf61579d">
-			<ee:message>
-				<ee:set-payload><![CDATA[%dw 2.0
-output application/java
----
-{
-	columns: [{
-		name: vars.testData.name,
-		primaryKey: vars.testData.primaryKey,
-		"type": vars.testData."type"
-	}],
-	keyspaceName: vars.testData.keyspaceName,
-	tableName: vars.testData.tableName2
-} as Object {
-	class : "org.mule.modules.cassandradb.api.CreateTableInput"
-}]]></ee:set-payload>
-			</ee:message>
-		</ee:transform>
+		<munit:behavior>
+			<flow-ref doc:name="Flow Reference" doc:id="a47fb149-2377-498f-872e-995b6af54e76" name="createTable2Flow"/>
 		</munit:behavior>
 		<munit:execution >
 		<cassandra-db:create-table config-ref="Cassandra_Basic_Config">
@@ -77,7 +32,7 @@ output application/java
 		</munit:validation>
 	</munit:test>
 	<munit:after-test name="tearDownCreateTableTest" description="After tests actions" doc:id="75e9fe95-65d0-4d0d-9a24-81f705b49f85" >
-		<flow-ref doc:name=" dropTable" doc:id="bf579267-ea8f-4f68-aa38-27eb0eed31a3" name="dropTableFlow"/>
+		<flow-ref doc:name="Flow Reference" doc:id="a0ef84bd-26ca-4494-bd07-5dc25d879b9c" name="dropTableFlow"/>
 	</munit:after-test>
 
 

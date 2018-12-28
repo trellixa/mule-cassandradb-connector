@@ -17,6 +17,7 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
 		</munit:behavior>
 		<munit:execution >
 			<cassandra-db:get-table-names-from-keyspace doc:name="Get table names from keyspace" doc:id="b0f31cef-2523-4fb5-87bb-eb07c8bb937c" config-ref="Cassandra_Basic_Config" keyspaceName="#[vars.testData.keyspaceName]"/>
+			<logger level="INFO" doc:name="Logger" doc:id="f4bc99f8-d3d5-4a4d-b67d-25afc1f81867" />
 		</munit:execution>
 		<munit:validation>
 			<munit-tools:assert-equals doc:name="tableNamesSizeEqualTo2" doc:id="9414fa9e-6cbd-442f-8d61-bd74276337b9" actual="#[sizeOf(payload)]" expected="#[2]"/>

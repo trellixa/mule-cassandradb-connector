@@ -76,6 +76,7 @@ public class ExecuteCqlQueryTestCase extends AbstractTestCases {
             executeCQLQuery(query);
         } catch (Exception e){
             assertThat(e.getMessage(), is("Invalid amount of bind variables."));
+            System.out.println(e);
         }
     }
 
@@ -91,6 +92,7 @@ public class ExecuteCqlQueryTestCase extends AbstractTestCases {
             executeCQLQuery(query);
         } catch (Exception e){
             assertThat(e.getMessage(), is("Prepared statement has only 0 variables, 1 values provided."));
+            System.out.println(e);
         }
     }
 }

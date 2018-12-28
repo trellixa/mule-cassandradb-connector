@@ -9,6 +9,12 @@ http://www.mulesoft.org/schema/mule/cassandra-db http://www.mulesoft.org/schema/
     <configuration-properties file="automation-credentials.properties"/>
 
     <cassandra-db:config name="Cassandra_Basic_Config">
-        <cassandra-db:connection host="${config.host}" port="${config.port}" keyspace="${config.keyspace}"/>
-    </cassandra-db:config>
+        <cassandra-db:connection host="${config.host}" port="${config.port}" keyspace="${config.keyspace}">
+			<reconnection failsDeployment="true" >
+				<reconnect-forever />
+			</reconnection>
+		</cassandra-db:connection>
+		<expiration-policy />
+    
+</cassandra-db:config>
     </mule>

@@ -11,26 +11,6 @@ http://www.mulesoft.org/schema/mule/cassandra-db http://www.mulesoft.org/schema/
 http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
 	<munit:config name="CreateKeyspaceTestCase.xml" />
 	<munit:before-test name="setUpCreateKeyspaceTest" description="Before tests actions" doc:id="7aec2090-df6e-4438-bb3a-4421f479c639" >
-		<ee:transform doc:name="testData" doc:id="0e8d61fe-b023-48c9-a2e5-d7f101d5a657" >
-			<ee:message />
-			<ee:variables >
-				<ee:set-variable variableName="testData" ><![CDATA[%dw 2.0
-output application/java
----
-{
-	keyspacename1: "keyspaceName1",
-	keyspacename2: "keyspaceName2",
-	keyspacename3: "keyspaceName3",
-	dataCenterName: "datacenter1",
-	simpleStrategy: "SimpleStrategy" as Enum {
-			class: "org.mule.modules.cassandradb.api.ReplicationStrategy"
-		},
-	networkTopologyStrategy: "NetworkTopologyStrategy" as Enum {
-			class: "org.mule.modules.cassandradb.api.ReplicationStrategy"
-		}
-}]]></ee:set-variable>
-			</ee:variables>
-		</ee:transform>
 		<flow-ref doc:name="cleanKeyspaces" doc:id="bc4d18c4-ee6d-4de9-8cf9-c2ab6bd5566a" name="cleanKeyspacesFlow"/>
 	</munit:before-test>
 	<munit:test name="testCreateKeyspaceWithDefaultReplicationStrategyWithSuccess" description="MUnit Test" doc:id="58f0a987-755c-4d42-8442-096b144f08e0">
