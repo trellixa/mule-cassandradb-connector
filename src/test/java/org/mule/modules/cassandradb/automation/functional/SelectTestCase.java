@@ -15,8 +15,8 @@ import static java.lang.Integer.valueOf;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.junit.Assert.assertThat;
-@Ignore
 
+@Ignore
 public class SelectTestCase extends AbstractTestCases {
 
     @Before

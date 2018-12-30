@@ -18,8 +18,8 @@ import org.mule.runtime.api.connection.*;
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.*;
 import static org.mule.runtime.api.connectivity.ConnectivityTestingService.*;
-@Ignore
 
+@Ignore
 public class ConfigTestCase extends AbstractTestCases {
     @Inject
     @Named(CONNECTIVITY_TESTING_SERVICE_KEY)

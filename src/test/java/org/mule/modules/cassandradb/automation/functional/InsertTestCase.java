@@ -14,8 +14,8 @@ import static java.lang.Thread.sleep;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
-@Ignore
 
+@Ignore
 public class InsertTestCase extends AbstractTestCases {
 
     @Before

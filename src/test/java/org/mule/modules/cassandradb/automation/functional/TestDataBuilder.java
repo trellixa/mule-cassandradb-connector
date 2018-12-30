@@ -28,7 +28,6 @@ import static java.lang.System.currentTimeMillis;
 import static java.lang.System.getProperty;
 import static java.util.Optional.ofNullable;
 
-
 public class TestDataBuilder {
 
     public final static String KEYSPACE_DUMMY = "dummy_keyspace";

@@ -9,8 +9,8 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.junit.Assert.fail;
-@Ignore
 
+@Ignore
 public class RenameColumnTestCase extends AbstractTestCases {
     @Before
     public  void setup() throws Exception {
