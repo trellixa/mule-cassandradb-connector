@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:cassandra-db="http://www.mulesoft.org/schema/mule/cassandra-db" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd
+http://www.mulesoft.org/schema/mule/cassandra-db http://www.mulesoft.org/schema/mule/cassandra-db/current/mule-cassandra-db.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<munit:config name="RenameColumnTestCase.xml" />
+	<munit:before-test name="setUpRenameColumnTestCase" description="Before tests actions" doc:id="763afb59-56c3-4a48-b259-204a8ee0a77d" >
+		<flow-ref doc:name="createTable" doc:id="c8e2d490-f540-4e3b-b11b-34332cf371d0" name="createTableWithCompositePrimaryKeyFlow"/>
+	</munit:before-test>
+	<munit:test name="shouldRenamePKColumnWithSuccess" description="MUnit Test" doc:id="347c899f-229f-438d-91b5-4713f4f294f9" >
+		<munit:execution >
+			<cassandra-db:rename-column doc:name="Rename column" doc:id="44a691ff-7c50-4fda-b365-9adfdb626fc9" config-ref="Cassandra_Basic_Config" table="#[vars.testData.tableName]" keyspaceName="#[vars.testData.keyspaceName]" newColumnName="#[vars.testData.newColumnName]">
+				<cassandra-db:old-column-name ><![CDATA[#[vars.testData.column]]]></cassandra-db:old-column-name>
+			</cassandra-db:rename-column>
+		</munit:execution>
+		<munit:validation>
+			<munit-tools:assert doc:name="notNullValue" doc:id="2bcc5d60-ed95-4e5f-8e88-4d687e55cf78" />
+		</munit:validation>
+	</munit:test>
+	<munit:after-test name="tearDownRenameColumnTestCase" description="After tests actions" doc:id="684d7032-879b-4442-9e16-621df809e3fa" >
+		<flow-ref doc:name="Flow Reference" doc:id="49c87162-99f9-4896-a0e8-0792602846d4" name="dropTableFlow"/>
+	</munit:after-test>
+
+
+</mule>

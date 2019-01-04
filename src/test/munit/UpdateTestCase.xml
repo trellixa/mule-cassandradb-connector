@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:cassandra-db="http://www.mulesoft.org/schema/mule/cassandra-db" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd
+http://www.mulesoft.org/schema/mule/cassandra-db http://www.mulesoft.org/schema/mule/cassandra-db/current/mule-cassandra-db.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<munit:config name="UpdateTestCase.xml" />
+	<munit:before-test name="setUpUpdateTestCase" description="Before tests actions" doc:id="8d69ea85-e129-4eb1-8ee7-dcbdbd795d2f" >
+		<flow-ref doc:name="createTable" doc:id="aec1db1e-ff5a-4e62-b2ec-1a8604242ac5" name="createTableFlow"/>
+		<cassandra-db:insert table="#[vars.testData.tableName]" doc:name="Insert" doc:id="010c4699-3ce7-4d7d-9556-649130ac2142" keyspaceName="#[vars.testData.keyspaceName]" config-ref="Cassandra_Basic_Config">
+			<cassandra-db:entity-to-insert ><![CDATA[#[vars.testData.getValidEntity]]]></cassandra-db:entity-to-insert>
+		</cassandra-db:insert>
+	</munit:before-test>
+	<munit:test name="testUpdateUsingEqWithSuccess" description="MUnit Test" doc:id="9f9b7736-de34-47a0-9b6c-2eb468ff2b92" >
+		<munit:behavior>
+			<ee:transform doc:name="updateInput" doc:id="fffef1ed-d7c6-40e2-8d0e-73e3850a6307" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+{
+  "where":vars.testData.getValidWhereClauseWithEq,
+  "columns":vars.testData.getValidEntityForUpdate
+}]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+		</munit:behavior>
+		<munit:execution >
+			<cassandra-db:update table="#[vars.testData.tableName]" doc:name="Update" doc:id="5767f9ec-2d20-43c8-adc0-362b34312d3d" config-ref="Cassandra_Basic_Config" keyspaceName="#[vars.testData.keyspaceName]" />
+		</munit:execution>
+		<munit:validation >
+			<ee:transform doc:name="selectInput" doc:id="ab40cad4-5d46-433b-8150-7309c2499c45">
+				<ee:message>
+					<ee:set-payload><![CDATA[%dw 2.0
+output application/java
+---
+{
+	cqlQuery:"SELECT * FROM demo_keyspace.dummy_table_name_1",
+	parameters: []
+	
+} as Object {class: "org.mule.modules.cassandradb.api.CQLQueryInput"}]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+			<cassandra-db:select doc:name="Select" doc:id="e490b734-96d8-4266-b4b7-eb329c6943a2" config-ref="Cassandra_Basic_Config" parameters="#[null]" >
+				<cassandra-db:query ><![CDATA[#[payload.cqlQuery]]]></cassandra-db:query>
+			</cassandra-db:select>
+			<munit-tools:assert-equals doc:name="equalToUpdatedValue" doc:id="a1b1c4df-8220-401a-8183-0ade125ceb26" actual="#[payload[0].dummy_column_2]" expected="#[vars.testData.updatedValue]"/>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="testUpdateUsingInWithSuccess" description="MUnit Test" doc:id="75141cb6-984c-452a-a4bb-9e8b2d76dbae" >
+		<munit:behavior >
+			<ee:transform doc:name="updateInput" doc:id="99aea61d-5452-4606-874f-38be81858c39" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+{
+  "where":vars.testData.getValidWhereClauseWithIN,
+  "columns":vars.testData.getValidEntityForUpdate2
+}]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+		</munit:behavior>
+		<munit:execution >
+			<cassandra-db:update table="#[vars.testData.tableName]" doc:name="Update" doc:id="e35b152c-667e-4027-90bb-ea243a0c4893" config-ref="Cassandra_Basic_Config" keyspaceName="#[vars.testData.keyspaceName]" />
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert doc:name="notNullValue" doc:id="bc3fe6f9-3183-4842-9ac7-58f99ae23b6c" />
+		</munit:validation>
+	</munit:test>
+	<munit:test name="testUpdateWithInvalidInput" description="MUnit Test" doc:id="c87f62b0-ff7a-4310-8f64-25f390f8faa2" expectedErrorType="CASSANDRA-DB:QUERY_VALIDATION">
+		<munit:behavior >
+			<ee:transform doc:name="updateInput" doc:id="db1956ac-bf43-4057-a0ac-cd5269ed093b" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+{
+  "where":vars.testData.getValidWhereClauseWithEq,
+  "columns":vars.testData.getInvalidEntity
+}]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+		</munit:behavior>
+		<munit:execution >
+			<cassandra-db:update table="#[vars.testData.tableName]" doc:name="Update" doc:id="ffb673d0-a91b-4f38-b5e5-a5fec9f4ab46" config-ref="Cassandra_Basic_Config" keyspaceName="#[vars.testData.keyspaceName]" />
+		</munit:execution>
+	</munit:test>
+	<munit:test name="testUpdateWithInvalidWhereClause" description="MUnit Test" doc:id="26aed48b-3ad6-4746-816f-b447e9ad7d25" expectedErrorType="CASSANDRA-DB:QUERY_VALIDATION">
+			<munit:behavior>
+				<ee:transform doc:name="updateInput" doc:id="58813c26-6e03-434d-ab1a-0eef40a87a68">
+					<ee:message>
+						<ee:set-payload><![CDATA[%dw 2.0
+output application/java
+---
+{
+  "where":vars.testData.getValidWhereClauseWithEq,
+  "columns":vars.testData.getInvalidWhereClause
+}]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			</munit:behavior>
+			<munit:execution>
+				<cassandra-db:update table="#[vars.testData.tableName]" doc:name="Update" doc:id="1c67bdf4-7119-4302-9f5e-94dfc4f919cf" config-ref="Cassandra_Basic_Config" keyspaceName="#[vars.testData.keyspaceName]" />
+			</munit:execution>
+		</munit:test>
+	<munit:after-test name="tearDownUpdateTestCase" description="After tests actions" doc:id="700ce4dd-f7af-4b2e-b7ed-c374b2f7db49" >
+		<flow-ref doc:name="dropTable" doc:id="0b9a27c3-670b-4d17-a719-4dc3c4387483" name="dropTableFlow"/>
+	</munit:after-test>
+
+
+</mule>

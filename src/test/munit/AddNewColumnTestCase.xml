@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:cassandra-db="http://www.mulesoft.org/schema/mule/cassandra-db" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd
+http://www.mulesoft.org/schema/mule/cassandra-db http://www.mulesoft.org/schema/mule/cassandra-db/current/mule-cassandra-db.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<munit:config name="AddNewColumnTestCase.xml" />
+	<munit:before-test name="AddNewColumnTestCaseBefore_Test" description="Before tests actions" doc:id="95448a80-346a-4a28-b8a4-ff93921914b4" >
+		<flow-ref doc:name="createTable" doc:id="e1cb6652-1ca8-470f-96c6-5a09afe4f6fb" name="createTableFlow"/>
+	</munit:before-test>
+	<munit:test name="testAddNewColumnOfPrimitiveTypeWithSuccess" description="MUnit Test" doc:id="21dd8d62-d665-4d25-9ad3-d80985c2d512">
+		<munit:behavior>
+			<ee:transform doc:name="addNewColumnInput" doc:id="141e75c3-7e96-41a8-a5b2-d755e28da661" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+{
+	column: vars.testData.randomColumn,
+	"type": vars.testData."type"
+} as Object {
+	class : "org.mule.modules.cassandradb.api.AlterColumnInput"
+}]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+		</munit:behavior>
+		<munit:execution>
+			<cassandra-db:add-new-column doc:name="Add new column" doc:id="044999b6-ca46-4bd2-9d3a-4052b7547a56" table="#[vars.testData.tableName]" keyspaceName="#[vars.testData.keyspaceName]" config-ref="Cassandra_Basic_Config" />
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert doc:name="createSuccessful" doc:id="6b11b087-6162-4a27-afaf-caf589936169" >
+			</munit-tools:assert>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="testAddNewColumnWithSameName" description="MUnit Test" doc:id="b69f6c63-86f7-41b2-b34c-53fbf67ca7d6" expectedErrorType="CASSANDRA-DB:QUERY_VALIDATION">
+		<munit:behavior>
+			<ee:transform doc:name="addNewColumnImput" doc:id="c67ac0e5-2280-4c08-ade1-6f35e20caba9">
+				<ee:message>
+					<ee:set-payload><![CDATA[%dw 2.0
+output application/java
+---
+{
+	column: vars.testData.column,
+	"type": vars.testData."type"
+} as Object {
+	class : "org.mule.modules.cassandradb.api.AlterColumnInput"
+}]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+		</munit:behavior>
+		<munit:execution>
+			<cassandra-db:add-new-column doc:name="Add new column" doc:id="4f18b4d7-3384-4379-abf5-abf3ba296828" table="#[vars.testData.tableName]" keyspaceName="#[vars.testData.keyspaceName]" config-ref="Cassandra_Basic_Config" />
+			<cassandra-db:add-new-column doc:name="Add new column duplicated" doc:id="b28ecb7b-0757-4395-9951-0c65c4a0dc989" table="#[vars.testData.tableName]" keyspaceName="#[vars.testData.keyspaceName]" config-ref="Cassandra_Basic_Config" />
+		</munit:execution>
+	</munit:test>
+	<munit:after-test name="tearDownAddNewColumn" description="After tests actions" doc:id="1c2134a7-5e92-4c51-bfc8-8c0950f4df26" >
+		<flow-ref doc:name="dropTable" doc:id="25c17f40-1e19-4a08-bab4-c7ce70f5c49b" name="dropTableFlow"/>
+	</munit:after-test>
+
+
+</mule>

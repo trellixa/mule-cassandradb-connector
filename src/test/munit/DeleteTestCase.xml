@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:cassandra-db="http://www.mulesoft.org/schema/mule/cassandra-db" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd
+http://www.mulesoft.org/schema/mule/cassandra-db http://www.mulesoft.org/schema/mule/cassandra-db/current/mule-cassandra-db.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<munit:config name="DeleteTestCase.xml" />
+	<munit:before-test name="setUpDeleteTestCase" description="Before tests actions" doc:id="a6b7d2f5-0b13-489d-868d-70f7e74edc7a" >
+		<flow-ref doc:name="createTable" doc:id="ef38d92f-7815-4ee3-a2b1-8f9c0a51c542" name="createTableFlow"/>
+	</munit:before-test>
+	<munit:test name="testDeleteColumnUsingEqWithSuccess" description="MUnit Test" doc:id="445e76e4-1c17-4c48-91cc-af259b4d0c44">
+		<munit:behavior >
+			<cassandra-db:insert table="#[vars.testData.tableName]" doc:name="Insert" doc:id="a8acbb83-97aa-44f3-81e0-897ebf72037c" config-ref="Cassandra_Basic_Config" keyspaceName="#[vars.testData.keyspaceName]">
+				<cassandra-db:entity-to-insert ><![CDATA[#[vars.testData.getValidEntity]]]></cassandra-db:entity-to-insert>
+			</cassandra-db:insert>
+		</munit:behavior>
+		<munit:execution>
+			<cassandra-db:delete-columns-value doc:name="Delete columns value" doc:id="99faf2fe-eb93-4c8c-906e-9dca2b706ce1" config-ref="Cassandra_Basic_Config" table="#[vars.testData.tableName]" keyspaceName="#[vars.testData.keyspaceName]">
+				<cassandra-db:entities>
+					<cassandra-db:entity value="#[vars.testData.column]" />
+					<cassandra-db:entity value="#[vars.testData.column2]" />
+				</cassandra-db:entities>
+				<cassandra-db:where-clause><![CDATA[#[vars.testData.getValidWhereClauseWithEq]]]></cassandra-db:where-clause>
+			</cassandra-db:delete-columns-value>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert doc:name="Assert expression" doc:id="ed43f7ee-2b93-4d8e-a83a-10cf97566314" />
+		</munit:validation>
+	</munit:test>
+	<munit:test name="testDeleteRowUsingEqWithSuccess" description="MUnit Test" doc:id="0c1b460c-47c4-4a17-81ae-438845d1af26">
+			<munit:behavior>
+				<cassandra-db:insert table="#[vars.testData.tableName]" doc:name="Insert" doc:id="71e9ea43-2459-4e6d-bfb4-e3010b88e7e1" config-ref="Cassandra_Basic_Config" keyspaceName="#[vars.testData.keyspaceName]">
+					<cassandra-db:entity-to-insert><![CDATA[#[vars.testData.getValidEntity]]]></cassandra-db:entity-to-insert>
+				</cassandra-db:insert>
+			</munit:behavior>
+			<munit:execution>
+				<cassandra-db:delete-columns-value table="#[vars.testData.tableName]" doc:name="Delete columns value" doc:id="2d285e51-cc96-449c-8ed9-f3e95e6e5e4d" config-ref="Cassandra_Basic_Config" keyspaceName="#[vars.testData.keyspaceName]">
+					<cassandra-db:entities>
+					</cassandra-db:entities>
+				<cassandra-db:where-clause ><![CDATA[#[vars.testData.getValidWhereClauseWithEq]]]></cassandra-db:where-clause>
+				</cassandra-db:delete-columns-value>
+			</munit:execution>
+			<munit:validation>
+				<munit-tools:assert doc:name="Assert expression" doc:id="a91cc69a-2e6d-416e-8c22-172fbbdd05a0" />
+			</munit:validation>
+		</munit:test>
+	<munit:test name="testDeleteColumnUsingINWithSuccess" description="MUnit Test" doc:id="e6ff75e3-6436-4707-87a5-5b0bdf742d45">
+			<munit:behavior>
+				<cassandra-db:insert table="#[vars.testData.tableName]" doc:name="Insert" doc:id="6e27d4b2-f50a-4402-9358-6c193bb079bb" config-ref="Cassandra_Basic_Config" keyspaceName="#[vars.testData.keyspaceName]">
+					<cassandra-db:entity-to-insert><![CDATA[#[vars.testData.getValidEntity]]]></cassandra-db:entity-to-insert>
+				</cassandra-db:insert>
+			</munit:behavior>
+			<munit:execution>
+				<cassandra-db:delete-columns-value table="#[vars.testData.tableName]" doc:name="Delete columns value" doc:id="4a93c39a-df00-4c79-ae28-a5e02fa28af5" config-ref="Cassandra_Basic_Config" keyspaceName="#[vars.testData.keyspaceName]">
+					<cassandra-db:entities>
+						<cassandra-db:entity value="#[vars.testData.column]" />
+						<cassandra-db:entity value="#[vars.testData.column2]" />
+					</cassandra-db:entities>
+					<cassandra-db:where-clause><![CDATA[#[vars.testData.getValidWhereClauseWithIN]]]></cassandra-db:where-clause>
+				</cassandra-db:delete-columns-value>
+			</munit:execution>
+			<munit:validation>
+				<munit-tools:assert doc:name="Assert expression" doc:id="d7902996-7c21-4bfb-a755-cd61bec468c8" />
+			</munit:validation>
+		</munit:test>
+	<munit:test name="testDeleteRowUsingINWithSuccess" description="MUnit Test" doc:id="957f16d0-b2e2-45b3-b461-da642ce1675c">
+			<munit:behavior>
+				<cassandra-db:insert table="#[vars.testData.tableName]" doc:name="Insert" doc:id="0caa6fef-0337-4b52-b31e-509936151192" config-ref="Cassandra_Basic_Config" keyspaceName="#[vars.testData.keyspaceName]">
+					<cassandra-db:entity-to-insert><![CDATA[#[vars.testData.getValidEntity]]]></cassandra-db:entity-to-insert>
+				</cassandra-db:insert>
+			</munit:behavior>
+			<munit:execution>
+				<cassandra-db:delete-columns-value table="#[vars.testData.tableName]" doc:name="Delete columns value" doc:id="8ca89ceb-f8d8-4b3e-bed6-b161a905a1d4" config-ref="Cassandra_Basic_Config" keyspaceName="#[vars.testData.keyspaceName]">
+					<cassandra-db:entities>
+					</cassandra-db:entities>
+					<cassandra-db:where-clause><![CDATA[#[vars.testData.getValidWhereClauseWithIN]]]></cassandra-db:where-clause>
+				</cassandra-db:delete-columns-value>
+			</munit:execution>
+			<munit:validation>
+				<munit-tools:assert doc:name="Assert expression" doc:id="b2b76bf7-990f-486f-98e1-a6a630d85728" />
+			</munit:validation>
+		</munit:test>
+	<munit:test name="testDeleteWithInvalidInput" description="MUnit Test" doc:id="24574630-0d1f-46a4-b04b-70e7fb6a7d8d" expectedErrorType="CASSANDRA-DB:QUERY_VALIDATION">
+			<munit:behavior>
+				<cassandra-db:insert table="#[vars.testData.tableName]" doc:name="Insert" doc:id="81418075-9fc3-46a9-bcb0-dfc6893474de" config-ref="Cassandra_Basic_Config" keyspaceName="#[vars.testData.keyspaceName]">
+					<cassandra-db:entity-to-insert><![CDATA[#[vars.testData.getValidEntity]]]></cassandra-db:entity-to-insert>
+				</cassandra-db:insert>
+			</munit:behavior>
+			<munit:execution>
+				<cassandra-db:delete-columns-value table="#[vars.testData.tableName]" doc:name="Delete columns value" doc:id="807eda3f-ca3f-4fba-b7dd-a15e1904b7cc" config-ref="Cassandra_Basic_Config" keyspaceName="#[vars.testData.keyspaceName]">
+					<cassandra-db:entities>
+					<cassandra-db:entity value="#[vars.testData.getInvalidEntityForDelete]" />
+					</cassandra-db:entities>
+					<cassandra-db:where-clause><![CDATA[#[vars.testData.getValidWhereClauseWithEq]]]></cassandra-db:where-clause>
+				</cassandra-db:delete-columns-value>
+			</munit:execution>
+		</munit:test>
+	<munit:test name="testDeleteWithInvalidWhereClause" description="MUnit Test" doc:id="7d45d731-6196-4a9a-ad9c-27bc38f9907b" expectedErrorType="CASSANDRA-DB:QUERY_VALIDATION">
+			<munit:behavior>
+				<cassandra-db:insert table="#[vars.testData.tableName]" doc:name="Insert" doc:id="b1e08236-2e2f-47ae-9841-43c16bbb59db" config-ref="Cassandra_Basic_Config" keyspaceName="#[vars.testData.keyspaceName]">
+					<cassandra-db:entity-to-insert><![CDATA[#[vars.testData.getValidEntity]]]></cassandra-db:entity-to-insert>
+				</cassandra-db:insert>
+			</munit:behavior>
+			<munit:execution>
+				<cassandra-db:delete-columns-value table="#[vars.testData.tableName]" doc:name="Delete columns value" doc:id="16040063-1f73-4302-8407-78ef399851aa" config-ref="Cassandra_Basic_Config" keyspaceName="#[vars.testData.keyspaceName]">
+					<cassandra-db:entities>
+						<cassandra-db:entity value="#[vars.testData.column]" />
+						<cassandra-db:entity value="#[vars.testData.column2]" />
+					</cassandra-db:entities>
+					<cassandra-db:where-clause><![CDATA[#[vars.testData.getInvalidWhereClause]]]></cassandra-db:where-clause>
+				</cassandra-db:delete-columns-value>
+			</munit:execution>
+			<munit:validation>
+				<munit-tools:assert doc:name="Assert expression" doc:id="cd84cfcb-d857-4cec-8592-5cc7fa412c8c" />
+			</munit:validation>
+		</munit:test>
+	<munit:after-test name="tearDownDeleteTestCase" description="After tests actions" doc:id="5169fa38-3292-4af3-a04f-aba02bc3b853">
+		<flow-ref doc:name="dropTable" doc:id="41c34a3c-e21d-4a5a-a2a8-4c8e219c0e6f" name="dropTableFlow" />
+	</munit:after-test>
+
+
+</mule>

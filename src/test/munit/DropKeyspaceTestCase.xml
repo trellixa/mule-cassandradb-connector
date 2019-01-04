@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:cassandra-db="http://www.mulesoft.org/schema/mule/cassandra-db" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd
+http://www.mulesoft.org/schema/mule/cassandra-db http://www.mulesoft.org/schema/mule/cassandra-db/current/mule-cassandra-db.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<munit:config name="DropKeyspaceTestCase.xml" />
+	<munit:test name="testDropSimpleKeyspace" description="MUnit Test" doc:id="d3a91fc9-b2d4-460e-a52d-e49c49d81622" >
+		<munit:behavior>
+			<ee:transform doc:name="testData" doc:id="e667c90b-ded7-49be-b668-089713863058" >
+				<ee:message />
+				<ee:variables >
+					<ee:set-variable variableName="testData" ><![CDATA[%dw 2.0
+output application/java
+---
+{
+	keyspacename1: "keyspaceName1",
+	keyspacename2: "keyspaceName2",
+	keyspacename3: "keyspaceName3",
+	dataCenterName: "datacenter1",
+	simpleStrategy: "SimpleStrategy" as Enum {
+			class: "org.mule.modules.cassandradb.api.ReplicationStrategy"
+		},
+	networkTopologyStrategy: "NetworkTopologyStrategy" as Enum {
+			class: "org.mule.modules.cassandradb.api.ReplicationStrategy"
+		}
+}]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+			<ee:transform doc:name="createKeyspaceInput" doc:id="010e9e59-5365-49ef-8070-385fcdb5dd07" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+{
+	keyspaceName: vars.testData.keyspacename1
+} as Object {
+	class : "org.mule.modules.cassandradb.api.CreateKeyspaceInput"
+}]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+		</munit:behavior>
+		<munit:execution >
+			<cassandra-db:create-keyspace doc:name="Create keyspace" doc:id="6205b0ae-6376-497e-adcf-dd4ef8edfd55" config-ref="Cassandra_Basic_Config" />
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert doc:name="createSuccessful" doc:id="c4b3aae0-c0dc-4215-a130-9c45bd294928" />
+		</munit:validation>
+	</munit:test>
+	<munit:test name="testDropKeyspaceWithDifferentConfigurations" description="MUnit Test" doc:id="95504489-5d88-453b-a866-e8802a2fe426">
+			<munit:behavior>
+			<ee:transform doc:name="testData" doc:id="7e6f5e5b-7f17-4c96-9fd2-7219a53c464c">
+				<ee:message />
+				<ee:variables>
+					<ee:set-variable variableName="testData"><![CDATA[%dw 2.0
+output application/java
+---
+{
+	keyspacename1: "keyspaceName1",
+	keyspacename2: "keyspaceName2",
+	keyspacename3: "keyspaceName3",
+	dataCenterName: "datacenter1",
+	simpleStrategy: "SimpleStrategy" as Enum {
+			class: "org.mule.modules.cassandradb.api.ReplicationStrategy"
+		},
+	networkTopologyStrategy: "NetworkTopologyStrategy" as Enum {
+			class: "org.mule.modules.cassandradb.api.ReplicationStrategy"
+		}
+}]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+			<ee:transform doc:name="createKeyspaceInput" doc:id="a4fc718f-3b37-4f5f-b9f0-8d094cc09fa1">
+					<ee:message>
+						<ee:set-payload><![CDATA[%dw 2.0
+output application/java
+---
+{
+	firstDataCenter: {
+		name: vars.testData.dataCenterName,
+		value: 1
+	},
+	keyspaceName: vars.testData.keyspacename2,
+	replicationStrategyClass: vars.testData.networkTopologyStrategy
+} as Object {
+	class : "org.mule.modules.cassandradb.api.CreateKeyspaceInput"
+}]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			<cassandra-db:create-keyspace doc:name="Create keyspace" doc:id="2722713b-e78f-4a10-bad4-7a415ba9b13d" config-ref="Cassandra_Basic_Config" />
+			</munit:behavior>
+		<munit:execution>
+			<cassandra-db:drop-keyspace doc:name="Drop keyspace" doc:id="2c017bd2-3553-42aa-9287-a0092eb2bb86" config-ref="Cassandra_Basic_Config">
+				<cassandra-db:keyspace-name ><![CDATA[#[output application/java
+---
+vars.testData.keyspacename2]]]></cassandra-db:keyspace-name>
+		</cassandra-db:drop-keyspace>
+			</munit:execution>
+		<munit:validation>
+			<munit-tools:assert doc:name="notAssertion" doc:id="1d7d9744-c6e2-44c6-9b22-97f9251291b2">
+			</munit-tools:assert>
+			</munit:validation>
+		</munit:test>
+
+
+</mule>

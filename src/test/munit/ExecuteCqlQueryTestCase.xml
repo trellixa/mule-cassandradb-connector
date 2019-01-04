@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:cassandra-db="http://www.mulesoft.org/schema/mule/cassandra-db" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd
+http://www.mulesoft.org/schema/mule/cassandra-db http://www.mulesoft.org/schema/mule/cassandra-db/current/mule-cassandra-db.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<munit:config name="ExecuteCqlQueryTestCase.xml" />
+	<munit:before-test name="setUpExecuteCqlQueryTest" description="Before tests actions" doc:id="1859e707-811a-4798-ba39-e46837b7ecb5" >
+		<flow-ref doc:name="createTable" doc:id="8407b428-b1a0-45cc-8c3a-8cf18372496f" name="createTable2OnlyOneColumnFlow"/>
+		<ee:transform doc:name="addNewColumnImput" doc:id="516cbfb0-9c59-4f1e-ba7f-a0f4b39ad098" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+{
+	column: vars.testData.column2,
+	"type": vars.testData."type"
+} as Object {
+	class : "org.mule.modules.cassandradb.api.AlterColumnInput"
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<cassandra-db:add-new-column doc:name="Add new column" doc:id="a476c158-5e34-487e-af06-cbf514173cc7" config-ref="Cassandra_Basic_Config" table="#[vars.testData.tableName2]" keyspaceName="#[vars.testData.keyspaceName]" >
+		</cassandra-db:add-new-column>
+		<cassandra-db:insert table="#[vars.testData.tableName2]" doc:name="Insert" doc:id="812ddea4-5c7c-4b94-b025-16d97dc58967" config-ref="Cassandra_Basic_Config" keyspaceName="#[vars.testData.keyspaceName]">
+			<cassandra-db:entity-to-insert ><![CDATA[#[vars.testData.getValidEntity]]]></cassandra-db:entity-to-insert>
+		</cassandra-db:insert>
+	</munit:before-test>
+	<munit:test name="shouldExecute_ValidParametrizedQuery" description="MUnit Test" doc:id="d118f633-8926-4f65-965e-74ec36414ab5">
+		<munit:behavior>
+			<ee:transform doc:name="cqlQueryImput" doc:id="02c9cb87-2749-482e-b98c-94a1fdfb1517" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+{
+	cqlQuery:"SELECT*FROM demo_keyspace.dummy_table_name_2 WHERE dummy_partitionkey = 'value1'",
+	parameters: []
+	
+} as Object {class: "org.mule.modules.cassandradb.api.CQLQueryInput"}]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+		</munit:behavior>
+		<munit:execution >
+			<cassandra-db:execute-cql-query doc:name="Execute cql query" doc:id="47b52d8a-1b96-4116-aaa3-9d4728f4b846" config-ref="Cassandra_Basic_Config">
+			</cassandra-db:execute-cql-query>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert doc:name="notNullValue" doc:id="8efb5b96-df72-4226-9dce-b4f177f66eee" >
+				<munit-tools:that ><![CDATA[#[import * from dw::test::Asserts 
+ ---
+payload[0] must notBeNull()]]]></munit-tools:that>
+			</munit-tools:assert>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="shouldExecute_NonParametrizedQuery" description="MUnit Test" doc:id="69e4c52c-f4e6-4491-b802-eac045d9b959">
+			<munit:behavior>
+				<ee:transform doc:name="cqlQueryImput" doc:id="cff7e514-0758-404b-927d-eb201e8fecad">
+					<ee:message>
+						<ee:set-payload><![CDATA[%dw 2.0
+output application/java
+---
+{
+	cqlQuery:"SELECT*FROM demo_keyspace.dummy_table_name_2",
+	parameters: []
+	
+} as Object {class: "org.mule.modules.cassandradb.api.CQLQueryInput"}]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			</munit:behavior>
+			<munit:execution>
+				<cassandra-db:execute-cql-query doc:name="Execute cql query" doc:id="ed62f44e-388f-44f7-97b1-d869b59fbb3c" config-ref="Cassandra_Basic_Config" />
+			</munit:execution>
+			<munit:validation>
+				<munit-tools:assert doc:name="notNullValue" doc:id="2307ae16-1d3c-4e5d-9d8c-8cc231a109d7">
+					<munit-tools:that><![CDATA[#[import * from dw::test::Asserts 
+ ---
+payload[0] must notBeNull()]]]></munit-tools:that>
+				</munit-tools:assert>
+			</munit:validation>
+		</munit:test>
+	<munit:test name="shouldThrowException_When_InsufficientAmountOfBindVariables" description="MUnit Test" doc:id="0ded47b5-a982-42e7-8cab-86204955d968" expectedErrorType="CASSANDRA-DB:QUERY_VALIDATION">
+			<munit:behavior>
+				<ee:transform doc:name="cqlQueryImput" doc:id="6ac46699-bcb3-4aa6-bdc2-f712d75b7d5a">
+					<ee:message>
+						<ee:set-payload><![CDATA[%dw 2.0
+output application/java
+---
+{
+	cqlQuery:"SELECT*FROM demo_keyspace.dummy_table_name_2 WHERE dummy_partitionkey = ?",
+	parameters: []
+	
+} as Object {class: "org.mule.modules.cassandradb.api.CQLQueryInput"}]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			</munit:behavior>
+			<munit:execution>
+				<cassandra-db:execute-cql-query doc:name="Execute cql query" doc:id="cef4b3b0-2b5a-47a9-a96d-c85c306995cc" config-ref="Cassandra_Basic_Config" />
+			</munit:execution>
+		</munit:test>
+	<munit:test name="shouldThrowException_When_InsufficientAmountOfParameters" description="MUnit Test" doc:id="b7c172b4-09fe-47fc-8c36-8be4059462d7" expectedErrorType="CASSANDRA-DB:UNKNOWN">
+			<munit:behavior>
+				<ee:transform doc:name="cqlQueryImput" doc:id="95272f83-280e-4dbc-aac7-7b0eaf3ff7b2">
+					<ee:message>
+						<ee:set-payload><![CDATA[%dw 2.0
+output application/java
+---
+{
+	cqlQuery:"SELECT*FROM demo_keyspace.dummy_table_name_2",
+	parameters: ["value1"]
+	
+} as Object {class: "org.mule.modules.cassandradb.api.CQLQueryInput"}]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			</munit:behavior>
+			<munit:execution>
+				<cassandra-db:execute-cql-query doc:name="Execute cql query" doc:id="529cb9fb-7a1a-4a52-b0de-96e53f541149" config-ref="Cassandra_Basic_Config" />
+			</munit:execution>
+		</munit:test>
+	<munit:after-test name="ExecuteCqlQueryTestCaseAfter_Test" description="After tests actions" doc:id="1e117ed7-d4c7-4da9-a8f9-5f11f50720c1">
+		<flow-ref doc:name="Flow Reference" doc:id="839ce155-fbbe-4705-bb27-170c800b1b14" name="dropTableFlow" />
+	</munit:after-test>
+
+
+</mule>

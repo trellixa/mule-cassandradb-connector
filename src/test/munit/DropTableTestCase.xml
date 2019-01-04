@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:cassandra-db="http://www.mulesoft.org/schema/mule/cassandra-db" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd
+http://www.mulesoft.org/schema/mule/cassandra-db http://www.mulesoft.org/schema/mule/cassandra-db/current/mule-cassandra-db.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<munit:config name="DropTableTestCase.xml" />
+	<munit:test name="testDropTable" description="MUnit Test" doc:id="ac47a428-a946-4df1-83c7-39bc7fe76f2a">
+			<munit:behavior >
+			<flow-ref doc:name="createTable" doc:id="ba2ca73f-8e4d-4b03-a50d-74d04270eea1" name="createTableFlow" />
+		</munit:behavior>
+		<munit:execution>
+			<flow-ref doc:name="dropTable" doc:id="84c8c31b-8598-4a61-857b-df9a9b59d598" name="dropTableFlow"/>
+			</munit:execution>
+		<munit:validation>
+				<munit-tools:assert doc:name="dropedTable" doc:id="36a82e55-ceb8-4a9b-996a-379796b780ee" >
+			</munit-tools:assert>
+			</munit:validation>
+		</munit:test>
+	<munit:test name="testDropTableWithCompositePK" description="MUnit Test" doc:id="6b327210-de6b-430e-bf41-cf7d281d3b3c">
+			<munit:behavior>
+				<ee:transform doc:name="testData" doc:id="45270058-e7af-4724-86f2-b1272384f25d">
+					<ee:message />
+					<ee:variables>
+						<ee:set-variable variableName="testData"><![CDATA[%dw 2.0
+output application/java
+import * from dw::core::Strings
+var randomChar1=fromCharCode(randomInt(25) + 97)
+var randomChar2=fromCharCode(randomInt(25) + 97)
+var randomChar3=fromCharCode(randomInt(25) + 97)
+var randomChar4=fromCharCode(randomInt(25) + 97)
+var randomChar5=fromCharCode(randomInt(25) + 97)
+fun randomColumnName()=
+	randomChar1 ++ randomChar2 ++ randomChar3 ++ randomChar4 ++ randomChar5
+---
+{
+	name: "DUMMY_PARTITION_KEY",
+	primaryKey: true,
+	"type": "TEXT" as Enum {
+			class: "org.mule.modules.cassandradb.api.ColumnType"
+		},
+	keyspaceName: "demo_keyspace",
+	tableName: "dummy_table_name_1",
+	tableName2: "dummy_table_name_2",
+	randomColumn: randomColumnName(),
+	column:"dummy_column_1"
+}]]></ee:set-variable>
+					</ee:variables>
+				</ee:transform>
+				<ee:transform doc:name="createTableInput" doc:id="23759302-c9b2-477c-b69c-12e82eef61bd">
+					<ee:message>
+						<ee:set-payload><![CDATA[%dw 2.0
+output application/java
+---
+{
+	columns: [{
+		name: vars.testData.name,
+		primaryKey: vars.testData.primaryKey,
+		"type": vars.testData."type"
+	}],
+	keyspaceName: vars.testData.keyspaceName,
+	tableName: vars.testData.tableName2
+} as Object {
+	class : "org.mule.modules.cassandradb.api.CreateTableInput"
+}]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			<cassandra-db:create-table doc:name="Create table" doc:id="001f6592-781d-479c-855a-6da04659ce4b" config-ref="Cassandra_Basic_Config" />
+			</munit:behavior>
+			<munit:execution>
+			<cassandra-db:drop-table doc:name="Drop table" doc:id="10e27de3-8cbb-4805-80d3-a9ec9a01db93" config-ref="Cassandra_Basic_Config" keyspaceName="#[vars.testData.keyspaceName]" >
+				<cassandra-db:table-name ><![CDATA[#[vars.testData.tableName2]]]></cassandra-db:table-name>
+			</cassandra-db:drop-table>
+			</munit:execution>
+		<munit:validation>
+				<munit-tools:assert doc:name="dropedTable" doc:id="6dabb5c5-908b-4f9c-b8c4-abafaae117ef" />
+			</munit:validation>
+		</munit:test>
+
+
+</mule>

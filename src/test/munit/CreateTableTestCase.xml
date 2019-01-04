@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:cassandra-db="http://www.mulesoft.org/schema/mule/cassandra-db"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:munit="http://www.mulesoft.org/schema/mule/munit"
+	xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd 
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd
+http://www.mulesoft.org/schema/mule/cassandra-db http://www.mulesoft.org/schema/mule/cassandra-db/current/mule-cassandra-db.xsd">
+	<munit:config name="CreateTableTestCase.xml" />
+	<munit:test name="testCreateTableWithSuccess" description="MUnit Test" doc:id="2f66016f-14d4-463c-ac3d-a3e0b3171932">
+		<munit:execution >
+			<flow-ref doc:name="createTable" doc:id="86d4914e-4471-4edc-8998-33ba9670bdaa" name="createTableFlow" />
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert doc:name="createdSuccessful" doc:id="268af9dd-7848-462c-9b24-a86cf24de180" />
+		</munit:validation>
+	</munit:test>
+	<munit:test name="testCreateTableWithCompositePKWithSuccess" description="MUnit Test" doc:id="5d7da591-a993-42ea-aeae-beb13a882170">
+		<munit:behavior>
+			<flow-ref doc:name="Flow Reference" doc:id="a47fb149-2377-498f-872e-995b6af54e76" name="createTable2Flow"/>
+		</munit:behavior>
+		<munit:execution >
+		<cassandra-db:create-table config-ref="Cassandra_Basic_Config">
+        </cassandra-db:create-table>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert doc:name="createdSuccessful" doc:id="b85af687-c6e0-419b-867d-9494a7c2471c" />
+		</munit:validation>
+	</munit:test>
+	<munit:after-test name="tearDownCreateTableTest" description="After tests actions" doc:id="75e9fe95-65d0-4d0d-9a24-81f705b49f85" >
+		<flow-ref doc:name="Flow Reference" doc:id="a0ef84bd-26ca-4494-bd07-5dc25d879b9c" name="dropTableFlow"/>
+	</munit:after-test>
+
+
+</mule>

@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:cassandra-db="http://www.mulesoft.org/schema/mule/cassandra-db" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd
+http://www.mulesoft.org/schema/mule/cassandra-db http://www.mulesoft.org/schema/mule/cassandra-db/current/mule-cassandra-db.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<munit:config name="CreateKeyspaceTestCase.xml" />
+	<munit:before-test name="setUpCreateKeyspaceTest" description="Before tests actions" doc:id="7aec2090-df6e-4438-bb3a-4421f479c639" >
+		<flow-ref doc:name="cleanKeyspaces" doc:id="bc4d18c4-ee6d-4de9-8cf9-c2ab6bd5566a" name="cleanKeyspacesFlow"/>
+	</munit:before-test>
+	<munit:test name="testCreateKeyspaceWithDefaultReplicationStrategyWithSuccess" description="MUnit Test" doc:id="58f0a987-755c-4d42-8442-096b144f08e0">
+		<munit:behavior >
+			<ee:transform doc:name="keyspacesInput" doc:id="ae9e6c75-623f-441a-9c4d-5a0755d4bbb1" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+{
+	keyspaceName: vars.testData.keyspacename1
+} as Object {
+	class : "org.mule.modules.cassandradb.api.CreateKeyspaceInput"
+}]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+		</munit:behavior>
+		<munit:execution>
+			<cassandra-db:create-keyspace doc:name="Create keyspace" doc:id="25e43dc9-9a65-4c23-8bf4-645c0bc932b3" config-ref="Cassandra_Basic_Config">
+			</cassandra-db:create-keyspace>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert doc:name="createSuccessful" doc:id="96fad28a-748b-4408-9fac-9b5c2f144af9" />
+		</munit:validation>
+	</munit:test>
+	<munit:test name="testCreateKeyspaceWithDifferentReplicationStrategyWithSuccess" description="MUnit Test" doc:id="d651153d-473c-47cc-b7b4-db2983bba50d">
+		<munit:behavior>
+			<ee:transform doc:name="keyspacesInput" doc:id="b51dd4d3-7052-4f3c-b5b0-38e3fd42dd42">
+				<ee:message>
+					<ee:set-payload><![CDATA[%dw 2.0
+output application/java
+---
+{
+	firstDataCenter: {
+		name: vars.testData.dataCenterName,
+		value: 1
+	},
+	keyspaceName: vars.testData.keyspacename2,
+	replicationStrategyClass: vars.testData.networkTopologyStrategy
+} as Object {
+	class : "org.mule.modules.cassandradb.api.CreateKeyspaceInput"
+}]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+		</munit:behavior>
+		<munit:execution>
+			<cassandra-db:create-keyspace doc:name="Create keyspace" doc:id="1e5deffb-5947-4e48-b98b-0dcf1be02b4e" config-ref="Cassandra_Basic_Config">
+			</cassandra-db:create-keyspace>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert doc:name="createSuccessful" doc:id="2baa1a26-7d98-417b-b335-27eed7ef2d54" />
+		</munit:validation>
+	</munit:test>
+	<munit:test name="shouldFail_Using_MissingReplicationFactor" description="MUnit Test" doc:id="1efbdfd1-c386-4b8c-be12-bc06f7c258be" expectedErrorType="CASSANDRA-DB:SYNTAX_ERROR">
+		<munit:behavior>
+			<ee:transform doc:name="keyspacesInput" doc:id="9c3d6de4-1222-4854-a5a7-96279bb2989a">
+				<ee:message>
+					<ee:set-payload><![CDATA[%dw 2.0
+output application/java
+---
+{
+	keyspaceName: vars.testData.keyspacename1,
+	replicationFactor: null,
+	replicationStrategyClass: vars.testData.simpleStrategy
+} as Object {
+	class : "org.mule.modules.cassandradb.api.CreateKeyspaceInput"
+}]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+		</munit:behavior>
+		<munit:execution >
+			<cassandra-db:create-keyspace doc:name="Create keyspace" doc:id="03159323-e2ce-4df7-a8ce-3f824692b36e" config-ref="Cassandra_Basic_Config">
+				<cassandra-db:input><![CDATA[#[output application/java
+---
+payload]]]></cassandra-db:input>
+			</cassandra-db:create-keyspace>
+		</munit:execution>
+	</munit:test>
+	<munit:after-test name="tearDownCreateKeyspace" description="After tests actions" doc:id="95950550-6c6c-4ee6-892b-92b63ddc5a97" >
+		<flow-ref doc:name="cleanKeyspaces" doc:id="c269e29b-0384-40f0-b351-2ae6fafc7f72" name="cleanKeyspacesFlow"/>
+	</munit:after-test>
+
+
+</mule>

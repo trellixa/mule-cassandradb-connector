@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:cassandra-db="http://www.mulesoft.org/schema/mule/cassandra-db" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd
+http://www.mulesoft.org/schema/mule/cassandra-db http://www.mulesoft.org/schema/mule/cassandra-db/current/mule-cassandra-db.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<munit:config name="SelectTestCase.xml" />
+	<munit:before-test name="SelectTestCaseBefore_Test" description="Before tests actions" doc:id="0654a49b-8e70-4d58-b151-f6ca7d0edf03" >
+		<flow-ref doc:name="Flow Reference" doc:id="40ccc68e-d8f4-4437-99ee-d38ca2d782f8" name="createTableOnlyOneColumnFlow"/>
+		<ee:transform doc:name="addNewColumnImput" doc:id="f5046743-2805-4839-b2a8-39f6df1a24ed" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+{
+	column: vars.testData.column2,
+	"type": vars.testData."type"
+} as Object {
+	class : "org.mule.modules.cassandradb.api.AlterColumnInput"
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<cassandra-db:add-new-column doc:name="Add new column" doc:id="0f22efac-4e0a-4b75-a3a7-4078c2c3a8ab" config-ref="Cassandra_Basic_Config" table="#[vars.testData.tableName]" keyspaceName="#[vars.testData.keyspaceName]" />
+		<cassandra-db:insert table="#[vars.testData.tableName]" doc:name="Insert" doc:id="ef29d0b5-9a97-45bf-88b4-fae2170e1b2b" config-ref="Cassandra_Basic_Config" keyspaceName="#[vars.testData.keyspaceName]" >
+			<cassandra-db:entity-to-insert ><![CDATA[#[vars.testData.getValidEntity]]]></cassandra-db:entity-to-insert>
+		</cassandra-db:insert>
+	</munit:before-test>
+	<munit:test name="testSelectNativeQueryWithParameters" description="MUnit Test" doc:id="d6129d42-6944-4c6f-a36f-b552a8f5ea88" >
+		<munit:behavior >
+			<ee:transform doc:name="selectInput" doc:id="0ce343e8-825c-4027-a037-1345b8964d8c" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+{
+	cqlQuery:"SELECT dummy_column_2 FROM demo_keyspace.dummy_table_name_1 WHERE dummy_partitionKey IN ('value1', 'value2')",
+	parameters: []
+	
+} as Object {class: "org.mule.modules.cassandradb.api.CQLQueryInput"}]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+		</munit:behavior>
+		<munit:execution>
+			<cassandra-db:select doc:name="Select" doc:id="99d8925f-41e0-4718-869e-25cb33412c6f" config-ref="Cassandra_Basic_Config" parameters="#[null]">
+				<cassandra-db:query><![CDATA[#[payload.cqlQuery]]]></cassandra-db:query>
+			</cassandra-db:select>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert doc:name="sizeIsGreaterThan0" doc:id="bc07d599-7bbb-4c14-b7e7-5808a4c213a1" >
+				<munit-tools:that ><![CDATA[#[import * from dw::test::Asserts 
+ ---
+sizeOf(payload) must beGreaterThan(0)]]]></munit-tools:that>
+			</munit-tools:assert>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="testSelectNativeQueryWithInvalidParameters" description="MUnit Test" doc:id="853bc98b-e314-4b08-b9f6-2c4f230b70d0" expectedErrorType="CASSANDRA-DB:QUERY_ERROR">
+			<munit:behavior>
+				<ee:transform doc:name="selectInput" doc:id="e0af116e-9ffb-4e85-9bb6-22d0dedeafdf">
+					<ee:message>
+						<ee:set-payload><![CDATA[%dw 2.0
+output application/java
+---
+{
+	cqlQuery:"SELECT dummy_column_2 FROM demo_keyspace.dummy_table_name_1 WHERE dummy_partitionKey IN (?, ?)",
+	parameters: []
+	
+} as Object {class: "org.mule.modules.cassandradb.api.CQLQueryInput"}]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			</munit:behavior>
+			<munit:execution>
+				<cassandra-db:select doc:name="Select" doc:id="db22d3e4-69cf-4bbf-a60a-769936497b29" config-ref="Cassandra_Basic_Config" parameters="#[null]">
+					<cassandra-db:query><![CDATA[#[payload.cqlQuery]]]></cassandra-db:query>
+				</cassandra-db:select>
+			</munit:execution>
+		</munit:test>
+	<munit:test name="testSelectDSQLQuery" description="MUnit Test" doc:id="04a606f3-89b8-46c9-906a-18cbf887a3cc">
+			<munit:behavior>
+				<ee:transform doc:name="selectInput" doc:id="543f901a-32db-4e74-aba2-229bba9d3404">
+					<ee:message>
+						<ee:set-payload><![CDATA[%dw 2.0
+output application/java
+---
+{
+	cqlQuery:"dsql: SELECT dummy_column_2 FROM demo_keyspace.dummy_table_name_1",
+	parameters: []
+	
+} as Object {class: "org.mule.modules.cassandradb.api.CQLQueryInput"}]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			</munit:behavior>
+			<munit:execution>
+				<cassandra-db:select doc:name="Select" doc:id="f4f669f0-9799-4552-b1e1-735d8c545d75" config-ref="Cassandra_Basic_Config" parameters="#[null]">
+					<cassandra-db:query><![CDATA[#[payload.cqlQuery]]]></cassandra-db:query>
+				</cassandra-db:select>
+			</munit:execution>
+			<munit:validation>
+				<munit-tools:assert doc:name="sizeIsGreaterThan0" doc:id="8ed0f393-6fb7-4bee-a5ee-af52c80222ff">
+				<munit-tools:that ><![CDATA[#[import * from dw::test::Asserts 
+ ---
+sizeOf(payload) must beGreaterThan(0)]]]></munit-tools:that>
+				</munit-tools:assert>
+			</munit:validation>
+		</munit:test>
+	<munit:after-test name="tearDownSelectTestCase" description="After tests actions" doc:id="40b0c2cf-24f5-4f3f-8cc9-47a812e92400" >
+		<flow-ref doc:name="dropTable" doc:id="4c90a732-9565-4991-af2c-0f6d96a2285a" name="dropTableFlow"/>
+	</munit:after-test>
+
+
+</mule>

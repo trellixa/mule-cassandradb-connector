@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:cassandra-db="http://www.mulesoft.org/schema/mule/cassandra-db" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd
+http://www.mulesoft.org/schema/mule/cassandra-db http://www.mulesoft.org/schema/mule/cassandra-db/current/mule-cassandra-db.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<munit:config name="DropColumnTestCase.xml" />
+	<munit:before-test name="setUpDropColumnTest" description="Before tests actions" doc:id="a8bdd76d-be25-4f86-8562-61393c5e856d" >
+		<flow-ref doc:name="createTable" doc:id="b10f96a9-9195-458d-b127-7569909de2e4" name="createTableFlow"/>
+	</munit:before-test>
+	<munit:test name="testRemoveColumnWithSuccess" description="MUnit Test" doc:id="8188aaee-331a-42bf-889f-145db4af5aa0" >
+		<munit:behavior>
+			<ee:transform doc:name="testData" doc:id="f359e852-c806-4495-b3d8-5dd3148c267b" >
+				<ee:message />
+				<ee:variables >
+					<ee:set-variable variableName="testData" ><![CDATA[%dw 2.0
+output application/java
+import * from dw::core::Strings
+var randomChar1=fromCharCode(randomInt(25) + 97)
+var randomChar2=fromCharCode(randomInt(25) + 97)
+var randomChar3=fromCharCode(randomInt(25) + 97)
+var randomChar4=fromCharCode(randomInt(25) + 97)
+var randomChar5=fromCharCode(randomInt(25) + 97)
+fun randomColumnName()=
+	randomChar1 ++ randomChar2 ++ randomChar3 ++ randomChar4 ++ randomChar5
+---
+{
+	name: "DUMMY_PARTITION_KEY",
+	primaryKey: true,
+	"type": "TEXT" as Enum {
+			class: "org.mule.modules.cassandradb.api.ColumnType"
+		},
+	"int": "INT" as Enum {
+			class: "org.mule.modules.cassandradb.api.ColumnType"
+		},
+	keyspaceName: "demo_keyspace",
+	tableName: "dummy_table_name_1",
+	tableName2: "dummy_table_name_2",
+	randomColumn: randomColumnName(),
+	column:"dummy_column_1",
+	column2:"dummy_column_2",
+	column3:"column"
+}]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+		</munit:behavior>
+		<munit:execution >
+			<cassandra-db:drop-column doc:name="Drop column" doc:id="9d077809-c9eb-4069-80b1-70344504aca4" config-ref="Cassandra_Basic_Config" table="#[vars.testData.tableName]" keyspaceName="#[vars.testData.keyspaceName]">
+				<cassandra-db:column-name ><![CDATA[#[vars.testData.column]]]></cassandra-db:column-name>
+			</cassandra-db:drop-column>
+			<cassandra-db:drop-column doc:name="Drop column" doc:id="a2ccae0b-fb04-47cb-a5c8-8961fda18568" config-ref="Cassandra_Basic_Config" table="#[vars.testData.tableName]" keyspaceName="#[vars.testData.keyspaceName]">
+				<cassandra-db:column-name ><![CDATA[#[vars.testData.column2]]]></cassandra-db:column-name>
+			</cassandra-db:drop-column>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert doc:name="successful" doc:id="10b6eaf9-bb1f-4f5c-a84b-51d2b7651e51" >
+			</munit-tools:assert>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="testRemoveColumnWithInvalidName" description="MUnit Test" doc:id="0d656745-e3b8-43ce-923e-dc77d0f3d456" expectedErrorType="CASSANDRA-DB:QUERY_VALIDATION">
+		<munit:behavior>
+			<ee:transform doc:name="testData" doc:id="4013b346-aee9-445f-b961-258d4c471a29" >
+				<ee:message />
+				<ee:variables >
+					<ee:set-variable variableName="testData" ><![CDATA[%dw 2.0
+output application/java
+import * from dw::core::Strings
+var randomChar1=fromCharCode(randomInt(25) + 97)
+var randomChar2=fromCharCode(randomInt(25) + 97)
+var randomChar3=fromCharCode(randomInt(25) + 97)
+var randomChar4=fromCharCode(randomInt(25) + 97)
+var randomChar5=fromCharCode(randomInt(25) + 97)
+fun randomColumnName()=
+	randomChar1 ++ randomChar2 ++ randomChar3 ++ randomChar4 ++ randomChar5
+---
+{
+	name: "DUMMY_PARTITION_KEY",
+	primaryKey: true,
+	"type": "TEXT" as Enum {
+			class: "org.mule.modules.cassandradb.api.ColumnType"
+		},
+	"int": "INT" as Enum {
+			class: "org.mule.modules.cassandradb.api.ColumnType"
+		},
+	keyspaceName: "demo_keyspace",
+	tableName: "dummy_table_name_1",
+	tableName2: "dummy_table_name_2",
+	randomColumn: randomColumnName(),
+	column:"dummy_column_1",
+	column2:"dummy_column_2",
+	column3:"column"
+}]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+		</munit:behavior>
+		<munit:execution >
+			<cassandra-db:drop-column doc:name="Drop column" doc:id="ddab8751-90cd-4c33-b871-1d6d8d0ec0ef" config-ref="Cassandra_Basic_Config" table="#[vars.testData.tableName]" keyspaceName="#[vars.testData.keyspaceName]">
+				<cassandra-db:column-name ><![CDATA[#[vars.testData.column3]]]></cassandra-db:column-name>
+			</cassandra-db:drop-column>
+		</munit:execution>
+	</munit:test>
+	<munit:after-test name="tearDownDropColumnTest" description="After tests actions" doc:id="3c337c8b-97d8-453d-be51-d1fdd8c8d7b0" >
+		<flow-ref doc:name="dropTable" doc:id="b3bb218f-cee5-4b59-acd5-558dacc1cabe" name="dropTableFlow"/>
+	</munit:after-test>
+
+
+</mule>

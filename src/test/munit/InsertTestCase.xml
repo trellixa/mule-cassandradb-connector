@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:cassandra-db="http://www.mulesoft.org/schema/mule/cassandra-db" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd
+http://www.mulesoft.org/schema/mule/cassandra-db http://www.mulesoft.org/schema/mule/cassandra-db/current/mule-cassandra-db.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<munit:config name="InsertTestCase.xml" />
+	<munit:before-test name="setUpInsertTestCase" description="Before tests actions" doc:id="ee6de8de-cf9b-49f0-ae01-349ff4ea0f52" >
+		<flow-ref doc:name="createTable" doc:id="1477ff97-0096-47d3-a62f-444d63b4dc10" name="createTableFlow"/>
+	</munit:before-test>
+	<munit:test name="testInsertWithSuccess" description="MUnit Test" doc:id="6ceb6180-3632-468d-9155-fe769d2f1d6b" >
+		<munit:execution>
+			<cassandra-db:insert table="#[vars.testData.tableName]" doc:name="Insert" doc:id="1bb95531-83b7-48d8-9bf1-1f33e3072635" config-ref="Cassandra_Basic_Config" keyspaceName="#[vars.testData.keyspaceName]">
+				<cassandra-db:entity-to-insert><![CDATA[#[vars.testData.getValidEntity]]]></cassandra-db:entity-to-insert>
+			</cassandra-db:insert>
+		</munit:execution>
+		<munit:validation >
+			<ee:transform doc:name="selectInput" doc:id="c49146ef-44b5-4969-8d9b-ddf5266a674f">
+				<ee:message>
+					<ee:set-payload><![CDATA[%dw 2.0
+output application/java
+---
+{
+	cqlQuery:"SELECT * FROM demo_keyspace.dummy_table_name_1",
+	parameters: []
+	
+} as Object {class: "org.mule.modules.cassandradb.api.CQLQueryInput"}]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+			<cassandra-db:select doc:name="Select" doc:id="be7ab8d9-56b5-4aa9-97e0-340c6725816e" config-ref="Cassandra_Basic_Config" parameters="#[null]">
+				<cassandra-db:query><![CDATA[#[payload.cqlQuery]]]></cassandra-db:query>
+			</cassandra-db:select>
+			<munit-tools:assert-equals doc:name="sizeEqualTo1" doc:id="ed8a45c2-c0a7-4337-95e6-651d74c9a52d" actual="#[sizeOf(payload)]" expected="#[1]"/>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="testInsertWithInvalidInput" description="MUnit Test" doc:id="2915cfe2-2fc1-4b75-9386-93328262c795" expectedErrorType="CASSANDRA-DB:QUERY_VALIDATION">
+		<munit:execution>
+			<cassandra-db:insert table="#[vars.testData.tableName]" doc:name="Insert" doc:id="55d60002-7138-4507-92cc-2a1b4bfba560" config-ref="Cassandra_Basic_Config" keyspaceName="#[vars.testData.keyspaceName]">
+				<cassandra-db:entity-to-insert><![CDATA[#[vars.testData.getInvalidEntity]]]></cassandra-db:entity-to-insert>
+			</cassandra-db:insert>
+		</munit:execution>
+	</munit:test>
+	<munit:after-test name="tearDownInsertTestCase" description="After tests actions" doc:id="dd3fbc74-3715-4d24-9a8e-69041a276c4c" >
+		<flow-ref doc:name="dropTable" doc:id="5be2755c-7c8f-41f7-8bca-2681d2a259c4" name="dropTableFlow"/>
+	</munit:after-test>
+
+
+</mule>

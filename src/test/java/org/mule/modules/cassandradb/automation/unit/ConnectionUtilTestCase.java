@@ -12,6 +12,7 @@ import java.util.Map;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
+
 public class ConnectionUtilTestCase {
     public static final String CASSANDRA_NODE_DEFAULT_PORT = "9042";
 
