@@ -3,23 +3,22 @@
  */
 package org.mule.modules.cassandradb.automation.system;
 
-import org.junit.Ignore;
-import org.mule.modules.cassandradb.automation.functional.AbstractTestCases;
 import org.junit.Test;
+import org.mule.modules.cassandradb.automation.functional.AbstractTestCases;
 import org.mule.runtime.api.component.location.Location;
+import org.mule.runtime.api.connection.ConnectionException;
 import org.mule.runtime.api.connection.ConnectionValidationResult;
 import org.mule.runtime.api.connectivity.ConnectivityTestingService;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import org.mule.runtime.api.connection.*;
+import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.mule.runtime.api.connectivity.ConnectivityTestingService.CONNECTIVITY_TESTING_SERVICE_KEY;
 
-import static org.hamcrest.CoreMatchers.*;
-import static org.hamcrest.MatcherAssert.*;
-import static org.mule.runtime.api.connectivity.ConnectivityTestingService.*;
 
-@Ignore
 public class ConfigTestCase extends AbstractTestCases {
     @Inject
     @Named(CONNECTIVITY_TESTING_SERVICE_KEY)
